@@ -10,11 +10,9 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
 } from '@wordpress/components';
-import { BrowserRouter } from 'react-router-dom';
 import * as AdminControls from '../components/controls';
 import { AdminHeader, MigrationModal, Notices } from '../components';
-// eslint-disable-next-line import/no-unresolved
-import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
+import { NuqsAdapter } from 'nuqs/adapters/react';
 
 interface AdminContextValue {
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
@@ -37,9 +35,7 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 
 	return (
 		<NuqsAdapter>
-			<BrowserRouter>
-				<InnerAdminProvider>{children}</InnerAdminProvider>
-			</BrowserRouter>
+			<InnerAdminProvider>{children}</InnerAdminProvider>
 		</NuqsAdapter>
 	);
 };
