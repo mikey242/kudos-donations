@@ -113,6 +113,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 					onChange={(newValue: string) =>
 						handleFormChange({ [field.id]: newValue })
 					}
+					__next40pxDefaultSize
 				/>
 			);
 		}
@@ -129,6 +130,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 								[field.id]: newValue ? Number(newValue) : null,
 							})
 						}
+						__next40pxDefaultSize
 					/>
 				);
 			case 'datetime':
@@ -142,6 +144,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 						onChange={(newValue) =>
 							handleFormChange({ [field.id]: newValue })
 						}
+						__next40pxDefaultSize
 					/>
 				);
 		}
