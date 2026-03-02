@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { DetailsModal, HeaderItem, StatusIcon, Table } from '../table';
 import type { StatusConfig } from '../table';
+import { confirmDelete } from '../../utils';
 
 const transactionStatusConfig: Record<string, StatusConfig> = {
 	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },
@@ -151,17 +152,15 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 							size="compact"
 							icon="trash"
 							label={__('Delete transaction', 'kudos-donations')}
-							onClick={() => {
-								return (
-									// eslint-disable-next-line no-alert
-									window.confirm(
-										__(
-											'Are you sure you wish to delete this transaction?',
-											'kudos-donations'
-										)
-									) && handleDelete(post.id)
-								);
-							}}
+							onClick={() =>
+								confirmDelete(
+									__(
+										'Are you sure you wish to delete this transaction?',
+										'kudos-donations'
+									),
+									() => handleDelete(post.id)
+								)
+							}
 						/>
 					</>
 				);

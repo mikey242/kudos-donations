@@ -6,6 +6,7 @@ import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
+import { confirmDelete } from '../../utils';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
@@ -106,17 +107,15 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="trash"
 						label={__('Delete donor', 'kudos-donations')}
-						onClick={() => {
-							return (
-								// eslint-disable-next-line no-alert
-								window.confirm(
-									__(
-										'Are you sure you wish to delete this donor?',
-										'kudos-donations'
-									)
-								) && handleDelete(post.id)
-							);
-						}}
+						onClick={() =>
+							confirmDelete(
+								__(
+									'Are you sure you wish to delete this donor?',
+									'kudos-donations'
+								),
+								() => handleDelete(post.id)
+							)
+						}
 					/>
 				</Flex>
 			),

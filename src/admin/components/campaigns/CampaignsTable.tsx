@@ -14,6 +14,7 @@ import { useAdminContext, useEntitiesContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
+import { confirmDelete } from '../../utils';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
@@ -134,17 +135,15 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 						size="compact"
 						icon="trash"
 						label={__('Delete campaign', 'kudos-donations')}
-						onClick={() => {
-							return (
-								// eslint-disable-next-line no-alert
-								window.confirm(
-									__(
-										'Are you sure you wish to delete this campaign?',
-										'kudos-donations'
-									)
-								) && handleDelete(post.id)
-							);
-						}}
+						onClick={() =>
+							confirmDelete(
+								__(
+									'Are you sure you wish to delete this campaign?',
+									'kudos-donations'
+								),
+								() => handleDelete(post.id)
+							)
+						}
 					/>
 				</Flex>
 			),
