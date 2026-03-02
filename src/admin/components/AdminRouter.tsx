@@ -80,9 +80,9 @@ const AdminPages = {
 	'kudos-settings': () => <SettingsPage />,
 };
 
-export const AdminRouter = ({ defaultView }): React.ReactNode => {
+export const AdminRouter = (): React.ReactNode => {
 	const { params } = useAdminQueryParams();
-	const page = params.page ?? defaultView;
+	const page = params.page;
 
 	const CurrentPageComponent = AdminPages[page];
 

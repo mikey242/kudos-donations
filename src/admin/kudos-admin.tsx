@@ -7,13 +7,12 @@ import { AdminRouter } from './components';
 
 domReady(() => {
 	const container = document.getElementById('root');
-	const defaultView = container.dataset.view;
 	if (container) {
 		const root = createRoot(container);
 		root.render(
 			<AdminProvider>
 				<SettingsProvider>
-					<AdminRouter defaultView={defaultView} />
+					<AdminRouter/>
 				</SettingsProvider>
 			</AdminProvider>
 		);
