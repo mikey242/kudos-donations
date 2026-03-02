@@ -1,10 +1,4 @@
-import {
-	Button,
-	Dashicon,
-	Flex,
-	Tooltip,
-	VisuallyHidden,
-} from '@wordpress/components';
+import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
@@ -14,8 +8,17 @@ import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
 } from '@heroicons/react/24/outline';
-import { IconKey } from '@wordpress/components/build-types/dashicon/types';
-import { DetailsModal, HeaderItem, Table } from '../table';
+import { DetailsModal, HeaderItem, StatusIcon, Table } from '../table';
+import type { StatusConfig } from '../table';
+
+const transactionStatusConfig: Record<string, StatusConfig> = {
+	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },
+	open: { title: __('Open', 'kudos-donations'), icon: 'clock' },
+	cancelled: { title: __('Canceled', 'kudos-donations'), icon: 'no-alt' },
+	expired: { title: __('Expired', 'kudos-donations'), icon: 'warning' },
+	failed: { title: __('Failed', 'kudos-donations'), icon: 'warning' },
+};
+
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
@@ -25,7 +28,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
-
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post?.donor?.name || post?.donor?.email || '',
 		},
@@ -33,46 +35,12 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
 			orderby: 'status',
-			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.status;
-
-				const statusConfig: Record<
-					string,
-					{ title: string; icon: string }
-				> = {
-					paid: {
-						title: __('Paid', 'kudos-donations'),
-						icon: 'yes-alt',
-					},
-					open: {
-						title: __('Open', 'kudos-donations'),
-						icon: 'clock',
-					},
-					cancelled: {
-						title: __('Canceled', 'kudos-donations'),
-						icon: 'no-alt',
-					},
-					expired: {
-						title: __('Expired', 'kudos-donations'),
-						icon: 'warning',
-					},
-					failed: {
-						title: __('Failed', 'kudos-donations'),
-						icon: 'warning',
-					},
-				};
-
-				const config = statusConfig[status];
-
-				return (
-					config && (
-						<Dashicon
-							title={config.title}
-							icon={config.icon as IconKey}
-						/>
-					)
-				);
-			},
+			valueCallback: (post: Transaction): React.ReactNode => (
+				<StatusIcon
+					status={post.status}
+					config={transactionStatusConfig}
+				/>
+			),
 		},
 		{
 			key: 'value',

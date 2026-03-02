@@ -1,22 +1,29 @@
 import {
 	Button,
-	Dashicon,
 	Flex,
 	Icon,
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../table';
+import { Table, StatusIcon } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/entity';
-import { IconKey } from '@wordpress/components/build-types/dashicon/types';
+import type { StatusConfig } from '../table';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+
+const subscriptionStatusConfig: Record<string, StatusConfig> = {
+	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
+	cancelled: { title: __('Canceled', 'kudos-donations'), icon: 'no-alt' },
+	suspended: { title: __('Suspended', 'kudos-donations'), icon: 'warning' },
+	completed: { title: __('Completed', 'kudos-donations'), icon: 'yes' },
+};
+
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
@@ -63,41 +70,12 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
 			orderby: 'status',
-			valueCallback: (post: Subscription): React.ReactNode => {
-				const status = post?.status;
-
-				const statusConfig: Record<
-					string,
-					{ title: string; icon: string }
-				> = {
-					active: {
-						title: __('Active', 'kudos-donations'),
-						icon: 'yes-alt',
-					},
-					cancelled: {
-						title: __('Canceled', 'kudos-donations'),
-						icon: 'no-alt',
-					},
-					suspended: {
-						title: __('Suspended', 'kudos-donations'),
-						icon: 'warning',
-					},
-					completed: {
-						title: __('Completed', 'kudos-donations'),
-						icon: 'yes',
-					},
-				};
-				const config = statusConfig[status];
-
-				return (
-					config && (
-						<Dashicon
-							title={config.title}
-							icon={config.icon as IconKey}
-						/>
-					)
-				);
-			},
+			valueCallback: (post: Subscription): React.ReactNode => (
+				<StatusIcon
+					status={post.status}
+					config={subscriptionStatusConfig}
+				/>
+			),
 		},
 		{
 			key: 'value',
