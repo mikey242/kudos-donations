@@ -1,4 +1,5 @@
-:root {
+:root,
+body.admin-color-modern {
 	--kudos-rounded: 0.5rem;
 	--wp-admin-theme-color: #ff9f1c;
 	--wp-admin-theme-color-darker-10: #ff8e1c;
