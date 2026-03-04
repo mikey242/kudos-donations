@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { confirmDelete } from '../../utils';
 import type { Campaign, Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
@@ -10,7 +11,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { DetailsModal, HeaderItem, StatusIcon, Table } from '../table';
 import type { StatusConfig } from '../table';
-import { confirmDelete } from '../../utils';
 
 const transactionStatusConfig: Record<string, StatusConfig> = {
 	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },
@@ -115,8 +115,8 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
-					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
+					<i>{dateI18n('d-m-Y', post.created_at)}</i>
 				</Tooltip>
 			),
 		},
