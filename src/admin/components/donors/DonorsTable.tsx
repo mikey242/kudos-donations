@@ -4,9 +4,9 @@ import { DetailsModal, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { confirmDelete } from '../../utils';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-import { confirmDelete } from '../../utils';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
@@ -76,8 +76,8 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Donor): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
-					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
+					<i>{dateI18n('d-m-Y', post.created_at)}</i>
 				</Tooltip>
 			),
 		},

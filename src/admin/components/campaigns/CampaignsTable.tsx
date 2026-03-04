@@ -11,10 +11,10 @@ import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, useEntitiesContext } from '../../contexts';
+import { confirmDelete } from '../../utils';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-import { confirmDelete } from '../../utils';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
@@ -101,8 +101,8 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
-					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
+					<i>{dateI18n('d-m-Y', post.created_at)}</i>
 				</Tooltip>
 			),
 		},

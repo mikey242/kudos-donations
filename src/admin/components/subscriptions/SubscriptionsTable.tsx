@@ -12,11 +12,11 @@ import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/entity';
 import type { StatusConfig } from '../table';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { confirmDelete } from '../../utils';
 import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { confirmDelete } from '../../utils';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
@@ -124,8 +124,8 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Subscription): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
-					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
+					<i>{dateI18n('d-m-Y', post.created_at)}</i>
 				</Tooltip>
 			),
 		},
