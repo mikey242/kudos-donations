@@ -22,6 +22,7 @@ $finders = [
 			  'symfony/filesystem/',
 			  'symfony/proxy-manager-bridge/',
 			  'symfony/service-contracts/',
+              'twig/'
 	      ])
 	      ->in('vendor'),
 ];
@@ -95,5 +96,19 @@ return [
 				$content
 			);
 		},
+        static function (string $filePath, string $prefix, string $content): string {
+            // Rewrite hardcoded Twig 'use' namespace strings written by ModuleNode into
+            // compiled template cache files. PHP-Scoper cannot rewrite class names that
+            // appear inside string literals, so these must be patched manually.
+            if (false === strpos($filePath, 'twig/twig/src/Node/ModuleNode.php')) {
+                return $content;
+            }
+            $escaped_prefix = str_replace('\\', '\\\\', $prefix);
+            return str_replace(
+                '"use Twig\\\\',
+                '"use ' . $escaped_prefix . '\\\\Twig\\\\',
+                $content
+            );
+        }
 	],
 ];

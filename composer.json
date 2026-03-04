@@ -91,7 +91,10 @@
 			"rm -rf vendor/symfony/proxy-manager-bridge",
 			"rm -rf vendor/symfony/service-contracts",
 			"sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_files.php",
-			"sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_static.php"
+			"sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_static.php",
+			"sed -i '/twig\\/twig/d' vendor/composer/autoload_files.php",
+			"sed -i '/twig\\/twig/d' vendor/composer/autoload_static.php",
+			"rm -rf vendor/twig"
 		],
 		"post-install-cmd": [
 			"@clean-unused-files",
