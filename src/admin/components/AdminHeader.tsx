@@ -5,6 +5,7 @@ import {
 	Flex,
 	FlexBlock,
 	FlexItem,
+	Icon,
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
@@ -23,7 +24,11 @@ export const AdminHeader = ({
 				<div className="kudos-admin-header-top admin-wrap-wide">
 					<Flex align="center" justify="space-between">
 						<FlexBlock>
-							<Flex direction="row" justify="flex-start">
+							<Flex
+								direction="row"
+								justify="flex-start"
+								align="center"
+							>
 								<FlexItem>
 									<ResponsiveWrapper
 										naturalHeight={32}
@@ -46,6 +51,9 @@ export const AdminHeader = ({
 											'kudos-donations'
 										)}
 									</span>
+								</FlexItem>
+								<FlexItem>
+									<Icon icon="plus" />
 								</FlexItem>
 								<FlexItem>
 									<p className="kudos-version">

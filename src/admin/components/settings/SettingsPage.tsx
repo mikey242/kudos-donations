@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { EmailTab, HelpTab, ReceiptTab, MollieTab } from './tabs';
+import { EmailTab, HelpTab, ReceiptTab, MollieTab, LicenceTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import {
@@ -14,7 +14,8 @@ import {
 } from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import type { BaseSettings } from '../../../types/settings';
+import type { AllSettings } from '../../../types/all-settings';
+import { isLicenceActive } from '../../utils';
 
 interface SaveButtonProps {
 	isSaving: boolean;
@@ -45,7 +46,7 @@ interface SettingsTab {
 export const SettingsPage = (): React.ReactNode => {
 	const { setHeaderContent } = useAdminContext();
 	const { settingsReady, settingsSaving, updateSettings, settings } =
-		useSettingsContext();
+		useSettingsContext<AllSettings>();
 	const formMethods = useForm({
 		defaultValues: settings,
 	});
@@ -76,6 +77,11 @@ export const SettingsPage = (): React.ReactNode => {
 				content: <ReceiptTab />,
 			},
 			{
+				name: 'licence',
+				title: 'Licence',
+				content: <LicenceTab />,
+			},
+			{
 				name: 'help',
 				title: __('Help', 'kudos-donations'),
 				content: <HelpTab />,
@@ -90,18 +96,17 @@ export const SettingsPage = (): React.ReactNode => {
 			<>
 				<FlexItem>
 					<span className="status-text">
-						{settings._kudos_payment_vendor_status.ready
-							? settings._kudos_payment_vendor_status.text
-							: __('not ready', 'kudos-donations')}
+						{isLicenceActive(settings._kudos_licence_status)
+							? __('licence active', 'kudos-donations')
+							: __('free version', 'kudos-donations')}
 					</span>
 				</FlexItem>
 				<FlexItem>
 					<span
 						className={clsx(
-							settings._kudos_payment_vendor_status.ready
-								? 'ready'
-								: 'not-ready',
-							'status-icon'
+							isLicenceActive(settings._kudos_licence_status)
+								? 'ready status-icon'
+								: 'not-ready'
 						)}
 					></span>
 				</FlexItem>
@@ -117,9 +122,9 @@ export const SettingsPage = (): React.ReactNode => {
 			setHeaderContent(null);
 		};
 	}, [
-		settings._kudos_payment_vendor_status,
 		setHeaderContent,
-		settings?._kudos_payment_vendor,
+		settings._kudos_licence_status,
+		settings._kudos_payment_vendor,
 		settingsSaving,
 	]);
 
@@ -129,7 +134,7 @@ export const SettingsPage = (): React.ReactNode => {
 		}
 	}, [formMethods, settings]);
 
-	const save = (data: BaseSettings): Promise<void> => {
+	const save = (data: AllSettings): Promise<void> => {
 		return updateSettings(data, formState.dirtyFields);
 	};
 

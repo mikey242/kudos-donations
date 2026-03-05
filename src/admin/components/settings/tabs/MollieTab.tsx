@@ -13,13 +13,13 @@ import {
 } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../controls';
 import { Panel } from '../../Panel';
-import type { MollieSettings } from '../../../../types/mollie';
+import type { AllSettings } from '../../../../types/all-settings';
 
 type ApiMode = 'live' | 'test';
 
 const MollieTab = (): React.ReactNode => {
 	const { checkingApiKey, checkApiKey, updateSettings, settings } =
-		useSettingsContext<MollieSettings>();
+		useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 
@@ -27,7 +27,7 @@ const MollieTab = (): React.ReactNode => {
 		_kudos_vendor_mollie_payment_methods: paymentMethods,
 		_kudos_vendor_mollie_api_key_live: liveKey,
 		_kudos_vendor_mollie_api_key_test: testKey,
-	} = settings as MollieSettings;
+	} = settings;
 
 	const apiKeyStatus: Record<ApiMode, string> = {
 		live: liveKey,
@@ -93,7 +93,17 @@ const MollieTab = (): React.ReactNode => {
 				/>
 			</Panel>
 
-			<Panel header={__('Available payment methods', 'kudos-donations')}>
+			<Panel
+				header={__('Available payment methods', 'kudos-donations')}
+				headerExtra={
+					<strong style={{ color: '#35ac35' }}>
+						{settings._kudos_payment_vendor_status.text}
+						{settings._kudos_payment_vendor_status.ready && (
+							<Icon icon="yes" />
+						)}
+					</strong>
+				}
+			>
 				{renderPaymentMethods()}
 				<p>
 					{__(
@@ -165,7 +175,7 @@ const MollieTab = (): React.ReactNode => {
 								_kudos_vendor_mollie_api_key_test: '',
 								_kudos_vendor_mollie_api_mode: 'test',
 								_kudos_vendor_mollie_profile: null,
-								_kudos_payment_vendor_status: null,
+								_kudos_payment_vendor_status: {},
 							});
 						}}
 					>

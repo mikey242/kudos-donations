@@ -15,6 +15,7 @@ import { useState } from '@wordpress/element';
 
 interface PanelProps {
 	header: string;
+	headerExtra?: React.ReactNode;
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	initialOpen?: boolean;
@@ -22,6 +23,7 @@ interface PanelProps {
 
 export const Panel = ({
 	header,
+	headerExtra,
 	children,
 	footer = null,
 	initialOpen = true,
@@ -36,6 +38,7 @@ export const Panel = ({
 				<Heading size={16} level={3}>
 					{header}
 				</Heading>
+				{headerExtra && <>{headerExtra}</>}
 			</CardHeader>
 			{open && (
 				<CardBody>

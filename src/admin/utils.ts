@@ -1,3 +1,17 @@
+import type { LicenceStatus } from '../types/licence';
+
+export const isLicenceActive = (
+	status: LicenceStatus | Record<string, never>
+): boolean => {
+	if (!('valid' in status) || !status.valid) {
+		return false;
+	}
+	if (status.expires_at) {
+		return new Date(status.expires_at) > new Date();
+	}
+	return true;
+};
+
 export const confirmDelete = (message: string, onConfirm: () => void): void => {
 	// eslint-disable-next-line no-alert
 	if (window.confirm(message)) {
