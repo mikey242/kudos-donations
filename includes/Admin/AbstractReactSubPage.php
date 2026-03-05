@@ -72,6 +72,8 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 				)
 			);
 		}
+
+		do_action( 'kudos-admin-' . self::SCRIPT_HANDLE . '-enqueued' );
 	}
 
 	/**
