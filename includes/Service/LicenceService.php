@@ -159,6 +159,8 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			return $remote;
 		}
 
+		$this->logger->debug( 'Checking for addon plugin updates' );
+
 		$url = add_query_arg(
 			[
 				'licence_key' => get_option( self::SETTING_KUDOS_LICENCE_KEY, '' ),
@@ -170,7 +172,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		$response = wp_remote_get(
 			$url,
 			[
-				'timeout' => 10,
+				'timeout' => 5,
 				'headers' => [
 					'Accept' => 'application/json',
 				],
@@ -187,6 +189,8 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 
 		$remote = json_decode( wp_remote_retrieve_body( $response ) );
 		set_transient( self::CACHE_KEY, $remote, self::CACHE_TTL );
+
+		$this->logger->debug( 'Check complete.', $remote );
 
 		return $remote;
 	}
