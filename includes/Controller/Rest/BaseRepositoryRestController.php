@@ -297,15 +297,28 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	}
 
 	/**
-	 * Optionally enrich items (e.g., join campaign, donor, etc).
-	 * Override in child controllers.
+	 * Build the response array for an entity. Override in child controllers to add computed fields.
+	 *
+	 * @param TEntity $item Item to prepare.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	 */
+	protected function prepare_item( BaseEntity $item ): array {
+		return (array) $item;
+	}
+
+	/**
+	 * Prepare an entity for the REST response and apply the `kudos_rest_fields_{type}` filter.
+	 *
+	 * External plugins can add fields via:
+	 *   add_filter( 'kudos_rest_fields_campaign', function( array $data, CampaignEntity $item ) { ... }, 10, 2 );
 	 *
 	 * @param TEntity $item Item to add to the response object.
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
-		return (array) $item;
+		return apply_filters( 'kudos_rest_fields_' . $this->rest_base, $this->prepare_item( $item ), $item );
 	}
 
 	/**
