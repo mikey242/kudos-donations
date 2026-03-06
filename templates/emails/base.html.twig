@@ -513,10 +513,10 @@
                                 <td class="content-cell" align="center">
                                     <p class="f-fallback sub align-center u-margin-bottom-none">
                                         &copy; {{ 'now' | date('Y') }} <a
-                                                href="{{ get_bloginfo('url') }}">{{ get_bloginfo('name') }}</a>
+                                                href="{{ get_bloginfo('url') }}">{{ get_bloginfo('name') | raw }}</a>
                                     </p>
                                     <p style="font-style: italic;"
-                                       class="f-fallback sub align-center">{{ get_bloginfo('description') }}</p>
+                                       class="f-fallback sub align-center">{{ get_bloginfo('description') | raw }}</p>
                                 </td>
                             </tr>
                         </table>
