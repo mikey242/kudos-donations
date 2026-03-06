@@ -5,7 +5,6 @@ import {
 	Flex,
 	FlexBlock,
 	FlexItem,
-	Icon,
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
@@ -51,9 +50,6 @@ export const AdminHeader = ({
 											'kudos-donations'
 										)}
 									</span>
-								</FlexItem>
-								<FlexItem>
-									<Icon icon="plus" />
 								</FlexItem>
 								<FlexItem>
 									<p className="kudos-version">
