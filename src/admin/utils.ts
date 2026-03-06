@@ -3,7 +3,7 @@ import type { LicenceStatus } from '../types/licence';
 export const isLicenceActive = (
 	status: LicenceStatus | Record<string, never>
 ): boolean => {
-	if (!('valid' in status) || !status.valid) {
+	if (!status || !('valid' in status) || !status.valid) {
 		return false;
 	}
 	if (status.expires_at) {
