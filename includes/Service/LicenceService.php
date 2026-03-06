@@ -190,7 +190,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		$remote = json_decode( wp_remote_retrieve_body( $response ) );
 		set_transient( self::CACHE_KEY, $remote, self::CACHE_TTL );
 
-		$this->logger->debug( 'Check complete.', $remote );
+		$this->logger->debug( 'Check complete.', [ $remote ] );
 
 		return $remote;
 	}
