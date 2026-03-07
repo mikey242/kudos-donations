@@ -63,7 +63,9 @@ const Render = ({
 	return (
 		<root.div>
 			{/* Load global styles */}
-			{window.kudos?.styles && <style>{window.kudos?.styles}</style>}
+			{window.kudos?.customStyles && (
+				<style>{window.kudos?.customStyles}</style>
+			)}
 
 			{/* Load the main stylesheet */}
 			{window.kudos?.stylesheets?.map((stylesheet, i) => (
