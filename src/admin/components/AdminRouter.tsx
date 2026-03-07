@@ -13,6 +13,7 @@ import { DonorsTable } from './donors';
 import { SettingsPage } from './settings';
 import { SingleEntityEdit } from './SingleEntityEdit';
 import { Campaign } from '../../types/entity';
+import { applyFilters } from '@wordpress/hooks';
 
 export interface PageConfig {
 	label: string;
@@ -21,7 +22,7 @@ export interface PageConfig {
 	component: () => React.ReactNode;
 }
 
-export const AdminPages: PageConfig[] = [
+export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 	{
 		label: __('Campaigns', 'kudos-donations'),
 		view: 'kudos-campaigns',
@@ -227,7 +228,7 @@ export const AdminPages: PageConfig[] = [
 		icon: 'admin-settings',
 		component: () => <SettingsPage />,
 	},
-];
+]) as PageConfig[];
 
 export const AdminRouter = (): React.ReactNode => {
 	const { params } = useAdminQueryParams();
