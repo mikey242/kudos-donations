@@ -3,10 +3,11 @@ import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Panel } from './Panel';
 import { useCallback, useEffect, useState } from '@wordpress/element';
-import { useAdminContext, useEntitiesContext } from '../contexts';
+import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import {
 	Button,
+	Fill,
 	TextControl,
 	SelectControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -59,7 +60,6 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 	fields,
 }: PostEditProps<T>): React.ReactNode => {
 	const [formData, setFormData] = useState<T | null>(data ?? null);
-	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
 	const { handleUpdate } = useEntitiesContext();
 
@@ -74,13 +74,6 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 	useEffect(() => {
 		setFormData(data);
 	}, [data]);
-
-	useEffect(() => {
-		setHeaderContent(<NavigationButtons onBack={onBack} onSave={onSave} />);
-		return () => {
-			setHeaderContent(null);
-		};
-	}, [onBack, onSave, setHeaderContent]);
 
 	const handleFormChange = (fieldData: Record<string, unknown>) => {
 		const merged = { ...formData, ...fieldData };
@@ -151,14 +144,19 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 	};
 
 	return (
-		<Panel
-			header={sprintf(
-				// translators: %s is the entity singular name (e.g Transaction
-				__('%s details', 'kudos-donations'),
-				formData?.title
-			)}
-		>
-			{fields.map(renderField)}
-		</Panel>
+		<>
+			<Fill name="KudosHeaderActions">
+				<NavigationButtons onBack={onBack} onSave={onSave} />
+			</Fill>
+			<Panel
+				header={sprintf(
+					// translators: %s is the entity singular name (e.g Transaction
+					__('%s details', 'kudos-donations'),
+					formData?.title
+				)}
+			>
+				{fields.map(renderField)}
+			</Panel>
+		</>
 	);
 };

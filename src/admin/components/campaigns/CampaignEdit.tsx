@@ -13,15 +13,11 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import {
-	useAdminContext,
-	useEntitiesContext,
-	useSettingsContext,
-} from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
-import { Button } from '@wordpress/components';
+import { Button, Fill } from '@wordpress/components';
 import GenerateShortcode from './GenerateShortcode';
 
 const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
@@ -47,7 +43,6 @@ interface CampaignEditProps {
 
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { updateParams } = useAdminQueryParams();
-	const { setHeaderContent } = useAdminContext();
 	const { settings } = useSettingsContext();
 	const methods = useForm({
 		defaultValues: {
@@ -59,25 +54,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = useEntitiesContext();
-
-	useEffect(() => {
-		if (campaign) {
-			setHeaderContent(
-				<NavigationButtons
-					campaign={campaign}
-					onBack={() => {
-						void updateParams({
-							entity: null,
-							tab: null,
-						});
-					}}
-				/>
-			);
-		}
-		return () => {
-			setHeaderContent(null);
-		};
-	}, [campaign, setHeaderContent, updateParams]);
 
 	useEffect(() => {
 		if (campaign) {
@@ -147,6 +123,14 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 
 	return (
 		<>
+			<Fill name="KudosHeaderActions">
+				<NavigationButtons
+					campaign={campaign}
+					onBack={() => {
+						void updateParams({ entity: null, tab: null });
+					}}
+				/>
+			</Fill>
 			<FormProvider {...methods}>
 				<form id="campaign-form" onSubmit={handleSubmit(onSubmit)}>
 					<AdminTabPanel tabs={tabs} />

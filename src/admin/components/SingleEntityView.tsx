@@ -1,11 +1,11 @@
 import React from 'react';
-import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { useAdminContext, useEntitiesContext } from '../contexts';
+import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { BaseEntity } from '../../types/entity';
 import {
 	Flex,
+	Fill,
 	FlexItem,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
@@ -105,64 +105,59 @@ interface PostEditProps {
 }
 
 const SingleEntityView = ({ entity }: PostEditProps): React.ReactNode => {
-	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
 	const { singularName } = useEntitiesContext();
-
-	useEffect(() => {
-		setHeaderContent(
-			<NavigationButtons
-				onBack={() => {
-					void updateParams({ entity: null, tab: null });
-				}}
-			/>
-		);
-		return () => {
-			setHeaderContent(null);
-		};
-	}, [updateParams, setHeaderContent]);
 
 	if (!entity) {
 		return null;
 	}
 
 	return (
-		<VStack spacing={4}>
-			<Panel
-				header={sprintf(
-					// translators: %s is the entity singular name (e.g Transaction
-					__('%s details', 'kudos-donations'),
-					singularName
-				)}
-			>
-				{Object.entries(entity)
-					.sort(([aKey, aVal], [bKey, bVal]) => {
-						const getPriority = (val: unknown) => {
-							if (val === null || val === undefined) {
+		<>
+			<Fill name="KudosHeaderActions">
+				<NavigationButtons
+					onBack={() => {
+						void updateParams({ entity: null, tab: null });
+					}}
+				/>
+			</Fill>
+			<VStack spacing={4}>
+				<Panel
+					header={sprintf(
+						// translators: %s is the entity singular name (e.g Transaction
+						__('%s details', 'kudos-donations'),
+						singularName
+					)}
+				>
+					{Object.entries(entity)
+						.sort(([aKey, aVal], [bKey, bVal]) => {
+							const getPriority = (val: unknown) => {
+								if (val === null || val === undefined) {
+									return 0;
+								}
+								if (Array.isArray(val)) {
+									return 1;
+								}
+								if (typeof val === 'object') {
+									return 2;
+								}
 								return 0;
-							}
-							if (Array.isArray(val)) {
-								return 1;
-							}
-							if (typeof val === 'object') {
-								return 2;
-							}
-							return 0;
-						};
+							};
 
-						const priorityA = getPriority(aVal);
-						const priorityB = getPriority(bVal);
+							const priorityA = getPriority(aVal);
+							const priorityB = getPriority(bVal);
 
-						if (priorityA !== priorityB) {
-							return priorityA - priorityB;
-						}
+							if (priorityA !== priorityB) {
+								return priorityA - priorityB;
+							}
 
-						// Fallback to key sort
-						return aKey.localeCompare(bKey);
-					})
-					.map(([key, value]) => renderField(key, value))}
-			</Panel>
-		</VStack>
+							// Fallback to key sort
+							return aKey.localeCompare(bKey);
+						})
+						.map(([key, value]) => renderField(key, value))}
+				</Panel>
+			</VStack>
+		</>
 	);
 };
 

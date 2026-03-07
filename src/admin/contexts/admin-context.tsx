@@ -9,12 +9,12 @@ import React, {
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
+	SlotFillProvider,
 } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 
 interface AdminContextValue {
-	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
 	setPageTitle: Dispatch<SetStateAction<string>>;
 	pageTitle: string;
 }
@@ -40,23 +40,25 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 };
 
 export const InnerAdminProvider = ({ children }) => {
-	const [headerContent, setHeaderContent] = useState<ReactNode>(null);
 	const [pageTitle, setPageTitle] = useState<string>('');
 
 	// Define export data.
 	const data: AdminContextValue = {
-		setHeaderContent,
 		setPageTitle,
 		pageTitle,
 	};
 
 	return (
 		<AdminContext.Provider value={data}>
-			<AdminHeader children={headerContent} />
-			<Notices />
-			<Spacer marginTop={'7'} />
-			{pageTitle && <h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>}
-			<>{children}</>
+			<SlotFillProvider>
+				<AdminHeader />
+				<Notices />
+				<Spacer marginTop={'7'} />
+				{pageTitle && (
+					<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
+				)}
+				<>{children}</>
+			</SlotFillProvider>
 		</AdminContext.Provider>
 	);
 };
