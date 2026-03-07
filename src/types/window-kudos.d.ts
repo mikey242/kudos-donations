@@ -9,6 +9,16 @@ export interface KudosGlobal {
 	needsUpgrade: boolean;
 	countries: Record<string, string>;
 	env?: string;
+	admin: {
+		Controls: typeof import('../admin/components/controls');
+		Components: {
+			Panel: typeof import('../admin/components/Panel').Panel;
+		};
+		Hooks: {
+			useSettingsContext: typeof import('../admin/contexts/settings-context').useSettingsContext;
+			useFormContext: typeof import('react-hook-form').useFormContext;
+		};
+	}
 	[key: string]: unknown;
 }
 

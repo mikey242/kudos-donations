@@ -58,38 +58,33 @@ export const SettingsPage = (): React.ReactNode => {
 	};
 
 	// Define tabs and panels
-	const tabs: SettingsTab[] = applyFilters(
-		'kudosSettingsTabs',
-		[
-			{
-				name: 'mollie',
-				title: __('Mollie', 'kudos-donations'),
-				content: <MollieTab />,
-			},
-			{
-				name: 'email',
-				title: __('Email', 'kudos-donations'),
-				content: <EmailTab />,
-			},
-			{
-				name: 'receipt',
-				title: __('Receipt', 'kudos-donations'),
-				content: <ReceiptTab />,
-			},
-			{
-				name: 'licence',
-				title: 'Licence',
-				content: <LicenceTab />,
-			},
-			{
-				name: 'help',
-				title: __('Help', 'kudos-donations'),
-				content: <HelpTab />,
-			},
-		],
-		useSettingsContext,
-		formMethods
-	) as SettingsTab[];
+	const tabs: SettingsTab[] = applyFilters('kudosSettingsTabs', [
+		{
+			name: 'mollie',
+			title: __('Mollie', 'kudos-donations'),
+			content: <MollieTab />,
+		},
+		{
+			name: 'email',
+			title: __('Email', 'kudos-donations'),
+			content: <EmailTab />,
+		},
+		{
+			name: 'receipt',
+			title: __('Receipt', 'kudos-donations'),
+			content: <ReceiptTab />,
+		},
+		{
+			name: 'licence',
+			title: 'Licence',
+			content: <LicenceTab />,
+		},
+		{
+			name: 'help',
+			title: __('Help', 'kudos-donations'),
+			content: <HelpTab />,
+		},
+	]) as SettingsTab[];
 
 	useEffect(() => {
 		setHeaderContent(
