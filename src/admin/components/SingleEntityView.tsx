@@ -2,6 +2,7 @@ import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
+import { SLOT_HEADER_ACTIONS } from './AdminHeader';
 import type { BaseEntity } from '../../types/entity';
 import {
 	Flex,
@@ -114,7 +115,7 @@ const SingleEntityView = ({ entity }: PostEditProps): React.ReactNode => {
 
 	return (
 		<>
-			<Fill name="KudosHeaderActions">
+			<Fill name={SLOT_HEADER_ACTIONS}>
 				<NavigationButtons
 					onBack={() => {
 						void updateParams({ entity: null, tab: null });

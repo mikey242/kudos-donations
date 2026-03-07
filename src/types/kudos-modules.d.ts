@@ -4,6 +4,10 @@ declare module '@kudos/admin-controls' {
 
 declare module '@kudos/admin-components' {
 	export { Panel, PanelRow } from '../admin/components/Panel';
+	export {
+		SLOT_HEADER_ACTIONS,
+		HeaderActionsFillProps,
+	} from '../admin/components/AdminHeader';
 }
 
 declare module '@kudos/admin-hooks' {
