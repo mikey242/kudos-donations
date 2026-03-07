@@ -9,10 +9,11 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
 	Button,
+	Fill,
 	Flex,
 	FlexItem,
 } from '@wordpress/components';
-import { useAdminContext, useSettingsContext } from '../../contexts';
+import { useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
 import { isLicenceActive } from '../../utils';
@@ -44,7 +45,6 @@ interface SettingsTab {
 }
 
 export const SettingsPage = (): React.ReactNode => {
-	const { setHeaderContent } = useAdminContext();
 	const { settingsReady, settingsSaving, updateSettings, settings } =
 		useSettingsContext<AllSettings>();
 	const formMethods = useForm({
@@ -87,43 +87,6 @@ export const SettingsPage = (): React.ReactNode => {
 	]) as SettingsTab[];
 
 	useEffect(() => {
-		setHeaderContent(
-			<>
-				<FlexItem>
-					<span className="status-text">
-						{isLicenceActive(settings._kudos_licence_status)
-							? __('licence active', 'kudos-donations')
-							: __('free version', 'kudos-donations')}
-					</span>
-				</FlexItem>
-				<FlexItem>
-					<span
-						className={clsx(
-							isLicenceActive(settings._kudos_licence_status)
-								? 'ready status-icon'
-								: 'not-ready'
-						)}
-					></span>
-				</FlexItem>
-				<FlexItem>
-					<SaveButton
-						isSaving={settingsSaving}
-						onClick={handleSave}
-					/>
-				</FlexItem>
-			</>
-		);
-		return () => {
-			setHeaderContent(null);
-		};
-	}, [
-		setHeaderContent,
-		settings._kudos_licence_status,
-		settings._kudos_payment_vendor,
-		settingsSaving,
-	]);
-
-	useEffect(() => {
 		if (settings) {
 			formMethods.reset(settings);
 		}
@@ -137,6 +100,32 @@ export const SettingsPage = (): React.ReactNode => {
 		<div className="admin-wrap">
 			{settingsReady && (
 				<FormProvider {...formMethods}>
+					<Fill name="KudosHeaderActions">
+						<FlexItem>
+							<span className="status-text">
+								{isLicenceActive(settings._kudos_licence_status)
+									? __('licence active', 'kudos-donations')
+									: __('free version', 'kudos-donations')}
+							</span>
+						</FlexItem>
+						<FlexItem>
+							<span
+								className={clsx(
+									isLicenceActive(
+										settings._kudos_licence_status
+									)
+										? 'ready status-icon'
+										: 'not-ready'
+								)}
+							></span>
+						</FlexItem>
+						<FlexItem>
+							<SaveButton
+								isSaving={settingsSaving}
+								onClick={handleSave}
+							/>
+						</FlexItem>
+					</Fill>
 					<form
 						id="settings-form"
 						ref={formRef}

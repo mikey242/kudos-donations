@@ -2,21 +2,16 @@ import React from 'react';
 import { KudosLogo } from '../../block/components';
 import { __ } from '@wordpress/i18n';
 import {
-	Flex,
 	FlexBlock,
 	FlexItem,
+	Flex,
 	Panel,
 	ResponsiveWrapper,
+	Slot,
 } from '@wordpress/components';
 import { AdminMenu } from './AdminMenu';
 
-interface AdminHeaderProps {
-	children: React.ReactNode;
-}
-
-export const AdminHeader = ({
-	children,
-}: AdminHeaderProps): React.ReactNode => {
+export const AdminHeader = (): React.ReactNode => {
 	return (
 		<>
 			<Panel className="kudos-admin-header">
@@ -59,9 +54,15 @@ export const AdminHeader = ({
 							</Flex>
 						</FlexBlock>
 						<FlexItem>
-							<Flex justify="flex-end" align="center">
-								{children}
-							</Flex>
+							<Slot
+								name="KudosHeaderActions"
+								bubblesVirtually
+								style={{
+									display: 'flex',
+									alignItems: 'center',
+									gap: '8px',
+								}}
+							/>
 						</FlexItem>
 					</Flex>
 				</div>

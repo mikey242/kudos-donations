@@ -1,6 +1,7 @@
 import {
 	Button,
 	ColorIndicator,
+	Fill,
 	Flex,
 	ProgressBar,
 	Tooltip,
@@ -10,28 +11,14 @@ import { __, sprintf } from '@wordpress/i18n';
 import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, useEntitiesContext } from '../../contexts';
+import { useEntitiesContext } from '../../contexts';
 import { confirmDelete } from '../../utils';
-import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
-	const { setHeaderContent } = useAdminContext();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
-
-	useEffect(() => {
-		setHeaderContent(
-			<Button
-				variant="primary"
-				onClick={handleNew}
-				text={__('New campaign', 'kudos-donations')}
-				icon="plus"
-			/>
-		);
-		return () => setHeaderContent(null);
-	}, [handleNew, setHeaderContent]);
 
 	const changeView = (postId: number) => {
 		void setParams({
@@ -152,6 +139,14 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 
 	return (
 		<>
+			<Fill name="KudosHeaderActions">
+				<Button
+					variant="primary"
+					onClick={handleNew}
+					text={__('New campaign', 'kudos-donations')}
+					icon="plus"
+				/>
+			</Fill>
 			<Table headerItems={headerItems} />
 		</>
 	);
