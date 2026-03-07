@@ -171,6 +171,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 				settings,
 				checkingApiKey,
 				checkApiKey,
+				fetchSettings,
 				updateSetting,
 				updateSettings,
 				settingsReady,
