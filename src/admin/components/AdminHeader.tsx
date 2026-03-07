@@ -10,8 +10,15 @@ import {
 	Slot,
 } from '@wordpress/components';
 import { AdminMenu } from './AdminMenu';
+import { useAdminQueryParams } from '../hooks';
+
+export const SLOT_HEADER_ACTIONS = 'KudosHeaderActions';
 
 export const AdminHeader = (): React.ReactNode => {
+	const {
+		params: { page, tab },
+	} = useAdminQueryParams();
+
 	return (
 		<>
 			<Panel className="kudos-admin-header">
@@ -55,8 +62,9 @@ export const AdminHeader = (): React.ReactNode => {
 						</FlexBlock>
 						<FlexItem>
 							<Slot
-								name="KudosHeaderActions"
+								name={SLOT_HEADER_ACTIONS}
 								bubblesVirtually
+								fillProps={{ page, tab }}
 								style={{
 									display: 'flex',
 									alignItems: 'center',

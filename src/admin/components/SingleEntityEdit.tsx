@@ -2,6 +2,7 @@ import type { BaseEntity } from '../../types/entity';
 import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Panel } from './Panel';
+import { SLOT_HEADER_ACTIONS } from './AdminHeader';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
@@ -145,7 +146,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 
 	return (
 		<>
-			<Fill name="KudosHeaderActions">
+			<Fill name={SLOT_HEADER_ACTIONS}>
 				<NavigationButtons onBack={onBack} onSave={onSave} />
 			</Fill>
 			<Panel

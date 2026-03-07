@@ -18,6 +18,7 @@ import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { Button, Fill } from '@wordpress/components';
+import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
 import GenerateShortcode from './GenerateShortcode';
 
 const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
@@ -123,7 +124,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 
 	return (
 		<>
-			<Fill name="KudosHeaderActions">
+			<Fill name={SLOT_HEADER_ACTIONS}>
 				<NavigationButtons
 					campaign={campaign}
 					onBack={() => {

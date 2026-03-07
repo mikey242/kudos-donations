@@ -14,6 +14,7 @@ import {
 	FlexItem,
 } from '@wordpress/components';
 import { useSettingsContext } from '../../contexts';
+import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
 import { isLicenceActive } from '../../utils';
@@ -100,7 +101,7 @@ export const SettingsPage = (): React.ReactNode => {
 		<div className="admin-wrap">
 			{settingsReady && (
 				<FormProvider {...formMethods}>
-					<Fill name="KudosHeaderActions">
+					<Fill name={SLOT_HEADER_ACTIONS}>
 						<FlexItem>
 							<span className="status-text">
 								{isLicenceActive(settings._kudos_licence_status)
