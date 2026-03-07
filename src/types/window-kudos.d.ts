@@ -15,6 +15,7 @@ export interface KudosGlobal {
 			Panel: typeof import('../admin/components/Panel').Panel;
 		};
 		Hooks: {
+			useAdminContext: typeof import('../admin/contexts/admin-context').useAdminContext;
 			useSettingsContext: typeof import('../admin/contexts/settings-context').useSettingsContext;
 			useFormContext: typeof import('react-hook-form').useFormContext;
 		};
