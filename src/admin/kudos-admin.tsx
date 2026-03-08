@@ -7,6 +7,7 @@ import {
 	SettingsProvider,
 	useSettingsContext,
 	useAdminContext,
+	useEntitiesContext,
 } from './contexts';
 import { AdminRouter, Panel } from './components';
 import * as Controls from './components/controls';
@@ -20,6 +21,7 @@ window.kudos.admin = {
 	Hooks: {
 		useAdminContext,
 		useSettingsContext,
+		useEntitiesContext,
 		useFormContext,
 	},
 };
