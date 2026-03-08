@@ -55,4 +55,11 @@ class BaseEntity {
 			}
 		}
 	}
+
+	/**
+	 * To be overridden in child entities.
+	 */
+	public function __toString(): string {
+		return $this->title;
+	}
 }
