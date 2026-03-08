@@ -1,10 +1,13 @@
-import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
 import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { Fill } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
+import { SLOT_HEADER_ACTIONS } from './AdminHeader';
+import { ReactNode } from 'react';
 
 interface EntityPageProps {
 	renderTable: (
@@ -53,8 +56,17 @@ export const EntityPage = ({
 		}
 	}, [entityId, entities, entityType, hasResolved]);
 
+	const entityActions = applyFilters(
+		'kudosEntityPageActions',
+		[],
+		entityType
+	) as ReactNode[];
+
 	return (
 		<>
+			{entityActions.length > 0 && (
+				<Fill name={SLOT_HEADER_ACTIONS}>{entityActions}</Fill>
+			)}
 			{entityId && renderEdit ? (
 				<div className="admin-wrap"> {renderEdit(currentEntity)}</div>
 			) : (
