@@ -35,11 +35,15 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_items' ],
-					'permission_callback' => $this->can_list(),
+					'permission_callback' => '__return_true',
 					'args'                => [
 						'columns'  => [
 							'type'     => 'array',
 							'required' => false,
+						],
+						'enrich'   => [
+							'type'    => 'boolean',
+							'default' => true,
 						],
 						'paged'    => [
 							'type'              => FieldType::INTEGER,
@@ -189,6 +193,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$paged    = max( 1, (int) $request->get_param( 'paged' ) );
 		$per_page = max( 1, (int) $request->get_param( 'per_page' ) );
 		$columns  = $request->get_param( 'columns' );
+		$enrich   = (bool) $request->get_param( 'enrich' );
 		$orderby  = $request->get_param( 'orderby' );
 		$order    = $request->get_param( 'order' );
 		$offset   = ( $paged - 1 ) * $per_page;
@@ -205,7 +210,9 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		];
 
 		$items = $this->repository->query( $args );
-		$items = array_map( fn( $item ) => $this->add_rest_fields( $item ), $items );
+		$items = $enrich
+			? array_map( fn( $item ) => $this->add_rest_fields( $item ), $items )
+			: array_map( fn( $item ) => (array) $item, $items );
 		$total = $this->repository->count_query( $where );
 
 		return new WP_REST_Response(
