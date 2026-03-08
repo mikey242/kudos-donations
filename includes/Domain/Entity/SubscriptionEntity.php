@@ -36,4 +36,11 @@ class SubscriptionEntity extends BaseEntity {
 			'currency' => 'EUR',
 		];
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function __toString(): string {
+		return $this->vendor_subscription_id;
+	}
 }

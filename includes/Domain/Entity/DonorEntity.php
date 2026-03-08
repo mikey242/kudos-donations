@@ -24,4 +24,11 @@ class DonorEntity extends BaseEntity {
 	public ?string $locale;
 	public ?string $vendor_customer_id;
 	public ?int $transaction_count;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function __toString(): string {
+		return trim( $this->name . ' <' . $this->email . '>' );
+	}
 }
