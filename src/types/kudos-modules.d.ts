@@ -13,5 +13,6 @@ declare module '@kudos/admin-components' {
 declare module '@kudos/admin-hooks' {
 	export { useAdminContext } from '../admin/contexts/admin-context';
 	export { useSettingsContext } from '../admin/contexts/settings-context';
+	export { useEntitiesContext } from '../admin/contexts/entities-context';
 	export { useFormContext } from 'react-hook-form';
 }

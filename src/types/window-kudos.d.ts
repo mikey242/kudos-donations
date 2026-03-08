@@ -17,6 +17,7 @@ export interface KudosGlobal {
 		Hooks: {
 			useAdminContext: typeof import('../admin/contexts/admin-context').useAdminContext;
 			useSettingsContext: typeof import('../admin/contexts/settings-context').useSettingsContext;
+			useEntitiesContext: typeof import('../admin/contexts/entities-context').useEntitiesContext;
 			useFormContext: typeof import('react-hook-form').useFormContext;
 		};
 	}
