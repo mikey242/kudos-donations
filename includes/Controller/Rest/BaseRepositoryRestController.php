@@ -35,7 +35,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_items' ],
-					'permission_callback' => '__return_true',
+					'permission_callback' => $this->can_list(),
 					'args'                => [
 						'columns'  => [
 							'type'     => 'array',
