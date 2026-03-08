@@ -18,6 +18,17 @@ import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
+interface QueryArgs {
+	paged?: number;
+	per_page?: number;
+	columns?: string[];
+	enrich?: boolean;
+	orderby?: string;
+	order?: string;
+	where?: Record<string, string | number>;
+	[key: string]: unknown;
+}
+
 interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	entities: T[];
 	hasResolved: boolean;
@@ -28,6 +39,7 @@ interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	handleDelete: (entityId: number) => void;
 	handleDuplicate: (entity: T) => void;
 	fetchEntities: () => void;
+	queryEntities: (args: QueryArgs) => Promise<EntityRestResponse<T>>;
 	singularName: string;
 	pluralName: string;
 	entityType: string;
@@ -74,30 +86,34 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		totalPages: 1,
 	});
 
+	const queryEntities = useCallback(
+		(args: QueryArgs): Promise<EntityRestResponse<T>> => {
+			return apiFetch({
+				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
+			});
+		},
+		[entityType]
+	);
+
 	const fetchEntities = useCallback(async () => {
 		try {
-			setState((prev) => ({
-				...prev,
-				hasResolved: false,
-			}));
-			const args = { paged, orderby, order, where };
-			apiFetch({
-				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
-			}).then((response: EntityRestResponse<T>) => {
-				setState({
-					entities: response.items,
-					hasResolved: true,
-					totalItems: response.total,
-					totalPages: response.total_pages,
-				});
+			setState((prev) => ({ ...prev, hasResolved: false }));
+			const response = await queryEntities({
+				paged,
+				orderby,
+				order,
+				where,
+			});
+			setState({
+				entities: response.items,
+				hasResolved: true,
+				totalItems: response.total,
+				totalPages: response.total_pages,
 			});
 		} catch (error) {
-			setState((prev) => ({
-				...prev,
-				hasResolved: true,
-			}));
+			setState((prev) => ({ ...prev, hasResolved: true }));
 		}
-	}, [entityType, order, orderby, paged, where]);
+	}, [queryEntities, order, orderby, paged, where]);
 
 	useEffect(() => {
 		void fetchEntities();
@@ -288,20 +304,22 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			pluralName,
 			entityType,
 			fetchEntities,
+			queryEntities,
 		}),
 		[
 			state.entities,
 			state.hasResolved,
 			state.totalItems,
 			state.totalPages,
-			handleDelete,
-			handleDuplicate,
 			handleNew,
+			handleDuplicate,
+			handleDelete,
 			handleUpdate,
 			singularName,
 			pluralName,
 			entityType,
 			fetchEntities,
+			queryEntities,
 		]
 	);
 
