@@ -13,19 +13,19 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class SubscriptionEntity extends BaseEntity {
 
-	public float $value;
+	public ?int $transaction_id;
+	public ?TransactionEntity $transaction;
+	public string $status;
 	public string $currency;
+	public float $value;
 	public string $frequency;
 	public ?int $years;
-	public string $status;
-	public ?int $transaction_id;
 	public ?int $donor_id;
+	public ?DonorEntity $donor;
 	public ?int $campaign_id;
+	public ?CampaignEntity $campaign;
 	public ?string $vendor_customer_id;
 	public ?string $vendor_subscription_id;
-	public ?DonorEntity $donor;
-	public ?TransactionEntity $transaction;
-	public ?CampaignEntity $campaign;
 	public ?string $token;
 
 	/**
