@@ -13,10 +13,10 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class DonorEntity extends BaseEntity {
 
-	public string $email;
 	public ?string $mode;
-	public ?string $name;
+	public string $email;
 	public ?string $business_name;
+	public ?string $name;
 	public ?string $street;
 	public ?string $postcode;
 	public ?string $city;
