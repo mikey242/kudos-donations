@@ -4,7 +4,6 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
-	useMemo,
 	useState,
 } from '@wordpress/element';
 import type { ReactNode, SyntheticEvent } from 'react';
@@ -19,7 +18,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
 interface QueryArgs {
-	paged?: number;
+	page?: number;
 	per_page?: number;
 	columns?: string[];
 	enrich?: boolean;
@@ -49,8 +48,6 @@ export interface EntityRestResponse<T extends BaseEntity> {
 	items: T[];
 	total: number;
 	total_pages: number;
-	per_page: number;
-	paged: number;
 }
 
 const EntitiesContext = createContext<EntitiesContextValue<any> | null>(null);
@@ -87,10 +84,20 @@ export const EntitiesProvider = <T extends BaseEntity>({
 	});
 
 	const queryEntities = useCallback(
-		(args: QueryArgs): Promise<EntityRestResponse<T>> => {
-			return apiFetch({
+		async (args: QueryArgs): Promise<EntityRestResponse<T>> => {
+			const response: Response = await apiFetch({
 				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
+				parse: false,
 			});
+			const items: T[] = await response.json();
+			return {
+				items,
+				total: parseInt(response.headers.get('X-WP-Total') ?? '0', 10),
+				total_pages: parseInt(
+					response.headers.get('X-WP-TotalPages') ?? '1',
+					10
+				),
+			};
 		},
 		[entityType]
 	);
@@ -99,7 +106,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		try {
 			setState((prev) => ({ ...prev, hasResolved: false }));
 			const response = await queryEntities({
-				paged,
+				page: paged,
 				orderby,
 				order,
 				where,
@@ -290,45 +297,26 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		[handleSave]
 	);
 
-	const data: EntitiesContextValue<T> = useMemo(
-		() => ({
-			entities: state.entities,
-			hasResolved: state.hasResolved,
-			totalItems: state.totalItems,
-			totalPages: state.totalPages,
-			handleNew,
-			handleDuplicate,
-			handleDelete,
-			handleUpdate,
-			singularName,
-			pluralName,
-			entityType,
-			fetchEntities,
-			queryEntities,
-		}),
-		[
-			state.entities,
-			state.hasResolved,
-			state.totalItems,
-			state.totalPages,
-			handleNew,
-			handleDuplicate,
-			handleDelete,
-			handleUpdate,
-			singularName,
-			pluralName,
-			entityType,
-			fetchEntities,
-			queryEntities,
-		]
-	);
-
 	return (
-		<>
-			<EntitiesContext.Provider value={data}>
-				{children}
-			</EntitiesContext.Provider>
-		</>
+		<EntitiesContext.Provider
+			value={{
+				entities: state.entities,
+				hasResolved: state.hasResolved,
+				totalItems: state.totalItems,
+				totalPages: state.totalPages,
+				handleNew,
+				handleDuplicate,
+				handleDelete,
+				handleUpdate,
+				singularName,
+				pluralName,
+				entityType,
+				fetchEntities,
+				queryEntities,
+			}}
+		>
+			{children}
+		</EntitiesContext.Provider>
 	);
 };
 

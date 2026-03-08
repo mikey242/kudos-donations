@@ -1,7 +1,6 @@
 import type { BaseEntity, Campaign } from '../../../types/entity';
 import React from 'react';
 import { useCallback, useEffect, useState } from '@wordpress/element';
-import { EntityRestResponse } from '../../contexts';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { SingleEntityEdit } from '../SingleEntityEdit';
@@ -19,12 +18,12 @@ export const TransactionEdit = ({ entity }: PostEditProps): React.ReactNode => {
 	const [campaigns, setCampaigns] = useState<Element[]>();
 
 	const fetchPosts = useCallback(async () => {
-		const response: EntityRestResponse<Campaign> = await apiFetch({
+		const response: Campaign[] = await apiFetch({
 			path: addQueryArgs('/kudos/v1/campaign', {
 				columns: ['id', 'title'],
 			}),
 		});
-		const campaignsResponse = response.items.map((item: Campaign) => {
+		const campaignsResponse = response.map((item: Campaign) => {
 			return {
 				value: item.id,
 				label: `${item.title} (id: ${item.id})`,

@@ -45,7 +45,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 							'type'    => 'boolean',
 							'default' => true,
 						],
-						'paged'    => [
+						'page'     => [
 							'type'              => FieldType::INTEGER,
 							'default'           => 1,
 							'sanitize_callback' => 'absint',
@@ -53,7 +53,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 						'per_page' => [
 							'type'              => FieldType::INTEGER,
 							'default'           => 20,
-							'sanitize_callback' => 'absint',
+							'sanitize_callback' => fn( int $value ) => \intval( $value ),
 						],
 						'order'    => [
 							'type'              => FieldType::STRING,
@@ -190,13 +190,14 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @psalm-suppress InvalidArgument
 	 */
 	public function get_items( WP_REST_Request $request ): WP_REST_Response {
-		$paged    = max( 1, (int) $request->get_param( 'paged' ) );
-		$per_page = max( 1, (int) $request->get_param( 'per_page' ) );
-		$columns  = $request->get_param( 'columns' );
-		$enrich   = (bool) $request->get_param( 'enrich' );
-		$orderby  = $request->get_param( 'orderby' );
-		$order    = $request->get_param( 'order' );
-		$offset   = ( $paged - 1 ) * $per_page;
+		$page         = max( 1, (int) $request->get_param( 'page' ) );
+		$per_page_raw = (int) $request->get_param( 'per_page' );
+		$per_page     = -1 === $per_page_raw ? -1 : max( 1, $per_page_raw );
+		$columns      = $request->get_param( 'columns' );
+		$enrich       = (bool) $request->get_param( 'enrich' );
+		$orderby      = $request->get_param( 'orderby' );
+		$order        = $request->get_param( 'order' );
+		$offset       = -1 === $per_page ? 0 : ( $page - 1 ) * $per_page;
 		/** @var array<string, scalar> $where */
 		$where = $request->get_param( 'where' ) ?? [];
 
@@ -209,21 +210,18 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 			'where'   => $where,
 		];
 
-		$items = $this->repository->query( $args );
-		$items = $enrich
+		$items       = $this->repository->query( $args );
+		$items       = $enrich
 			? array_map( fn( $item ) => $this->add_rest_fields( $item ), $items )
 			: array_map( fn( $item ) => (array) $item, $items );
-		$total = $this->repository->count_query( $where );
+		$total       = $this->repository->count_query( $where );
+		$total_pages = -1 === $per_page ? 1 : (int) max( ceil( $total / $per_page ), 1 );
 
-		return new WP_REST_Response(
-			[
-				'items'       => $items,
-				'total'       => $total,
-				'total_pages' => (int) max( ceil( $total / $per_page ), 1 ),
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			]
-		);
+		$response = new WP_REST_Response( $items, 200 );
+		$response->header( 'X-WP-Total', (string) $total );
+		$response->header( 'X-WP-TotalPages', (string) $total_pages );
+
+		return $response;
 	}
 
 	/**

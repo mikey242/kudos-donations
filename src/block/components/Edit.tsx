@@ -19,7 +19,6 @@ import type { Campaign } from '../../types/entity';
 import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';
-import { EntityRestResponse } from '../../admin/contexts';
 
 export interface KudosButtonAttributes {
 	button_label: string;
@@ -57,12 +56,12 @@ const ButtonEdit = ({
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
 	const fetchPosts = useCallback(async () => {
-		const response: EntityRestResponse<Campaign> = await apiFetch({
+		const response: Campaign[] = await apiFetch({
 			path: addQueryArgs('/kudos/v1/campaign', {
 				columns: ['id', 'title'],
 			}),
 		});
-		setCampaigns(response.items);
+		setCampaigns(response);
 	}, []);
 
 	useEffect(() => {

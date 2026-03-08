@@ -243,7 +243,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		}
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
 
-		$where = $this->build_where_clause( $args['where'] ?? [] );
+		$where     = $this->build_where_clause( $args['where'] ?? [] );
+		$where_sql = $where['condition'] ? 'WHERE ' . $where['condition'] : '';
+		$params    = $where['params'];
 
 		$order_by = '';
 		if ( isset( $args['orderby'] ) && $this->is_valid_column( $args['orderby'] ) ) {
@@ -252,13 +254,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		}
 		$limit      = $args['limit'] ?? null;
 		$offset     = $args['offset'] ?? null;
-		$limit_sql  = isset( $limit ) ? 'LIMIT ' . absint( $limit ) : '';
-		$offset_sql = isset( $offset ) ? 'OFFSET ' . absint( $offset ) : '';
+		$has_limit  = isset( $limit ) && -1 !== $limit;
+		$limit_sql  = $has_limit ? 'LIMIT ' . absint( $limit ) : '';
+		$offset_sql = $has_limit && isset( $offset ) ? 'OFFSET ' . absint( $offset ) : '';
 
-		$sql = trim( "SELECT $select FROM $this->table {$where['sql']} $order_by $limit_sql $offset_sql" );
+		$sql = trim( "SELECT $select FROM $this->table $where_sql $order_by $limit_sql $offset_sql" );
 
-		if ( ! empty( $where['params'] ) ) {
-			$sql = $this->wpdb->prepare( $sql, ...$where['params'] );
+		if ( ! empty( $params ) ) {
+			$sql = $this->wpdb->prepare( $sql, ...$params );
 		}
 
 		$results = $this->wpdb->get_results(
@@ -279,8 +282,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @param array<string, scalar|null> $where The WHERE clause.
 	 */
 	public function count_query( array $where = [] ): int {
-		$parts = $this->build_where_clause( $where );
-		$sql   = "SELECT COUNT(*) FROM $this->table {$parts['sql']}";
+		$parts     = $this->build_where_clause( $where );
+		$where_sql = $parts['condition'] ? 'WHERE ' . $parts['condition'] : '';
+		$sql       = "SELECT COUNT(*) FROM $this->table $where_sql";
 
 		if ( ! empty( $parts['params'] ) ) {
 			$sql = $this->wpdb->prepare( $sql, ...$parts['params'] );
@@ -321,8 +325,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		}
 
 		return [
-			'sql'    => $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '',
-			'params' => $params,
+			'condition' => $clauses ? implode( ' AND ', $clauses ) : '',
+			'params'    => $params,
 		];
 	}
 
