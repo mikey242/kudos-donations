@@ -42,6 +42,7 @@ interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	singularName: string;
 	pluralName: string;
 	entityType: string;
+	queryParams: ReturnType<typeof useAdminQueryParams>['params'];
 }
 
 export interface EntityRestResponse<T extends BaseEntity> {
@@ -313,6 +314,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				entityType,
 				fetchEntities,
 				queryEntities,
+				queryParams: params,
 			}}
 		>
 			{children}
