@@ -21,7 +21,6 @@ interface QueryArgs {
 	page?: number;
 	per_page?: number;
 	columns?: string[];
-	enrich?: boolean;
 	orderby?: string;
 	order?: string;
 	where?: Record<string, string | number>;

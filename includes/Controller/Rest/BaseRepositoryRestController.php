@@ -41,10 +41,6 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 							'type'     => 'array',
 							'required' => false,
 						],
-						'enrich'   => [
-							'type'    => 'boolean',
-							'default' => true,
-						],
 						'page'     => [
 							'type'              => FieldType::INTEGER,
 							'default'           => 1,
@@ -68,6 +64,10 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 						'where'    => [
 							'type'              => FieldType::OBJECT,
 							'sanitize_callback' => [ $this, 'sanitize_where_field' ],
+						],
+						'export'   => [
+							'type'    => 'boolean',
+							'default' => false,
 						],
 					],
 				],
@@ -194,7 +194,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$per_page_raw = (int) $request->get_param( 'per_page' );
 		$per_page     = -1 === $per_page_raw ? -1 : max( 1, $per_page_raw );
 		$columns      = $request->get_param( 'columns' );
-		$enrich       = (bool) $request->get_param( 'enrich' );
+		$export       = (bool) $request->get_param( 'export' );
 		$orderby      = $request->get_param( 'orderby' );
 		$order        = $request->get_param( 'order' );
 		$offset       = -1 === $per_page ? 0 : ( $page - 1 ) * $per_page;
@@ -211,9 +211,10 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		];
 
 		$items       = $this->repository->query( $args );
-		$items       = $enrich
-			? array_map( fn( $item ) => $this->add_rest_fields( $item ), $items )
-			: array_map( fn( $item ) => (array) $item, $items );
+		$items       = array_map(
+			fn( $item ) => $export ? $this->prepare_export_item( $item ) : $this->add_rest_fields( $item ),
+			$items
+		);
 		$total       = $this->repository->count_query( $where );
 		$total_pages = -1 === $per_page ? 1 : (int) max( ceil( $total / $per_page ), 1 );
 
@@ -310,6 +311,21 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 */
 	protected function prepare_item( BaseEntity $item ): array {
 		return (array) $item;
+	}
+
+	/**
+	 * Prepare an entity for export, converting any nested entity objects to their string representation.
+	 *
+	 * @param TEntity $item Item to prepare.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	 */
+	protected function prepare_export_item( BaseEntity $item ): array {
+		$data = $this->prepare_item( $item );
+		return array_map(
+			fn( $value ) => $value instanceof BaseEntity ? (string) $value : $value,
+			$data
+		);
 	}
 
 	/**
