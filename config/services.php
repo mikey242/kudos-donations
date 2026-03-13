@@ -95,7 +95,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{constants.php,functions.php,vendor,Domain/Entity}' );
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity}' );
 
 	// Configure logger.
 	$services->set( JsonFormatter::class );
