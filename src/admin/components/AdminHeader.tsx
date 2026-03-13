@@ -16,7 +16,7 @@ export const SLOT_HEADER_ACTIONS = 'KudosHeaderActions';
 
 export const AdminHeader = (): React.ReactNode => {
 	const {
-		params: { page, tab },
+		params: { page, tab, entity },
 	} = useAdminQueryParams();
 
 	return (
@@ -64,7 +64,7 @@ export const AdminHeader = (): React.ReactNode => {
 							<Slot
 								name={SLOT_HEADER_ACTIONS}
 								bubblesVirtually
-								fillProps={{ page, tab }}
+								fillProps={{ page, tab, entity }}
 								style={{
 									display: 'flex',
 									alignItems: 'center',
