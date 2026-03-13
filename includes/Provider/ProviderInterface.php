@@ -19,4 +19,9 @@ interface ProviderInterface {
 	 * Returns the provider's unique slug.
 	 */
 	public static function get_slug(): string;
+
+	/**
+	 * Initialise the provider's hooks and configuration.
+	 */
+	public function init(): void;
 }

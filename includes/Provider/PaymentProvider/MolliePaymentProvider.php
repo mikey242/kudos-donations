@@ -76,7 +76,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register(): void {
+	public function init(): void {
 		$this->config_client();
 		$this->set_user_agent();
 

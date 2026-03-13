@@ -37,6 +37,10 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 */
 	public function register(): void {
 		add_filter( 'kudos_global_localization', [ $this, 'add_providers' ] );
+		$provider = $this->get_provider();
+		if ( null !== $provider ) {
+			$provider->init();
+		}
 	}
 
 	/**

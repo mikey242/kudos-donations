@@ -59,13 +59,6 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public static function get_registration_action(): string {
-		return 'kudos_mailer_send';
-	}
-
-	/**
 	 * Sets html as the content type.
 	 */
 	public function set_html_mail_content_type(): string {
@@ -75,7 +68,7 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register(): void {
+	public function init(): void {
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = (string) get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = (array) get_option( self::SETTING_CUSTOM_SMTP, [] );
