@@ -12,7 +12,7 @@ import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext } from '../../contexts';
-import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
+import { SLOT_HEADER_ACTIONS_START } from '../AdminHeader';
 import { confirmDelete } from '../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
@@ -140,7 +140,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 
 	return (
 		<>
-			<Fill name={SLOT_HEADER_ACTIONS}>
+			<Fill name={SLOT_HEADER_ACTIONS_START}>
 				<Button
 					variant="primary"
 					onClick={handleNew}

@@ -12,7 +12,8 @@ import {
 import { AdminMenu } from './AdminMenu';
 import { useAdminQueryParams } from '../hooks';
 
-export const SLOT_HEADER_ACTIONS = 'KudosHeaderActions';
+export const SLOT_HEADER_ACTIONS_START = 'KudosHeaderActionsStart';
+export const SLOT_HEADER_ACTIONS_END = 'KudosHeaderActionsEnd';
 
 export const AdminHeader = (): React.ReactNode => {
 	const {
@@ -61,16 +62,18 @@ export const AdminHeader = (): React.ReactNode => {
 							</Flex>
 						</FlexBlock>
 						<FlexItem>
-							<Slot
-								name={SLOT_HEADER_ACTIONS}
-								bubblesVirtually
-								fillProps={{ page, tab, entity }}
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									gap: '8px',
-								}}
-							/>
+							<Flex align="center" gap={2}>
+								<Slot
+									name={SLOT_HEADER_ACTIONS_START}
+									bubblesVirtually
+									fillProps={{ page, tab, entity }}
+								/>
+								<Slot
+									name={SLOT_HEADER_ACTIONS_END}
+									bubblesVirtually
+									fillProps={{ page, tab, entity }}
+								/>
+							</Flex>
 						</FlexItem>
 					</Flex>
 				</div>

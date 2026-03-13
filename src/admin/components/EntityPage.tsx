@@ -6,7 +6,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { Fill } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
-import { SLOT_HEADER_ACTIONS } from './AdminHeader';
+import { SLOT_HEADER_ACTIONS_END } from './AdminHeader';
 import { ReactNode } from 'react';
 
 interface EntityPageProps {
@@ -65,7 +65,7 @@ export const EntityPage = ({
 	return (
 		<>
 			{entityActions.length > 0 && (
-				<Fill name={SLOT_HEADER_ACTIONS}>{entityActions}</Fill>
+				<Fill name={SLOT_HEADER_ACTIONS_END}>{entityActions}</Fill>
 			)}
 			{entityId && renderEdit ? (
 				<div className="admin-wrap"> {renderEdit(currentEntity)}</div>
