@@ -6,6 +6,8 @@ declare module '@kudos/admin-components' {
 	export { Panel, PanelRow } from '../admin/components/Panel';
 	export {
 		SLOT_HEADER_ACTIONS,
+		SLOT_HEADER_ACTIONS_EXTRA,
+		SLOT_PAGE_TITLE,
 		HeaderActionsFillProps,
 	} from '../admin/components/AdminHeader';
 }
