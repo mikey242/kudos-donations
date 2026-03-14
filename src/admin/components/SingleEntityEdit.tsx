@@ -2,7 +2,6 @@ import type { BaseEntity } from '../../types/entity';
 import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Panel } from './Panel';
-import { SLOT_HEADER_ACTIONS } from './AdminHeader';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
@@ -14,6 +13,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
+import { SLOT_HEADER_ACTIONS_EXTRA } from './AdminHeader';
 
 interface PostEditProps<T extends BaseEntity = BaseEntity> {
 	data: T;
@@ -146,7 +146,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 
 	return (
 		<>
-			<Fill name={SLOT_HEADER_ACTIONS}>
+			<Fill name={SLOT_HEADER_ACTIONS_EXTRA}>
 				<NavigationButtons onBack={onBack} onSave={onSave} />
 			</Fill>
 			<Panel
