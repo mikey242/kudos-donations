@@ -49,7 +49,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 						'per_page' => [
 							'type'              => FieldType::INTEGER,
 							'default'           => 20,
-							'sanitize_callback' => fn( int $value ) => \intval( $value ),
+							'sanitize_callback' => fn( int $value ) => $value,
 						],
 						'order'    => [
 							'type'              => FieldType::STRING,
