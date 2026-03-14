@@ -85,10 +85,19 @@ export const EntitiesProvider = <T extends BaseEntity>({
 
 	const queryEntities = useCallback(
 		async (args: QueryArgs): Promise<EntityRestResponse<T>> => {
-			const response: Response = await apiFetch({
-				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
-				parse: false,
-			});
+			let response: Response;
+			try {
+				response = await apiFetch({
+					path: addQueryArgs(`/kudos/v1/${entityType}`, args),
+					parse: false,
+				});
+			} catch (e: any) {
+				// apiFetch rejects with the raw Response on non-ok status
+				if (e instanceof Response) {
+					throw await e.json();
+				}
+				throw e;
+			}
 			const items: T[] = await response.json();
 			return {
 				items,
