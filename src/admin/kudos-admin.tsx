@@ -10,6 +10,11 @@ import {
 	useEntitiesContext,
 } from './contexts';
 import { AdminRouter, Panel } from './components';
+import {
+	SLOT_HEADER_ACTIONS,
+	SLOT_HEADER_ACTIONS_EXTRA,
+	SLOT_PAGE_TITLE,
+} from './slot-names';
 import * as Controls from './components/controls';
 import { useFormContext } from 'react-hook-form';
 
@@ -23,6 +28,11 @@ window.kudos.admin = {
 		useSettingsContext,
 		useEntitiesContext,
 		useFormContext,
+	},
+	SlotNames: {
+		SLOT_HEADER_ACTIONS,
+		SLOT_HEADER_ACTIONS_EXTRA,
+		SLOT_PAGE_TITLE,
 	},
 };
 

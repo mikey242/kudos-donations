@@ -6,7 +6,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { Fill } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
-import { SLOT_HEADER_ACTIONS_EXTRA } from './AdminHeader';
+import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
 import { ReactNode } from 'react';
 
 interface EntityPageProps {

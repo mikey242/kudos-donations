@@ -18,7 +18,7 @@ import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { Button, Fill } from '@wordpress/components';
-import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
+import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import GenerateShortcode from './GenerateShortcode';
 
 const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (

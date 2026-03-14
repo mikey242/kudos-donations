@@ -7,8 +7,7 @@ import {
 } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
-
-export const SLOT_PAGE_TITLE = 'KudosPageTitle';
+import { SLOT_PAGE_TITLE } from '../slot-names';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AdminContextValue {}

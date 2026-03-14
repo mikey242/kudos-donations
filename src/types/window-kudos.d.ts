@@ -20,6 +20,7 @@ export interface KudosGlobal {
 			useEntitiesContext: typeof import('../admin/contexts/entities-context').useEntitiesContext;
 			useFormContext: typeof import('react-hook-form').useFormContext;
 		};
+		SlotNames: typeof import('../admin/slot-names');
 	}
 	[key: string]: unknown;
 }

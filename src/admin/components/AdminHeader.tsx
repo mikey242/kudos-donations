@@ -11,9 +11,7 @@ import {
 } from '@wordpress/components';
 import { AdminMenu } from './AdminMenu';
 import { useAdminQueryParams } from '../hooks';
-
-export const SLOT_HEADER_ACTIONS = 'KudosHeaderActions';
-export const SLOT_HEADER_ACTIONS_EXTRA = 'KudosHeaderActionsExtra';
+import { SLOT_HEADER_ACTIONS, SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
 
 export const AdminHeader = (): React.ReactNode => {
 	const {
