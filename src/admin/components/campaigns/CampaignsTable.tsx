@@ -12,7 +12,7 @@ import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext } from '../../contexts';
-import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
+import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { confirmDelete } from '../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';

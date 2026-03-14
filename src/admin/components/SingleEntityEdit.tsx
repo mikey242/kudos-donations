@@ -13,7 +13,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
-import { SLOT_HEADER_ACTIONS_EXTRA } from './AdminHeader';
+import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
 
 interface PostEditProps<T extends BaseEntity = BaseEntity> {
 	data: T;

@@ -2,7 +2,7 @@ import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
-import { SLOT_HEADER_ACTIONS } from './AdminHeader';
+import { SLOT_HEADER_ACTIONS } from '../slot-names';
 import type { BaseEntity } from '../../types/entity';
 import {
 	Flex,

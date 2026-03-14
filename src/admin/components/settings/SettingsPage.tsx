@@ -14,7 +14,7 @@ import {
 	FlexItem,
 } from '@wordpress/components';
 import { useSettingsContext } from '../../contexts';
-import { SLOT_HEADER_ACTIONS } from '../AdminHeader';
+import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
 import { isLicenceActive } from '../../utils';
