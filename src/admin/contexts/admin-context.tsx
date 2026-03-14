@@ -1,23 +1,17 @@
-import React, {
-	createContext,
-	Dispatch,
-	ReactNode,
-	SetStateAction,
-	useContext,
-	useState,
-} from 'react';
+import React, { createContext, ReactNode, useContext } from 'react';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
+	Slot,
 	SlotFillProvider,
 } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 
-interface AdminContextValue {
-	setPageTitle: Dispatch<SetStateAction<string>>;
-	pageTitle: string;
-}
+export const SLOT_PAGE_TITLE = 'KudosPageTitle';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface AdminContextValue {}
 
 interface ProviderProps {
 	children: ReactNode;
@@ -40,23 +34,13 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 };
 
 export const InnerAdminProvider = ({ children }) => {
-	const [pageTitle, setPageTitle] = useState<string>('');
-
-	// Define export data.
-	const data: AdminContextValue = {
-		setPageTitle,
-		pageTitle,
-	};
-
 	return (
-		<AdminContext.Provider value={data}>
+		<AdminContext.Provider value={{}}>
 			<SlotFillProvider>
 				<AdminHeader />
 				<Notices />
 				<Spacer marginTop={'7'} />
-				{pageTitle && (
-					<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
-				)}
+				<Slot name={SLOT_PAGE_TITLE} />
 				<>{children}</>
 			</SlotFillProvider>
 		</AdminContext.Provider>
