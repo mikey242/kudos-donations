@@ -17,6 +17,9 @@ import {
 } from './slot-names';
 import * as Controls from './components/controls';
 import { useFormContext } from 'react-hook-form';
+import { getLicenceStatus } from '../licence-utils';
+
+window.kudos.getLicenceStatus = getLicenceStatus;
 
 window.kudos.admin = {
 	Controls,

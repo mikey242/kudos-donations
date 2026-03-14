@@ -17,7 +17,7 @@ import { useSettingsContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
-import { isLicenceActive } from '../../utils';
+import { isLicenceActive } from '../../../licence-utils';
 
 interface SaveButtonProps {
 	isSaving: boolean;

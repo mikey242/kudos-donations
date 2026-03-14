@@ -1,5 +1,8 @@
 import CodeMirror from 'codemirror';
+import type { LicenceStatusString } from './licence';
 export interface KudosGlobal {
+	isLicenceActive: boolean;
+	getLicenceStatus: () => Promise<LicenceStatusString>;
 	customStyles?: string;
 	stylesheets?: string[];
 	baseFontSize?: string;

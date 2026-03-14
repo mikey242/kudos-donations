@@ -20,6 +20,9 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 
 	public const SETTING_KUDOS_LICENCE_KEY = '_kudos_licence_key';
 	public const SETTING_LICENCE_STATUS    = '_kudos_licence_status';
+	public const STATUS_ACTIVE             = 'active';
+	public const STATUS_EXPIRED            = 'expired';
+	public const STATUS_NOT_SET            = 'not-set';
 	private const CACHE_KEY                = 'kudos_update_info';
 	private const CACHE_TTL                = 12 * HOUR_IN_SECONDS;
 	private string $base_domain;
@@ -43,10 +46,21 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		add_filter( 'kudos_global_localization', [ $this, 'add_licence_status' ] );
 		add_filter( 'plugins_api', [ $this, 'plugin_info' ], 20, 3 );
 		add_filter( 'site_transient_update_plugins', [ $this, 'update_check' ] );
 		add_action( 'upgrader_process_complete', [ $this, 'purge_cache' ], 10, 2 );
 		add_filter( 'pre_update_option_' . self::SETTING_KUDOS_LICENCE_KEY, [ $this, 'handle_key_update' ], 10, 2 );
+	}
+
+	/**
+	 * Returns true if licence active.
+	 *
+	 * @param array $localisation The localisation array.
+	 */
+	public function add_licence_status( array $localisation ): array {
+		$localisation['isLicenceActive'] = self::is_active();
+		return $localisation;
 	}
 
 	/**
@@ -303,17 +317,24 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	}
 
 	/**
-	 * Returns true if the licence is valid and not expired.
+	 * Returns the licence status: active, expired, or not-set.
 	 */
-	public static function is_active(): bool {
+	public static function get_status(): string {
 		$status = get_option( self::SETTING_LICENCE_STATUS, [] );
 		if ( empty( $status['valid'] ) ) {
-			return false;
+			return self::STATUS_NOT_SET;
 		}
-		if ( ! empty( $status['expires_at'] ) ) {
-			return strtotime( $status['expires_at'] ) > time();
+		if ( ! empty( $status['expires_at'] ) && strtotime( $status['expires_at'] ) <= time() ) {
+			return self::STATUS_EXPIRED;
 		}
-		return true;
+		return self::STATUS_ACTIVE;
+	}
+
+	/**
+	 * Returns true if the licence is active.
+	 */
+	public static function is_active(): bool {
+		return self::STATUS_ACTIVE === self::get_status();
 	}
 
 	/**
