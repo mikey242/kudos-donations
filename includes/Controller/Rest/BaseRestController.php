@@ -21,7 +21,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	/**
 	 * Returns the REST namespace.
 	 */
-	public function get_namespace(): string {
+	protected function get_namespace(): string {
 		return $this->namespace;
 	}
 
@@ -30,7 +30,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 *
 	 * @return string $rest_base
 	 */
-	public function get_base(): string {
+	protected function get_base(): string {
 		return $this->rest_base;
 	}
 
@@ -49,7 +49,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	/**
 	 * Registers the routes defined in get_routes.
 	 */
-	public function register_routes(): void {
+	protected function register_routes(): void {
 		foreach ( $this->get_routes() as $route => $args ) {
 			register_rest_route( $this->get_namespace(), $this->get_base() . $route, $args );
 		}
@@ -95,7 +95,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 *
 	 * @param array $values Array of form values.
 	 */
-	public function is_bot( array $values ): bool {
+	protected function is_bot( array $values ): bool {
 		// Check if timestamp is present and tabs completed too quickly.
 		if ( isset( $values['timestamp'] ) && abs( (int) $values['timestamp'] - time() ) < 4 ) {
 			return true;

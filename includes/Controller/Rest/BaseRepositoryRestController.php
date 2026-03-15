@@ -29,7 +29,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	/**
 	 * Specifies the standard CRUD routes for repository endpoints.
 	 */
-	public function get_crud_routes(): array {
+	protected function get_crud_routes(): array {
 		return [
 			'/'            => [
 				[
@@ -132,7 +132,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	/**
 	 * Generates rest route args based on schema.
 	 */
-	public function get_rest_args(): array {
+	protected function get_rest_args(): array {
 		$schema = $this->repository->get_schema()->get_column_schema();
 		$args   = [];
 
