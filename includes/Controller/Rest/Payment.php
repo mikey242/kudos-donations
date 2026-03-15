@@ -417,9 +417,13 @@ class Payment extends BaseRestController {
 	 *
 	 * @param WP_REST_Request $request The request.
 	 */
-	public function refund( WP_REST_Request $request ): bool {
+	public function refund( WP_REST_Request $request ): WP_REST_Response {
 		$entity_id = $request->get_param( 'id' );
 
-		return $this->vendor->refund( $entity_id );
+		if ( $this->vendor->refund( $entity_id ) ) {
+			return new WP_REST_Response( [ 'message' => __( 'Refund successful.', 'kudos-donations' ) ], 200 );
+		}
+
+		return new WP_REST_Response( [ 'message' => __( 'Refund failed.', 'kudos-donations' ) ], 500 );
 	}
 }
