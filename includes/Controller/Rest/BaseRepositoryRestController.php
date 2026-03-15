@@ -184,7 +184,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param array<string, mixed> $args Query args (limit, offset, orderby, order, where, columns).
 	 * @return array<array<string, mixed>>
 	 */
-	public function get_prepared_items( array $args = [] ): array {
+	protected function get_prepared_items( array $args = [] ): array {
 		$items = $this->repository->query( $args );
 		return array_map( fn( $item ) => $this->add_rest_fields( $item ), $items );
 	}
