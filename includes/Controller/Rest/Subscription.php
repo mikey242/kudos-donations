@@ -52,7 +52,7 @@ class Subscription extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_additional_routes(): array {
+	public function get_extra_routes(): array {
 		return [
 			self::ROUTE_CANCEL => [
 				'methods'             => WP_REST_Server::CREATABLE,

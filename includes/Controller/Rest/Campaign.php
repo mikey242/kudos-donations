@@ -43,7 +43,7 @@ class Campaign extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_additional_routes(): array {
+	protected function get_extra_routes(): array {
 		return [
 			'/by-slug/(?P<slug>[a-z0-9-]+)' => [
 				[
