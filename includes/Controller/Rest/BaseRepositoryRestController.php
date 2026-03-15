@@ -27,9 +27,9 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	protected BaseRepository $repository;
 
 	/**
-	 * Specifies the base routes for repository endpoints.
+	 * Specifies the standard CRUD routes for repository endpoints.
 	 */
-	public function get_base_routes(): array {
+	public function get_crud_routes(): array {
 		return [
 			'/'            => [
 				[
@@ -117,15 +117,15 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 */
 	public function get_routes(): array {
 		return array_merge(
-			$this->get_base_routes(),
-			$this->get_additional_routes()
+			$this->get_crud_routes(),
+			$this->get_extra_routes()
 		);
 	}
 
 	/**
-	 * Supply additional routes.
+	 * Override to supply extra routes beyond the standard CRUD set.
 	 */
-	protected function get_additional_routes(): array {
+	protected function get_extra_routes(): array {
 		return [];
 	}
 
