@@ -179,6 +179,17 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	}
 
 	/**
+	 * Query and prepare items directly without a REST request/response wrapper.
+	 *
+	 * @param array<string, mixed> $args Query args (limit, offset, orderby, order, where, columns).
+	 * @return array<array<string, mixed>>
+	 */
+	public function get_prepared_items( array $args = [] ): array {
+		$items = $this->repository->query( $args );
+		return array_map( fn( $item ) => $this->add_rest_fields( $item ), $items );
+	}
+
+	/**
 	 * Get the repository items.
 	 *
 	 * @param WP_REST_Request $request The request object.
@@ -205,8 +216,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 			'where'   => $where,
 		];
 
-		$items       = $this->repository->query( $args );
-		$items       = array_map( fn( $item ) => $this->add_rest_fields( $item ), $items );
+		$items       = $this->get_prepared_items( $args );
 		$total       = $this->repository->count_query( $where );
 		$total_pages = -1 === $per_page ? 1 : (int) max( ceil( $total / $per_page ), 1 );
 
