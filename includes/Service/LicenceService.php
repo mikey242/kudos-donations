@@ -23,23 +23,17 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	public const STATUS_ACTIVE             = 'active';
 	public const STATUS_EXPIRED            = 'expired';
 	public const STATUS_NOT_SET            = 'not-set';
-	private const CACHE_KEY                = 'kudos_update_info';
-	private const CACHE_TTL                = 12 * HOUR_IN_SECONDS;
 	private string $base_domain;
 	private string $base_path;
 	private string $base_url;
-	private string $plugin_slug;
-	private string $plugin_basename;
 
 	/**
 	 * Plugin licence constructor. Sets licence server URL based on presence of ENV_VAR.
 	 */
 	public function __construct() {
-		$this->base_domain     = $_ENV['API_SERVER_URL'] ?? 'https://kudosdonations.com';
-		$this->base_path       = '/wp-json/kudos-licence/v1';
-		$this->base_url        = $this->base_domain . $this->base_path;
-		$this->plugin_basename = plugin_basename( KUDOS_PLUGIN_FILE );
-		$this->plugin_slug     = \dirname( $this->plugin_basename );
+		$this->base_domain = $_ENV['API_SERVER_URL'] ?? 'https://kudosdonations.com';
+		$this->base_path   = '/wp-json/kudos-licence/v1';
+		$this->base_url    = $this->base_domain . $this->base_path;
 	}
 
 	/**
@@ -47,9 +41,6 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 */
 	public function register(): void {
 		add_filter( 'kudos_global_localization', [ $this, 'add_licence_status' ] );
-		add_filter( 'plugins_api', [ $this, 'plugin_info' ], 20, 3 );
-		add_filter( 'site_transient_update_plugins', [ $this, 'update_check' ] );
-		add_action( 'upgrader_process_complete', [ $this, 'purge_cache' ], 10, 2 );
 		add_filter( 'pre_update_option_' . self::SETTING_KUDOS_LICENCE_KEY, [ $this, 'handle_key_update' ], 10, 2 );
 	}
 
@@ -96,7 +87,74 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			]
 		);
 
+		/**
+		 * Fires after a licence key has been successfully activated.
+		 *
+		 * @param string $licence_key The activated licence key.
+		 */
+		do_action( 'kudos_licence_activated', $new_value );
+
+		$this->maybe_install_addon( $new_value );
+
 		return $new_value;
+	}
+
+	/**
+	 * Attempts to install the premium add-on if it is not already present.
+	 *
+	 * Fetches plugin info from the licence server and, if a download URL is
+	 * returned and the add-on is not yet installed, uses WP_Upgrader to install
+	 * and activate it.
+	 *
+	 * @param string $licence_key The active licence key.
+	 */
+	private function maybe_install_addon( string $licence_key ): void {
+		$url = add_query_arg(
+			[
+				'licence_key' => $licence_key,
+				'domain'      => $_SERVER['SERVER_NAME'] ?? '',
+			],
+			rtrim( $this->base_url, '/' ) . '/info'
+		);
+
+		$response = wp_remote_get(
+			$url,
+			[
+				'timeout' => 10,
+				'headers' => [ 'Accept' => 'application/json' ],
+			]
+		);
+
+		if (
+			is_wp_error( $response )
+			|| 200 !== wp_remote_retrieve_response_code( $response )
+			|| empty( wp_remote_retrieve_body( $response ) )
+		) {
+			return;
+		}
+
+		$remote = json_decode( wp_remote_retrieve_body( $response ) );
+
+		if ( empty( $remote->download_url ) || empty( $remote->slug ) ) {
+			return;
+		}
+
+		$plugin_file = $remote->slug . '/' . $remote->slug . '.php';
+
+		if ( is_plugin_active( $plugin_file ) ) {
+			return;
+		}
+
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		$upgrader = new \Plugin_Upgrader( new \WP_Ajax_Upgrader_Skin() );
+		$result   = $upgrader->install( $remote->download_url );
+
+		if ( true === $result ) {
+			activate_plugin( $plugin_file );
+		}
 	}
 
 	/**
@@ -159,161 +217,6 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		);
 
 		! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
-	}
-
-	/**
-	 * Fetch remote plugin data, using a transient as a cache.
-	 *
-	 * @return stdClass|false Remote data object on success, false on failure.
-	 */
-	private function fetch_remote() {
-		$remote = get_transient( self::CACHE_KEY );
-
-		if ( false !== $remote ) {
-			return $remote;
-		}
-
-		$this->logger->debug( 'Checking for addon plugin updates' );
-
-		$url = add_query_arg(
-			[
-				'licence_key' => get_option( self::SETTING_KUDOS_LICENCE_KEY, '' ),
-				'domain'      => $_SERVER['SERVER_NAME'] ?? '',
-			],
-			rtrim( $this->base_url, '/' ) . '/info'
-		);
-
-		$response = wp_remote_get(
-			$url,
-			[
-				'timeout' => 5,
-				'headers' => [
-					'Accept' => 'application/json',
-				],
-			]
-		);
-
-		if (
-			is_wp_error( $response )
-			|| 200 !== wp_remote_retrieve_response_code( $response )
-			|| empty( wp_remote_retrieve_body( $response ) )
-		) {
-			return false;
-		}
-
-		$remote = json_decode( wp_remote_retrieve_body( $response ) );
-		set_transient( self::CACHE_KEY, $remote, self::CACHE_TTL );
-
-		$this->logger->debug( 'Check complete.', [ $remote ] );
-
-		return $remote;
-	}
-
-	/**
-	 * Supply plugin information for the "View details" modal.
-	 *
-	 * @param mixed  $result The result object or array. Default false.
-	 * @param string $action The type of information being requested.
-	 * @param object $args   Plugin API arguments.
-	 * @return mixed
-	 */
-	public function plugin_info( $result, string $action, object $args ) {
-		if ( 'plugin_information' !== $action ) {
-			return $result;
-		}
-
-		if ( $this->plugin_slug !== $args->slug ) {
-			return $result;
-		}
-
-		$remote = $this->fetch_remote();
-
-		if ( false === $remote ) {
-			return $result;
-		}
-
-		$result                 = new stdClass();
-		$result->name           = $remote->name;
-		$result->slug           = $remote->slug;
-		$result->author         = $remote->author;
-		$result->author_profile = $remote->author_profile;
-		$result->version        = $remote->version;
-		$result->tested         = $remote->tested;
-		$result->requires       = $remote->requires;
-		$result->requires_php   = $remote->requires_php;
-		$result->download_link  = $remote->download_url;
-		$result->trunk          = $remote->download_url;
-		$result->last_updated   = $remote->last_updated;
-		$result->sections       = [
-			'description'  => $remote->sections->description,
-			'installation' => $remote->sections->installation,
-			'changelog'    => $remote->sections->changelog,
-		];
-		if ( ! empty( $remote->sections->screenshots ) ) {
-			$result->sections['screenshots'] = $remote->sections->screenshots;
-		}
-		$result->banners = [
-			'low'  => $remote->banners->low,
-			'high' => $remote->banners->high,
-		];
-
-		return $result;
-	}
-
-	/**
-	 * Inject an update into the update transient when a newer version is available.
-	 *
-	 * @param mixed $transient The update_plugins transient value.
-	 * @return mixed
-	 */
-	public function update_check( $transient ) {
-		if ( empty( $transient->checked ) ) {
-			return $transient;
-		}
-
-		$remote = $this->fetch_remote();
-
-		if ( false === $remote ) {
-			return $transient;
-		}
-
-		if (
-			version_compare( KUDOS_VERSION, $remote->version, '<' )
-			&& version_compare( $remote->requires, get_bloginfo( 'version' ), '<=' )
-			&& version_compare( $remote->requires_php, PHP_VERSION, '<' )
-		) {
-			$update               = new stdClass();
-			$update->id           = $this->plugin_slug;
-			$update->slug         = $this->plugin_slug;
-			$update->plugin       = $this->plugin_basename;
-			$update->new_version  = $remote->version;
-			$update->tested       = $remote->tested;
-			$update->package      = $remote->download_url;
-			$update->requires_php = $remote->requires_php;
-			$update->url          = '';
-
-			$transient->response[ $this->plugin_basename ] = $update;
-		}
-
-		return $transient;
-	}
-
-	/**
-	 * Clear the cached remote data after a successful plugin update.
-	 *
-	 * @param mixed $upgrader   WP_Upgrader instance.
-	 * @param array $hook_extra Extra data about the upgrade.
-	 */
-	public function purge_cache( $upgrader, array $hook_extra ): void {
-		if ( 'plugin' !== ( $hook_extra['type'] ?? '' ) ) {
-			return;
-		}
-
-		$plugins = (array) ( $hook_extra['plugins'] ?? [] );
-
-		if ( \in_array( $this->plugin_basename, $plugins, true ) ) {
-			delete_transient( self::CACHE_KEY );
-		}
 	}
 
 	/**
