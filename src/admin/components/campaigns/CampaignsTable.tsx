@@ -9,14 +9,14 @@ import {
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { HeaderItem, Table } from '../table';
-import React from 'react';
+import type { ReactNode } from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { confirmDelete } from '../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
+export const CampaignsTable = ({ handleEdit, handleNew }): ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
@@ -33,7 +33,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
-			valueCallback: (post: Campaign): React.ReactNode => (
+			valueCallback: (post: Campaign): ReactNode => (
 				<Button
 					showTooltip={true}
 					style={{
@@ -55,14 +55,14 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		{
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
-			valueCallback: (post: Campaign): React.ReactNode => (
+			valueCallback: (post: Campaign): ReactNode => (
 				<ColorIndicator colorValue={post.theme_color} />
 			),
 		},
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
-			valueCallback: (post: Campaign): React.ReactNode => {
+			valueCallback: (post: Campaign): ReactNode => {
 				const total = Number(post.total);
 				const goal = Number(post.goal);
 				const progress =
@@ -88,7 +88,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
-			valueCallback: (post: Campaign): React.ReactNode => (
+			valueCallback: (post: Campaign): ReactNode => (
 				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
 					<i>{dateI18n('d-m-Y', post.created_at)}</i>
 				</Tooltip>
@@ -99,7 +99,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			title: (
 				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
 			),
-			valueCallback: (post: Campaign): React.ReactNode => (
+			valueCallback: (post: Campaign): ReactNode => (
 				<Flex justify="flex-end">
 					<Button
 						size="compact"

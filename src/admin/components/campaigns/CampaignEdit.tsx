@@ -1,5 +1,5 @@
-import React from 'react';
 import { useEffect, useMemo } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
@@ -21,7 +21,7 @@ import { Button, Fill } from '@wordpress/components';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import GenerateShortcode from './GenerateShortcode';
 
-const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
+const NavigationButtons = ({ campaign, onBack }): ReactNode => (
 	<>
 		<Button
 			variant="secondary"
@@ -42,7 +42,7 @@ interface CampaignEditProps {
 	campaign: Campaign;
 }
 
-const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
+const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 	const { updateParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
 	const methods = useForm({

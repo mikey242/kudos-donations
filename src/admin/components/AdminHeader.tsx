@@ -1,4 +1,3 @@
-import React from 'react';
 import { KudosLogo } from '../../block/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -12,8 +11,9 @@ import {
 import { AdminMenu } from './AdminMenu';
 import { useAdminQueryParams } from '../hooks';
 import { SLOT_HEADER_ACTIONS, SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
+import type { ReactNode } from 'react';
 
-export const AdminHeader = (): React.ReactNode => {
+export const AdminHeader = (): ReactNode => {
 	const {
 		params: { page, tab, entity },
 	} = useAdminQueryParams();

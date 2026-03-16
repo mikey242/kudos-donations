@@ -1,13 +1,13 @@
-import React from 'react';
 import { Button, Flex } from '@wordpress/components';
 import { useAdminQueryParams } from '../hooks';
 import { AdminPages } from './AdminRouter';
+import type { ReactNode, MouseEvent } from 'react';
 
-export const AdminMenu = (): React.ReactNode => {
+export const AdminMenu = (): ReactNode => {
 	const { params, setParams } = useAdminQueryParams();
 	const { page: currentView } = params;
 
-	const changePage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const changePage = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		void setParams({ page: e.currentTarget?.value });
 	};
 

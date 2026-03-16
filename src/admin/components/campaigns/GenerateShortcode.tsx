@@ -1,5 +1,5 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
@@ -25,7 +25,7 @@ interface GenerateShortcodeProps {
 export default function GenerateShortcode({
 	campaign,
 	iconOnly = false,
-}: GenerateShortcodeProps): React.ReactNode {
+}: GenerateShortcodeProps): ReactNode {
 	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const [type, setType] = useState<string>('button');

@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl } from '../../controls';
-import React from 'react';
 import { useEffect, useRef } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Panel } from '../../Panel';
 
-export const CustomCSSTab = (): React.ReactNode => {
+export const CustomCSSTab = (): ReactNode => {
 	const { setValue } = useFormContext(); // Get methods from React Hook Form
 	const editorRef = useRef<HTMLTextAreaElement | null>(null); // Ref for the textarea
 	const editorId: string = 'css-editor'; // Unique ID for the textarea
