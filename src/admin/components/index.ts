@@ -14,4 +14,5 @@ export * from './IntroGuide';
 export * from './MigrationModal';
 export * from './Notices';
 export * from './Panel';
+export * from './Spacer';
 export * from './SingleEntityView';

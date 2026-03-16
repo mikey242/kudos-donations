@@ -8,6 +8,7 @@ import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { useEntitiesContext } from '../../contexts';
 import { Filter } from './Filters';
+import { Spacer } from '../Spacer';
 
 export interface HeaderItem<T extends BaseEntity = BaseEntity> {
 	title: string | React.ReactNode;
@@ -120,6 +121,7 @@ export const Table = <T extends BaseEntity>({
 				totalPages={totalPages}
 				totalItems={totalItems}
 			/>
+			<Spacer size={3} />
 			<table
 				className="widefat striped rounded"
 				style={{
@@ -184,6 +186,7 @@ export const Table = <T extends BaseEntity>({
 					)}
 				</tbody>
 			</table>
+			<Spacer size={3} />
 			<TableControls totalPages={totalPages} totalItems={totalItems} />
 		</>
 	);
