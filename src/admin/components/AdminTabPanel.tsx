@@ -1,24 +1,22 @@
-import React from 'react';
 import {
 	TabPanel,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 import { useAdminQueryParams } from '../hooks';
+import type { ReactNode } from 'react';
 
 export interface AdminTab {
 	name: string;
 	title: string;
-	content: React.ReactNode;
+	content: ReactNode;
 }
 
 interface AdminTabPanelProps {
 	tabs: AdminTab[];
 }
 
-export const AdminTabPanel = ({
-	tabs,
-}: AdminTabPanelProps): React.ReactNode => {
+export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
 
 	return (

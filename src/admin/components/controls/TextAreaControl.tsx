@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from '@wordpress/element';
 import { TextareaControl as WPTextAreaControl } from '@wordpress/components';
 import { BaseControl, ControlProps } from './BaseControl';
 

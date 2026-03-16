@@ -1,8 +1,14 @@
 /* eslint-disable camelcase */
 
-import React, { createContext, ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Flex, Spinner } from '@wordpress/components';
 import type { Campaign } from '../../types/entity';

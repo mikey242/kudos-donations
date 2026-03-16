@@ -1,5 +1,5 @@
-import React from 'react';
 import { Flex, IconType } from '@wordpress/components';
+import type { ReactNode } from 'react';
 import { useAdminQueryParams } from '../hooks';
 import { EntitiesProvider } from '../contexts';
 import { CampaignsTable } from './campaigns';
@@ -19,7 +19,7 @@ export interface PageConfig {
 	label: string;
 	view: string;
 	icon?: IconType;
-	component: () => React.ReactNode;
+	component: () => ReactNode;
 }
 
 export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
@@ -230,7 +230,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 	},
 ]) as PageConfig[];
 
-export const AdminRouter = (): React.ReactNode => {
+export const AdminRouter = (): ReactNode => {
 	const { params } = useAdminQueryParams();
 	const page = params.page || AdminPages[0].view;
 

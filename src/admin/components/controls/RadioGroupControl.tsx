@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import { useId } from '@wordpress/element';
 import { Controller } from 'react-hook-form';
 import {
 	BaseControl,

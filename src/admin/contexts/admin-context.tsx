@@ -1,8 +1,9 @@
-import React, { createContext, ReactNode, useContext } from 'react';
+import React, { ReactNode } from 'react';
 import { Slot, SlotFillProvider } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices, Spacer } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { SLOT_PAGE_TITLE } from '../slot-names';
+import { createContext, useContext } from '@wordpress/element';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AdminContextValue {}
