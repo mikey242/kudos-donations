@@ -5,14 +5,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { EmailTab, HelpTab, ReceiptTab, MollieTab, LicenceTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
-import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
-	Button,
-	Fill,
-	Flex,
-	FlexItem,
-} from '@wordpress/components';
+import { Button, Fill, Flex, FlexItem } from '@wordpress/components';
+import { Spacer } from '../';
 import { useSettingsContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
@@ -133,7 +127,7 @@ export const SettingsPage = (): React.ReactNode => {
 						onSubmit={formMethods.handleSubmit(save)}
 					>
 						<AdminTabPanel tabs={tabs} />
-						<Spacer marginTop={'5'} />
+						<Spacer size={5} />
 						<Flex justify="flex-start">
 							<SaveButton
 								isSaving={settingsSaving}

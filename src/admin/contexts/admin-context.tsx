@@ -1,11 +1,6 @@
 import React, { createContext, ReactNode, useContext } from 'react';
-import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
-	Slot,
-	SlotFillProvider,
-} from '@wordpress/components';
-import { AdminHeader, MigrationModal, Notices } from '../components';
+import { Slot, SlotFillProvider } from '@wordpress/components';
+import { AdminHeader, MigrationModal, Notices, Spacer } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { SLOT_PAGE_TITLE } from '../slot-names';
 
@@ -38,7 +33,7 @@ export const InnerAdminProvider = ({ children }) => {
 			<SlotFillProvider>
 				<AdminHeader />
 				<Notices />
-				<Spacer marginTop={'7'} />
+				<Spacer size={7} />
 				<Slot name={SLOT_PAGE_TITLE} />
 				<>{children}</>
 			</SlotFillProvider>

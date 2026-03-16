@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
-	Flex,
-	FlexItem,
-} from '@wordpress/components';
+import { Flex, FlexItem } from '@wordpress/components';
 import { Pagination } from './Pagination';
 import { Filter, Filters } from './Filters';
 
@@ -32,7 +27,6 @@ export const TableControls = ({
 					/>
 				</FlexItem>
 			</Flex>
-			<Spacer marginTop={'3'} />
 		</>
 	);
 };
