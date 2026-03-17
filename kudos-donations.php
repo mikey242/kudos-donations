@@ -140,7 +140,7 @@ function bootstrap_plugin(): void {
 	try {
 		ContainerFactory::create()->get( Plugin::class )->register();
 	} catch ( \Throwable $e ) {
-		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+		NoticeService::notice( $e->getMessage() . '. ' . $e->getFile() . ':' . $e->getLine(), NoticeService::ERROR );
 		CacheService::recursively_clear_cache();
 	}
 }
