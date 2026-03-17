@@ -109,6 +109,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param string $licence_key The active licence key.
 	 */
 	private function maybe_install_addon( string $licence_key ): void {
+		$this->logger->debug( 'Licence valid, attempting to install add-on' );
 		$url = add_query_arg(
 			[
 				'licence_key' => $licence_key,
@@ -125,23 +126,28 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			]
 		);
 
+		$this->logger->debug( 'Response from add-on server info route', [ 'response' => json_encode( $response ) ] );
+
 		if (
 			is_wp_error( $response )
 			|| 200 !== wp_remote_retrieve_response_code( $response )
 			|| empty( wp_remote_retrieve_body( $response ) )
 		) {
+			$this->logger->error( 'Error fetching add-on info.', [ 'response' => $response ] );
 			return;
 		}
 
 		$remote = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( empty( $remote->download_url ) || empty( $remote->slug ) ) {
+			$this->logger->error( 'Plugin slug or download_url missing.', [ 'remote' => $remote ] );
 			return;
 		}
 
 		$plugin_file = $remote->slug . '/' . $remote->slug . '.php';
 
 		if ( is_plugin_active( $plugin_file ) ) {
+			$this->logger->info( 'Add-on already active.', [ 'plugin_file' => $plugin_file ] );
 			return;
 		}
 
@@ -153,7 +159,16 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		$result   = $upgrader->install( $remote->download_url );
 
 		if ( true === $result ) {
+			$this->logger->info( 'Add-on successfully downloaded', [ 'plugin_file' => $plugin_file ] );
 			activate_plugin( $plugin_file );
+		} else {
+			$this->logger->error(
+				'Something went wrong downloading the add-on',
+				[
+					'result'      => $result,
+					'plugin_file' => $plugin_file,
+				]
+			);
 		}
 	}
 
