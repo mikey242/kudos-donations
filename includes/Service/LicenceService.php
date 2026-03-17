@@ -126,7 +126,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			]
 		);
 
-		$this->logger->debug( 'Response from add-on server info route', [ 'response' => json_encode( $response ) ] );
+		$this->logger->debug( 'Response from add-on server info route', [ 'response' => $response ] );
 
 		if (
 			is_wp_error( $response )
