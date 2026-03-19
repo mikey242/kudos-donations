@@ -50,7 +50,8 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param array $localisation The localisation array.
 	 */
 	public function add_licence_status( array $localisation ): array {
-		$localisation['isLicenceActive'] = self::is_active();
+		$localisation['isLicenceActive']  = self::is_active();
+		$localisation['isAddonInstalled'] = apply_filters( 'kudos_is_addon_installed', false );
 		return $localisation;
 	}
 
@@ -94,8 +95,6 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		 */
 		do_action( 'kudos_licence_activated', $new_value );
 
-		$this->maybe_install_addon( $new_value );
-
 		return $new_value;
 	}
 
@@ -108,7 +107,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 *
 	 * @param string $licence_key The active licence key.
 	 */
-	private function maybe_install_addon( string $licence_key ): void {
+	public function maybe_install_addon( string $licence_key ): bool {
 		$this->logger->debug( 'Licence valid, attempting to install add-on' );
 		$url = add_query_arg(
 			[
@@ -134,42 +133,52 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			|| empty( wp_remote_retrieve_body( $response ) )
 		) {
 			$this->logger->error( 'Error fetching add-on info.', [ 'response' => $response ] );
-			return;
+			return false;
 		}
 
 		$remote = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( empty( $remote->download_url ) || empty( $remote->slug ) ) {
 			$this->logger->error( 'Plugin slug or download_url missing.', [ 'remote' => $remote ] );
-			return;
+			return false;
 		}
 
 		$plugin_file = $remote->slug . '/' . $remote->slug . '.php';
 
 		if ( is_plugin_active( $plugin_file ) ) {
 			$this->logger->info( 'Add-on already active.', [ 'plugin_file' => $plugin_file ] );
-			return;
+			return true;
+		}
+
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
+			activate_plugin( $plugin_file );
+			$this->logger->info( 'Add-on installed but inactive, activating.', [ 'plugin_file' => $plugin_file ] );
+			return true;
 		}
 
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-		$upgrader = new \Plugin_Upgrader( new \WP_Ajax_Upgrader_Skin() );
+		$skin     = new \WP_Ajax_Upgrader_Skin();
+		$upgrader = new \Plugin_Upgrader( $skin );
 		$result   = $upgrader->install( $remote->download_url );
 
 		if ( true === $result ) {
 			$this->logger->info( 'Add-on successfully downloaded', [ 'plugin_file' => $plugin_file ] );
 			activate_plugin( $plugin_file );
-		} else {
-			$this->logger->error(
-				'Something went wrong downloading the add-on',
-				[
-					'result'      => $result,
-					'plugin_file' => $plugin_file,
-				]
-			);
+			return true;
 		}
+
+		$this->logger->error(
+			'Something went wrong downloading the add-on',
+			[
+				'result'       => $result,
+				'skin_errors'  => $skin->get_errors()->get_error_messages(),
+				'plugin_file'  => $plugin_file,
+			]
+		);
+		return false;
 	}
 
 	/**

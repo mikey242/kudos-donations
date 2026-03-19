@@ -2,6 +2,7 @@ import CodeMirror from 'codemirror';
 import type { LicenceStatusString } from './licence';
 export interface KudosGlobal {
 	isLicenceActive: boolean;
+	isAddonInstalled: boolean;
 	getLicenceStatus: () => Promise<LicenceStatusString>;
 	customStyles?: string;
 	stylesheets?: string[];
