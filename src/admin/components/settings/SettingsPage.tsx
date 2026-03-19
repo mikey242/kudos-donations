@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { EmailTab, HelpTab, ReceiptTab, MollieTab, LicenceTab } from './tabs';
+import { EmailTab, HelpTab, ReceiptTab, MollieTab, PlusTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import { Button, Fill, Flex, FlexItem } from '@wordpress/components';
@@ -70,9 +70,9 @@ export const SettingsPage = (): React.ReactNode => {
 			content: <ReceiptTab />,
 		},
 		{
-			name: 'licence',
-			title: 'Licence',
-			content: <LicenceTab />,
+			name: 'plus',
+			title: 'Plus',
+			content: <PlusTab />,
 		},
 		{
 			name: 'help',

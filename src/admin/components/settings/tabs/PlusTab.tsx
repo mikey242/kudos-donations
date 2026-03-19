@@ -4,6 +4,7 @@ import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import apiFetch from '@wordpress/api-fetch';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
@@ -15,12 +16,17 @@ import {
 import { Panel } from '../../Panel';
 import type { AllSettings } from '../../../../types/all-settings';
 
-const LicenceTab = (): React.ReactNode => {
+type InstallState = 'idle' | 'installing' | 'installed' | 'failed';
+
+const PlusTab = (): React.ReactNode => {
 	const { updateSetting, settings } = useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 	const [pendingKey, setPendingKey] = useState('');
 	const [activating, setActivating] = useState(false);
+	const [installState, setInstallState] = useState<InstallState>(
+		window.kudos?.isAddonInstalled ? 'installed' : 'idle'
+	);
 
 	const {
 		_kudos_licence_key: licenceKey,
@@ -56,6 +62,29 @@ const LicenceTab = (): React.ReactNode => {
 		}
 	};
 
+	const handleInstall = async () => {
+		setInstallState('installing');
+		try {
+			await apiFetch({
+				path: '/kudos/v1/licence/install-addon',
+				method: 'POST',
+			});
+			setInstallState('installed');
+			void createSuccessNotice(
+				__('Add-on installed and activated.', 'kudos-donations'),
+				{ type: 'snackbar' }
+			);
+		} catch {
+			setInstallState('failed');
+			void createErrorNotice(
+				__(
+					'Failed to install add-on. Please check the logs and try again.',
+					'kudos-donations'
+				)
+			);
+		}
+	};
+
 	const handleReset = async () => {
 		await updateSetting(
 			'_kudos_licence_key',
@@ -68,6 +97,36 @@ const LicenceTab = (): React.ReactNode => {
 
 	return (
 		<>
+			{licenceStatus?.valid && (
+				<Panel header={__('Add-on', 'kudos-donations')}>
+					<Flex justify="space-between" align="center">
+						<span>
+							{__('Kudos Donations Plus', 'kudos-donations')}
+						</span>
+						{installState === 'installed' ? (
+							<Button
+								type="button"
+								disabled={true}
+								icon={<Icon icon="yes-alt" />}
+							>
+								{__('Add-on installed', 'kudos-donations')}
+							</Button>
+						) : (
+							<Button
+								type="button"
+								variant="primary"
+								isBusy={installState === 'installing'}
+								disabled={installState === 'installing'}
+								onClick={() => void handleInstall()}
+							>
+								{installState === 'failed'
+									? __('Retry install', 'kudos-donations')
+									: __('Install add-on', 'kudos-donations')}
+							</Button>
+						)}
+					</Flex>
+				</Panel>
+			)}
 			<Panel header={__('Licence key', 'kudos-donations')}>
 				<InputControl
 					__next40pxDefaultSize
@@ -122,4 +181,4 @@ const LicenceTab = (): React.ReactNode => {
 	);
 };
 
-export { LicenceTab };
+export { PlusTab };
