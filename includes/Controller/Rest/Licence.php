@@ -12,21 +12,20 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Service\LicenceService;
-use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
 class Licence extends BaseRestController {
-    private LicenceService $licence_service;
+	private LicenceService $licence_service;
 
-    /**
+	/**
 	 * Licence constructor.
 	 *
 	 * @param LicenceService $licence_service The licence service.
 	 */
 	public function __construct( LicenceService $licence_service ) {
-        $this->licence_service = $licence_service;
-        $this->rest_base = 'licence';
+		$this->licence_service = $licence_service;
+		$this->rest_base       = 'licence';
 	}
 
 	/**

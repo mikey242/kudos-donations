@@ -173,9 +173,9 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		$this->logger->error(
 			'Something went wrong downloading the add-on',
 			[
-				'result'       => $result,
-				'skin_errors'  => $skin->get_errors()->get_error_messages(),
-				'plugin_file'  => $plugin_file,
+				'result'      => $result,
+				'skin_errors' => $skin->get_errors()->get_error_messages(),
+				'plugin_file' => $plugin_file,
 			]
 		);
 		return false;
