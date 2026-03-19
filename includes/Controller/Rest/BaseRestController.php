@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Service\LicenceService;
+use WP_Error;
 
 abstract class BaseRestController extends AbstractRegistrable {
 
@@ -88,6 +90,31 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 */
 	public function can_edit_posts(): bool {
 		return current_user_can( 'edit_posts' );
+	}
+
+	/**
+	 * Returns true if licence is active and user has admin access, or a WP_Error describing why not.
+	 *
+	 * @return true|WP_Error
+	 */
+	public function is_licence_active_and_admin(): true|WP_Error {
+		if ( ! $this->can_manage_options() ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'You do not have permission to perform this action.', 'kudos-donations' ),
+				[ 'status' => 403 ]
+			);
+		}
+
+		if ( ! LicenceService::is_active() ) {
+			return new WP_Error(
+				'rest_licence_inactive',
+				__( 'An active licence is required to perform this action.', 'kudos-donations' ),
+				[ 'status' => 403 ]
+			);
+		}
+
+		return true;
 	}
 
 	/**
