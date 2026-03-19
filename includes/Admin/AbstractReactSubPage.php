@@ -54,21 +54,21 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 
 			wp_set_script_translations( self::SCRIPT_HANDLE, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
 
-			$localized_data = apply_filters(
+			$admin_data = apply_filters(
 				'kudos_admin_localization',
 				[
 					'currencies' => Utils::get_currencies(),
 					'codeEditor' => $settings,
-					'version'    => KUDOS_VERSION,
+					'version'    => [ KUDOS_VERSION ],
 				]
 			);
 
 			wp_localize_script(
 				self::SCRIPT_HANDLE,
 				'kudos',
-				apply_filters(
-					'kudos_global_localization',
-					$localized_data
+				(array) array_merge(
+					apply_filters( 'kudos_global_localization', [] ),
+					$admin_data
 				)
 			);
 		}
