@@ -97,7 +97,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 *
 	 * @return true|WP_Error
 	 */
-	public function is_licence_active_and_admin(): true|WP_Error {
+	public function is_licence_active_and_admin() {
 		if ( ! $this->can_manage_options() ) {
 			return new WP_Error(
 				'rest_forbidden',
