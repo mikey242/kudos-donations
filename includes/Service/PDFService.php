@@ -130,7 +130,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		}
 
 		// Add logos to $data.
-		$data = array_merge( $data, [ 'logos' => [ 'logo' => Utils::get_company_logo( 'url', 'medium' ) ] ] );
+		$data = array_merge( $data, [ 'logos' => [ 'logo' => Utils::get_company_logo() ] ] );
 
 		try {
 			$dompdf = $this->pdf;
