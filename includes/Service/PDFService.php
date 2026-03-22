@@ -27,7 +27,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	private const FONTS_DIR  = KUDOS_CACHE_DIR . 'fonts/';
 	private Dompdf $pdf;
 	private TwigService $twig;
-	private array $logos;
 
 	/**
 	 * Pdf constructor.
@@ -50,10 +49,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		$options->setDefaultPaperSize( 'A4' );
 		$pdf->setOptions( $options );
 		$this->pdf = $pdf;
-
-		$this->logos = [
-			'logo' => 'data:image/svg+xml,' . Utils::get_company_logo_svg(),
-		];
 	}
 
 	/**
@@ -135,7 +130,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		}
 
 		// Add logos to $data.
-		$data = array_merge( $data, [ 'logos' => $this->logos ] );
+		$data = array_merge( $data, [ 'logos' => [ 'logo' => Utils::get_company_logo( 'url', 'medium' ) ] ] );
 
 		try {
 			$dompdf = $this->pdf;

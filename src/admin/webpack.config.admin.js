@@ -1,11 +1,22 @@
 const { merge } = require('webpack-merge');
 const commonConfig = require('../webpack.config.base');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { resolve } = require('node:path');
 
 module.exports = merge(commonConfig, {
 	entry: {
 		'kudos-admin': resolve(__dirname, 'kudos-admin.tsx'),
 	},
+	plugins: [
+		new CopyWebpackPlugin({
+			patterns: [
+				{
+					from: resolve(__dirname, '../images'),
+					to: 'images',
+				},
+			],
+		}),
+	],
 	module: {
 		rules: [
 			{

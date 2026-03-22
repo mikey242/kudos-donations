@@ -30,6 +30,26 @@ class Assets {
 	}
 
 	/**
+	 * Returns the URL and local path for an image in the build directory.
+	 *
+	 * @param string $asset Image filename (e.g. 'logo-colour.png').
+	 * @return array{url: string, path: string}|null
+	 */
+	public static function get_image( string $asset ): ?array {
+		$suffix = 'build/admin/images/' . ltrim( $asset, '/' );
+		$path   = KUDOS_PLUGIN_DIR . $suffix;
+
+		if ( ! file_exists( $path ) ) {
+			return null;
+		}
+
+		return [
+			'url'  => KUDOS_PLUGIN_URL . $suffix,
+			'path' => $path,
+		];
+	}
+
+	/**
 	 * Returns an array with js file properties.
 	 * This includes checking for an accompanying .asset.php file.
 	 *
