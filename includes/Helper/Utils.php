@@ -210,21 +210,6 @@ class Utils {
 	}
 
 	/**
-	 * Returns a formatted id based on the post id and date of post.
-	 *
-	 * @param int $post_id WordPress post id.
-	 */
-	public static function get_formatted_id( int $post_id ): string {
-		$post      = get_post( $post_id );
-		$post_type = $post->post_type;
-		$date      = $post->post_date;
-		$year      = substr( $date, 0, 4 );
-		$type      = substr( $post_type, 6, 2 );
-
-		return 'k' . $type . '_' . $year . $post_id;
-	}
-
-	/**
 	 * Returns a formatted id based on the entity id and created date.
 	 *
 	 * @param BaseEntity $entity Entity object.
@@ -236,20 +221,6 @@ class Utils {
 		$year = substr( $date, 0, 4 );
 		$type = substr( strtolower( $singular_name ), 0, 2 );
 		return 'k' . $type . '_' . $year . $id;
-	}
-
-	/**
-	 * Uses regex that accepts any word character or hyphen in last name
-	 *
-	 * @link https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
-	 *
-	 * @param string $name The full name.
-	 */
-	public static function split_name( string $name ): array {
-		$name       = trim( $name );
-		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
-		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
-		return [ $first_name, $last_name ];
 	}
 
 	/**
