@@ -59,7 +59,7 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	}
 
 	/**
-	 * Sets html as the content type.
+	 * Sets HTML as the content type.
 	 */
 	public function set_html_mail_content_type(): string {
 		return 'text/html';
