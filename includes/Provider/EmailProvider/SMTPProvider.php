@@ -112,11 +112,8 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 		$phpmailer->Timeout = 10;
 
 		// Add logo as attachment.
-		$phpmailer->addStringEmbeddedImage(
-			Utils::get_company_logo_png(),
-			'logo',
-			'logo.png'
-		);
+		$logo_path = Utils::get_company_logo( 'path' );
+		$phpmailer->addEmbeddedImage( $logo_path, 'logo', basename( $logo_path ) );
 
 		// Enable HTML email support.
 		$phpmailer->isHTML();
