@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge');
 const commonConfig = require('../webpack.config.base');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { resolve } = require('node:path');
 
