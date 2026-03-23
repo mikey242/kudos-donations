@@ -1,9 +1,9 @@
+import { useId } from '@wordpress/element';
 import { BaseControl, ControlProps } from './BaseControl';
 import {
 	BaseControl as WPBaseControl,
 	FormTokenField as WPFormTokenField,
 } from '@wordpress/components';
-import _ from 'lodash';
 import React from 'react';
 
 interface FormTokenFieldProps extends ControlProps {
@@ -18,7 +18,7 @@ export const FormTokenField = ({
 	isDisabled,
 	maxLength,
 }: FormTokenFieldProps): React.ReactNode => {
-	const id = _.uniqueId('kudos');
+	const id = useId();
 
 	return (
 		<BaseControl
@@ -26,7 +26,7 @@ export const FormTokenField = ({
 			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
-			render={({ onChange, value, description }) => (
+			render={({ onChange, onBlur, value, description }) => (
 				<WPBaseControl
 					help={description}
 					id={id}
@@ -42,6 +42,7 @@ export const FormTokenField = ({
 						label={label}
 						disabled={isDisabled}
 						onChange={onChange}
+						onBlur={onBlur}
 						value={value ?? []}
 						__nextHasNoMarginBottom
 					/>

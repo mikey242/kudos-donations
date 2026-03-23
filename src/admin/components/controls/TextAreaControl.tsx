@@ -1,3 +1,4 @@
+import React from 'react';
 import { forwardRef } from '@wordpress/element';
 import { TextareaControl as WPTextAreaControl } from '@wordpress/components';
 import { BaseControl, ControlProps } from './BaseControl';
@@ -26,13 +27,14 @@ const TextAreaControl = forwardRef<HTMLTextAreaElement, TextAreaControlProps>(
 				rules={rules}
 				isDisabled={isDisabled}
 				help={help}
-				render={({ onChange, value, description }) => (
+				render={({ onChange, onBlur, value, description }) => (
 					<WPTextAreaControl
 						id={id}
 						label={label}
 						value={value ?? ''}
 						disabled={isDisabled}
 						onChange={onChange}
+						onBlur={onBlur}
 						help={description}
 						hideLabelFromVision={hideLabelFromVision}
 						ref={ref}

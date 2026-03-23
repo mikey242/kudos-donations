@@ -38,34 +38,33 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
 				rules={rules}
 				isDisabled={isDisabled}
 				help={help}
-				render={({ onChange, value, description }) => (
-					<>
-						<InputControl
-							ref={ref}
-							label={label}
-							value={value ?? ''}
-							disabled={isDisabled}
-							onChange={onChange}
-							help={description}
-							placeholder={placeholder}
-							prefix={
-								prefix && (
-									<InputControlPrefixWrapper>
-										{prefix}
-									</InputControlPrefixWrapper>
-								)
-							}
-							type={type}
-							suffix={
-								suffix && (
-									<InputControlSuffixWrapper>
-										{suffix}
-									</InputControlSuffixWrapper>
-								)
-							}
-							__next40pxDefaultSize
-						/>
-					</>
+				render={({ onChange, onBlur, value, description }) => (
+					<InputControl
+						ref={ref}
+						label={label}
+						value={value ?? ''}
+						disabled={isDisabled}
+						onChange={onChange}
+						onBlur={onBlur}
+						help={description}
+						placeholder={placeholder}
+						prefix={
+							prefix && (
+								<InputControlPrefixWrapper>
+									{prefix}
+								</InputControlPrefixWrapper>
+							)
+						}
+						type={type}
+						suffix={
+							suffix && (
+								<InputControlSuffixWrapper>
+									{suffix}
+								</InputControlSuffixWrapper>
+							)
+						}
+						__next40pxDefaultSize
+					/>
 				)}
 			/>
 		);

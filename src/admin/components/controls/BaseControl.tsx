@@ -16,10 +16,10 @@ interface BaseControlProps {
 	rules?: RegisterOptions;
 	isDisabled?: boolean;
 	help?: string;
-	children?: ReactNode;
-	render?: (params: {
+	render: (params: {
 		description?: string;
 		onChange: (value: any) => void;
+		onBlur: () => void;
 		value: any;
 	}) => ReactNode;
 }
@@ -30,7 +30,6 @@ export const BaseControl = ({
 	isDisabled = false,
 	help,
 	render,
-	children,
 }: BaseControlProps): ReactNode => {
 	const {
 		formState: { errors },
@@ -44,20 +43,16 @@ export const BaseControl = ({
 			name={name}
 			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
-			render={({ field: { onChange, value } }) => {
-				return (
-					<div
-						className={clsx(
-							'kudos-base-control',
-							error?.message && 'has-error'
-						)}
-					>
-						{render
-							? render({ description, onChange, value })
-							: children}
-					</div>
-				);
-			}}
+			render={({ field: { onChange, onBlur, value } }) => (
+				<div
+					className={clsx(
+						'kudos-base-control',
+						error?.message && 'has-error'
+					)}
+				>
+					{render({ description, onChange, onBlur, value })}
+				</div>
+			)}
 		/>
 	);
 };

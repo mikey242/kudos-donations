@@ -1,7 +1,7 @@
 import React from 'react';
+import { useId } from '@wordpress/element';
 import { BaseControl, ColorPalette } from '@wordpress/components';
 import { Controller } from 'react-hook-form';
-import _ from 'lodash';
 import { ControlProps } from './BaseControl';
 
 export const ColorPicker = ({
@@ -19,7 +19,7 @@ export const ColorPicker = ({
 		{ name: 'Green', color: '#2ec4b6' },
 	];
 
-	const id = _.uniqueId('kudos');
+	const id = useId();
 
 	return (
 		<Controller

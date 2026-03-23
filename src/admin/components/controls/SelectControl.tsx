@@ -14,8 +14,6 @@ interface SelectOption {
 interface SelectControlProps extends ControlProps {
 	options: SelectOption[];
 	prefix?: React.ReactNode;
-	value?: any;
-	onChange?: (value: any) => void;
 }
 
 export const SelectControl = ({
@@ -33,10 +31,11 @@ export const SelectControl = ({
 			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
-			render={({ onChange, value, description }) => (
+			render={({ onChange, onBlur, value, description }) => (
 				<WPSelectControl
 					label={label}
 					onChange={onChange}
+					onBlur={onBlur}
 					disabled={isDisabled}
 					help={description}
 					value={value !== undefined && value !== null ? value : ''}
