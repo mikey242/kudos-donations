@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch } from '@headlessui/react';
+import { Field, Label, Switch } from '@headlessui/react';
 import { clsx } from 'clsx';
 import { BaseController } from './BaseController';
 import { RegisterOptions } from 'react-hook-form';
@@ -26,14 +26,15 @@ export const ToggleControl = ({
 			isDisabled={isDisabled}
 			rules={rules}
 			help={help}
-			render={({ error, field: { value, onChange } }) => (
-				<Switch.Group
+			render={({ error, field: { value, onChange, onBlur } }) => (
+				<Field
 					as="div"
 					className="flex items-center first:mt-0 mt-3 mb-1"
 				>
 					<Switch
 						checked={value}
 						onChange={onChange}
+						onBlur={onBlur}
 						disabled={isDisabled}
 						className={clsx(
 							'control',
@@ -55,7 +56,8 @@ export const ToggleControl = ({
 							)}
 						/>
 					</Switch>
-					<Switch.Label
+					<Label
+						onClick={() => !isDisabled && onChange(!value)}
 						className={clsx(
 							isDisabled
 								? 'cursor-not-allowed'
@@ -69,8 +71,8 @@ export const ToggleControl = ({
 									? __('On', 'kudos-donations')
 									: __('Off', 'kudos-donations'))}
 						</span>
-					</Switch.Label>
-				</Switch.Group>
+					</Label>
+				</Field>
 			)}
 		/>
 	);
