@@ -98,7 +98,7 @@ export const FormRouter = ({
 	const [isBusy, setIsBusy] = useState<boolean>(false);
 	const elementRef = useRef<HTMLDivElement>(null);
 	const firstUpdate = useRef<boolean>(true);
-	const timeoutRef = useRef<ReturnType<typeof setTimeout | null>>(null);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const methods: UseFormReturn<FormData> = useForm<FormData>({
 		defaultValues: {
 			recurring: false,
