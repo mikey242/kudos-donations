@@ -49,54 +49,53 @@ export const TextControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			rules={rules}
-			render={({ error, field: { value, onChange } }) => (
-				<>
-					<div className="relative flex flex-row rounded-md">
-						{prefix && (
-							<div className="absolute inset-y-0 start-0 top-0 ps-3.5 flex items-center pointer-events-none">
-								<span
-									ref={prefixRef}
-									className="text-gray-500 sm:text-sm"
-								>
-									{prefix}
-								</span>
-							</div>
+			render={({ error, field: { value, onChange, onBlur } }) => (
+				<div className="relative flex flex-row rounded-md">
+					{prefix && (
+						<div className="absolute inset-y-0 start-0 top-0 ps-3.5 flex items-center pointer-events-none">
+							<span
+								ref={prefixRef}
+								className="text-gray-500 sm:text-sm"
+							>
+								{prefix}
+							</span>
+						</div>
+					)}
+					<Input
+						value={value ?? ''}
+						onChange={onChange}
+						onBlur={onBlur}
+						readOnly={isReadOnly}
+						disabled={isDisabled}
+						type={type}
+						name={name}
+						aria-label={ariaLabel ?? label ?? placeholder}
+						className={clsx(
+							// General
+							'control form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+							// Focus
+							'focus:outline-none',
+							// Disabled
+							'disabled:cursor-not-allowed disabled:bg-slate-100',
+							// Invalid
+							error?.message
+								? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
+								: 'border-gray-300 focus:ring-primary focus:border-primary'
 						)}
-						<Input
-							value={value ?? ''}
-							onChange={onChange}
-							readOnly={isReadOnly}
-							disabled={isDisabled}
-							type={type}
-							name={name}
-							aria-label={ariaLabel ?? label ?? placeholder}
-							className={clsx(
-								// General
-								'control form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
-								// Focus
-								'focus:outline-none',
-								// Disabled
-								'disabled:cursor-not-allowed disabled:bg-slate-100',
-								// Invalid
-								error?.message
-									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
-									: 'border-gray-300 focus:ring-primary focus:border-primary'
-							)}
-							style={
-								prefix && {
-									paddingLeft: width + 'px',
-								}
+						style={
+							prefix && {
+								paddingLeft: width + 'px',
 							}
-							placeholder={placeholder}
-							aria-invalid={!!error}
-							aria-errormessage={
-								error?.ref?.name
-									? `${error.ref.name}-error`
-									: undefined
-							}
-						/>
-					</div>
-				</>
+						}
+						placeholder={placeholder}
+						aria-invalid={!!error}
+						aria-errormessage={
+							error?.ref?.name
+								? `${error.ref.name}-error`
+								: undefined
+						}
+					/>
+				</div>
 			)}
 		/>
 	);

@@ -33,11 +33,12 @@ export const SelectControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			rules={rules}
-			render={({ error, field: { onChange, value } }) => (
+			render={({ error, field: { onChange, onBlur, value } }) => (
 				<Select
 					disabled={isDisabled}
 					value={value ?? ''}
 					onChange={onChange}
+					onBlur={onBlur}
 					className={clsx(
 						// General
 						'control mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',

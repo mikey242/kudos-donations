@@ -23,7 +23,7 @@ export const CheckboxControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			rules={rules}
-			render={({ error, field: { onChange, value } }) => (
+			render={({ error, field: { onChange, onBlur, value } }) => (
 				// eslint-disable-next-line jsx-a11y/label-has-associated-control
 				<label className="relative flex items-center">
 					<div className="flex items-center h-5">
@@ -31,6 +31,7 @@ export const CheckboxControl = ({
 							disabled={isDisabled}
 							checked={value ?? false}
 							onChange={onChange}
+							onBlur={onBlur}
 							name={name}
 							type="checkbox"
 							className="control disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
