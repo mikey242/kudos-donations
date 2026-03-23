@@ -183,7 +183,7 @@ export const FormRouter = ({
 		// Find next available step.
 		while (
 			!checkRequirements(Tabs, state, nextStep) &&
-			nextStep <= Tabs.length
+			nextStep < Tabs.length
 		) {
 			nextStep++;
 		}
