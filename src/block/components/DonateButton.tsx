@@ -7,7 +7,7 @@ interface DonateButtonProps {
 	children: React.ReactNode;
 }
 
-const DonateButton = ({ children, onClick = null }: DonateButtonProps) => {
+const DonateButton = ({ children, onClick }: DonateButtonProps) => {
 	return (
 		<Button
 			id="donate-button"
