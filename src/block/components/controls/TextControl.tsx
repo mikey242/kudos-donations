@@ -1,12 +1,13 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { BaseController } from './BaseController';
+import { RegisterOptions } from 'react-hook-form';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { Input } from '@headlessui/react';
 
 interface TextControlProps {
 	name: string;
-	rules?: any;
+	rules?: RegisterOptions;
 	label?: string;
 	help?: string;
 	prefix?: string;

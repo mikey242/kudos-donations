@@ -2,11 +2,12 @@ import React from 'react';
 import { Switch } from '@headlessui/react';
 import { clsx } from 'clsx';
 import { BaseController } from './BaseController';
+import { RegisterOptions } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
 
 interface ToggleControlProps {
 	name: string;
-	rules?: any;
+	rules?: RegisterOptions;
 	label?: string;
 	help?: string;
 	isDisabled?: boolean;
