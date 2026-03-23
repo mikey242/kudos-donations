@@ -92,6 +92,7 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_all_cache':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
 						CacheService::recursively_clear_cache();
+						do_action( 'kudos_clear_all_cache' );
 					}
 					break;
 				case 'kudos_clear_logs':
