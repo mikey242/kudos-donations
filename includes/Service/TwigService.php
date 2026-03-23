@@ -116,6 +116,12 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 		 */
 		$get_bloginfo = new TwigFunction( 'get_bloginfo', 'get_bloginfo' );
 		$this->twig->addFunction( $get_bloginfo );
+
+		/**
+		 * Add get_company_logo function.
+		 */
+		$get_company_logo = new TwigFunction( 'get_company_logo', [ Utils::class, 'get_company_logo' ] );
+		$this->twig->addFunction( $get_company_logo );
 	}
 
 	/**

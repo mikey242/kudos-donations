@@ -12,7 +12,6 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider\EmailProvider;
 
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\TwigService;
 use PHPMailer\PHPMailer\Exception;
@@ -110,10 +109,6 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 
 		// Set higher timeout.
 		$phpmailer->Timeout = 10;
-
-		// Add logo as attachment.
-		$logo_path = Utils::get_company_logo( 'path' );
-		$phpmailer->addEmbeddedImage( $logo_path, 'logo', basename( $logo_path ) );
 
 		// Enable HTML email support.
 		$phpmailer->isHTML();

@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Service;
 
 use Exception;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Options;
 use Psr\Log\LoggerAwareInterface;
@@ -128,9 +127,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 			NoticeService::add_notice( __( 'Cannot generate PDF. Directory not writeable', 'kudos-donations' ) . ': ' . $target_dir, NoticeService::ERROR );
 			return null;
 		}
-
-		// Add logos to $data.
-		$data = array_merge( $data, [ 'logos' => [ 'logo' => Utils::get_company_logo() ] ] );
 
 		try {
 			$dompdf = $this->pdf;
