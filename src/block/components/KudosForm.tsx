@@ -117,7 +117,7 @@ export const KudosForm = ({
 					themeColor={campaign?.theme_color}
 					style={campaign?.custom_styles}
 					errors={campaignErrors}
-					className={previewMode && 'pointer-events-none'}
+					className={previewMode ? 'pointer-events-none' : undefined}
 					alignment={alignment}
 				>
 					<KudosModal toggleModal={toggleModal} isOpen={isModalOpen}>
@@ -162,7 +162,7 @@ export const KudosForm = ({
 				themeColor={campaign?.theme_color}
 				style={campaign?.custom_styles}
 				errors={campaignErrors}
-				className={previewMode && 'pointer-events-none'}
+				className={previewMode ? 'pointer-events-none' : undefined}
 				alignment={alignment}
 			>
 				<>
