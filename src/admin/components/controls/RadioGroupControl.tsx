@@ -1,13 +1,13 @@
+import React from 'react';
 import { useId } from '@wordpress/element';
-import { Controller } from 'react-hook-form';
 import {
-	BaseControl,
+	BaseControl as WPBaseControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import { ControlProps } from './BaseControl';
+import { BaseControl, ControlProps } from './BaseControl';
 
 export interface RadioGroupOption {
 	label: string;
@@ -19,6 +19,14 @@ interface RadioGroupControlProps extends ControlProps {
 	options: RadioGroupOption[];
 }
 
+interface RadioGroupControlBaseProps {
+	value: string;
+	label?: string;
+	help?: string;
+	options: RadioGroupOption[];
+	onChange: (value: string) => void;
+}
+
 export const RadioGroupControl = ({
 	name,
 	options,
@@ -28,15 +36,16 @@ export const RadioGroupControl = ({
 	rules,
 }: RadioGroupControlProps): React.ReactNode => {
 	return (
-		<Controller
+		<BaseControl
 			name={name}
-			rules={isDisabled ? {} : rules}
-			disabled={isDisabled}
-			render={({ field: { onChange, value } }) => (
+			rules={rules}
+			isDisabled={isDisabled}
+			help={help}
+			render={({ onChange, value, description }) => (
 				<RadioGroupControlBase
 					label={label}
 					value={value}
-					help={help}
+					help={description}
 					onChange={onChange}
 					options={options}
 				/>
@@ -51,11 +60,11 @@ export const RadioGroupControlBase = ({
 	help,
 	options,
 	onChange,
-}) => {
+}: RadioGroupControlBaseProps): React.ReactNode => {
 	const id = useId();
 
 	return (
-		<BaseControl
+		<WPBaseControl
 			help={help}
 			id={id}
 			className="kudos-button-group"
@@ -69,19 +78,17 @@ export const RadioGroupControlBase = ({
 					__nextHasNoMarginBottom
 					__next40pxDefaultSize
 				>
-					{options.map((option: RadioGroupOption) => {
-						return (
-							<ToggleGroupControlOption
-								key={option.value}
-								label={option.label}
-								value={option.value}
-								disabled={option.disabled ?? false}
-								onClick={() => onChange(option.value)}
-							/>
-						);
-					})}
+					{options.map((option: RadioGroupOption) => (
+						<ToggleGroupControlOption
+							key={option.value}
+							label={option.label}
+							value={option.value}
+							disabled={option.disabled ?? false}
+							onClick={() => onChange(option.value)}
+						/>
+					))}
 				</ToggleGroupControl>
 			</div>
-		</BaseControl>
+		</WPBaseControl>
 	);
 };

@@ -1,8 +1,10 @@
 import React from 'react';
 import { useId } from '@wordpress/element';
-import { BaseControl, ColorPalette } from '@wordpress/components';
-import { Controller } from 'react-hook-form';
-import { ControlProps } from './BaseControl';
+import {
+	BaseControl as WPBaseControl,
+	ColorPalette,
+} from '@wordpress/components';
+import { BaseControl, ControlProps } from './BaseControl';
 
 export const ColorPicker = ({
 	name,
@@ -22,15 +24,16 @@ export const ColorPicker = ({
 	const id = useId();
 
 	return (
-		<Controller
+		<BaseControl
 			name={name}
-			rules={isDisabled ? {} : rules}
-			disabled={isDisabled}
-			render={({ field: { onChange, value } }) => (
-				<BaseControl
+			rules={rules}
+			isDisabled={isDisabled}
+			help={help}
+			render={({ onChange, value, description }) => (
+				<WPBaseControl
 					id={id}
 					label={label}
-					help={help}
+					help={description}
 					__nextHasNoMarginBottom
 				>
 					<ColorPalette
@@ -38,7 +41,7 @@ export const ColorPicker = ({
 						onChange={onChange}
 						value={value}
 					/>
-				</BaseControl>
+				</WPBaseControl>
 			)}
 		/>
 	);
