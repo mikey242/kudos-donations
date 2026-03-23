@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import { clsx } from 'clsx';
 import { get } from 'lodash';
 import {
@@ -15,16 +15,14 @@ interface BaseControllerProps {
 	type?: string;
 	isDisabled?: boolean;
 	help?: ReactNode;
-	children?: ReactNode;
 	rules?: RegisterOptions;
-	render?: (params: {
+	render: (params: {
 		field: ControllerRenderProps<FieldValues, string>;
 		error: FieldError | undefined;
-	}) => ReactNode;
+	}) => ReactElement;
 }
 
 export const BaseController = ({
-	children,
 	isDisabled,
 	type,
 	help,
@@ -54,18 +52,20 @@ export const BaseController = ({
 					name={name}
 					rules={isDisabled ? {} : rules}
 					disabled={isDisabled}
-					render={({ field }) => (
-						<>{render ? render({ error, field }) : children}</>
-					)}
+					render={({ field }) => render({ error, field })}
 				/>
 			</div>
 			{/* Errors need to be shown outside hidden element. */}
-			{error ? <Error error={error} /> : <Help>{help}</Help>}
+			{error ? <ErrorMessage error={error} /> : <Help>{help}</Help>}
 		</div>
 	);
 };
 
-const Help = ({ children }) => {
+interface HelpProps {
+	children?: ReactNode;
+}
+
+const Help = ({ children }: HelpProps) => {
 	return (
 		<>
 			{children && (
@@ -75,10 +75,11 @@ const Help = ({ children }) => {
 	);
 };
 
-interface ErrorProps {
+interface ErrorMessageProps {
 	error?: FieldError;
 }
-const Error = ({ error }: ErrorProps) => {
+
+const ErrorMessage = ({ error }: ErrorMessageProps) => {
 	return (
 		<>
 			{error?.message && (
