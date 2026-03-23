@@ -41,17 +41,9 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
 		},
 		ref
 	) => {
-		const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-			if (href) {
-				e.preventDefault();
-				window.location.href = href;
-			} else {
-				return (
-					typeof onClick === 'function' &&
-					!isDisabled &&
-					!isBusy &&
-					onClick()
-				);
+		const handleClick = () => {
+			if (typeof onClick === 'function' && !isDisabled && !isBusy) {
+				onClick();
 			}
 		};
 
