@@ -85,7 +85,7 @@ const Render = ({
 				{`:host { 
 					font-size: ${window.kudos?.baseFontSize ?? '1.2rem'};
 					--kudos-font-heading: ${fonts?.header ?? 'cabinbold, sans-serif'} ;
-					--kudos-font-body: ${fonts?.header ?? 'montserratregular, sans-serif'};
+					--kudos-font-body: ${fonts?.body ?? 'montserratregular, sans-serif'};
 					--kudos-theme-primary: ${themeColor};
 				}`}
 			</style>
