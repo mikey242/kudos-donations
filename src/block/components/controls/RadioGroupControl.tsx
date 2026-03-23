@@ -32,7 +32,10 @@ export const RadioGroupControl = ({
 	ariaLabel,
 }: RadioGroupControlProps) => {
 	// Create refs for each radio button to handle focus programmatically
-	const radioRefs = useRef<Array<HTMLElement | null>>([]);
+	const radioRefs = useRef<Array<HTMLElement | null>>(
+		new Array(options.length).fill(null)
+	);
+	radioRefs.current = radioRefs.current.slice(0, options.length);
 	// Helper function to handle keyboard events for custom navigation.
 	const handleKeyDown = useCallback(
 		(event: React.KeyboardEvent, onChange: OnChangeFn, value: string) => {
