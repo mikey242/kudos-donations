@@ -101,7 +101,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
 					<a
 						id={id}
 						href={href}
-						target={isExternal && '_blank'}
+						target={isExternal ? '_blank' : undefined}
 						ref={ref as React.Ref<HTMLAnchorElement>}
 						className={classes}
 						aria-label={ariaLabel}
