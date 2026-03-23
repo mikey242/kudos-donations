@@ -46,7 +46,11 @@ export const TextAreaControl = ({
 							'read-only:bg-slate-50'
 						)}
 						aria-invalid={!!error}
-						aria-errormessage={error?.message}
+						aria-errormessage={
+							error?.ref?.name
+								? `${error.ref.name}-error`
+								: undefined
+						}
 					/>
 				</div>
 			)}

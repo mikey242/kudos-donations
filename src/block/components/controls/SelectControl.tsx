@@ -49,7 +49,9 @@ export const SelectControl = ({
 							: 'border-gray-300 focus:ring-primary focus:border-primary'
 					)}
 					aria-invalid={!!error}
-					aria-errormessage={error?.message}
+					aria-errormessage={
+						error?.ref?.name ? `${error.ref.name}-error` : undefined
+					}
 					aria-label={ariaLabel ?? placeholder}
 				>
 					{placeholder && (

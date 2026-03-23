@@ -88,7 +88,11 @@ export const TextControl = ({
 							}
 							placeholder={placeholder}
 							aria-invalid={!!error}
-							aria-errormessage={error?.message}
+							aria-errormessage={
+								error?.ref?.name
+									? `${error.ref.name}-error`
+									: undefined
+							}
 						/>
 					</div>
 				</>
