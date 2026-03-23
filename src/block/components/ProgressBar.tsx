@@ -16,8 +16,10 @@ const ProgressBar = ({
 	extra = 0,
 	showGoal = true,
 }: ProgressBarProps) => {
-	const percentage = goal ? Math.round((total / goal) * 100) : 0;
-	const extraPercentage = goal ? extra / (goal - total) : 0;
+	const percentage = goal
+		? Math.min(Math.round((total / goal) * 100), 100)
+		: 0;
+	const extraPercentage = goal && goal > total ? extra / (goal - total) : 0;
 
 	return (
 		<div className="w-full text-base">
