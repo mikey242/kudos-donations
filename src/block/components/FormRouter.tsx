@@ -25,11 +25,6 @@ interface TabDefinition {
 	element: React.ComponentType<{ campaign: Campaign }>;
 	requirements?: Record<string, any>;
 }
-interface Tab {
-	name: string;
-	element: React.ComponentType<{ campaign: Campaign }>;
-	requirements?: Record<string, any>;
-}
 
 interface FormData {
 	recurring: boolean;
@@ -75,7 +70,7 @@ export const matchesRequirements = (
 };
 
 const checkRequirements = (
-	tabs: Tab[],
+	tabs: TabDefinition[],
 	state: Record<string, any>,
 	index: number
 ): boolean => {
