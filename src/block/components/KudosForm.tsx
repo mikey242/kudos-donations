@@ -9,6 +9,7 @@ import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 import * as FrontControls from './controls';
+import { applyFilters } from '@wordpress/hooks';
 
 interface KudosFormProps {
 	displayAs: 'form' | 'button' | 'fslogo';
@@ -109,6 +110,11 @@ export const KudosForm = ({
 			});
 	}
 
+	const showLogo: boolean = applyFilters(
+		'kudosShowBranding',
+		true
+	) as boolean;
+
 	const renderModal = () => {
 		const portalContainer = document.getElementById('kudos-portal');
 		if (portalContainer) {
@@ -120,7 +126,11 @@ export const KudosForm = ({
 					className={previewMode ? 'pointer-events-none' : undefined}
 					alignment={alignment}
 				>
-					<KudosModal toggleModal={toggleModal} isOpen={isModalOpen}>
+					<KudosModal
+						showLogo={showLogo}
+						toggleModal={toggleModal}
+						isOpen={isModalOpen}
+					>
 						{renderDonationForm()}
 					</KudosModal>
 				</Render>,
@@ -170,7 +180,10 @@ export const KudosForm = ({
 					{isForm && renderDonationForm()}
 					{isModal && (
 						<>
-							<DonateButton onClick={toggleModal}>
+							<DonateButton
+								showLogo={showLogo}
+								onClick={toggleModal}
+							>
 								{label}
 							</DonateButton>
 							{renderModal()}
