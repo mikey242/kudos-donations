@@ -10,7 +10,6 @@ import {
 	useState,
 } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Flex, Spinner } from '@wordpress/components';
 import type { Campaign } from '../../types/entity';
 
 interface CampaignContextType {
@@ -98,13 +97,7 @@ export default function CampaignProvider({
 
 	return (
 		<CampaignContext.Provider value={contextValue}>
-			{isLoading ? (
-				<Flex justify="center">
-					<Spinner />
-				</Flex>
-			) : (
-				children
-			)}
+			{children}
 		</CampaignContext.Provider>
 	);
 }

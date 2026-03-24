@@ -1,7 +1,6 @@
 export * from './tabs';
 export * from './controls';
 export * from './DonateButton';
-export * from './Edit';
 export * from './FormRouter';
 export * from './KudosForm';
 export * from './KudosLogo';

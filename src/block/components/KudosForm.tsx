@@ -5,6 +5,7 @@ import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
 import Render from './Render';
+import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
@@ -162,10 +163,6 @@ export const KudosForm = ({
 		</div>
 	);
 
-	if (isLoading) {
-		return;
-	}
-
 	return (
 		<>
 			<Render
@@ -176,17 +173,23 @@ export const KudosForm = ({
 				alignment={alignment}
 			>
 				<>
-					{isFSLogo && <KudosLogoFullScreenAnimated />}
-					{isForm && renderDonationForm()}
-					{isModal && (
+					{isLoading ? (
+						<Spinner />
+					) : (
 						<>
-							<DonateButton
-								showLogo={showLogo}
-								onClick={toggleModal}
-							>
-								{label}
-							</DonateButton>
-							{renderModal()}
+							{isFSLogo && <KudosLogoFullScreenAnimated />}
+							{isForm && renderDonationForm()}
+							{isModal && (
+								<>
+									<DonateButton
+										showLogo={showLogo}
+										onClick={toggleModal}
+									>
+										{label}
+									</DonateButton>
+									{renderModal()}
+								</>
+							)}
 						</>
 					)}
 				</>
