@@ -204,25 +204,24 @@ export const FormRouter = ({
 	};
 
 	useLayoutEffect(() => {
-		// Skip on first render
 		if (firstUpdate.current) {
 			firstUpdate.current = false;
 			return;
 		}
 
-		// Only proceed if the step has changed
 		if (prevStep.current !== step) {
 			if (!elementRef.current) {
 				return;
 			}
 
 			const target = elementRef.current;
+			const form = target.querySelector('form');
 			target.classList.add('translate-x-1', 'opacity-0');
 
-			const oldHeight = target.querySelector('form').offsetHeight;
+			const oldHeight = form.offsetHeight;
 			setHeight(oldHeight.toString());
 			const resizeObserver = new ResizeObserver(() => {
-				const newHeight = target.querySelector('form').offsetHeight;
+				const newHeight = form.offsetHeight;
 				setHeight(newHeight.toString());
 
 				timeoutRef.current = setTimeout(() => {
@@ -240,14 +239,14 @@ export const FormRouter = ({
 				}, 200);
 			});
 
-			resizeObserver.observe(target.querySelector('form'));
+			resizeObserver.observe(form);
 
 			return () => {
 				resizeObserver.disconnect();
 				clearTimeout(timeoutRef.current);
 			};
 		}
-	}, [Tabs, step]); // Only rerun when `step` changes
+	}, [Tabs, step]);
 
 	return (
 		<FormProvider {...methods}>
