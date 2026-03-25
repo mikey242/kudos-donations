@@ -32,7 +32,6 @@ export const RadioControl = ({
 					options={options}
 					selected={value}
 					help={description}
-					__nextHasNoMarginBottom
 				/>
 			)}
 		/>
