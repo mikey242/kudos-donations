@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 const Spinner = ({}) => {
 	return (
-		<div className="text-center">
+		<div className="text-center w-full">
 			<div role="status">
 				<svg
 					aria-hidden="true"
