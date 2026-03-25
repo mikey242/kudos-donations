@@ -19,11 +19,6 @@ interface KudosFormProps {
 	previewMode?: boolean;
 }
 
-interface FormState {
-	currentStep: number;
-	formData: Record<string, any>;
-}
-
 export const KudosForm = ({
 	displayAs,
 	label,
@@ -33,10 +28,7 @@ export const KudosForm = ({
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp] = useState<number>(() => Date.now());
 	const [formError, setFormError] = useState<string | null>(null);
-	const [formState, setFormState] = useState<FormState>({
-		currentStep: 0,
-		formData: {},
-	});
+	const [currentStep, setCurrentStep] = useState<number>(0);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
@@ -58,11 +50,7 @@ export const KudosForm = ({
 	};
 
 	const resetForm = () => {
-		setFormState((prev) => ({
-			...prev,
-			currentStep: 0,
-			formData: {},
-		}));
+		setCurrentStep(0);
 	};
 
 	async function submitForm(data: Record<string, any>): Promise<any> {
@@ -152,9 +140,9 @@ export const KudosForm = ({
 			)}
 			{campaign && (
 				<FormRouter
-					step={formState?.currentStep}
+					step={currentStep}
 					campaign={campaign}
-					setFormState={setFormState}
+					onStepChange={setCurrentStep}
 					submitForm={submitForm}
 				/>
 			)}

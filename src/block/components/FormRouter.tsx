@@ -40,12 +40,7 @@ interface FormRouterProps {
 	step: number;
 	campaign: Campaign;
 	submitForm: (data: FormData) => Promise<any>;
-	setFormState: React.Dispatch<
-		React.SetStateAction<{
-			currentStep: number;
-			formData: Record<string, any>;
-		}>
-	>;
+	onStepChange: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const matchesRequirements = (
@@ -85,7 +80,7 @@ export const FormRouter = ({
 	step,
 	campaign,
 	submitForm,
-	setFormState,
+	onStepChange,
 }: FormRouterProps) => {
 	const [height, setHeight] = useState<string>('');
 	const [currentStep, setCurrentStep] = useState<number>(step);
@@ -165,10 +160,7 @@ export const FormRouter = ({
 		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
 			prev--;
 		}
-		setFormState((prevState) => ({
-			...prevState,
-			currentStep: prev,
-		}));
+		onStepChange(prev);
 	};
 
 	const handleNext = (data: FormData) => {
@@ -183,11 +175,7 @@ export const FormRouter = ({
 			nextStep++;
 		}
 
-		setFormState((prev) => ({
-			...prev,
-			formData: { ...prev?.formData, ...data },
-			currentStep: nextStep,
-		}));
+		onStepChange(nextStep);
 	};
 
 	const onSubmit = (data: FormData) => {
