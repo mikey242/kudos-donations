@@ -162,36 +162,32 @@ export const KudosForm = ({
 	);
 
 	return (
-		<>
-			<Render
-				themeColor={campaign?.theme_color}
-				style={campaign?.custom_styles}
-				errors={campaignErrors}
-				className={previewMode ? 'pointer-events-none' : undefined}
-				alignment={alignment}
-			>
+		<Render
+			themeColor={campaign?.theme_color}
+			style={campaign?.custom_styles}
+			errors={campaignErrors}
+			className={previewMode ? 'pointer-events-none' : undefined}
+			alignment={alignment}
+		>
+			{isLoading ? (
+				<Spinner />
+			) : (
 				<>
-					{isLoading ? (
-						<Spinner />
-					) : (
+					{isFSLogo && <KudosLogoFullScreenAnimated />}
+					{isForm && renderDonationForm()}
+					{isModal && (
 						<>
-							{isFSLogo && <KudosLogoFullScreenAnimated />}
-							{isForm && renderDonationForm()}
-							{isModal && (
-								<>
-									<DonateButton
-										showLogo={showLogo}
-										onClick={toggleModal}
-									>
-										{label}
-									</DonateButton>
-									{renderModal()}
-								</>
-							)}
+							<DonateButton
+								showLogo={showLogo}
+								onClick={toggleModal}
+							>
+								{label}
+							</DonateButton>
+							{renderModal()}
 						</>
 					)}
 				</>
-			</Render>
-		</>
+			)}
+		</Render>
 	);
 };
