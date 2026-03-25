@@ -31,7 +31,7 @@ export const KudosForm = ({
 	previewMode = false,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
-	const [timestamp, setTimestamp] = useState<number>(0);
+	const [timestamp] = useState<number>(() => Date.now());
 	const [formError, setFormError] = useState<string | null>(null);
 	const [formState, setFormState] = useState<FormState>({
 		currentStep: 0,
@@ -42,11 +42,9 @@ export const KudosForm = ({
 	const isModal = displayAs === 'button';
 	const isFSLogo = displayAs === 'fslogo';
 
-	// Add controls to kudos property for external access.
-	window.kudos.FrontControls = FrontControls;
-
 	useEffect(() => {
-		setTimestamp(Date.now());
+		// Add controls to kudos property for external access.
+		window.kudos.FrontControls = FrontControls;
 	}, []);
 
 	useEffect(() => {
