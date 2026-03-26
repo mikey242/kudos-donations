@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
+import { getCurrencySymbol } from '../../currency-utils';
 
 interface ProgressBarProps {
 	goal: number;
@@ -16,6 +17,7 @@ export const ProgressBar = ({
 	extra = 0,
 	showGoal = true,
 }: ProgressBarProps) => {
+	const currencySymbol = getCurrencySymbol(currency);
 	const percentage = goal
 		? Math.min(Math.round((total / goal) * 100), 100)
 		: 0;
@@ -48,7 +50,7 @@ export const ProgressBar = ({
 				{showGoal && (
 					<div className="kudos-progress-total flex space-x-2 items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
 						<FlagIcon className="w-4 h-4" />
-						<span>{currency + ' ' + goal}</span>
+						<span>{currencySymbol + goal}</span>
 					</div>
 				)}
 			</div>

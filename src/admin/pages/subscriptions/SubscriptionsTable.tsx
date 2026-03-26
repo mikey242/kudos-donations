@@ -17,6 +17,7 @@ import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import { getCurrencySymbol } from '../../../currency-utils';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
@@ -26,7 +27,6 @@ const subscriptionStatusConfig: Record<string, StatusConfig> = {
 };
 
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
-	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
 	const { handleDelete, fetchEntities } = useEntitiesContext();
@@ -90,7 +90,8 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					return null;
 				}
 
-				const currencySymbol = currencies[post?.currency] ?? currency;
+				const currencySymbol =
+					getCurrencySymbol(post.currency) ?? currency;
 				return (
 					<span>
 						{currencySymbol}

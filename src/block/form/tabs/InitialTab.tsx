@@ -8,6 +8,7 @@ import { RadioGroupControl, TextControl, ToggleControl } from '../../controls';
 import type { RadioGroupOption } from '../../controls';
 import { ProgressBar } from '../../components';
 import type { Campaign } from '../../../types/entity';
+import { getCurrencySymbol } from '../../../currency-utils';
 
 interface InitialTabProps {
 	campaign: Campaign;
@@ -31,9 +32,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		email_required,
 		total,
 	} = campaign;
-	const currencySymbol = useMemo(() => {
-		return window.kudos?.currencies?.[currency] ?? currency;
-	}, [currency]);
+	const currencySymbol = getCurrencySymbol(currency);
 	const { setValue } = useFormContext();
 	const watchFixed: string = useWatch({ name: 'valueFixed' });
 	const watchOpen: string = useWatch({ name: 'valueOpen' });
@@ -115,7 +114,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
-					prefix={currencySymbol}
+					prefix={currency}
 					type="number"
 					placeholder={
 						amount_type === 'both'
@@ -142,7 +141,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 								'Maximum donation is %1$s%2$d',
 								'kudos-donations'
 							),
-							currencySymbol,
+							currency,
 							maximum_donation
 						),
 					},

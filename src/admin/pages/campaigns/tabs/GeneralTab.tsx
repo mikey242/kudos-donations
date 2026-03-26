@@ -11,6 +11,7 @@ import { useWatch } from 'react-hook-form';
 import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../../components';
 import { isValidUrl } from '../../../utils';
+import { getCurrencySymbol } from '../../../../currency-utils';
 
 interface GeneralTabProps {
 	campaign: Campaign;
@@ -24,6 +25,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 	const watchDisplayGoal = useWatch({ name: 'show_goal' });
 	const watchCurrency = useWatch({ name: 'currency' });
 	const watchUseReturnURL = useWatch({ name: 'use_custom_return_url' });
+	const currencySymbol = getCurrencySymbol(watchCurrency);
 
 	return (
 		<>
@@ -43,7 +45,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					name="currency"
 					label={__('Currency', 'kudos-donations')}
 					isDisabled={campaign.total > 0}
-					prefix={currencies[watchCurrency]}
+					prefix={currencySymbol}
 					help={__(
 						'Select the desired currency for this campaign. Cannot be changed once you have received a donation.',
 						'kudos-donations'
@@ -64,7 +66,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 				<TextControl
 					type="number"
 					name="goal"
-					prefix={currencies[watchCurrency]}
+					prefix={currencySymbol}
 					help={__(
 						'Set a goal for your campaign.',
 						'kudos-donations'
@@ -95,7 +97,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 				<TextControl
 					type="number"
 					name="additional_funds"
-					prefix={currencies[watchCurrency]}
+					prefix={currencySymbol}
 					help={__(
 						'Add external funds to the total.',
 						'kudos-donations'

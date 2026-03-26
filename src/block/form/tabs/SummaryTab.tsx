@@ -7,6 +7,7 @@ import { CheckboxControl } from '../../controls';
 import { createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
+import { getCurrencySymbol } from '../../../currency-utils';
 
 interface SummaryTabProps {
 	campaign: Campaign;
@@ -127,7 +128,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 				</p>
 				<p className="my-1">
 					<strong>{__('Amount', 'kudos-donations')}: </strong>
-					<span>{`${window.kudos?.currencies[currency]} ${values.value}`}</span>
+					<span>{getCurrencySymbol(currency) + values.value}</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('Type', 'kudos-donations')}: </strong>

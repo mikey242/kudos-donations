@@ -8,16 +8,16 @@ import {
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { HeaderItem, Table } from '../../components/table';
-import type { ReactNode } from 'react';
+import { HeaderItem, Table } from '../../components';
+import React, { ReactNode } from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { confirmDelete } from '../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
+import { getCurrencySymbol } from '../../../currency-utils';
 export const CampaignsTable = ({ handleEdit, handleNew }): ReactNode => {
-	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
 
@@ -82,7 +82,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): ReactNode => {
 			key: 'total',
 			title: __('Total', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode =>
-				`${currencies[post.currency]} ${post.total}`,
+				`${getCurrencySymbol(post.currency)}${post.total}`,
 		},
 		{
 			key: 'date',

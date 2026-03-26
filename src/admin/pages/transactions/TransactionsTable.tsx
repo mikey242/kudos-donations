@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { DetailsModal, HeaderItem, StatusIcon, Table } from '../../components';
 import type { StatusConfig } from '../../components';
+import {getCurrencySymbol} from "../../../currency-utils";
 
 const transactionStatusConfig: Record<string, StatusConfig> = {
 	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },
@@ -21,7 +22,6 @@ const transactionStatusConfig: Record<string, StatusConfig> = {
 };
 
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
-	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
 	const { handleDelete } = useEntitiesContext();
 
@@ -56,7 +56,8 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 					return null;
 				}
 
-				const currencySymbol = currencies[post.currency] ?? currency;
+				const currencySymbol =
+					getCurrencySymbol(post.currency) ?? currency;
 
 				let icon: React.ReactNode;
 

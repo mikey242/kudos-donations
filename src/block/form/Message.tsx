@@ -7,6 +7,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from '../components/Spinner';
 import { useCampaignContext } from '../contexts';
 import { Render } from '../components';
+import { getCurrencySymbol } from '../../currency-utils';
 
 interface PaymentStatusProps {
 	transactionId: string;
@@ -57,9 +58,8 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 					case 'paid':
 						const placeholders = {
 							value:
-								window.kudos.currencies[
-									response.data.currency
-								] + response.data.value,
+								getCurrencySymbol(response.data.currency) +
+								response.data.value,
 							name: response.data.name,
 						};
 						setTitle(campaign.return_message_title);

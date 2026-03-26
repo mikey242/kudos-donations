@@ -10,6 +10,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { applyFilters } from '@wordpress/hooks';
 import { Panel } from '../../../components';
 import { useEffect } from '@wordpress/element';
+import { getCurrencySymbol } from '../../../../currency-utils';
 
 interface DonationSettingsTabProps {
 	recurringEnabled?: boolean;
@@ -17,13 +18,13 @@ interface DonationSettingsTabProps {
 export const DonationSettingsTab = ({
 	recurringEnabled = false,
 }: DonationSettingsTabProps): React.ReactNode => {
-	const { currencies } = window.kudos;
 	const { setValue, getValues } = useFormContext();
 	const amountType = useWatch({ name: 'amount_type' });
 	const currency = useWatch({ name: 'currency' });
 	const maxDonation = useWatch({ name: 'maximum_donation' });
 	const minDonation = useWatch({ name: 'minimum_donation' });
 	const donationType = useWatch({ name: 'donation_type' });
+	const currencySymbol = getCurrencySymbol(currency);
 
 	useEffect(() => {
 		if (donationType !== 'oneoff') {
@@ -145,7 +146,7 @@ export const DonationSettingsTab = ({
 				<TextControl
 					name="minimum_donation"
 					type="number"
-					prefix={currencies[currency]}
+					prefix={currencySymbol}
 					help={__(
 						'This is the minimum donation that will be accepted.',
 						'kudos-donations'
@@ -167,7 +168,7 @@ export const DonationSettingsTab = ({
 				/>
 				<TextControl
 					name="maximum_donation"
-					prefix={currencies[currency]}
+					prefix={currencySymbol}
 					type="number"
 					label={__('Maximum donation', 'kudos-donations')}
 					help={__(
