@@ -9,7 +9,7 @@ interface ProgressBarProps {
 	showGoal?: boolean;
 }
 
-const ProgressBar = ({
+export const ProgressBar = ({
 	goal,
 	total = 0,
 	currency = '',
@@ -55,5 +55,3 @@ const ProgressBar = ({
 		</div>
 	);
 };
-
-export { ProgressBar };
