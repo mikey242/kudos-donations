@@ -2,7 +2,7 @@ import React from 'react';
 import { ToggleControl as WPToggleControl } from '@wordpress/components';
 import { BaseControl, ControlProps } from './BaseControl';
 
-const ToggleControl = ({
+export const ToggleControl = ({
 	name,
 	rules,
 	label,
@@ -28,5 +28,3 @@ const ToggleControl = ({
 		/>
 	);
 };
-
-export { ToggleControl };

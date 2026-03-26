@@ -8,7 +8,10 @@ interface TextAreaControlProps extends ControlProps {
 	hideLabelFromVision?: boolean;
 }
 
-const TextAreaControl = forwardRef<HTMLTextAreaElement, TextAreaControlProps>(
+export const TextAreaControl = forwardRef<
+	HTMLTextAreaElement,
+	TextAreaControlProps
+>(
 	(
 		{
 			name,
@@ -45,5 +48,3 @@ const TextAreaControl = forwardRef<HTMLTextAreaElement, TextAreaControlProps>(
 		);
 	}
 );
-
-export { TextAreaControl };
