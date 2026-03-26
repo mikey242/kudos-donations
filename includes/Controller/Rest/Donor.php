@@ -20,6 +20,8 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
  * @extends BaseRepositoryRestController<DonorEntity>
  */
 class Donor extends BaseRepositoryRestController {
+
+	protected string $rest_base = 'donor';
 	private TransactionRepository $transaction_repository;
 
 	/**
@@ -29,7 +31,6 @@ class Donor extends BaseRepositoryRestController {
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
 	public function __construct( DonorRepository $repository, TransactionRepository $transaction_repository ) {
-		$this->rest_base              = 'donor';
 		$this->repository             = $repository;
 		$this->transaction_repository = $transaction_repository;
 	}

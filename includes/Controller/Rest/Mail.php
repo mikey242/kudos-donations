@@ -20,6 +20,8 @@ use WP_REST_Server;
 
 class Mail extends BaseRestController {
 
+	protected string $rest_base = 'email';
+
 	/**
 	 * Mailer service.
 	 *
@@ -33,8 +35,7 @@ class Mail extends BaseRestController {
 	 * @param MailerService $mailer Mailer service.
 	 */
 	public function __construct( MailerService $mailer ) {
-		$this->rest_base = 'email';
-		$this->mailer    = $mailer;
+		$this->mailer = $mailer;
 	}
 
 	/**

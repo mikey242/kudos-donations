@@ -44,6 +44,7 @@ use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
+use IseardMedia\Kudos\ThirdParty\Monolog\Processor\IntrospectionProcessor;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Psr\Log\LoggerAwareInterface;
@@ -100,6 +101,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	// Configure logger.
 	$services->set( JsonFormatter::class );
 	$services->set( PsrLogMessageProcessor::class );
+	$services->set( IntrospectionProcessor::class );
 	$services->set( RotatingFileHandler::class )
 		->args(
 			[
@@ -114,7 +116,8 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
 		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] )
-		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] );
+		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] )
+		->call( 'pushProcessor', [ service( IntrospectionProcessor::class ) ] );
 
 	// External libraries.
 	$services->set( Dompdf::class )->lazy();

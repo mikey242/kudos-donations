@@ -25,6 +25,8 @@ use WP_REST_Server;
  */
 class Campaign extends BaseRepositoryRestController {
 
+	protected string $rest_base = 'campaign';
+
 	/**
 	 * @var CampaignRepository
 	 */
@@ -36,7 +38,6 @@ class Campaign extends BaseRepositoryRestController {
 	 * @param CampaignRepository $campaign_repository The campaign repository.
 	 */
 	public function __construct( CampaignRepository $campaign_repository ) {
-		$this->rest_base  = 'campaign';
 		$this->repository = $campaign_repository;
 	}
 

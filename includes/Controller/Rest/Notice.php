@@ -19,12 +19,7 @@ use WP_REST_Server;
 
 class Notice extends BaseRestController {
 
-	/**
-	 * Notice constructor.
-	 */
-	public function __construct() {
-		$this->rest_base = 'notice';
-	}
+	protected string $rest_base = 'notice';
 
 	/**
 	 * Notice routes.

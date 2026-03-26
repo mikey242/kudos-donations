@@ -29,6 +29,8 @@ use WP_REST_Server;
  */
 class Subscription extends BaseRepositoryRestController {
 
+	protected string $rest_base = 'subscription';
+
 	public const ROUTE_CANCEL = '/cancel';
 
 	/**
@@ -44,7 +46,6 @@ class Subscription extends BaseRepositoryRestController {
 	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
 	public function __construct( PaymentProviderFactory $factory, SubscriptionRepository $subscription ) {
-		$this->rest_base  = 'subscription';
 		$this->repository = $subscription;
 		$this->vendor     = $factory->get_provider();
 	}

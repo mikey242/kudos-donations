@@ -17,6 +17,8 @@ use WP_REST_Server;
 
 class Migration extends BaseRestController {
 
+	protected string $rest_base = 'migration';
+
 	/**
 	 * Migration handler.
 	 *
@@ -30,7 +32,6 @@ class Migration extends BaseRestController {
 	 * @param MigrationHandler $migration Migration handler.
 	 */
 	public function __construct( MigrationHandler $migration ) {
-		$this->rest_base = 'migration';
 		$this->migration = $migration;
 	}
 

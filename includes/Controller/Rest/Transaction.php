@@ -21,6 +21,8 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
  */
 class Transaction extends BaseRepositoryRestController {
 
+	protected string $rest_base = 'transaction';
+
 	/**
 	 * @var TransactionRepository
 	 */
@@ -32,7 +34,6 @@ class Transaction extends BaseRepositoryRestController {
 	 * @param TransactionRepository $transactions The transaction repository.
 	 */
 	public function __construct( TransactionRepository $transactions ) {
-		$this->rest_base  = 'transaction';
 		$this->repository = $transactions;
 	}
 

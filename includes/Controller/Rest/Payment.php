@@ -32,6 +32,8 @@ class Payment extends BaseRestController {
 
 	use SanitizeTrait;
 
+	protected string $rest_base = 'payment';
+
 	public const ROUTE_CREATE  = '/create';
 	public const ROUTE_REFUND  = '/refund';
 	public const ROUTE_WEBHOOK = '/webhook';
@@ -52,7 +54,6 @@ class Payment extends BaseRestController {
 	 * @param CampaignRepository     $campaign_repository Campaign repository.
 	 */
 	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, DonorRepository $donor_repository, CampaignRepository $campaign_repository ) {
-		$this->rest_base              = 'payment';
 		$this->vendor                 = $factory->get_provider();
 		$this->transaction_repository = $transaction_repository;
 		$this->donor_repository       = $donor_repository;

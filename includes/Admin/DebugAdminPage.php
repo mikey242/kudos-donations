@@ -423,6 +423,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								<th><?php esc_html_e( 'Level', 'kudos-donations' ); ?></th>
 								<th><?php esc_html_e( 'Message', 'kudos-donations' ); ?></th>
 								<th><?php esc_html_e( 'Context', 'kudos-donations' ); ?></th>
+								<th><?php esc_html_e( 'Extra', 'kudos-donations' ); ?></th>
 							</tr>
 							</thead>
 
@@ -435,6 +436,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								$style   = 'border-left-width: 10px; border-left-style: solid;';
 								$message = $log['message'];
 								$context = $log['context'] ?? '[]';
+								$extra   = $log['extra'] ?? '[]';
 
 								switch ( $level ) {
 									case Logger::CRITICAL:
@@ -467,6 +469,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 									<td><code><?php echo esc_attr( $level ); ?></code></td>
 									<td><?php echo esc_textarea( $message ); ?></td>
 									<td><code><?php echo esc_textarea( $context ); ?></code></td>
+									<td><code><?php echo esc_textarea( $extra ); ?></code></td>
 
 								</tr>
 

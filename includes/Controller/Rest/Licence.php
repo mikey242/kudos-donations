@@ -16,6 +16,8 @@ use WP_REST_Response;
 use WP_REST_Server;
 
 class Licence extends BaseRestController {
+
+	protected string $rest_base = 'licence';
 	private LicenceService $licence_service;
 
 	/**
@@ -25,7 +27,6 @@ class Licence extends BaseRestController {
 	 */
 	public function __construct( LicenceService $licence_service ) {
 		$this->licence_service = $licence_service;
-		$this->rest_base       = 'licence';
 	}
 
 	/**

@@ -22,6 +22,7 @@ use WP_REST_Server;
 
 class Receipt extends BaseRestController {
 
+	protected string $rest_base = 'receipt';
 	private ReceiptService $invoice;
 	private PDFService $pdf;
 	private TransactionRepository $transaction_repository;
@@ -34,7 +35,6 @@ class Receipt extends BaseRestController {
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
 	public function __construct( PDFService $pdf, ReceiptService $invoice, TransactionRepository $transaction_repository ) {
-		$this->rest_base              = 'receipt';
 		$this->pdf                    = $pdf;
 		$this->invoice                = $invoice;
 		$this->transaction_repository = $transaction_repository;
