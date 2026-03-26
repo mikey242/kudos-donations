@@ -15,7 +15,7 @@ interface RenderProps {
 	errors?: string[] | null;
 }
 
-const Render = ({
+export const Render = ({
 	children,
 	themeColor,
 	style,
@@ -104,5 +104,3 @@ const Render = ({
 		</root.div>
 	);
 };
-
-export default Render;

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React, { ReactNode } from 'react';
 import { KudosModal } from './KudosModal';
-import Render from './Render';
 import { Button } from './controls';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts';
+import { Render } from './Render';
 
 interface PaymentStatusProps {
 	transactionId: string;

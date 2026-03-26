@@ -25,10 +25,10 @@ interface CampaignProviderProps {
 
 export const CampaignContext = createContext<CampaignContextType>(null);
 
-export default function CampaignProvider({
+export const CampaignProvider = ({
 	campaignId,
 	children,
-}: CampaignProviderProps) {
+}: CampaignProviderProps) => {
 	const [campaign, setCampaign] = useState<Campaign | null>(null);
 	const [campaignErrors, setCampaignErrors] = useState<string[]>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -100,7 +100,7 @@ export default function CampaignProvider({
 			{children}
 		</CampaignContext.Provider>
 	);
-}
+};
 
 export const useCampaignContext = (): CampaignContextType => {
 	const context = useContext(CampaignContext);

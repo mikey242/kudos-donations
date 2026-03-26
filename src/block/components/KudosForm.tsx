@@ -4,7 +4,6 @@ import { createPortal, useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
-import Render from './Render';
 import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
@@ -12,6 +11,7 @@ import { KudosLogoFullScreenAnimated } from './KudosLogo';
 import * as Controls from './controls';
 import * as Components from '.';
 import { applyFilters } from '@wordpress/hooks';
+import { Render } from '.';
 
 interface KudosFormProps {
 	displayAs: 'form' | 'button' | 'fslogo';

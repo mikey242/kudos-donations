@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React from 'react';
 import type { BlockEditProps } from '@wordpress/blocks';
-import { useCampaignContext } from '../contexts/';
+import { CampaignProvider, useCampaignContext } from '../contexts/';
 import { __ } from '@wordpress/i18n';
 import {
 	ExternalLink,
@@ -14,7 +14,6 @@ import {
 import { KudosForm } from './KudosForm';
 import { KudosLogo } from './KudosLogo';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import CampaignProvider from '../contexts/campaign-context';
 import type { Campaign } from '../../types/entity';
 import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from '@wordpress/element';
