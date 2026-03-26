@@ -6,7 +6,7 @@
 
 /* eslint-disable camelcase */
 
-import { KudosButtonAttributes, KudosForm } from './components';
+import { KudosForm } from './components';
 import Message, { PaymentStatus } from './components/Message';
 import './kudos-fonts.css';
 import './kudos-front.css';
@@ -14,6 +14,7 @@ import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import React from 'react';
 import CampaignProvider from './contexts/campaign-context';
+import { KudosButtonAttributes } from './components/Edit';
 
 domReady(() => {
 	// Select the web components as target for render.
