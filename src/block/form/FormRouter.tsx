@@ -1,0 +1,294 @@
+import { __ } from '@wordpress/i18n';
+import React from 'react';
+import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
+import {
+	InitialTab,
+	FrequencyTab,
+	AddressTab,
+	MessageTab,
+	SummaryTab,
+} from './tabs';
+import { Button } from '../controls';
+import { useLayoutEffect, useMemo, useRef, useState } from '@wordpress/element';
+import { clsx } from 'clsx';
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	LockClosedIcon,
+} from '@heroicons/react/24/outline';
+import { applyFilters } from '@wordpress/hooks';
+import BaseTab from './tabs/BaseTab';
+import type { Campaign } from '../../types/entity';
+
+interface TabDefinition {
+	name: string;
+	element: React.ComponentType<{ campaign: Campaign }>;
+	requirements?: Record<string, any>;
+}
+
+interface FormData {
+	recurring: boolean;
+	business_name: string;
+	city: string;
+	country: string;
+	postcode: string;
+	street: string;
+	message: string;
+	[key: string]: any;
+}
+interface FormRouterProps {
+	step: number;
+	campaign: Campaign;
+	submitForm: (data: FormData) => Promise<any>;
+	onStepChange: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const matchesRequirements = (
+	state: Record<string, any>,
+	requirements: Record<string, any> = {}
+): boolean => {
+	const deepMatches = (data: any, expected: any): boolean => {
+		if (typeof expected !== 'object' || expected === null) {
+			return data === expected;
+		}
+		if (typeof data !== 'object' || data === null) {
+			return false;
+		}
+		return Object.entries(expected).every(([key, val]) =>
+			deepMatches(data[key], val)
+		);
+	};
+
+	return Object.entries(requirements).every(([key, value]) =>
+		deepMatches(state[key], value)
+	);
+};
+
+const checkRequirements = (
+	tabs: TabDefinition[],
+	state: Record<string, any>,
+	index: number
+): boolean => {
+	const reqs = tabs[index]?.requirements;
+	if (!reqs) {
+		return true;
+	}
+	return matchesRequirements(state, reqs);
+};
+
+export const FormRouter = ({
+	step,
+	campaign,
+	submitForm,
+	onStepChange,
+}: FormRouterProps) => {
+	const [height, setHeight] = useState<string>('');
+	const [currentStep, setCurrentStep] = useState<number>(step);
+	const prevStep = useRef<number>(step); // Ref to keep track of the previous step
+	const [isBusy, setIsBusy] = useState<boolean>(false);
+	const elementRef = useRef<HTMLDivElement>(null);
+	const firstUpdate = useRef<boolean>(true);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const methods: UseFormReturn<FormData> = useForm<FormData>({
+		defaultValues: {
+			recurring: false,
+			business_name: '',
+			city: '',
+			country: '',
+			postcode: '',
+			street: '',
+			message: '',
+			name: '',
+			email: '',
+			language: navigator.language,
+		},
+	});
+
+	const Tabs = useMemo<TabDefinition[]>(
+		() =>
+			applyFilters(
+				'kudosFormTabs',
+
+				[
+					{
+						name: 'Initial',
+						element: InitialTab,
+					},
+					{
+						name: 'Recurring',
+						element: FrequencyTab,
+						requirements: {
+							recurring: true,
+						},
+					},
+					{
+						name: 'Address',
+						element: AddressTab,
+						requirements: {
+							address_enabled: true,
+						},
+					},
+					{
+						name: 'Message',
+						element: MessageTab,
+						requirements: {
+							message_enabled: true,
+						},
+					},
+					{
+						name: 'Summary',
+						element: SummaryTab,
+					},
+				],
+				campaign,
+				BaseTab
+			) as TabDefinition[],
+		[campaign]
+	);
+
+	const currentTab = Tabs[currentStep];
+	const CurrentTab = currentTab.element;
+
+	const handlePrev = () => {
+		if (currentStep === 0) {
+			return;
+		}
+		let prev = currentStep - 1;
+		const state = { ...methods.getValues(), ...campaign };
+
+		// Find next available step.
+		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
+			prev--;
+		}
+		onStepChange(prev);
+	};
+
+	const handleNext = (data: FormData) => {
+		const state = { ...data, ...campaign };
+		let nextStep = currentStep + 1;
+
+		// Find next available step.
+		while (
+			!checkRequirements(Tabs, state, nextStep) &&
+			nextStep < Tabs.length
+		) {
+			nextStep++;
+		}
+
+		onStepChange(nextStep);
+	};
+
+	const onSubmit = (data: FormData) => {
+		if (currentStep < Tabs.length - 1) {
+			return handleNext(data);
+		}
+
+		setIsBusy(true);
+		submitForm(data).then((result) => {
+			if (!result?.success) {
+				setIsBusy(false);
+			}
+		});
+	};
+
+	useLayoutEffect(() => {
+		if (firstUpdate.current) {
+			firstUpdate.current = false;
+			return;
+		}
+
+		if (prevStep.current !== step) {
+			if (!elementRef.current) {
+				return;
+			}
+
+			const target = elementRef.current;
+			const form = target.querySelector('form');
+			target.classList.add('translate-x-1', 'opacity-0');
+
+			const oldHeight = form.offsetHeight;
+			setHeight(oldHeight.toString());
+			const resizeObserver = new ResizeObserver(() => {
+				const newHeight = form.offsetHeight;
+				setHeight(newHeight.toString());
+
+				timeoutRef.current = setTimeout(() => {
+					setHeight('auto'); // Allow form to grow if validation message appears.
+					setCurrentStep(step);
+					target.classList.remove(
+						'translate-x-1',
+						'opacity-0',
+						'section-' + Tabs[prevStep.current]?.name?.toLowerCase()
+					);
+					target.classList.add(
+						'section-' + Tabs[step]?.name?.toLowerCase()
+					);
+					prevStep.current = step; // Update the previous step to the current step
+				}, 200);
+			});
+
+			resizeObserver.observe(form);
+
+			return () => {
+				resizeObserver.disconnect();
+				clearTimeout(timeoutRef.current);
+			};
+		}
+	}, [Tabs, step]);
+
+	return (
+		<FormProvider {...methods}>
+			<div
+				ref={elementRef}
+				id="form-container"
+				className={clsx(
+					isBusy && 'opacity-50',
+					'w-full transition-all duration-200'
+				)}
+				style={{ height: height + 'px' }}
+			>
+				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
+					<CurrentTab campaign={campaign} />
+					<div
+						id="form-buttons"
+						className="mt-8 flex justify-between relative"
+					>
+						{currentStep > 0 && (
+							<Button
+								type="button"
+								className="text-base"
+								ariaLabel={__('Back', 'kudos-donations')}
+								onClick={handlePrev}
+								icon={
+									<ChevronLeftIcon className="mr-2 w-5 h-5" />
+								}
+							>
+								<p>{__('Back', 'kudos-donations')}</p>
+							</Button>
+						)}
+						<Button
+							type="submit"
+							ariaLabel={__('Next', 'kudos-donations')}
+							className="ml-auto text-base"
+							isBusy={isBusy}
+							icon={
+								currentTab.name === 'Summary' && (
+									<LockClosedIcon className="mr-2 w-5 h-5" />
+								)
+							}
+						>
+							{currentTab.name === 'Summary' ? (
+								<p>{__('Submit', 'kudos-donations')}</p>
+							) : (
+								<>
+									<p>{__('Next', 'kudos-donations')}</p>
+									<ChevronRightIcon className="ml-2 w-5 h-5" />
+								</>
+							)}
+						</Button>
+					</div>
+				</form>
+			</div>
+		</FormProvider>
+	);
+};

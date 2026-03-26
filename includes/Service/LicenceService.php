@@ -108,7 +108,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param string $licence_key The active licence key.
 	 */
 	public function maybe_install_addon( string $licence_key ): bool {
-		$this->logger->debug( 'Licence valid, attempting to install add-on' );
+		$this->logger->info( 'Licence valid, attempting to install add-on' );
 		$url = add_query_arg(
 			[
 				'licence_key' => $licence_key,

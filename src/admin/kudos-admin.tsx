@@ -2,42 +2,16 @@ import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import './kudos-admin.css';
-import {
-	AdminProvider,
-	SettingsProvider,
-	useSettingsContext,
-	useAdminContext,
-	useEntitiesContext,
-} from './contexts';
-import { AdminRouter, Panel } from './components';
-import {
-	SLOT_HEADER_ACTIONS,
-	SLOT_HEADER_ACTIONS_EXTRA,
-	SLOT_PAGE_TITLE,
-} from './slot-names';
-import * as Controls from './components/controls';
-import { useFormContext } from 'react-hook-form';
+import { AdminProvider, SettingsProvider } from './contexts';
+import { AdminRouter } from './pages';
+import * as Controls from './controls';
+import * as Components from './components';
+import * as Contexts from './contexts';
 import { getLicenceStatus } from '../licence-utils';
 
 window.kudos.getLicenceStatus = getLicenceStatus;
 
-window.kudos.admin = {
-	Controls,
-	Components: {
-		Panel,
-	},
-	Hooks: {
-		useAdminContext,
-		useSettingsContext,
-		useEntitiesContext,
-		useFormContext,
-	},
-	SlotNames: {
-		SLOT_HEADER_ACTIONS,
-		SLOT_HEADER_ACTIONS_EXTRA,
-		SLOT_PAGE_TITLE,
-	},
-};
+window.kudos.admin = { Controls, Components, Contexts };
 
 domReady(() => {
 	const container = document.getElementById('root');

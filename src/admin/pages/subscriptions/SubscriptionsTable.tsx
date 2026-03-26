@@ -1,0 +1,200 @@
+import {
+	Button,
+	Flex,
+	Icon,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { Table, StatusIcon } from '../../components';
+import React from 'react';
+import { dateI18n } from '@wordpress/date';
+import type { Subscription } from '../../../types/entity';
+import type { StatusConfig } from '../../components';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { confirmDelete } from '../../utils';
+import { useAdminQueryParams } from '../../hooks';
+import apiFetch from '@wordpress/api-fetch';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
+
+const subscriptionStatusConfig: Record<string, StatusConfig> = {
+	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
+	cancelled: { title: __('Canceled', 'kudos-donations'), icon: 'no-alt' },
+	suspended: { title: __('Suspended', 'kudos-donations'), icon: 'warning' },
+	completed: { title: __('Completed', 'kudos-donations'), icon: 'yes' },
+};
+
+export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
+	const { currencies } = window.kudos;
+	const { setParams } = useAdminQueryParams();
+	const { settings } = useSettingsContext();
+	const { handleDelete, fetchEntities } = useEntitiesContext();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
+
+	const changeView = (entityId: number) => {
+		void setParams({
+			page: 'kudos-transactions',
+			where: { subscription_id: String(entityId) },
+		});
+	};
+
+	const cancelSubscription = async (entityId: number, token: string) => {
+		try {
+			const response: any = await apiFetch({
+				path: `/kudos/v1/subscription/cancel/`,
+				method: 'POST',
+				data: { id: entityId, token },
+			});
+
+			await createSuccessNotice(response.message, {
+				type: 'snackbar',
+				icon: <Icon icon="dismiss" />,
+			});
+
+			fetchEntities();
+		} catch (error: any) {
+			void createErrorNotice(error.message);
+			return null;
+		}
+	};
+
+	const headerItems = [
+		{
+			key: 'donor',
+			title: __('Donor', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.donor?.name ?? post.donor?.email ?? '',
+		},
+		{
+			key: 'status',
+			title: __('Status', 'kudos-donations'),
+			orderby: 'status',
+			valueCallback: (post: Subscription): React.ReactNode => (
+				<StatusIcon
+					status={post.status}
+					config={subscriptionStatusConfig}
+				/>
+			),
+		},
+		{
+			key: 'value',
+			title: __('Amount', 'kudos-donations'),
+			orderby: 'value',
+			valueCallback: (post: Subscription): React.ReactNode => {
+				const value = post?.value;
+				const currency = post?.currency;
+
+				if (!value || !currency) {
+					return null;
+				}
+
+				const currencySymbol = currencies[post?.currency] ?? currency;
+				return (
+					<span>
+						{currencySymbol}
+						{value}
+					</span>
+				);
+			},
+		},
+		{
+			key: 'campaign',
+			title: __('Campaign', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.campaign?.title,
+		},
+		{
+			key: 'frequency',
+			title: __('Frequency', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.frequency,
+		},
+		{
+			key: 'length',
+			title: __('Length', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.years === 0
+					? __('Continuous', 'kudos-donations')
+					: post.years + ' ' + __('years', 'kudos-donations'),
+		},
+		{
+			key: 'date',
+			title: __('Created', 'kudos-donations'),
+			orderby: 'created_at',
+			valueCallback: (post: Subscription): React.ReactNode => (
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
+					<i>{dateI18n('d-m-Y', post.created_at)}</i>
+				</Tooltip>
+			),
+		},
+		{
+			key: 'edit',
+			title: (
+				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
+			),
+			valueCallback: (post: Subscription): React.ReactNode => (
+				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="money-alt"
+						disabled={!post.donor}
+						onClick={() => changeView(post.id)}
+						title={__('View donations', 'kudos-donations')}
+					/>
+					<Button
+						size="compact"
+						icon="dismiss"
+						disabled={post.status !== 'active'}
+						onClick={() => cancelSubscription(post.id, post.token)}
+						title={__('Cancel subscription', 'kudos-donations')}
+					/>
+					{settings._kudos_debug_mode && (
+						<Button
+							size="compact"
+							icon="edit"
+							onClick={() => handleEdit(post.id)}
+							title={__('View more', 'kudos-donations')}
+						/>
+					)}
+					<Button
+						size="compact"
+						icon="trash"
+						label={__('Delete subscription', 'kudos-donations')}
+						onClick={() =>
+							confirmDelete(
+								__(
+									'Are you sure you wish to delete this subscription?',
+									'kudos-donations'
+								),
+								() => handleDelete(post.id)
+							)
+						}
+					/>
+				</Flex>
+			),
+		},
+	];
+
+	const filters = [
+		{
+			label: __('Monthly', 'kudos-donations'),
+			where: { frequency: '1 month' },
+		},
+		{
+			label: __('Quarterly', 'kudos-donations'),
+			where: { frequency: '3 months' },
+		},
+		{
+			label: __('Yearly', 'kudos-donations'),
+			where: { frequency: '12 months' },
+		},
+	];
+
+	return (
+		<>
+			<Table filters={filters} headerItems={headerItems} />
+		</>
+	);
+};
