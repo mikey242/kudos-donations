@@ -97,9 +97,9 @@ export const KudosForm = ({
 			});
 	}
 
-	const showLogo: boolean = applyFilters(
-		'kudosShowBranding',
-		true
+	const showLogo: boolean = !applyFilters(
+		'kudosHideBranding',
+		false
 	) as boolean;
 
 	const renderModal = () => {
