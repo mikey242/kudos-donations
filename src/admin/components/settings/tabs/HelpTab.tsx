@@ -1,14 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { useSettingsContext } from '../../../contexts';
 import { Button, Flex, FlexItem } from '@wordpress/components';
 import { TextControl, ToggleControl } from '../../controls';
 import { Panel } from '../../Panel';
+import { LogModal } from '../../LogModal';
 
 const HelpTab = (): React.ReactNode => {
-	const { updateSetting } = useSettingsContext();
-
 	return (
 		<>
 			<Panel header={__('Share the love', 'kudos-donations')}>
@@ -51,15 +49,6 @@ const HelpTab = (): React.ReactNode => {
 							</Button>
 							<Button
 								variant="secondary"
-								icon="info"
-								onClick={() =>
-									updateSetting('_kudos_show_intro', true)
-								}
-							>
-								{__('Show welcome guide', 'kudos-donations')}
-							</Button>
-							<Button
-								variant="secondary"
 								icon="editor-help"
 								href="https://docs.kudosdonations.com/"
 								target="_blank"
@@ -70,6 +59,7 @@ const HelpTab = (): React.ReactNode => {
 									'kudos-donations'
 								)}
 							</Button>
+							<LogModal />
 						</Flex>
 					</FlexItem>
 					<FlexItem>
