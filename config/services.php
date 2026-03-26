@@ -112,7 +112,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		)
 		->call( 'setFormatter', [ service( JsonFormatter::class ) ] );
 	$services->set( FingersCrossedHandler::class )
-		->args( [ service( RotatingFileHandler::class ), Logger::ERROR, 0, true, true, Logger::INFO ] );
+		->args( [ service( RotatingFileHandler::class ), Logger::ERROR, 0, true, true, KUDOS_DEBUG ? Logger::DEBUG : Logger::INFO ] );
 	$services->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
 		->call( 'pushHandler', [ service( FingersCrossedHandler::class ) ] )
