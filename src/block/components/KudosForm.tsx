@@ -4,7 +4,6 @@ import { createPortal, useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
-import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
@@ -157,26 +156,20 @@ export const KudosForm = ({
 			errors={campaignErrors}
 			className={previewMode ? 'pointer-events-none' : undefined}
 			alignment={alignment}
+			isContentReady={!isLoading}
 		>
-			{isLoading ? (
-				<Spinner />
-			) : (
-				<>
-					{isFSLogo && <KudosLogoFullScreenAnimated />}
-					{isForm && renderDonationForm()}
-					{isModal && (
-						<>
-							<DonateButton
-								showLogo={showLogo}
-								onClick={toggleModal}
-							>
-								{label}
-							</DonateButton>
-							{renderModal()}
-						</>
-					)}
-				</>
-			)}
+			<>
+				{isFSLogo && <KudosLogoFullScreenAnimated />}
+				{isForm && renderDonationForm()}
+				{isModal && (
+					<>
+						<DonateButton showLogo={showLogo} onClick={toggleModal}>
+							{label}
+						</DonateButton>
+						{renderModal()}
+					</>
+				)}
+			</>
 		</Render>
 	);
 };

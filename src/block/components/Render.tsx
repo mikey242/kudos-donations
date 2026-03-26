@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import { useRef, useState } from '@wordpress/element';
 import root from 'react-shadow';
 import React, { ReactNode } from 'react';
+import { Spinner } from './Spinner';
 interface RenderProps {
 	children: ReactNode;
 	themeColor?: string;
@@ -13,6 +14,7 @@ interface RenderProps {
 	};
 	alignment?: 'left' | 'center' | 'right';
 	errors?: string[] | null;
+	isContentReady?: boolean;
 }
 
 export const Render = ({
@@ -23,6 +25,7 @@ export const Render = ({
 	fonts,
 	alignment,
 	errors = null,
+	isContentReady = true,
 }: RenderProps) => {
 	// Set ready = false if there are stylesheets to load
 	const [ready, setReady] = useState(!window.kudos?.stylesheets);
@@ -98,7 +101,11 @@ export const Render = ({
 						alignmentResult
 					)}
 				>
-					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
+					{ready && !errors ? (
+						<>{isContentReady ? children : <Spinner />}</>
+					) : (
+						<>{renderErrors()}</>
+					)}
 				</div>
 			</div>
 		</root.div>
