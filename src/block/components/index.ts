@@ -1,5 +1,3 @@
-export * from './tabs';
-export * from './controls';
 export * from './DonateButton';
 export * from './FormRouter';
 export * from './KudosForm';

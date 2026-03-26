@@ -9,7 +9,8 @@ import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
-import * as FrontControls from './controls';
+import * as Controls from './controls';
+import * as Components from '.';
 import { applyFilters } from '@wordpress/hooks';
 
 interface KudosFormProps {
@@ -36,7 +37,7 @@ export const KudosForm = ({
 
 	useEffect(() => {
 		// Add controls to kudos property for external access.
-		window.kudos.FrontControls = FrontControls;
+		window.kudos.front = { Components, Controls };
 	}, []);
 
 	useEffect(() => {

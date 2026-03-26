@@ -26,6 +26,10 @@ export interface KudosGlobal {
 		};
 		SlotNames: typeof import('../admin/slot-names');
 	}
+	front: {
+		Components: typeof import('../block/components')
+		Controls: typeof import('../block/components/controls')
+	}
 	[key: string]: unknown;
 }
 
