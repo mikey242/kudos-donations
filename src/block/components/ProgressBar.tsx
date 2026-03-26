@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
-import { getCurrencySymbol } from '../../currency-utils';
+import { getCurrencySymbol } from '../../utils/currency';
 
 interface ProgressBarProps {
 	goal: number;

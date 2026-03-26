@@ -7,7 +7,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from '../components/Spinner';
 import { useCampaignContext } from '../contexts';
 import { Render } from '../components';
-import { getCurrencySymbol } from '../../currency-utils';
+import { getCurrencySymbol } from '../../utils/currency';
 
 interface PaymentStatusProps {
 	transactionId: string;

@@ -10,7 +10,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { applyFilters } from '@wordpress/hooks';
 import { Panel } from '../../../components';
 import { useEffect } from '@wordpress/element';
-import { getCurrencySymbol } from '../../../../currency-utils';
+import { getCurrencySymbol } from '../../../../utils/currency';
 
 interface DonationSettingsTabProps {
 	recurringEnabled?: boolean;

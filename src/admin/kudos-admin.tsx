@@ -7,7 +7,7 @@ import { AdminRouter } from './pages';
 import * as Controls from './controls';
 import * as Components from './components';
 import * as Contexts from './contexts';
-import { getLicenceStatus } from '../licence-utils';
+import { getLicenceStatus } from '../utils/licence';
 
 window.kudos.getLicenceStatus = getLicenceStatus;
 

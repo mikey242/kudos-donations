@@ -4,7 +4,7 @@ import { DetailsModal, Table } from '../../components';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { confirmDelete } from '../../utils';
+import { confirmDelete } from '../../../utils';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {

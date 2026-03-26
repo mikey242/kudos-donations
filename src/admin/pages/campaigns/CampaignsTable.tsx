@@ -13,10 +13,10 @@ import React, { ReactNode } from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
-import { confirmDelete } from '../../utils';
+import { confirmDelete } from '../../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-import { getCurrencySymbol } from '../../../currency-utils';
+import { getCurrencySymbol } from '../../../utils/currency';
 export const CampaignsTable = ({ handleEdit, handleNew }): ReactNode => {
 	const { setParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();

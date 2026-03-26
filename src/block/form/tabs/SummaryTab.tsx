@@ -7,7 +7,7 @@ import { CheckboxControl } from '../../controls';
 import { createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
-import { getCurrencySymbol } from '../../../currency-utils';
+import { getCurrencySymbol } from '../../../utils/currency';
 
 interface SummaryTabProps {
 	campaign: Campaign;

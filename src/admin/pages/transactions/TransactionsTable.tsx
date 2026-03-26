@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { confirmDelete } from '../../utils';
+import { confirmDelete } from '../../../utils';
 import type { Campaign, Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { DetailsModal, HeaderItem, StatusIcon, Table } from '../../components';
 import type { StatusConfig } from '../../components';
-import {getCurrencySymbol} from "../../../currency-utils";
+import { getCurrencySymbol } from '../../../utils/currency';
 
 const transactionStatusConfig: Record<string, StatusConfig> = {
 	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },

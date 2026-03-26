@@ -12,12 +12,12 @@ import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/entity';
 import type { StatusConfig } from '../../components';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { confirmDelete } from '../../utils';
+import { confirmDelete } from '../../../utils';
 import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { getCurrencySymbol } from '../../../currency-utils';
+import { getCurrencySymbol } from '../../../utils/currency';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },

@@ -10,8 +10,8 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../../components';
-import { isValidUrl } from '../../../utils';
-import { getCurrencySymbol } from '../../../../currency-utils';
+import { isValidUrl } from '../../../../utils';
+import { getCurrencySymbol } from '../../../../utils/currency';
 
 interface GeneralTabProps {
 	campaign: Campaign;

@@ -8,7 +8,7 @@ import { RadioGroupControl, TextControl, ToggleControl } from '../../controls';
 import type { RadioGroupOption } from '../../controls';
 import { ProgressBar } from '../../components';
 import type { Campaign } from '../../../types/entity';
-import { getCurrencySymbol } from '../../../currency-utils';
+import { getCurrencySymbol } from '../../../utils/currency';
 
 interface InitialTabProps {
 	campaign: Campaign;
