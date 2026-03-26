@@ -1,14 +1,16 @@
 declare module '@kudos/admin-controls' {
-	export {BaseControl} from '../admin/components/controls'
-	export {CheckboxControl} from '../admin/components/controls'
-	export {ColorPicker} from '../admin/components/controls'
-	export {FormTokenField} from '../admin/components/controls'
-	export {RadioControl} from '../admin/components/controls'
-	export {RadioGroupControl} from '../admin/components/controls'
-	export {SelectControl} from '../admin/components/controls'
-	export {TextAreaControl} from '../admin/components/controls'
-	export {TextControl} from '../admin/components/controls'
-	export {ToggleControl} from '../admin/components/controls'
+	export {
+		BaseControl,
+		CheckboxControl,
+		ColorPicker,
+		FormTokenField,
+		RadioControl,
+		RadioGroupControl,
+		SelectControl,
+		TextAreaControl,
+		TextControl,
+		ToggleControl,
+	} from '../admin/components/controls'
 }
 
 declare module '@kudos/admin-components' {
