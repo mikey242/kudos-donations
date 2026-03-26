@@ -77,7 +77,6 @@ if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action
 $dotenv->populate(
 	[
 		'KUDOS_STORAGE_DIR' => KUDOS_STORAGE_DIR,
-		'LOG_LEVEL'         => KUDOS_DEBUG ? Logger::DEBUG : Logger::INFO,
 	],
 	true
 );

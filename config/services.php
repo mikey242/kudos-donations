@@ -41,8 +41,8 @@ use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
+use IseardMedia\Kudos\ThirdParty\Monolog\Handler\FingersCrossedHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
-use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\IntrospectionProcessor;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
@@ -107,15 +107,15 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 			[
 				'%env(KUDOS_STORAGE_DIR)%logs/%env(APP_ENV)%.log',
 				'%log.max_files%',
-				'%env(LOG_LEVEL)%',
+				Logger::DEBUG,
 			]
 		)
 		->call( 'setFormatter', [ service( JsonFormatter::class ) ] );
-	$services->set( WhatFailureGroupHandler::class )
-		->args( [ [ service( RotatingFileHandler::class ) ] ] );
+	$services->set( FingersCrossedHandler::class )
+		->args( [ service( RotatingFileHandler::class ), Logger::ERROR, 0, true, true, Logger::INFO ] );
 	$services->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
-		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] )
+		->call( 'pushHandler', [ service( FingersCrossedHandler::class ) ] )
 		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] )
 		->call( 'pushProcessor', [ service( IntrospectionProcessor::class ) ] );
 
