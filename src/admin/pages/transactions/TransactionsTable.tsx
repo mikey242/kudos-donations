@@ -191,9 +191,5 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 	];
 
-	return (
-		<>
-			<Table filters={filters} headerItems={headerItems} />
-		</>
-	);
+	return <Table filters={filters} headerItems={headerItems} />;
 };

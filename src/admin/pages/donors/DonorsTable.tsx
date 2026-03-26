@@ -122,9 +122,5 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		},
 	];
 
-	return (
-		<>
-			<Table headerItems={headerItems} />
-		</>
-	);
+	return <Table headerItems={headerItems} />;
 };
