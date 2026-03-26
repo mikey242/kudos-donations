@@ -18,7 +18,7 @@ const IntroGuide = (): React.ReactNode => {
 	}, [settings._kudos_show_intro]);
 
 	const closeModal = () => {
-		void updateSetting('_kudos_show_intro', 0);
+		void updateSetting('_kudos_show_intro', false);
 		setShowGuide(false);
 	};
 
