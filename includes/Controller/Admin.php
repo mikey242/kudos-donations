@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
-use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
@@ -93,14 +92,6 @@ class Admin extends AbstractRegistrable {
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
 						CacheService::recursively_clear_cache();
 						do_action( 'kudos_clear_all_cache' );
-					}
-					break;
-				case 'kudos_clear_logs':
-					if ( wp_verify_nonce( $nonce, 'kudos_clear_logs' ) ) {
-						$log_files = DebugAdminPage::get_logs();
-						foreach ( $log_files as $log_file ) {
-							wp_delete_file( $log_file );
-						}
 					}
 					break;
 				case 'kudos_assign_transactions_to_campaign':
