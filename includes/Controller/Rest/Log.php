@@ -46,7 +46,7 @@ class Log extends BaseRestController {
 			'/' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_log' ],
-				'permission_callback' => [$this, 'can_manage_options'],
+				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
 					'file'  => [
 						'type'              => FieldType::STRING,

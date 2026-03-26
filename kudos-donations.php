@@ -24,7 +24,6 @@ namespace IseardMedia\Kudos;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\CompatibilityService;
 use IseardMedia\Kudos\Service\NoticeService;
-use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.
