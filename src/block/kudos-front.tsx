@@ -16,7 +16,6 @@ import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import React from 'react';
 
 window.kudos.front = { Components, Controls, Contexts };
 

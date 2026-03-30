@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import React from 'react';
 import type { BlockEditProps } from '@wordpress/blocks';
 import { CampaignProvider, useCampaignContext } from '../contexts/';
 import { __ } from '@wordpress/i18n';
