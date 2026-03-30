@@ -39,7 +39,7 @@ export const ProgressBar = ({
 					<div className="absolute right-1/2 translate-x-1/2">
 						<span>{percentage + '%'}</span>
 						<span className="hidden xs:inline">
-							{' ( ' + currency + total + ')'}
+							{' ( ' + currencySymbol + total + ')'}
 						</span>
 					</div>
 				</div>
