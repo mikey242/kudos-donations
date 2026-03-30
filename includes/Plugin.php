@@ -112,13 +112,7 @@ class Plugin implements LoggerAwareInterface {
 			$this->on_plugin_loaded();
 			do_action( 'kudos_donations_loaded' );
 		} catch ( Throwable $e ) {
-			$this->get_logger()->error(
-				$e->getMessage(),
-				[
-					'file' => $e->getFile(),
-					'line' => $e->getLine(),
-				]
-			);
+			$this->get_logger()->error( $e->getMessage() );
 		}
 	}
 }
