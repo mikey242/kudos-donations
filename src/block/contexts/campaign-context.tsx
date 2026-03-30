@@ -31,7 +31,7 @@ export const CampaignProvider = ({
 }: CampaignProviderProps) => {
 	const [campaign, setCampaign] = useState<Campaign | null>(null);
 	const [campaignErrors, setCampaignErrors] = useState<string[]>(null);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	/**
 	 * Fetch campaign by ID first, fallback to slug if not found.
 	 * Slug fetch is enabled only if the ID fetch resolves and finds nothing.
@@ -39,7 +39,6 @@ export const CampaignProvider = ({
 	useEffect(() => {
 		if (campaignId) {
 			setCampaignErrors(null);
-			setIsLoading(true);
 
 			// Try by ID
 			apiFetch({ path: `/kudos/v1/campaign/${campaignId}` })
