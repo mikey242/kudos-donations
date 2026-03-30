@@ -63,13 +63,15 @@ class CampaignRepository extends BaseRepository {
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function get_total( CampaignEntity $campaign ): float {
-		$transactions = $this->get_transactions( $campaign, [ 'status', 'value' ] );
-		return array_reduce(
+		$transactions     = $this->get_transactions( $campaign, [ 'status', 'value' ] );
+		$additional_funds = $campaign->additional_funds ?? 0.0;
+		$total_campaign   = array_reduce(
 			$transactions,
 			static fn( float $carry, $item ): float =>
 			'paid' === $item->status ? $carry + (float) $item->value : $carry,
 			0.0
 		);
+		return $total_campaign + $additional_funds;
 	}
 
 	/**
