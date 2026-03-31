@@ -3,7 +3,7 @@
  * CacheService tests.
  */
 
-namespace Service;
+namespace IseardMedia\Kudos\Tests\Service;
 
 use WP_UnitTestCase;
 

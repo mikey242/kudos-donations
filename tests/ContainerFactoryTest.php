@@ -3,8 +3,12 @@
  * ContainerFactory tests
  */
 
+namespace IseardMedia\Kudos\Tests;
+
+use Exception;
 use IseardMedia\Kudos\ContainerFactory;
 use Psr\Container\ContainerInterface;
+use WP_UnitTestCase;
 
 /**
  * @covers \IseardMedia\Kudos\ContainerFactory

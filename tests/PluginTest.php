@@ -3,6 +3,10 @@
  * Plugin tests
  */
 
+namespace IseardMedia\Kudos\Tests;
+
+use WP_UnitTestCase;
+
 /**
  * @covers \IseardMedia\Kudos\Plugin
  */
