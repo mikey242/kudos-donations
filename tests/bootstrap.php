@@ -7,6 +7,7 @@
 use IseardMedia\Kudos\Helper\Utils;
 
 const FS_METHOD = 'direct';
+const KUDOS_TEST_MODE = true;
 
 require dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
 

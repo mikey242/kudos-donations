@@ -43,6 +43,7 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\FingersCrossedHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
+use IseardMedia\Kudos\ThirdParty\Monolog\Handler\StreamHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\IntrospectionProcessor;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
@@ -118,6 +119,13 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->call( 'pushHandler', [ service( FingersCrossedHandler::class ) ] )
 		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] )
 		->call( 'pushProcessor', [ service( IntrospectionProcessor::class ) ] );
+
+	if ( defined( 'KUDOS_TEST_MODE' ) && KUDOS_TEST_MODE ) {
+		$services->set( 'kudos.test_logger_handler', StreamHandler::class )
+			->args( [ 'php://stdout', Logger::DEBUG ] );
+		$services->get( LoggerInterface::class )
+			->call( 'pushHandler', [ service( 'kudos.test_logger_handler' ) ] );
+	}
 
 	// External libraries.
 	$services->set( Dompdf::class )->lazy();
