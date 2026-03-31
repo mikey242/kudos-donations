@@ -87,8 +87,8 @@ return [
                 $content
             );
             return str_replace(
-                "'\\\\Dompdf\\\\Positioner\\\\'",
-                "'\\\\" . $escaped_prefix . "\\\\Dompdf\\\\Positioner\\\\'",
+                "'\\Dompdf\\Positioner\\\\'",
+                "'\\" . $prefix . "\\Dompdf\\Positioner\\\\'",
                 $content
             );
         },
