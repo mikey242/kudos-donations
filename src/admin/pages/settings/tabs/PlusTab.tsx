@@ -128,6 +128,12 @@ const PlusTab = (): React.ReactNode => {
 				</Panel>
 			)}
 			<Panel header={__('Licence key', 'kudos-donations')}>
+				<p>
+					{__(
+						'Add additional functionality to Kudos Donations and help fund future development. Click the "Visit documentation" link below for more information.',
+						'kudos-donations'
+					)}
+				</p>
 				<InputControl
 					__next40pxDefaultSize
 					label={__('Licence key', 'kudos-donations')}
@@ -152,7 +158,7 @@ const PlusTab = (): React.ReactNode => {
 					</Flex>
 				)}
 				<Flex justify="space-between">
-					<ExternalLink href="https://docs.kudosdonations.com">
+					<ExternalLink href="https://docs.kudosdonations.com/docs/plus">
 						{__('Visit documentation', 'kudos-donations')}
 					</ExternalLink>
 					{isSet ? (
