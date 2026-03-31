@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dae157ddeed89659b12421a8fab0deb5",
+    "content-hash": "5273cb841a36beeed5b57bc822b81284",
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.10",
+            "version": "1.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "961a5e4056dd2e4a2eedcac7576075947c28bf63"
+                "reference": "68ff39175e8e94a4bb1d259407ce51a6a60f09e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/961a5e4056dd2e4a2eedcac7576075947c28bf63",
-                "reference": "961a5e4056dd2e4a2eedcac7576075947c28bf63",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/68ff39175e8e94a4bb1d259407ce51a6a60f09e6",
+                "reference": "68ff39175e8e94a4bb1d259407ce51a6a60f09e6",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.10"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.11"
             },
             "funding": [
                 {
@@ -76,7 +76,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-08T15:06:51+00:00"
+            "time": "2026-03-30T09:16:10+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -4882,53 +4882,6 @@
                 }
             ],
             "time": "2025-09-13T08:53:30+00:00"
-        },
-        {
-            "name": "sniccowp/php-scoper-wordpress-excludes",
-            "version": "6.9.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/snicco/php-scoper-wordpress-excludes.git",
-                "reference": "94867711087d0efc3d361dbe068044e0124f4c0b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/snicco/php-scoper-wordpress-excludes/zipball/94867711087d0efc3d361dbe068044e0124f4c0b",
-                "reference": "94867711087d0efc3d361dbe068044e0124f4c0b",
-                "shasum": ""
-            },
-            "require-dev": {
-                "php": "^7.4",
-                "php-stubs/wordpress-globals": "0.2.0",
-                "php-stubs/wordpress-stubs": "6.9.1",
-                "sniccowp/php-scoper-excludes": "dev-master"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Calvin Alkan",
-                    "email": "calvin@snicco.de"
-                },
-                {
-                    "name": "Marlon Alkan",
-                    "email": "marlon@snicco.de"
-                }
-            ],
-            "description": "A list of all WordPress core classes, functions and constants. Meant to be used with the PHP-Scoper exclusion functionality.",
-            "keywords": [
-                "php-scoper",
-                "scoping WordPress",
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/snicco/php-scoper-wordpress-excludes/issues",
-                "source": "https://github.com/snicco/php-scoper-wordpress-excludes/tree/6.9.1"
-            },
-            "time": "2026-02-04T00:34:47+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
