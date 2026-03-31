@@ -35,6 +35,10 @@ return [
         'Psr\\',
         'Composer'
     ],
+    'exclude-functions' => [
+        'http_clear_last_response_headers',
+        'http_get_last_response_headers',
+    ],
     'patchers' => [
 
         /**
