@@ -136,9 +136,10 @@ return [
             if (false === strpos($filePath, 'proxy-manager-bridge/LazyProxy/PhpDumper/ProxyDumper.php')) {
                 return $content;
             }
+            $escaped_prefix = str_replace('\\', '\\\\', $prefix);
             return str_replace(
-                '\\ProxyManager\\Proxy\\LazyLoadingInterface',
-                '\\' . $prefix . '\\ProxyManager\\Proxy\\LazyLoadingInterface',
+                '\\\\ProxyManager\\\\Proxy\\\\LazyLoadingInterface',
+                '\\\\' . $escaped_prefix . '\\\\ProxyManager\\\\Proxy\\\\LazyLoadingInterface',
                 $content
             );
         },
