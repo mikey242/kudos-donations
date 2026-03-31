@@ -114,7 +114,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
-					prefix={currency}
+					prefix={currencySymbol}
 					type="number"
 					placeholder={
 						amount_type === 'both'
