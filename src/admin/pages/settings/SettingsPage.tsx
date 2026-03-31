@@ -98,9 +98,9 @@ export const SettingsPage = (): React.ReactNode => {
 					<Fill name={SLOT_HEADER_ACTIONS}>
 						<FlexItem>
 							<span className="status-text">
-								{isLicenceActive(settings._kudos_licence_status)
-									? __('licence active', 'kudos-donations')
-									: __('free version', 'kudos-donations')}
+								{isLicenceActive(
+									settings._kudos_licence_status
+								) && __('licence active', 'kudos-donations')}
 							</span>
 						</FlexItem>
 						<FlexItem>
