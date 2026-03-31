@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import React, { ReactNode } from 'react';
 import { KudosModal } from './KudosModal';
 import { Button } from '../controls';
@@ -8,6 +8,7 @@ import { Spinner } from '../components/Spinner';
 import { useCampaignContext } from '../contexts';
 import { Render } from '../components';
 import { getCurrencySymbol } from '../../utils/currency';
+import { applyFilters } from '@wordpress/hooks';
 
 interface PaymentStatusProps {
 	transactionId: string;
@@ -26,7 +27,7 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 	const { campaign, isLoading } = useCampaignContext();
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<ReactNode>(<Spinner />);
-	const pollingRef = useRef<NodeJS.Timeout>(null);
+	const [isResolved, setIsResolved] = useState(false);
 	const intervalTime = 1000;
 	const maxAttempts = 10;
 
@@ -69,30 +70,34 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 								placeholders
 							)
 						);
-						clearInterval(pollingRef.current);
+						setIsResolved(true);
+						clearInterval(interval);
 						break;
 					case 'failed':
 						setTitle(__('Payment Failed', 'kudos-donations'));
 						setBody(__('Your payment failed.', 'kudos-donations'));
-						clearInterval(pollingRef.current);
+						setIsResolved(true);
+						clearInterval(interval);
 						break;
 					case 'cancelled':
 						setTitle(__('Payment Cancelled', 'kudos-donations'));
 						setBody(
 							__('Your payment was cancelled.', 'kudos-donations')
 						);
-						clearInterval(pollingRef.current);
+						setIsResolved(true);
+						clearInterval(interval);
 						break;
 				}
 			} catch (error) {
 				setTitle('Error');
 				setBody(error.message);
-				clearInterval(pollingRef.current);
+				setIsResolved(true);
+				clearInterval(interval);
 			}
 		};
 
 		// Create polling interval.
-		pollingRef.current = setInterval(() => {
+		const interval = setInterval(() => {
 			if (attempts < maxAttempts) {
 				checkTransactionStatus().then(() => {
 					attempts++;
@@ -105,11 +110,12 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 						'kudos-donations'
 					)
 				);
-				clearInterval(pollingRef.current);
+				setIsResolved(true);
+				clearInterval(interval);
 			}
 		}, intervalTime);
 
-		return () => clearInterval(pollingRef.current);
+		return () => clearInterval(interval);
 	}, [transactionId, campaign]);
 
 	if (isLoading) {
@@ -122,7 +128,7 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 			body={body}
 			color={campaign?.theme_color}
 			style={campaign?.custom_styles}
-			dismissible={!!pollingRef.current}
+			dismissible={isResolved}
 		/>
 	);
 };
@@ -153,11 +159,20 @@ export default function Message({
 		setReady(true);
 	}, []);
 
+	const showLogo: boolean = !applyFilters(
+		'kudosHideBranding',
+		false
+	) as boolean;
+
 	return (
 		<>
 			{ready && (
 				<Render style={style} themeColor={color}>
-					<KudosModal toggleModal={closeModal} isOpen={modalOpen}>
+					<KudosModal
+						toggleModal={closeModal}
+						isOpen={modalOpen}
+						showLogo={showLogo}
+					>
 						<>
 							{title && (
 								<h2 className="font-bold font-heading text-4xl/4 m-0 mb-2 block text-center">
