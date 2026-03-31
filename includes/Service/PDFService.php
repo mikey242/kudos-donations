@@ -147,7 +147,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 
 			return null;
 
-		} catch ( Exception $e ) {
+		} catch ( \Throwable $e ) {
 			$this->logger->critical( $e->getMessage(), $data );
 
 			return null;
