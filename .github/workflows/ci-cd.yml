@@ -129,7 +129,8 @@ jobs:
       - name: Download and install compatibility plugins
         run: |
           mkdir -p /tmp/compat-plugins
-          WP_PLUGINS_DIR=/tmp/wordpress/src/wp-content/plugins
+          WP_PLUGINS_DIR=$(find /tmp/wordpress -type d -name plugins | head -1)
+          echo "Installing compatibility plugins to: $WP_PLUGINS_DIR"
 
           if [ ! -f /tmp/compat-plugins/woocommerce.zip ]; then
             curl -L https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \
