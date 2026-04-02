@@ -33,6 +33,19 @@ require_once "{$_tests_dir}/includes/functions.php";
 
 // Manually load the plugin being tested.
 function _manually_load_plugin() {
+	$loaded = [];
+	foreach ( glob( WP_PLUGIN_DIR . '/*', GLOB_ONLYDIR ) as $plugin_dir ) {
+		$slug        = basename( $plugin_dir );
+		$plugin_file = $plugin_dir . '/' . $slug . '.php';
+		if ( 'kudos-donations' !== $slug && file_exists( $plugin_file ) ) {
+			require $plugin_file;
+			$loaded[] = $slug;
+		}
+	}
+
+	$compat_list = $loaded ? implode( ', ', $loaded ) : 'none';
+	echo "Plugins loaded: {$compat_list}" . PHP_EOL;
+
 	require dirname( __DIR__ ) . '/kudos-donations.php';
 	$wpdb = new \IseardMedia\Kudos\Helper\WpDb();
 	Utils::create_all_tables($wpdb);

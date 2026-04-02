@@ -1,0 +1,44 @@
+name: Setup WP test environment
+description: Checks out code, sets up PHP, downloads built artifacts, installs subversion, and runs install-wp-tests.sh.
+
+inputs:
+  php-version:
+    description: PHP version to set up
+    required: true
+  mysql-port:
+    description: Mapped MySQL port from the job service
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php-version }}
+
+    - name: Download plugin dependencies
+      uses: actions/download-artifact@v8
+      with:
+        name: plugin-deps
+        path: ./
+
+    - name: Install subversion
+      shell: bash
+      run: |
+        sudo apt-get update -y --allow-releaseinfo-change
+        sudo apt-get install -y subversion
+
+    - name: Install tests
+      shell: bash
+      run: |
+        sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
+        sudo chmod +x /bin/*.sh
+        bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ inputs.mysql-port }} latest true
+
+    - name: Fix permissions for PHPUnit
+      shell: bash
+      run: chmod +x vendor/bin/phpunit
