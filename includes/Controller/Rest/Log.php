@@ -27,14 +27,14 @@ class Log extends BaseRestController {
 
 	protected string $rest_base = 'log';
 	private WP_Filesystem_Direct $file_system;
-	private ?array $log_files;
+	private array $log_files;
 
 	/**
 	 * Log route constructor.
 	 */
 	public function __construct() {
 		$this->file_system = new WP_Filesystem_Direct( true );
-		$this->log_files   = $this->get_logs();
+		$this->log_files   = $this->get_logs( $_ENV['APP_ENV'] ?? null );
 	}
 
 	/**
@@ -69,13 +69,14 @@ class Log extends BaseRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function get_log( WP_REST_Request $request ): WP_REST_Response {
-		$file        = $request->get_param( 'file' );
-		$level       = $request->get_param( 'level' );
-		$log_content = $this->get_log_content( $file, $level );
+		$file   = $request->get_param( 'file' );
+		$level  = $request->get_param( 'level' );
+		$result = $this->get_log_content( $file, $level );
 		return new WP_REST_Response(
 			[
-				'log_files'   => $this->log_files,
-				'log_content' => $log_content,
+				'log_files'    => $this->log_files,
+				'current_file' => $result['current_file'],
+				'log_entries'  => $result['log_entries'],
 			],
 			200
 		);
@@ -83,10 +84,30 @@ class Log extends BaseRestController {
 
 	/**
 	 * Gets an array of the log file paths.
+	 *
+	 * @param ?string $env The environment to fetch logs for. If not specified return all.
 	 */
-	public static function get_logs(): ?array {
-		$files = glob( self::LOG_DIR . '*.log' );
-		return $files ? array_map( 'basename', $files ) : $files;
+	private function get_logs( ?string $env = null ): array {
+		$paths = glob( self::LOG_DIR . '*.log' );
+		$files = $paths ? array_map( 'basename', $paths ) : $paths;
+		if ( $env ) {
+			$files = array_filter( $files, fn( $file ) => substr( $file, 0, \strlen( $env ) ) === $env );
+		}
+
+		return $files;
+	}
+
+	/**
+	 * Resolves which log file to use, falling back to the latest available.
+	 *
+	 * @param string|null $log_file The requested log file name.
+	 */
+	private function resolve_log_file( ?string $log_file ): ?string {
+		if ( $log_file && $this->file_system->exists( self::LOG_DIR . $log_file ) ) {
+			return $log_file;
+		}
+		$latest = $this->log_files ? $this->log_files[ \count( $this->log_files ) - 1 ] : null;
+		return $latest && $this->file_system->exists( self::LOG_DIR . $latest ) ? $latest : null;
 	}
 
 	/**
@@ -96,17 +117,16 @@ class Log extends BaseRestController {
 	 * @param string      $level The log level to return.
 	 */
 	private function get_log_content( ?string $log_file, string $level = 'ALL' ): array {
-		$resolved = $log_file ? self::LOG_DIR . $log_file : null;
-		if ( ! $resolved || ! $this->file_system->exists( $resolved ) ) {
-			$latest   = \is_array( $this->log_files ) && $this->log_files ? end( $this->log_files ) : '';
-			$resolved = $latest ? self::LOG_DIR . $latest : '';
+		$current_file = $this->resolve_log_file( $log_file );
+
+		if ( null === $current_file ) {
+			return [
+				'current_file' => null,
+				'log_entries'  => [],
+			];
 		}
 
-		if ( ! $resolved || ! $this->file_system->exists( $resolved ) ) {
-			return [];
-		}
-
-		$lines  = array_filter( explode( "\n", $this->file_system->get_contents( $resolved ) ) );
+		$lines  = array_filter( explode( "\n", $this->file_system->get_contents( self::LOG_DIR . $current_file ) ) );
 		$levels = 'ALL' !== $level ? explode( '|', $level ) : [];
 
 		$log_array = [];
@@ -130,6 +150,9 @@ class Log extends BaseRestController {
 			];
 		}
 
-		return array_reverse( $log_array );
+		return [
+			'current_file' => $current_file,
+			'log_entries'  => array_reverse( $log_array ),
+		];
 	}
 }

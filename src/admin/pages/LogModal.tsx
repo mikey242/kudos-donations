@@ -23,7 +23,8 @@ interface LogEntry {
 
 interface LogResponse {
 	log_files: string[];
-	log_content: LogEntry[];
+	current_file: string;
+	log_entries: LogEntry[];
 }
 
 const LEVEL_OPTIONS = [
@@ -83,7 +84,8 @@ const LogModal = () => {
 				method: 'GET',
 			});
 			setLogFiles(data.log_files ?? []);
-			setLogContent(data.log_content ?? []);
+			setLogContent(data.log_entries ?? []);
+			setSelectedFile(data.current_file);
 		} finally {
 			setIsLoading(false);
 		}
@@ -110,16 +112,10 @@ const LogModal = () => {
 							<WPSelectControl
 								label={__('File', 'kudos-donations')}
 								value={selectedFile}
-								options={[
-									{
-										label: __('Latest', 'kudos-donations'),
-										value: '',
-									},
-									...logFiles.map((f) => ({
-										label: f,
-										value: f,
-									})),
-								]}
+								options={logFiles.map((f) => ({
+									label: f,
+									value: f,
+								}))}
 								onChange={(value: string) => {
 									setSelectedFile(value);
 									void fetchLog(value, selectedLevel);
