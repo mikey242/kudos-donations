@@ -201,6 +201,13 @@ class Utils {
 	}
 
 	/**
+	 * Returns the company URL.
+	 */
+	public static function get_company_url(): string {
+		return (string) apply_filters( 'kudos_company_url', 'https://kudosdonations.com' );
+	}
+
+	/**
 	 * Returns a formatted id based on the entity id and created date.
 	 *
 	 * @param BaseEntity $entity Entity object.
