@@ -58,7 +58,8 @@ class ContainerFactory {
 			return $container;
 		}
 
-		$factory = new self( ! KUDOS_ENV_IS_DEVELOPMENT );
+		// Skip cache if in development or PHP version is less than 7.4.
+		$factory = new self( ! KUDOS_ENV_IS_DEVELOPMENT && PHP_MAJOR_VERSION >= 8 );
 
 		if ( null === $factory->container ) {
 			throw new RuntimeException( 'Error fetching container' );
@@ -94,9 +95,7 @@ class ContainerFactory {
 
 		if ( $use_cache ) {
 			$this->initialize_filesystem();
-			if ( ! KUDOS_ENV_IS_DEVELOPMENT ) {
-				CacheService::recursively_clear_cache( 'container' );
-			}
+			CacheService::recursively_clear_cache( 'container' );
 			$this->dump_container( $builder, $this->cache_folder . $this->get_cache_file() );
 		}
 	}
