@@ -10,6 +10,7 @@ $finders = [
         ->ignoreVCS(true)
         ->ignoreDotFiles(true)
         ->path([
+            'composer/InstalledVersions.php',
             'dompdf/',
             'friendsofphp/',
             'laminas/',

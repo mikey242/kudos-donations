@@ -108,7 +108,6 @@
       "php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
       "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > ./third-party/composer.json",
       "@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
-      "sed -i '/InstalledVersions/d' third-party/vendor/composer/autoload_classmap.php third-party/vendor/composer/autoload_static.php",
       "sed -i'.bak' -e 's/Composer\\\\Autoload/IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer\\\\Autoload/' third-party/vendor/composer/*.php && rm -rf third-party/vendor/composer/*.php.bak"
     ]
   },

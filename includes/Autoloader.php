@@ -28,7 +28,7 @@ class Autoloader {
 	public static function init(): bool {
 		$autoloaders = [
 			\dirname( __DIR__ ) . '/vendor/autoload.php',
-			\dirname( __DIR__ ) . '/third-party/vendor/autoload.php',
+			\dirname( __DIR__ ) . '/third-party/vendor/scoper-autoload.php',
 		];
 
 		// Load standard Composer autoloader.
