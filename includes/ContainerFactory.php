@@ -73,7 +73,8 @@ class ContainerFactory {
 	 * Uses a hash of the plugin version to ensure stale containers are not reused.
 	 */
 	private function get_cache_file(): string {
-		$hash_source = (string) apply_filters( 'kudos_container_hash_string', KUDOS_VERSION . $this->get_config_path() );
+		$php_version = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+		$hash_source = (string) apply_filters( 'kudos_container_hash_string', KUDOS_VERSION . $this->get_config_path() . $php_version );
 
 		return 'container-' . wp_hash( $hash_source ) . '.php';
 	}
