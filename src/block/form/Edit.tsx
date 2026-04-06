@@ -44,12 +44,11 @@ type SelectOption = {
 	value: string;
 	disabled?: boolean;
 };
-
 const ButtonEdit = ({
 	attributes: { button_label, type, alignment },
 	setAttributes,
 }: ButtonEditProps) => {
-	const { campaign, isLoading: campaignLoaded } = useCampaignContext();
+	const { campaign } = useCampaignContext();
 	const blockProps = useBlockProps();
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
@@ -196,17 +195,15 @@ const ButtonEdit = ({
 					alignment={alignment}
 				/>
 			) : (
-				!campaignLoaded && (
-					<Flex justify="flex-start">
-						<KudosLogo style={{ maxWidth: '32px' }} />
-						<p>
-							{__(
-								'Please select a campaign from the sidebar',
-								'kudos-donations'
-							)}
-						</p>
-					</Flex>
-				)
+				<Flex justify="flex-start">
+					<KudosLogo style={{ maxWidth: '32px' }} />
+					<p>
+						{__(
+							'Please select a campaign from the sidebar',
+							'kudos-donations'
+						)}
+					</p>
+				</Flex>
 			)}
 		</div>
 	);
