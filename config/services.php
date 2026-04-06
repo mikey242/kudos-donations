@@ -123,7 +123,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	// Output logs to console when running tests.
 	if ( defined( 'KUDOS_TEST_MODE' ) && KUDOS_TEST_MODE ) {
 		$services->set( 'kudos.test_logger_handler', StreamHandler::class )
-			->args( [ 'php://stdout', Logger::DEBUG ] );
+			->args( [ 'php://stdout', Logger::ERROR ] );
 		$services->get( LoggerInterface::class )
 			->call( 'pushHandler', [ service( 'kudos.test_logger_handler' ) ] );
 	}
