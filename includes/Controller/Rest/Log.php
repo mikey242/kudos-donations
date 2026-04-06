@@ -91,7 +91,7 @@ class Log extends BaseRestController {
 		$paths = glob( self::LOG_DIR . '*.log' );
 		$files = $paths ? array_map( 'basename', $paths ) : $paths;
 		if ( $env ) {
-			$files = array_filter( $files, fn( $file ) => substr( $file, 0, \strlen( $env ) ) === $env );
+			$files = array_values( array_filter( $files, fn( $file ) => substr( $file, 0, \strlen( $env ) ) === $env ) );
 		}
 
 		return $files;
