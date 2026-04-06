@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\ThirdParty\Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\Config\FileLocator;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ContainerBuilder;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -174,6 +175,7 @@ class ContainerFactory {
 	 */
 	private function dump_container( ContainerBuilder $builder, string $path ): void {
 		$dumper = new PhpDumper( $builder );
+		$dumper->setProxyDumper( new ProxyDumper() );
 		/** @var string $dump */
 		$dump = $dumper->dump( [ 'class' => 'KudosContainer' ] );
 
