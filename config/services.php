@@ -120,6 +120,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] )
 		->call( 'pushProcessor', [ service( IntrospectionProcessor::class ) ] );
 
+	// Output logs to console when running tests.
 	if ( defined( 'KUDOS_TEST_MODE' ) && KUDOS_TEST_MODE ) {
 		$services->set( 'kudos.test_logger_handler', StreamHandler::class )
 			->args( [ 'php://stdout', Logger::DEBUG ] );
