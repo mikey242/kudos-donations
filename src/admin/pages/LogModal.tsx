@@ -112,10 +112,13 @@ const LogModal = () => {
 							<WPSelectControl
 								label={__('File', 'kudos-donations')}
 								value={selectedFile}
-								options={logFiles.map((f) => ({
-									label: f,
-									value: f,
-								}))}
+								options={
+									logFiles.length &&
+									logFiles.map((f) => ({
+										label: f,
+										value: f,
+									}))
+								}
 								onChange={(value: string) => {
 									setSelectedFile(value);
 									void fetchLog(value, selectedLevel);
