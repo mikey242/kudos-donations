@@ -59,12 +59,12 @@ $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
 } catch ( \Exception $e ) {
-	$_ENV['APP_ENV'] = 'production';
+	$_ENV['KUDOS_APP_ENV'] = 'production';
 }
 
 // Set the environment as production if not specified.
-if ( ! isset( $_ENV['APP_ENV'] ) || '' === $_ENV['APP_ENV'] ) {
-	$_ENV['APP_ENV'] = 'production';
+if ( ! isset( $_ENV['KUDOS_APP_ENV'] ) || '' === $_ENV['KUDOS_APP_ENV'] ) {
+	$_ENV['KUDOS_APP_ENV'] = 'production';
 }
 
 // Action Scheduler.
@@ -81,8 +81,8 @@ $dotenv->populate(
 );
 
 // Define constant for easily accessing environment.
-\define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
-\define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
+\define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['KUDOS_APP_ENV'] ) );
+\define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['KUDOS_APP_ENV'] );
 
 // Load dev commands if in dev environment.
 $dev_bootstrap = __DIR__ . '/includes-dev/bootstrap.php';

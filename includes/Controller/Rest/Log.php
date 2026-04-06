@@ -34,7 +34,7 @@ class Log extends BaseRestController {
 	 */
 	public function __construct() {
 		$this->file_system = new WP_Filesystem_Direct( true );
-		$this->log_files   = $this->get_logs( $_ENV['APP_ENV'] ?? null );
+		$this->log_files   = $this->get_logs( $_ENV['KUDOS_APP_ENV'] ?? null );
 	}
 
 	/**

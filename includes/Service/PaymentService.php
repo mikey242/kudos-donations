@@ -80,14 +80,14 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	}
 
 	/**
-	 * Replaces the home url with the url defined in $_ENV['APP_URL'].
+	 * Replaces the home url with the url defined in $_ENV['KUDOS_APP_URL'].
 	 *
 	 * @param string $url The full URL.
 	 * @param string $path The rest route.
 	 */
 	public function use_alternate_app_url( string $url, string $path ): string {
-		if ( isset( $_ENV['APP_URL'] ) && '/kudos/v1/payment/webhook' === $path ) {
-			return str_replace( get_home_url(), sanitize_url( $_ENV['APP_URL'] ), $url );
+		if ( isset( $_ENV['KUDOS_APP_URL'] ) && '/kudos/v1/payment/webhook' === $path ) {
+			return str_replace( get_home_url(), sanitize_url( $_ENV['KUDOS_APP_URL'] ), $url );
 		}
 		return $url;
 	}

@@ -106,7 +106,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( RotatingFileHandler::class )
 		->args(
 			[
-				'%env(KUDOS_STORAGE_DIR)%logs/%env(APP_ENV)%.log',
+				'%env(KUDOS_STORAGE_DIR)%logs/%env(KUDOS_APP_ENV)%.log',
 				'%log.max_files%',
 				Logger::DEBUG,
 			]
