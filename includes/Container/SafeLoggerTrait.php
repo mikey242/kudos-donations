@@ -11,6 +11,7 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Container;
 
+use LogicException;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 
@@ -21,11 +22,11 @@ trait SafeLoggerTrait {
 	/**
 	 * Adds get_logger to ensure logger is set, throws error if not.
 	 *
-	 * @throws \LogicException If logger property not set.
+	 * @throws LogicException If logger property not set.
 	 */
 	protected function get_logger(): LoggerInterface {
 		if ( ! $this->logger ) {
-			throw new \LogicException( 'Logger not set' );
+			throw new LogicException( 'Logger not set' );
 		}
 
 		return $this->logger;
