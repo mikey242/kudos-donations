@@ -37,6 +37,10 @@ class ContainerFactoryTest extends WP_UnitTestCase {
      * builder itself is returned). We re-dump it here to validate the output.
      */
     public function test_container_dump_is_syntactically_valid(): void {
+        if ( PHP_MAJOR_VERSION < 8 ) {
+            $this->markTestSkipped( 'Container caching is disabled below PHP 8.0; dump validation not applicable.' );
+        }
+
         $container = ContainerFactory::create();
 
         if ( ! $container instanceof ContainerBuilder ) {
