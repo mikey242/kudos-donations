@@ -27,6 +27,7 @@ const PlusTab = (): React.ReactNode => {
 	const [installState, setInstallState] = useState<InstallState>(
 		window.kudos?.isAddonInstalled ? 'installed' : 'idle'
 	);
+	const [justInstalled, setJustInstalled] = useState(false);
 
 	const {
 		_kudos_licence_key: licenceKey,
@@ -70,6 +71,7 @@ const PlusTab = (): React.ReactNode => {
 				method: 'POST',
 			});
 			setInstallState('installed');
+			setJustInstalled(true);
 			void createSuccessNotice(
 				__('Add-on installed and activated.', 'kudos-donations'),
 				{ type: 'snackbar' }
@@ -95,6 +97,44 @@ const PlusTab = (): React.ReactNode => {
 		});
 	};
 
+	let addonButton: React.ReactNode;
+	if (justInstalled) {
+		addonButton = (
+			<Button
+				type="button"
+				variant="primary"
+				icon={<Icon icon="update" />}
+				onClick={() => window.location.reload()}
+			>
+				{__('Reload to apply changes', 'kudos-donations')}
+			</Button>
+		);
+	} else if (installState === 'installed') {
+		addonButton = (
+			<Button
+				type="button"
+				disabled={true}
+				icon={<Icon icon="yes-alt" />}
+			>
+				{__('Add-on installed', 'kudos-donations')}
+			</Button>
+		);
+	} else {
+		addonButton = (
+			<Button
+				type="button"
+				variant="primary"
+				isBusy={installState === 'installing'}
+				disabled={installState === 'installing'}
+				onClick={() => void handleInstall()}
+			>
+				{installState === 'failed'
+					? __('Retry install', 'kudos-donations')
+					: __('Install add-on', 'kudos-donations')}
+			</Button>
+		);
+	}
+
 	return (
 		<>
 			{licenceStatus?.valid && (
@@ -103,27 +143,7 @@ const PlusTab = (): React.ReactNode => {
 						<span>
 							{__('Kudos Donations Plus', 'kudos-donations')}
 						</span>
-						{installState === 'installed' ? (
-							<Button
-								type="button"
-								disabled={true}
-								icon={<Icon icon="yes-alt" />}
-							>
-								{__('Add-on installed', 'kudos-donations')}
-							</Button>
-						) : (
-							<Button
-								type="button"
-								variant="primary"
-								isBusy={installState === 'installing'}
-								disabled={installState === 'installing'}
-								onClick={() => void handleInstall()}
-							>
-								{installState === 'failed'
-									? __('Retry install', 'kudos-donations')
-									: __('Install add-on', 'kudos-donations')}
-							</Button>
-						)}
+						{addonButton}
 					</Flex>
 				</Panel>
 			)}
