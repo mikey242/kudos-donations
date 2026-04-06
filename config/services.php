@@ -38,6 +38,8 @@ use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\Service\PDFService;
+use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
@@ -128,9 +130,11 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 			->call( 'pushHandler', [ service( 'kudos.test_logger_handler' ) ] );
 	}
 
-	// External libraries.
+	// Enable Lazy loading for specific services/libraries.
 	$services->set( Dompdf::class )->lazy();
 	$services->set( MollieApiClient::class )->lazy();
+	$services->set( TwigService::class )->lazy();
+	$services->set( PDFService::class )->lazy();
 
 	// Configure repositories.
 	$services->set( TransactionRepository::class )
