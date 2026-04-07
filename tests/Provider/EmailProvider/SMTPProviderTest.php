@@ -58,7 +58,7 @@ class SMTPProviderTest extends BaseTestCase {
 		$this->clear_mailpit_messages();
 	}
 
-	protected function tear_down(): void {
+	public function tear_down(): void {
 		$this->clear_mailpit_messages();
 		parent::tear_down();
 	}
