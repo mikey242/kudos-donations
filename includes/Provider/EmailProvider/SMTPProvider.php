@@ -78,10 +78,12 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	 */
 	private function add_hooks(): void {
 		add_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
-		add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
-		add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		add_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
+		if ( $this->enable_custom_smtp ) {
+			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
+			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
+		}
 	}
 
 	/**
@@ -89,10 +91,12 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	 */
 	private function remove_hooks(): void {
 		remove_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
-		remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
-		remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		remove_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
+		if ( $this->enable_custom_smtp ) {
+			remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
+			remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
+		}
 	}
 
 	/**
