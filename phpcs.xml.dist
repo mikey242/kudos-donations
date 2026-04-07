@@ -227,5 +227,6 @@
 	<exclude-pattern>*/third-party/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/dist/*</exclude-pattern>
+    <exclude-pattern>*/config/php-scoper/*</exclude-pattern>
     <exclude-pattern>scoper.inc.php</exclude-pattern>
 </ruleset>
