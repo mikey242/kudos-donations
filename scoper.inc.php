@@ -13,6 +13,14 @@ $configs  = array_map( fn( $file ) => require $file, glob( __DIR__ . '/config/ph
 $finders  = ! empty( $configs ) ? array_merge( ...array_column( $configs, 'finders' ) ) : [];
 $patchers = ! empty( $configs ) ? array_merge( ...array_column( $configs, 'patchers' ) ) : [];
 
+// Remove non-essential files from finders.
+$exclude = [ 'test', 'tests', 'Test', 'Tests', 'bin' ];
+$notName = [ '*.md', 'CHANGELOG*', 'LICENSE*', 'README*', 'CREDITS', 'phpunit.xml', 'composer.json' ];
+
+foreach ( $finders as $finder ) {
+	$finder->exclude( $exclude )->notName( $notName );
+}
+
 return [
 	'prefix'                  => 'IseardMedia\\Kudos\\ThirdParty',
 	'php-version'             => '7.4',
