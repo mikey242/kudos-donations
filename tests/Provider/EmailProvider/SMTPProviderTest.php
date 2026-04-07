@@ -25,7 +25,7 @@ class SMTPProviderTest extends BaseTestCase {
 	private SMTPProvider $provider;
 	private string $mailpit_api_url;
 
-	protected function set_up(): void {
+	public function set_up(): void {
 		parent::set_up();
 
 		$smtp_port = getenv( 'MAILPIT_SMTP_PORT' );
