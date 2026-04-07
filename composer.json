@@ -73,27 +73,11 @@
       "find vendor/dompdf/dompdf/lib/fonts/ ! -name 'Helvetica*' -type f -delete",
       "find vendor -type f \\( -iname '*.md' -o -iname 'phpunit.xml' -o -iname 'CHANGELOG' -o -iname 'CHANGELOG.txt' -o -iname 'CREDITS' -o -iname 'README' -o -iname 'README.txt' -o -iname 'LICENSE' -o -iname 'LICENSE.txt' -o -iname 'README.rst' -o -iname 'composer.json' \\) -delete",
       "find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
-      "find vendor/mollie/mollie-api-php -type d \\( -iname 'bin' \\) -exec rm -rf '{}' +",
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
     "remove-from-vendor": [
-      "rm -rf vendor/dompdf",
-      "rm -rf vendor/friendsofphp",
-      "rm -rf vendor/laminas",
-      "rm -rf vendor/masterminds",
-      "rm -rf vendor/mollie",
-      "rm -rf vendor/monolog",
-      "rm -rf vendor/sabberworm",
-      "rm -rf vendor/symfony/config",
-      "rm -rf vendor/symfony/dependency-injection",
-      "rm -rf vendor/symfony/filesystem",
-      "rm -rf vendor/symfony/proxy-manager-bridge",
-      "rm -rf vendor/symfony/service-contracts",
-      "rm -rf vendor/twig",
-      "sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_files.php",
-      "sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_static.php",
-      "sed -i '/twig\\/twig/d' vendor/composer/autoload_files.php",
-      "sed -i '/twig\\/twig/d' vendor/composer/autoload_static.php"
+      "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
+      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
     ],
     "post-install-cmd": [
       "@clean-unused-files",
