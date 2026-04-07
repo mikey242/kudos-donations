@@ -81,6 +81,14 @@ jobs:
         ports:
           - 3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
+      mailpit:
+        image: axllent/mailpit
+        env:
+          MP_SMTP_AUTH_ACCEPT_ANY: 1
+        ports:
+          - 1025
+          - 8025
+        options: --health-cmd="nc -z localhost 1025" --health-interval=5s --health-timeout=3s --health-retries=10
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -95,6 +103,9 @@ jobs:
         run: php -v
 
       - name: Run tests
+        env:
+          MAILPIT_SMTP_PORT: ${{ job.services.mailpit.ports['1025'] }}
+          MAILPIT_HTTP_PORT: ${{ job.services.mailpit.ports['8025'] }}
         run: vendor/bin/phpunit --do-not-cache-result --testsuite testing
 
   compatibility-test:
