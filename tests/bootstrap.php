@@ -5,9 +5,13 @@
 
 // Change filesystem access method.
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\ThirdParty\Monolog\Handler\StreamHandler;
+use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
+use Psr\Log\LoggerInterface;
+use function IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 const FS_METHOD = 'direct';
-const KUDOS_TEST_MODE = true;
 
 require dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
 
@@ -52,6 +56,17 @@ function _manually_load_plugin() {
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+// Add a stdout handler so log output is visible during test runs.
+tests_add_filter(
+	'kudos_container_configurator',
+	static function ( ServicesConfigurator $services ): void {
+		$services->set( 'kudos.test_logger_handler', StreamHandler::class )
+			->args( [ 'php://stdout', Logger::ERROR ] );
+		$services->get( LoggerInterface::class )
+			->call( 'pushHandler', [ service( 'kudos.test_logger_handler' ) ] );
+	}
+);
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
