@@ -34,9 +34,19 @@ class SMTPProviderTest extends BaseTestCase {
 	public function set_up(): void {
 		parent::set_up();
 		reset_phpmailer_instance();
+		add_filter( 'wp_mail_from', [ $this, 'get_test_from_email' ] );
 
 		/** @var SMTPProvider $provider */
 		$this->provider = $this->get_from_container( SMTPProvider::class );
+	}
+
+	public function tear_down(): void {
+		remove_filter( 'wp_mail_from', [ $this, 'get_test_from_email' ] );
+		parent::tear_down();
+	}
+
+	public function get_test_from_email(): string {
+		return 'noreply@example.com';
 	}
 
 	/**
