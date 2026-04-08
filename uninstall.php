@@ -18,14 +18,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-try {
-	ContainerFactory::create()->get( Plugin::class )->register();
-} catch ( Throwable $e ) {
-	// phpcs:disable WordPress.PHP.DevelopmentFunctions
-	error_log( $e->getMessage() );
-	NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
-}
-
 /**
  * Defer running uninstallation until every service is registered.
  */
