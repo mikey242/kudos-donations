@@ -104,7 +104,7 @@
   "autoload-dev": {
     "psr-4": {
       "IseardMedia\\Kudos\\Dev\\": "includes-dev/",
-      "IseardMedia\\Kudos\\Tests\\": "tests/"
+      "IseardMedia\\Kudos\\Tests\\": ["tests/", "tests/Unit/", "tests/Integration/"]
     }
   }
 }
