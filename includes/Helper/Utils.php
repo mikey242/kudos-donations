@@ -87,7 +87,7 @@ class Utils {
 	 * @param string $frequency Frequency.
 	 */
 	public static function get_times_from_years( int $years, string $frequency ): ?int {
-		if ( ! $years > 0 ) {
+		if ( ! ( $years > 0 ) ) {
 			return null;
 		}
 
