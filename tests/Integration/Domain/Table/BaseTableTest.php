@@ -9,12 +9,12 @@ use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Table\CampaignsTable;
 use IseardMedia\Kudos\Helper\WpDb;
-use IseardMedia\Kudos\Tests\BaseTestCase;
+use IseardMedia\Kudos\Tests\BaseIntegrationTestCase;
 
 /**
  * @covers \IseardMedia\Kudos\Domain\Table\BaseTable
  */
-class BaseTableTest extends BaseTestCase {
+class BaseTableTest extends BaseIntegrationTestCase {
 
 	private CampaignsTable $table;
 	private WpDb $wpdb;
