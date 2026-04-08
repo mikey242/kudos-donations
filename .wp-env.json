@@ -1,15 +1,13 @@
 {
-	"phpVersion": "8.2",
+	"phpVersion": "8.4",
 	"plugins": [
 		".", "https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
 	],
 	"port": 80,
+	"testsEnvironment": false,
 	"env": {
 		"development": {
 			"mysqlPort": "32770"
-		},
-		"tests": {
-			"mysqlPort": "32768"
 		}
 	},
 	"config": {

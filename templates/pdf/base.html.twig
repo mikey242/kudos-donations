@@ -434,7 +434,7 @@
                             <tr>
                                 <td class="content-cell" align="center">
                                     <p class="sub align-center">
-                                        &copy; {{ 'now' | date('Y') }} {{ company_name }}
+                                        &copy; {{ 'now' | date('Y') }} {{ get_bloginfo('name') | raw }}
                                         {% if vat_number %}
                                             | {{ text.vat_number }}: {{ vat_number }}
                                         {% endif %}

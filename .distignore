@@ -69,12 +69,13 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 tailwind.config.js
 tsconfig.json
+scoper.inc.php
+/config/php-scoper/
 
 # Misc
 README.md
 TODO
 renovate.json
-scoper.inc.php
 tsconfig.shared.json
 wp-cli.phar
 CLAUDE.md
