@@ -95,7 +95,7 @@ jobs:
         run: php -v
 
       - name: Run tests
-        run: vendor/bin/phpunit --do-not-cache-result --testsuite testing
+        run: vendor/bin/phpunit --do-not-cache-result --testsuite unit
 
   compatibility-test:
     runs-on: ubuntu-latest
@@ -145,4 +145,30 @@ jobs:
           unzip -q /tmp/compat-plugins/wordpress-seo.zip -d $WP_PLUGINS_DIR
 
       - name: Run compatibility tests
-        run: vendor/bin/phpunit --do-not-cache-result --testsuite testing
+        run: vendor/bin/phpunit --do-not-cache-result --testsuite unit
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: lint-and-build
+    name: Integration tests
+    services:
+      mysql:
+        image: mariadb:lts
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup WP test environment
+        uses: ./.github/actions/setup-wp-tests
+        with:
+          php-version: "8.2"
+          mysql-port: ${{ job.services.mysql.ports['3306'] }}
+
+      - name: Run integration tests
+        run: vendor/bin/phpunit --do-not-cache-result --testsuite integration
