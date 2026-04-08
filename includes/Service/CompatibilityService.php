@@ -16,7 +16,7 @@ use WP_Error;
 class CompatibilityService {
 
 	private const MINIMUM_PHP_VERSION = '7.4';
-	private const MINIMUM_WP_VERSION  = '6.6';
+	private const MINIMUM_WP_VERSION  = '6.9';
 
 	/**
 	 * Runs the compatibility check on plugin activation.
