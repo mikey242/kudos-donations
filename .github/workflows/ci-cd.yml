@@ -65,7 +65,7 @@ jobs:
             ./vendor
             ./third-party
 
-  test-job:
+  unit-tests:
     runs-on: ubuntu-latest
     needs: lint-and-build
     strategy:
@@ -97,7 +97,7 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit --do-not-cache-result --testsuite unit
 
-  compatibility-test:
+  compatibility-tests:
     runs-on: ubuntu-latest
     needs: lint-and-build
     name: Compatibility tests
@@ -147,7 +147,7 @@ jobs:
       - name: Run compatibility tests
         run: vendor/bin/phpunit --do-not-cache-result --testsuite unit
 
-  integration-test:
+  integration-tests:
     runs-on: ubuntu-latest
     needs: lint-and-build
     name: Integration tests
