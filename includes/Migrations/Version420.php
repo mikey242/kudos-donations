@@ -401,60 +401,65 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$transaction_repo  = $this->get_repository( TransactionRepository::class );
 		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
 
-		// Get subscriptions that still have transactions needing backfill.
-		/** @var SubscriptionEntity[] $subscriptions */
-		$subscriptions = $subscription_repo->query(
+		// Find first-payment transactions that haven't been linked to a subscription yet.
+		/** @var TransactionEntity[] $unlinked */
+		$unlinked = $transaction_repo->query(
 			[
-				'columns' => [ 'id', 'wp_post_id' ],
+				'where'   => [
+					'subscription_id' => null,
+					'sequence_type'   => 'first',
+				],
 				'orderby' => 'id',
 				'order'   => 'ASC',
 				'limit'   => $limit,
 			]
 		);
 
-		if ( empty( $subscriptions ) ) {
+		if ( empty( $unlinked ) ) {
 			$this->logger->info( 'No more transactions to backfill.' );
 			return 0;
 		}
 
 		$processed = 0;
 
-		foreach ( $subscriptions as $subscription ) {
-			$subscription_post_id = $subscription->wp_post_id;
-			$subscription_id      = $subscription->id;
+		foreach ( $unlinked as $transaction ) {
+			$transaction_post_id = $transaction->wp_post_id;
 
-			// Get legacy transaction post ID from subscription post meta.
-			$transaction_post_id = get_post_meta(
-				$subscription_post_id,
-				'transaction_id',
-				true
+			if ( ! $transaction_post_id ) {
+				continue;
+			}
+
+			// Find the subscription CPT whose transaction_id meta points to this transaction.
+			$subscription_posts = get_posts(
+				[
+					'post_type'   => 'kudos_subscription',
+					'post_status' => 'any',
+					'numberposts' => 1,
+					'meta_key'    => 'transaction_id',
+					'meta_value'  => (string) $transaction_post_id,
+					'fields'      => 'ids',
+				]
 			);
 
-			if ( empty( $transaction_post_id ) ) {
-				$this->logger->warning( "No transaction_id meta found for subscription $subscription_post_id" );
+			if ( empty( $subscription_posts ) ) {
+				$this->logger->warning( "No subscription CPT found for transaction post $transaction_post_id" );
 				continue;
 			}
 
-			// Find transaction row by wp_post_id.
-			/** @var ?TransactionEntity $transaction */
-			$transaction = $transaction_repo->find_one_by( [ 'wp_post_id' => (int) $transaction_post_id ] );
+			// Find the migrated subscription row by its legacy post ID.
+			/** @var ?SubscriptionEntity $subscription */
+			$subscription = $subscription_repo->find_one_by( [ 'wp_post_id' => (int) $subscription_posts[0] ] );
 
-			if ( null === $transaction ) {
-				$this->logger->warning( "No migrated transaction found for post ID $transaction_post_id" );
+			if ( null === $subscription ) {
+				$this->logger->warning( "No migrated subscription found for post {$subscription_posts[0]}" );
 				continue;
 			}
 
-			// Skip if already linked.
-			if ( null !== $transaction->subscription_id ) {
-				continue;
-			}
-
-			// Update transaction row with the resolved subscription_id.
-			$transaction->subscription_id = $subscription_id;
+			$transaction->subscription_id = $subscription->id;
 			$transaction_repo->update( $transaction );
 			++$processed;
 
-			$this->logger->info( "Linked transaction $transaction_post_id to subscription $subscription_id" );
+			$this->logger->info( "Linked transaction $transaction_post_id to subscription {$subscription->id}" );
 		}
 
 		return $processed;
