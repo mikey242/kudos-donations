@@ -68,9 +68,11 @@ class Migration extends BaseRestController {
 		$pending_migrations = $this->migration->get_pending_migrations();
 
 		if ( empty( $pending_migrations ) ) {
+			update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 			return new WP_REST_Response(
 				[
 					'success' => true,
+					'done'    => true,
 				],
 				200
 			);
