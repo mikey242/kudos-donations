@@ -23,7 +23,7 @@ export const KudosForm = ({
 	label,
 	alignment,
 	previewMode = false,
-	fullscreenMode = true,
+	fullscreenMode = false,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp] = useState<number>(() => Date.now());
