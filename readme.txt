@@ -33,7 +33,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 Kudos Donations is designed to make online fundraising easier than ever. With seamless integration into your WordPress site, customizable options, and real-time tracking of donations, you can focus on growing your cause without the hassle of complicated setups.
 
 = Source =
-The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
+The Git repository for this plugin can be found [here](https://github.com/mikey242/kudos-donations).
 
 == Installation ==
 
