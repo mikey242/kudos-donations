@@ -173,7 +173,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'show_goal'                  => $this->get_meta_bool( $post_id, 'show_goal', false ),
 					'additional_funds'           => $this->get_meta_float( $post_id, 'additional_funds' ),
 					'amount_type'                => get_post_meta( $post_id, 'amount_type', true ),
-					'fixed_amounts'              => get_post_meta( $post_id, 'fixed_amounts', true ) ?: [],
+					'fixed_amounts'              => $this->parse_legacy_fixed_amounts( get_post_meta( $post_id, 'fixed_amounts', true ) ),
 					'minimum_donation'           => $this->get_meta_float( $post_id, 'minimum_donation', 1.0 ),
 					'maximum_donation'           => $this->get_meta_float( $post_id, 'maximum_donation', 5000.0 ),
 					'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
@@ -607,6 +607,25 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function refresh_mollie_status(): void {
 		$this->mollie->refresh();
+	}
+
+	/**
+	 * Converts the legacy fixed_amounts meta value to an array.
+	 *
+	 * In 4.1.x the value was stored as a comma-separated string (e.g. "5,10,25,50").
+	 * Some installs may have it already serialised as an array by WordPress.
+	 *
+	 * @param mixed $value Raw value from get_post_meta().
+	 * @return string[]
+	 */
+	private function parse_legacy_fixed_amounts( $value ): array {
+		if ( \is_array( $value ) ) {
+			return $value;
+		}
+		if ( ! \is_string( $value ) || '' === $value ) {
+			return [];
+		}
+		return array_values( array_filter( array_map( 'trim', explode( ',', $value ) ) ) );
 	}
 
 	/**
