@@ -8,12 +8,14 @@ import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated, Render } from '../components';
 import { applyFilters } from '@wordpress/hooks';
+import { clsx } from 'clsx';
 
 interface KudosFormProps {
 	displayAs: 'form' | 'button' | 'fslogo';
 	label?: string;
 	alignment?: 'left' | 'center' | 'right';
 	previewMode?: boolean;
+	fullscreenMode?: boolean;
 }
 
 export const KudosForm = ({
@@ -21,6 +23,7 @@ export const KudosForm = ({
 	label,
 	alignment,
 	previewMode = false,
+	fullscreenMode = true,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp] = useState<number>(() => Date.now());
@@ -146,7 +149,11 @@ export const KudosForm = ({
 			themeColor={campaign?.theme_color}
 			style={campaign?.custom_styles}
 			errors={campaignErrors}
-			className={previewMode ? 'pointer-events-none' : undefined}
+			className={clsx(
+				previewMode && 'pointer-events-none',
+				fullscreenMode &&
+					'z-[999999] fixed flex justify-center items-center top-0 left-0 w-full h-full bg-white'
+			)}
 			alignment={alignment}
 			isContentReady={!isLoading}
 		>
