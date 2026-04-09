@@ -166,7 +166,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$campaign = new CampaignEntity(
 				[
 					'wp_post_id'                 => $post_id,
-					'wp_post_slug'               => get_the_title( $post_id ),
+					'wp_post_slug'               => get_post_field( 'post_name', $post_id ),
 					'title'                      => get_post_field( 'post_title', $post_id ),
 					'currency'                   => get_post_meta( $post_id, 'currency', true ) ?: 'EUR',
 					'goal'                       => $this->get_meta_float( $post_id, 'goal' ),
