@@ -92,6 +92,7 @@ class Version420IntegrationTest extends BaseIntegrationTestCase {
 		update_post_meta( $this->campaign_post_id, 'show_goal', '1' );
 		update_post_meta( $this->campaign_post_id, 'donation_type', 'both' );
 		update_post_meta( $this->campaign_post_id, 'amount_type', 'open' );
+		update_post_meta( $this->campaign_post_id, 'fixed_amounts', '5,10,25,50' );
 
 		// First-payment transaction CPT (the mandate/first charge of a subscription).
 		$this->first_tx_post_id = wp_insert_post(
@@ -215,6 +216,7 @@ class Version420IntegrationTest extends BaseIntegrationTestCase {
 		$this->assertSame( 'EUR', $campaign->currency );
 		$this->assertSame( 1000.0, $campaign->goal );
 		$this->assertTrue( $campaign->show_goal );
+		$this->assertSame( [ '5', '10', '25', '50' ], $campaign->fixed_amounts );
 	}
 
 	/**
