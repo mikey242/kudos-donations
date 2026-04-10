@@ -64,7 +64,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_position()
 			);
 		} elseif ( $this instanceof SubmenuAdminPageInterface ) {
-			$this->screen_id = add_submenu_page(
+			$screen_id = add_submenu_page(
 				$this->get_parent_slug(),
 				$this->get_page_title(),
 				$this->get_menu_title(),
@@ -73,6 +73,9 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$callback,
 				$this->get_position(),
 			);
+
+			// Ensure $this->screen_id is either a string or null (and not false).
+			$this->screen_id = false !== $screen_id ? $screen_id : null;
 		}
 
 		if ( $this instanceof HasAssetsInterface ) {
