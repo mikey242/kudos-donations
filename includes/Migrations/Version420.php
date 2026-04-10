@@ -71,9 +71,9 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_jobs(): array {
 		return [
-			'prepare_tables'                  => $this->job( [ $this, 'prepare_tables' ], 'Preparing tables', false ),
+			'prepare_tables'                  => $this->job( [ $this, 'prepare_tables' ], 'Preparing tables', false, true ),
+			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns', true, true ),
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
-			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
 			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating transactions' ),
 			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating subscriptions' ),
 			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions' ),
