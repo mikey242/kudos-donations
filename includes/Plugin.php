@@ -96,8 +96,9 @@ class Plugin implements LoggerAwareInterface {
 		add_filter(
 			'kudos_global_localization',
 			function ( array $localization ): array {
-				$localization['env']       = KUDOS_APP_ENV;
-				$localization['countries'] = Country::get_countries();
+				$localization['env']          = KUDOS_APP_ENV;
+				$localization['countries']    = Country::get_countries();
+				$localization['needsUpgrade'] = false;
 				return $localization;
 			}
 		);

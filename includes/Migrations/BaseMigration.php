@@ -75,7 +75,7 @@ abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface
 	/**
 	 * Returns an array of job function names.
 	 *
-	 * @return array<string, array{callback: callable, chunked?: bool, label?: string}>
+	 * @return array<string, array{callback: callable, label?: string, chunked?: bool, auto?: bool}>
 	 */
 	abstract public function get_jobs(): array;
 
@@ -85,9 +85,10 @@ abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface
 	 * @param callable    $callback The callback to run.
 	 * @param string|null $label The label to display to the front-end.
 	 * @param bool        $chunked Whether the job processes in chunks.
-	 * @return array{callback: callable, chunked?: bool, label?: string}
+	 * @param bool        $auto Whether the job may run automatically without user confirmation.
+	 * @return array{callback: callable, chunked?: bool, label?: string, auto?: bool}
 	 */
-	protected function job( callable $callback, ?string $label = null, bool $chunked = true ): array {
-		return compact( 'callback', 'label', 'chunked' );
+	protected function job( callable $callback, ?string $label = null, bool $chunked = true, bool $auto = false ): array {
+		return compact( 'callback', 'label', 'chunked', 'auto' );
 	}
 }

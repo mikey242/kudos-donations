@@ -65,10 +65,9 @@ class Migration extends BaseRestController {
 	 * Handles a request for running migrations.
 	 */
 	public function run_migrations(): WP_REST_Response {
-		$pending_migrations = $this->migration->get_pending_migrations();
+		$result = $this->migration->run_migration_batch();
 
-		if ( empty( $pending_migrations ) ) {
-			update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
+		if ( null === $result ) {
 			return new WP_REST_Response(
 				[
 					'success' => true,
@@ -78,59 +77,10 @@ class Migration extends BaseRestController {
 			);
 		}
 
-		$history = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
-
-		foreach ( $pending_migrations as $migration ) {
-			$version       = $migration->get_version();
-			$transient_key = '_kudos_migration_' . $version . '_last_job';
-			$last_job      = get_transient( $transient_key );
-			$jobs          = $migration->get_jobs();
-			$job_names     = array_keys( $jobs );
-
-			// Resume from the last job if we have one stored.
-			if ( false !== $last_job ) {
-				$last_index = array_search( $last_job, $job_names, true );
-				if ( false !== $last_index ) {
-					$job_names = \array_slice( $job_names, $last_index );
-				}
-			}
-
-			foreach ( $job_names as $job_name ) {
-				$processed = $migration->run( $job_name );
-
-				if ( $processed > 0 ) {
-					// Done. Update the transient with the completed job name.
-					set_transient( $transient_key, $job_name, HOUR_IN_SECONDS );
-
-					return new WP_REST_Response(
-						[
-							'success'  => true,
-							'progress' => [
-								'version'   => $version,
-								'job'       => $jobs[ $job_name ]['label'] ?? $job_name,
-								'processed' => $processed,
-							],
-						],
-						200
-					);
-				}
-			}
-
-			delete_transient( $transient_key );
-			$history[] = $version;
-
-			// Migration complete, add to migration history.
-			update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, $history );
-		}
-
-		// All migrations complete, update database version.
-		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
-
 		return new WP_REST_Response(
 			[
 				'success'  => true,
-				'progress' => [],
-				'done'     => true,
+				'progress' => $result,
 			],
 			200
 		);

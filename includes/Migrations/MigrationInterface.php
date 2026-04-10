@@ -15,7 +15,8 @@ namespace IseardMedia\Kudos\Migrations;
  * @phpstan-type MigrationJob array{
  *       callback: callable,
  *       chunked?: bool,
- *       label?: string
+ *       label?: string,
+ *       auto?: bool
  *   }
  */
 interface MigrationInterface {
