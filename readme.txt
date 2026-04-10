@@ -115,7 +115,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.1 =
 * Automatically migrate campaigns to prevent front-end errors when plugin is updated automatically
-* Fix error when non-admin user access dashboard
+* Fix error when non-admin user accesses dashboard
 
 = 4.2.0 =
 * Optimize data storage making the plugin faster and use less space
