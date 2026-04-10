@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.1 =
+* Automatically migrate campaigns to prevent front-end errors when plugin is updated automatically
+
 = 4.2.0 =
 * Optimize data storage making the plugin faster and use less space
 * More PHP dependencies are now scoped reducing conflicts with other plugins
