@@ -104,7 +104,6 @@ const ButtonEdit = ({
 			value={campaign?.id.toString() ?? ''}
 			onChange={onChangeCampaign}
 			options={options}
-			__nextHasNoMarginBottom
 			__next40pxDefaultSize
 		/>
 	);
@@ -168,7 +167,6 @@ const ButtonEdit = ({
 									)}
 									value={button_label}
 									onChange={onChangeButtonLabel}
-									__nextHasNoMarginBottom
 									__next40pxDefaultSize
 								/>
 								<RadioControl

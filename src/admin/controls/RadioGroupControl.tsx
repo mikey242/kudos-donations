@@ -68,14 +68,12 @@ export const RadioGroupControlBase = ({
 			help={help}
 			id={id}
 			className="kudos-button-group"
-			__nextHasNoMarginBottom
 		>
 			<div>
 				<ToggleGroupControl
 					isBlock
 					value={value}
 					label={label}
-					__nextHasNoMarginBottom
 					__next40pxDefaultSize
 				>
 					{options.map((option: RadioGroupOption) => (

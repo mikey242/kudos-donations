@@ -58,7 +58,6 @@ export const Table = <T extends BaseEntity>({
 						return (
 							<Flex justify="flex-start" align="center">
 								<CheckboxControl
-									__nextHasNoMarginBottom
 									name="select"
 									checked={selectedItems.includes(item.id)}
 									onChange={(value) =>

@@ -124,7 +124,6 @@ const LogModal = () => {
 									void fetchLog(value, selectedLevel);
 								}}
 								__next40pxDefaultSize
-								__nextHasNoMarginBottom
 							/>
 							<WPSelectControl
 								label={__('Level', 'kudos-donations')}
@@ -135,7 +134,6 @@ const LogModal = () => {
 									void fetchLog(selectedFile, value);
 								}}
 								__next40pxDefaultSize
-								__nextHasNoMarginBottom
 							/>
 						</Flex>
 						{isLoading ? (

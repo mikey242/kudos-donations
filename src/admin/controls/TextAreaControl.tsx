@@ -41,7 +41,6 @@ export const TextAreaControl = forwardRef<
 						help={description}
 						hideLabelFromVision={hideLabelFromVision}
 						ref={ref}
-						__nextHasNoMarginBottom
 					/>
 				)}
 			/>

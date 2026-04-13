@@ -48,7 +48,6 @@ export const SelectControl = ({
 					}
 					options={options}
 					__next40pxDefaultSize
-					__nextHasNoMarginBottom
 				/>
 			)}
 		/>

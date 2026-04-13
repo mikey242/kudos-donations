@@ -22,7 +22,6 @@ export const ToggleControl = ({
 					onChange={onChange}
 					disabled={isDisabled}
 					help={description}
-					__nextHasNoMarginBottom
 				/>
 			)}
 		/>

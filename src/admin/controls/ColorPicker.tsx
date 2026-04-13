@@ -34,7 +34,6 @@ export const ColorPicker = ({
 					id={id}
 					label={label}
 					help={description}
-					__nextHasNoMarginBottom
 				>
 					<ColorPalette
 						colors={colors}
