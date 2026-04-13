@@ -9,8 +9,17 @@ import {
 	useMemo,
 	useState,
 } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
 import type { Campaign } from '../../types/entity';
+
+const fetchCampaign = async (path: string): Promise<Campaign> => {
+	const root: string =
+		(window as Window & { wpApiSettings?: { root?: string } })
+			?.wpApiSettings?.root ?? '/wp-json/';
+	const url = `${root.replace(/\/$/, '')}/kudos/v1/${path}`;
+	const res = await window.fetch(url, { credentials: 'omit' });
+	const data = await res.json();
+	return res.ok ? data : Promise.reject(data);
+};
 
 interface CampaignContextType {
 	campaign: Campaign | null;
@@ -41,7 +50,7 @@ export const CampaignProvider = ({
 			setCampaignErrors(null);
 
 			// Try by ID
-			apiFetch({ path: `/kudos/v1/campaign/${campaignId}` })
+			fetchCampaign(`campaign/${campaignId}`)
 				.then((postById: Campaign) => {
 					setCampaign(postById);
 					setIsLoading(false);
@@ -49,9 +58,7 @@ export const CampaignProvider = ({
 				.catch((error) => {
 					if (error?.data?.status === 404) {
 						// Try by wp_post_slug
-						apiFetch({
-							path: `/kudos/v1/campaign/by-slug/${campaignId}`,
-						})
+						fetchCampaign(`campaign/by-slug/${campaignId}`)
 							.then((postBySlug: Campaign) => {
 								if (postBySlug) {
 									setCampaign(postBySlug);
