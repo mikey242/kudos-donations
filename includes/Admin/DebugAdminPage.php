@@ -279,7 +279,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 									'<tr><th scope="row">%s</th><td><input type="checkbox" name="kudos_migration_history[]" value="%s"%s /></td></tr>',
 									esc_html( $version ),
 									esc_attr( $version ),
-									in_array( $version, $history, true ) ? ' checked' : ''
+									\in_array( $version, $history, true ) ? ' checked' : ''
 								);
 							}
 							?>
@@ -291,6 +291,33 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<?php submit_button( __( 'Save', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to update the migration history?', 'kudos-donations' ) ] ); ?>
 						<input type="hidden" name="kudos_action" value="kudos_update_migration_history" />
 					</form>
+					<hr>
+					<h2><?php esc_html_e( 'Log Files', 'kudos-donations' ); ?></h2>
+					<?php
+					$log_dir   = KUDOS_STORAGE_DIR . 'logs/';
+					$log_files = glob( $log_dir . '*.log' );
+					if ( ! empty( $log_files ) ) {
+						echo '<ul>';
+						foreach ( $log_files as $log_file ) {
+							$filename = basename( $log_file );
+							$url      = wp_nonce_url(
+								admin_url( 'admin-post.php?action=kudos_download_log&file=' . rawurlencode( $filename ) ),
+								'kudos_download_log_' . $filename
+							);
+							printf(
+								'<li><a href="%s">%s</a> (%s)</li>',
+								esc_url( $url ),
+								esc_html( $filename ),
+								esc_html( size_format( filesize( $log_file ) ) )
+							);
+						}
+						echo '</ul>';
+					} else {
+						echo '<p>' . esc_html__( 'No log files found.', 'kudos-donations' ) . '</p>';
+					}
+					?>
+
+					<hr/>
 
 					<?php do_action( 'kudos_debug_menu_actions_extra' ); ?>
 
