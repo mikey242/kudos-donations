@@ -198,7 +198,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [] );
 		$handler->register();
 
-		$data = apply_filters( 'kudos_global_localization', [] );
+		$data = apply_filters( 'kudos_admin_localization', [] );
 
 		$this->assertTrue( $data['needsUpgrade'] );
 	}
@@ -213,7 +213,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [] );
 		$handler->register();
 
-		$data = apply_filters( 'kudos_global_localization', [] );
+		$data = apply_filters( 'kudos_admin_localization', [] );
 
 		$this->assertFalse( $data['needsUpgrade'] );
 	}
