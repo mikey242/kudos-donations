@@ -26,7 +26,7 @@ export const FormTokenField = ({
 			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
-			render={({ onChange, onBlur, value, description }) => (
+			render={({ onChange, value, description }) => (
 				<WPBaseControl
 					help={description}
 					id={id}
@@ -41,7 +41,6 @@ export const FormTokenField = ({
 						label={label}
 						disabled={isDisabled}
 						onChange={onChange}
-						onBlur={onBlur}
 						value={value ?? []}
 					/>
 				</WPBaseControl>
