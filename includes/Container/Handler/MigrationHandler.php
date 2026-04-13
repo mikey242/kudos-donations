@@ -94,7 +94,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 */
 	private function add_localized_data(): void {
 		add_filter(
-			'kudos_global_localization',
+			'kudos_admin_localization',
 			function ( array $data ): array {
 				$data['needsUpgrade'] = $this->should_upgrade();
 				return $data;

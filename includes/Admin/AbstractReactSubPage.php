@@ -60,9 +60,10 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 			$admin_data = apply_filters(
 				'kudos_admin_localization',
 				[
-					'currencies' => Utils::get_currencies(),
-					'codeEditor' => $settings,
-					'version'    => [ KUDOS_VERSION ],
+					'currencies'   => Utils::get_currencies(),
+					'codeEditor'   => $settings,
+					'version'      => [ KUDOS_VERSION ],
+					'needsUpgrade' => false,
 				]
 			);
 
