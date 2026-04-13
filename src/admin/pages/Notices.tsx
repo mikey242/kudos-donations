@@ -28,6 +28,7 @@ export const Notices = (): React.ReactNode => {
 				type: 'default',
 				isDismissible: notice.isDismissible,
 				onDismiss: () => handleRemove(notice.id),
+				__unstableHTML: true,
 			});
 		});
 	}, [createNotice, handleRemove]);
