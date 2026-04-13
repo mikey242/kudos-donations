@@ -43,7 +43,7 @@ class Log extends BaseRestController {
 	public function get_routes(): array {
 
 		return [
-			'/' => [
+			'/'         => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_log' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -57,6 +57,18 @@ class Log extends BaseRestController {
 						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
+					],
+				],
+			],
+			'/download' => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'download_log' ],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+				'args'                => [
+					'file' => [
+						'type'              => FieldType::STRING,
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_file_name',
 					],
 				],
 			],
@@ -80,6 +92,30 @@ class Log extends BaseRestController {
 			],
 			200
 		);
+	}
+
+	/**
+	 * Streams a log file as a download.
+	 *
+	 * @param WP_REST_Request $request Request array.
+	 */
+	public function download_log( WP_REST_Request $request ): void {
+		$filename = $request->get_param( 'file' );
+		$log_path = self::LOG_DIR . $filename;
+
+		if (
+			! $this->file_system->exists( $log_path ) ||
+			realpath( $log_path ) !== realpath( self::LOG_DIR ) . DIRECTORY_SEPARATOR . $filename
+		) {
+			wp_die( esc_html__( 'File not found.', 'kudos-donations' ), 404 );
+		}
+
+		header( 'Content-Type: text/plain' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Length: ' . $this->file_system->size( $log_path ) );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+		readfile( $log_path );
+		exit;
 	}
 
 	/**

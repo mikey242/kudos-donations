@@ -11,6 +11,7 @@ import {
 import { useCallback, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import { addQueryArgs } from '@wordpress/url';
 
 interface LogEntry {
 	datetime: string;
@@ -64,6 +65,16 @@ const LevelBadge = ({ level }: { level: string }) => (
 	</span>
 );
 
+const getDownloadUrl = (file: string): string => {
+	const { root = '/wp-json/', nonce = '' } =
+		(window as Window & { wpApiSettings?: { root: string; nonce: string } })
+			.wpApiSettings ?? {};
+	return addQueryArgs(`${root}kudos/v1/log/download`, {
+		file,
+		_wpnonce: nonce,
+	});
+};
+
 const LogModal = () => {
 	const [isOpen, setOpen] = useState(false);
 	const [logFiles, setLogFiles] = useState<string[]>([]);
@@ -75,12 +86,11 @@ const LogModal = () => {
 	const fetchLog = useCallback(async (file: string, level: string) => {
 		setIsLoading(true);
 		try {
-			const params = new URLSearchParams({ level });
-			if (file) {
-				params.set('file', file);
-			}
 			const data = await apiFetch<LogResponse>({
-				path: `kudos/v1/log/?${params}`,
+				path: addQueryArgs('kudos/v1/log/', {
+					level,
+					...(file && { file }),
+				}),
 				method: 'GET',
 			});
 			setLogFiles(data.log_files ?? []);
@@ -108,33 +118,44 @@ const LogModal = () => {
 					size={'fill'}
 				>
 					<VStack spacing={5}>
-						<Flex justify="flex-start">
-							<WPSelectControl
-								label={__('File', 'kudos-donations')}
-								value={selectedFile}
-								options={
-									logFiles.length &&
-									logFiles.map((f) => ({
-										label: f,
-										value: f,
-									}))
-								}
-								onChange={(value: string) => {
-									setSelectedFile(value);
-									void fetchLog(value, selectedLevel);
-								}}
-								__next40pxDefaultSize
-							/>
-							<WPSelectControl
-								label={__('Level', 'kudos-donations')}
-								value={selectedLevel}
-								options={LEVEL_OPTIONS}
-								onChange={(value: string) => {
-									setSelectedLevel(value);
-									void fetchLog(selectedFile, value);
-								}}
-								__next40pxDefaultSize
-							/>
+						<Flex justify="space-between" align="flex-end">
+							<Flex justify="flex-start">
+								<WPSelectControl
+									label={__('File', 'kudos-donations')}
+									value={selectedFile}
+									options={
+										logFiles.length &&
+										logFiles.map((f) => ({
+											label: f,
+											value: f,
+										}))
+									}
+									onChange={(value: string) => {
+										setSelectedFile(value);
+										void fetchLog(value, selectedLevel);
+									}}
+									__next40pxDefaultSize
+								/>
+								<WPSelectControl
+									label={__('Level', 'kudos-donations')}
+									value={selectedLevel}
+									options={LEVEL_OPTIONS}
+									onChange={(value: string) => {
+										setSelectedLevel(value);
+										void fetchLog(selectedFile, value);
+									}}
+									__next40pxDefaultSize
+								/>
+							</Flex>
+							{selectedFile && (
+								<a
+									href={getDownloadUrl(selectedFile)}
+									download={selectedFile}
+									className="components-button is-secondary"
+								>
+									{__('Download', 'kudos-donations')}
+								</a>
+							)}
 						</Flex>
 						{isLoading ? (
 							<Flex justify="center">

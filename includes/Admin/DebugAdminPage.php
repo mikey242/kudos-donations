@@ -300,9 +300,12 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						echo '<ul>';
 						foreach ( $log_files as $log_file ) {
 							$filename = basename( $log_file );
-							$url      = wp_nonce_url(
-								admin_url( 'admin-post.php?action=kudos_download_log&file=' . rawurlencode( $filename ) ),
-								'kudos_download_log_' . $filename
+							$url      = add_query_arg(
+								[
+									'file'     => $filename,
+									'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+								],
+								rest_url( 'kudos/v1/log/download' )
 							);
 							printf(
 								'<li><a href="%s">%s</a> (%s)</li>',
