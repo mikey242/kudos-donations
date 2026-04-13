@@ -30,11 +30,7 @@ export const ColorPicker = ({
 			isDisabled={isDisabled}
 			help={help}
 			render={({ onChange, value, description }) => (
-				<WPBaseControl
-					id={id}
-					label={label}
-					help={description}
-				>
+				<WPBaseControl id={id} label={label} help={description}>
 					<ColorPalette
 						colors={colors}
 						onChange={onChange}

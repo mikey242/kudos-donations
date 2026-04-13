@@ -64,11 +64,7 @@ export const RadioGroupControlBase = ({
 	const id = useId();
 
 	return (
-		<WPBaseControl
-			help={help}
-			id={id}
-			className="kudos-button-group"
-		>
+		<WPBaseControl help={help} id={id} className="kudos-button-group">
 			<div>
 				<ToggleGroupControl
 					isBlock
