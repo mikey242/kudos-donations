@@ -96,6 +96,7 @@
 		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
 		"lint:js": "wp-scripts lint-js ./src",
 		"packages-update": "wp-scripts packages-update",
+		"fixtures": "wp-env run cli wp kudos:fixtures:all --delete --force",
 		"make-zip": "rm -f kudos-donations.zip && php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 	},
 	"wp-env": {
