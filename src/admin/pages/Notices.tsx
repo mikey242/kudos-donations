@@ -2,10 +2,23 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { NoticeList, SnackbarList } from '@wordpress/components';
 import React from 'react';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useCallback } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
 
 export const Notices = (): React.ReactNode => {
 	const { removeNotice, createNotice } = useDispatch(noticesStore);
+
+	const handleRemove = useCallback(
+		(id: string) => {
+			removeNotice(id);
+			apiFetch({
+				path: '/kudos/v1/notice/dismiss',
+				method: 'POST',
+				data: { id },
+			}).catch(() => {});
+		},
+		[removeNotice]
+	);
 
 	// Add normal Kudos admin notices found in the window.kudos object.
 	useEffect(() => {
@@ -14,9 +27,10 @@ export const Notices = (): React.ReactNode => {
 				id: notice.id,
 				type: 'default',
 				isDismissible: notice.isDismissible,
+				onDismiss: () => handleRemove(notice.id),
 			});
 		});
-	}, [createNotice]);
+	}, [createNotice, handleRemove]);
 
 	const notices = useSelect(
 		(select) => select(noticesStore).getNotices(),
