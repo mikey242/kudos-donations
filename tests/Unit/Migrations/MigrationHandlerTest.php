@@ -204,8 +204,8 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test that register() adds needsUpgrade=false to the localization filter
-	 * when no upgrade is pending.
+	 * Test that register() does not add needsUpgrade to the localization filter
+	 * when no upgrade is pending (the false default is provided by AbstractReactSubPage).
 	 */
 	public function test_register_sets_needs_upgrade_false_when_current(): void {
 		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
@@ -215,6 +215,6 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		$data = apply_filters( 'kudos_admin_localization', [] );
 
-		$this->assertFalse( $data['needsUpgrade'] );
+		$this->assertArrayNotHasKey( 'needsUpgrade', $data );
 	}
 }
