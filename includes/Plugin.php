@@ -15,8 +15,8 @@ use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
 use IseardMedia\Kudos\Helper\Country;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Service\CacheService;
-use IseardMedia\Kudos\Service\LocalizationService;
 use Psr\Log\LoggerAwareInterface;
 use Throwable;
 
@@ -26,23 +26,19 @@ class Plugin implements LoggerAwareInterface {
 
 	private ActivationHandler $activation_handler;
 	private RegistrableHandler $registrable_handler;
-	private LocalizationService $localization;
 
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param RegistrableHandler  $registrable_handler Registration handler.
-	 * @param ActivationHandler   $activation_handler  Activation related functions.
-	 * @param LocalizationService $localization        Localization service.
+	 * @param RegistrableHandler $registrable_handler Registration handler.
+	 * @param ActivationHandler  $activation_handler  Activation related functions.
 	 */
 	public function __construct(
 		RegistrableHandler $registrable_handler,
-		ActivationHandler $activation_handler,
-		LocalizationService $localization
+		ActivationHandler $activation_handler
 	) {
 		$this->registrable_handler = $registrable_handler;
 		$this->activation_handler  = $activation_handler;
-		$this->localization        = $localization;
 	}
 
 	/**
@@ -53,8 +49,8 @@ class Plugin implements LoggerAwareInterface {
 		add_action(
 			'init',
 			function (): void {
-				$this->localization->add_global( 'env', KUDOS_APP_ENV );
-				$this->localization->add_global( 'countries', Country::get_countries() );
+				Localization::add_global( 'env', KUDOS_APP_ENV );
+				Localization::add_global( 'countries', Country::get_countries() );
 			}
 		);
 		$this->registrable_handler->process();

@@ -12,7 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Service\LocalizationService;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,22 +23,19 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class AbstractProviderFactory extends AbstractRegistrable {
 
 	private ServiceLocator $provider_locator;
-	private LocalizationService $localization;
 
 	/**
-	 * @param ServiceLocator      $provider_locator Used to get class from container.
-	 * @param LocalizationService $localization     Localization service.
+	 * @param ServiceLocator $provider_locator Used to get class from container.
 	 */
-	public function __construct( ServiceLocator $provider_locator, LocalizationService $localization ) {
+	public function __construct( ServiceLocator $provider_locator ) {
 		$this->provider_locator = $provider_locator;
-		$this->localization     = $localization;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->localization->add_global( static::get_type_slug(), $this->get_providers() );
+		Localization::add_global( static::get_type_slug(), $this->get_providers() );
 		$provider = $this->get_provider();
 		if ( null !== $provider ) {
 			$provider->init();

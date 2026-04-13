@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 
 class NoticeService implements HasSettingsInterface {
@@ -94,7 +95,7 @@ class NoticeService implements HasSettingsInterface {
 			$key = wp_generate_uuid4();
 		}
 		add_filter(
-			LocalizationService::FILTER_ADMIN,
+			Localization::FILTER_ADMIN,
 			function ( $current ) use ( $raw_message, $level, $dismissible, $key ) {
 				$current['notices'][] = [
 					'id'            => $key,

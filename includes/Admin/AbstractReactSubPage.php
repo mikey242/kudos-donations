@@ -12,22 +12,13 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\LocalizationService;
 
 abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
 	public const SCRIPT_HANDLE      = 'kudos-admin';
 	public const STYLE_HANDLE_ADMIN = 'kudos-admin-style';
-
-	private LocalizationService $localization;
-
-	/**
-	 * @param LocalizationService $localization Localization service.
-	 */
-	public function __construct( LocalizationService $localization ) {
-		$this->localization = $localization;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -67,14 +58,14 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 
 			wp_set_script_translations( self::SCRIPT_HANDLE, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
 
-			$this->localization->add_admin( 'currencies', Utils::get_currencies() );
-			$this->localization->add_admin( 'codeEditor', $settings );
-			$this->localization->add_admin( 'version', [ KUDOS_VERSION ] );
+			Localization::add_admin( 'currencies', Utils::get_currencies() );
+			Localization::add_admin( 'codeEditor', $settings );
+			Localization::add_admin( 'version', [ KUDOS_VERSION ] );
 
 			wp_localize_script(
 				self::SCRIPT_HANDLE,
 				'kudos',
-				$this->localization->get_admin()
+				Localization::get_admin()
 			);
 		}
 

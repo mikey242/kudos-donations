@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Service;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Localization;
 use stdClass;
 
 class LicenceService extends AbstractRegistrable implements HasSettingsInterface {
@@ -27,26 +28,21 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	private string $base_path;
 	private string $base_url;
 
-	private LocalizationService $localization;
-
 	/**
 	 * Plugin licence constructor. Sets licence server URL based on presence of ENV_VAR.
-	 *
-	 * @param LocalizationService $localization Localization service.
 	 */
-	public function __construct( LocalizationService $localization ) {
-		$this->localization = $localization;
-		$this->base_domain  = $_ENV['API_SERVER_URL'] ?? 'https://kudosdonations.com';
-		$this->base_path    = '/wp-json/kudos-licence/v1';
-		$this->base_url     = $this->base_domain . $this->base_path;
+	public function __construct() {
+		$this->base_domain = $_ENV['API_SERVER_URL'] ?? 'https://kudosdonations.com';
+		$this->base_path   = '/wp-json/kudos-licence/v1';
+		$this->base_url    = $this->base_domain . $this->base_path;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->localization->add_global( 'isLicenceActive', self::is_active() );
-		$this->localization->add_global( 'isAddonInstalled', apply_filters( 'kudos_is_addon_installed', false ) );
+		Localization::add_global( 'isLicenceActive', self::is_active() );
+		Localization::add_global( 'isAddonInstalled', apply_filters( 'kudos_is_addon_installed', false ) );
 		add_filter( 'pre_update_option_' . self::SETTING_KUDOS_LICENCE_KEY, [ $this, 'handle_key_update' ], 10, 2 );
 	}
 

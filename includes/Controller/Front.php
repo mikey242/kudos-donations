@@ -17,10 +17,10 @@ use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
-use IseardMedia\Kudos\Service\LocalizationService;
 use IseardMedia\Kudos\Service\SettingsService;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -37,19 +37,16 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	];
 	private PaymentProviderInterface $vendor;
 	private TransactionRepository $transaction_repository;
-	private LocalizationService $localization;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentProviderFactory $factory        Payment vendor factory.
+	 * @param PaymentProviderFactory $factory                Payment vendor factory.
 	 * @param TransactionRepository  $transaction_repository Transaction repository.
-	 * @param LocalizationService    $localization   Localization service.
 	 */
-	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, LocalizationService $localization ) {
+	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository ) {
 		$this->transaction_repository = $transaction_repository;
 		$this->vendor                 = $factory->get_provider();
-		$this->localization           = $localization;
 	}
 
 	/**
@@ -101,15 +98,15 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				true
 			);
 		}
-		$this->localization->add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
-		$this->localization->add_front( 'currencies', Utils::get_currencies() );
-		$this->localization->add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
+		Localization::add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
+		Localization::add_front( 'currencies', Utils::get_currencies() );
+		Localization::add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
 
 		foreach ( self::SCRIPT_HANDLES as $handle ) {
 			wp_localize_script(
 				$handle,
 				'kudos',
-				$this->localization->get_front()
+				Localization::get_front()
 			);
 			wp_set_script_translations(
 				$handle,

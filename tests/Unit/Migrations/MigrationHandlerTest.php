@@ -6,6 +6,7 @@
 namespace IseardMedia\Kudos\Tests\Migrations;
 
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
+use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
@@ -13,6 +14,11 @@ use IseardMedia\Kudos\Tests\BaseTestCase;
  * @covers \IseardMedia\Kudos\Container\Handler\MigrationHandler
  */
 class MigrationHandlerTest extends BaseTestCase {
+
+	protected function tearDown(): void {
+		parent::tearDown();
+		Localization::reset();
+	}
 
 	/**
 	 * Create a mock migration with a given version.
@@ -198,7 +204,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [] );
 		$handler->register();
 
-		$data = apply_filters( 'kudos_admin_localization', [] );
+		$data = Localization::get_admin();
 
 		$this->assertTrue( $data['needsUpgrade'] );
 	}
@@ -213,7 +219,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [] );
 		$handler->register();
 
-		$data = apply_filters( 'kudos_admin_localization', [] );
+		$data = Localization::get_admin();
 
 		$this->assertArrayNotHasKey( 'needsUpgrade', $data );
 	}
