@@ -12,6 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Service\LocalizationService;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -22,21 +23,22 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class AbstractProviderFactory extends AbstractRegistrable {
 
 	private ServiceLocator $provider_locator;
+	private LocalizationService $localization;
 
 	/**
-	 * Add filter to allow accessing providers in js.
-	 *
-	 * @param ServiceLocator $provider_locator Used to get class from container.
+	 * @param ServiceLocator      $provider_locator Used to get class from container.
+	 * @param LocalizationService $localization     Localization service.
 	 */
-	public function __construct( ServiceLocator $provider_locator ) {
+	public function __construct( ServiceLocator $provider_locator, LocalizationService $localization ) {
 		$this->provider_locator = $provider_locator;
+		$this->localization     = $localization;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		add_filter( 'kudos_global_localization', [ $this, 'add_providers' ] );
+		$this->localization->add_global( static::get_type_slug(), $this->get_providers() );
 		$provider = $this->get_provider();
 		if ( null !== $provider ) {
 			$provider->init();
@@ -91,28 +93,23 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	}
 
 	/**
-	 * Add the providers to given args.
+	 * Returns the list of available providers for this factory type.
 	 *
-	 * @param array $args The existing args.
+	 * @return array<int, array{slug: string, label: string}>
 	 */
-	public function add_providers( array $args ): array {
+	private function get_providers(): array {
 		$providers = [];
 
 		/**
-		 * Iterate over the keys in the ServiceLocator
-		 *
 		 * @var class-string<ProviderInterface> $vendor_class
 		 */
 		foreach ( $this->provider_locator->getProvidedServices() as $vendor_class => $_ ) {
-			// Use a static method or reflection to get the name without instantiating the service.
 			$providers[] = [
 				'slug'  => $vendor_class::get_slug(),
 				'label' => $vendor_class::get_name(),
 			];
 		}
 
-		$args[ static::get_type_slug() ] = $providers;
-
-		return $args;
+		return $providers;
 	}
 }

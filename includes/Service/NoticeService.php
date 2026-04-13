@@ -94,7 +94,7 @@ class NoticeService implements HasSettingsInterface {
 			$key = wp_generate_uuid4();
 		}
 		add_filter(
-			'kudos_admin_localization',
+			LocalizationService::FILTER_ADMIN,
 			function ( $current ) use ( $raw_message, $level, $dismissible, $key ) {
 				$current['notices'][] = [
 					'id'            => $key,

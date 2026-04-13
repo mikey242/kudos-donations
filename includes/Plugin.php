@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
 use IseardMedia\Kudos\Helper\Country;
 use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\LocalizationService;
 use Psr\Log\LoggerAwareInterface;
 use Throwable;
 
@@ -25,19 +26,23 @@ class Plugin implements LoggerAwareInterface {
 
 	private ActivationHandler $activation_handler;
 	private RegistrableHandler $registrable_handler;
+	private LocalizationService $localization;
 
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param RegistrableHandler $registrable_handler Registration handler.
-	 * @param ActivationHandler  $activation_handler  Activation related functions.
+	 * @param RegistrableHandler  $registrable_handler Registration handler.
+	 * @param ActivationHandler   $activation_handler  Activation related functions.
+	 * @param LocalizationService $localization        Localization service.
 	 */
 	public function __construct(
 		RegistrableHandler $registrable_handler,
-		ActivationHandler $activation_handler
+		ActivationHandler $activation_handler,
+		LocalizationService $localization
 	) {
 		$this->registrable_handler = $registrable_handler;
 		$this->activation_handler  = $activation_handler;
+		$this->localization        = $localization;
 	}
 
 	/**
@@ -45,7 +50,13 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
-		$this->add_global_localization_data();
+		add_action(
+			'init',
+			function (): void {
+				$this->localization->add_global( 'env', KUDOS_APP_ENV );
+				$this->localization->add_global( 'countries', Country::get_countries() );
+			}
+		);
 		$this->registrable_handler->process();
 	}
 
@@ -85,20 +96,6 @@ class Plugin implements LoggerAwareInterface {
 			'init',
 			static function (): void {
 				load_plugin_textdomain( 'kudos-donations', false, \dirname( plugin_basename( __FILE__ ), 2 ) . '/languages' );
-			}
-		);
-	}
-
-	/**
-	 * Add data to the global localization array.
-	 */
-	private function add_global_localization_data(): void {
-		add_filter(
-			'kudos_global_localization',
-			function ( array $localization ): array {
-				$localization['env']       = KUDOS_APP_ENV;
-				$localization['countries'] = Country::get_countries();
-				return $localization;
 			}
 		);
 	}

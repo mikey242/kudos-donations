@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
+use IseardMedia\Kudos\Service\LocalizationService;
 use IseardMedia\Kudos\Service\NoticeService;
 
 class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
@@ -42,12 +43,16 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 */
 	protected array $migrations = [];
 
+	private LocalizationService $localization;
+
 	/**
 	 * MigrationManager constructor.
 	 *
-	 * @param iterable $migrations Migrations are injected here by the container.
+	 * @param iterable            $migrations   Migrations are injected here by the container.
+	 * @param LocalizationService $localization Localization service.
 	 */
-	public function __construct( iterable $migrations ) {
+	public function __construct( iterable $migrations, LocalizationService $localization ) {
+		$this->localization = $localization;
 		foreach ( $migrations as $migration ) {
 			$this->add( $migration );
 		}
@@ -77,7 +82,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 		add_action( self::AUTO_MIGRATION_HOOK, [ $this, 'run_auto_migration_batch' ] );
 
 		if ( $this->should_upgrade() ) {
-			$this->add_localized_data();
+			$this->localization->add_admin( 'needsUpgrade', $this->should_upgrade() );
 			// Enqueue a background batch if auto-migratable jobs have not yet.
 			if ( get_option( self::AUTO_DONE_OPTION ) !== KUDOS_DB_VERSION ) {
 				Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
@@ -87,19 +92,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 				$this->add_migration_notice();
 			}
 		}
-	}
-
-	/**
-	 * Adds needsUpgrade to localized script data.
-	 */
-	private function add_localized_data(): void {
-		add_filter(
-			'kudos_admin_localization',
-			function ( array $data ): array {
-				$data['needsUpgrade'] = $this->should_upgrade();
-				return $data;
-			}
-		);
 	}
 
 	/**
