@@ -8,7 +8,7 @@
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://github.com/mikey242/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           4.2.1
+ * Version:           4.2.2
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 6.9
@@ -34,13 +34,17 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-\define( 'KUDOS_VERSION', '4.2.1' );
+\define( 'KUDOS_VERSION', '4.2.2' );
 \define( 'KUDOS_DB_VERSION', '4.2.0' );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );
 \define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
 \define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
 \define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
 \define( 'KUDOS_DEBUG', (bool) get_option( '_kudos_debug_mode' ) );
+
+if ( ! \defined( 'KUDOS_DEMO_MODE' ) ) {
+	\define( 'KUDOS_DEMO_MODE', false );
+}
 
 if ( \function_exists( 'wp_upload_dir' ) ) {
 	$upload_dir = wp_upload_dir();
