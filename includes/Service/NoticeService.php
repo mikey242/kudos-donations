@@ -78,19 +78,33 @@ class NoticeService implements HasSettingsInterface {
 	/**
 	 * Sets up the message and adds the hook.
 	 *
-	 * @param string  $message The message content.
+	 * @param string  $raw_message The message content.
 	 * @param string  $level The message level.
 	 * @param bool    $dismissible Whether the notice can be dismissed by the user or not.
 	 * @param ?string $key Unique key for each notice.
 	 * @param bool    $logo Whether to include the logo or not.
 	 */
-	public static function notice( string $message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true ): void {
+	public static function notice( string $raw_message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true ): void {
 		if ( $logo ) {
-			$message = "<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $message . '</div>';
+			$message = "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $raw_message . '</div>';
+		} else {
+			$message = $raw_message;
 		}
 		if ( \is_null( $key ) ) {
 			$key = wp_generate_uuid4();
 		}
+		add_filter(
+			'kudos_admin_localization',
+			function ( $current ) use ( $raw_message, $level, $dismissible, $key ) {
+				$current['notices'][] = [
+					'id'            => $key,
+					'status'        => substr( $level, strpos( $level, '-' ) + 1 ),
+					'content'       => $raw_message,
+					'isDismissible' => $dismissible,
+				];
+				return $current;
+			}
+		);
 		add_action(
 			'admin_notices',
 			function () use ( $key, $level, $message, $dismissible ) {

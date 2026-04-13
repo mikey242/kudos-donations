@@ -1,6 +1,15 @@
 import CodeMirror from 'codemirror';
 import type { LicenceStatusString } from './licence';
+export interface KudosNotice {
+	id: string;
+	status: 'success' | 'error' | 'info' | 'warning';
+	content: string;
+	isDismissible: boolean;
+	type: 'default' | 'snackbar';
+}
+
 export interface KudosGlobal {
+	notices?: KudosNotice[];
 	isLicenceActive: boolean;
 	isAddonInstalled: boolean;
 	getLicenceStatus: () => Promise<LicenceStatusString>;

@@ -30,6 +30,9 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 	 * {@inheritDoc}
 	 */
 	public function register_assets(): void {
+		// Hide admin notices.
+		$this->discard_admin_notices();
+
 		// Enqueue the styles.
 		wp_enqueue_style(
 			self::STYLE_HANDLE_ADMIN,
@@ -87,5 +90,26 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 			esc_attr( $this->get_menu_slug() )
 		);
 		echo '</div>';
+	}
+
+	/**
+	 * Hide admin notices on our react-based admin pages.
+	 */
+	private function discard_admin_notices(): void {
+		add_action(
+			'admin_notices',
+			function () {
+				ob_start();
+			},
+			1
+		);
+
+		add_action(
+			'admin_notices',
+			function () {
+				ob_end_clean();
+			},
+			PHP_INT_MAX
+		);
 	}
 }
