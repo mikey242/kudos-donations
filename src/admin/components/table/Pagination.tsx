@@ -111,6 +111,7 @@ export const Pagination = ({
 							fontSize: '1rem',
 						}}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				) : (
 					<>
