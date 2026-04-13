@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,11 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+= 4.2.2 =
+* Improve admin notice handling
+* Move version information to Settings > Help > About
+* Update dependencies
 
 = 4.2.1 =
 * Automatically migrate campaigns to prevent front-end errors when plugin is updated automatically
