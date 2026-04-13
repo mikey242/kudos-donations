@@ -9,7 +9,7 @@ import { LogModal } from '../../LogModal';
 const HelpTab = (): React.ReactNode => {
 	return (
 		<>
-			<Panel header={__('Share the love', 'kudos-donations')}>
+			<Panel header={__('Share the love', 'kudos-donations')} spacing={2}>
 				<p className="mb-2">
 					{__(
 						'Do you like using Kudos? Please let us know your thoughts.',

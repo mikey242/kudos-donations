@@ -19,6 +19,7 @@ interface PanelProps {
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	initialOpen?: boolean;
+	spacing?: number;
 }
 
 export const Panel = ({
@@ -27,6 +28,7 @@ export const Panel = ({
 	children,
 	footer = null,
 	initialOpen = true,
+	spacing = 5,
 }: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
 	return (
@@ -42,7 +44,7 @@ export const Panel = ({
 			</CardHeader>
 			{open && (
 				<CardBody>
-					<VStack spacing={5}>{children}</VStack>
+					<VStack spacing={spacing}>{children}</VStack>
 				</CardBody>
 			)}
 			{footer && <CardFooter>{footer}</CardFooter>}
