@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
@@ -132,6 +133,17 @@ class Admin extends AbstractRegistrable {
 						foreach ( $transactions as $transaction ) {
 							$this->transaction_repository->patch( $transaction, [ 'campaign_id' => $to ] );
 						}
+					}
+					break;
+				case 'kudos_update_migration_history':
+					if ( wp_verify_nonce( $nonce, 'kudos_update_migration_history' ) ) {
+						$history = isset( $_POST['kudos_migration_history'] ) && \is_array( $_POST['kudos_migration_history'] )
+							? array_map( 'sanitize_text_field', wp_unslash( $_POST['kudos_migration_history'] ) )
+							: [];
+						update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, $history );
+
+						$db_version = isset( $_POST['kudos_db_version'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_db_version'] ) ) : '';
+						update_option( MigrationHandler::SETTING_DB_VERSION, $db_version );
 					}
 					break;
 				case 'kudos_link_entities':

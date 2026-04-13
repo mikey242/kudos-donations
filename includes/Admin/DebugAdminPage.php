@@ -20,14 +20,17 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 	private CampaignRepository $campaign_repository;
+	private MigrationHandler $migration_handler;
 
 	/**
 	 * Tools page constructor.
 	 *
 	 * @param CampaignRepository $campaign_repository The campaign repository.
+	 * @param MigrationHandler   $migration_handler   The migration handler.
 	 */
-	public function __construct( CampaignRepository $campaign_repository ) {
+	public function __construct( CampaignRepository $campaign_repository, MigrationHandler $migration_handler ) {
 		$this->campaign_repository = $campaign_repository;
+		$this->migration_handler   = $migration_handler;
 		$this->add_js();
 	}
 
@@ -264,14 +267,30 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 					<hr/>
 
-					<h2>Migration History:</h2>
-					<ul>
-						<?php
-						foreach ( get_option( MigrationHandler::SETTING_MIGRATION_HISTORY ) as $migration ) {
-							echo '<li>' . esc_attr( $migration ) . '</li>';
-						}
-						?>
-					</ul>
+					<h2>Migration History</h2>
+					<form method="post" action="">
+						<?php wp_nonce_field( 'kudos_update_migration_history' ); ?>
+						<table class="form-table">
+							<?php
+							$history = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
+							foreach ( $this->migration_handler->get_migrations() as $migration ) {
+								$version = $migration->get_version();
+								printf(
+									'<tr><th scope="row">%s</th><td><input type="checkbox" name="kudos_migration_history[]" value="%s"%s /></td></tr>',
+									esc_html( $version ),
+									esc_attr( $version ),
+									in_array( $version, $history, true ) ? ' checked' : ''
+								);
+							}
+							?>
+							<tr>
+								<th scope="row"><label for="kudos_db_version"><?php esc_html_e( 'DB Version', 'kudos-donations' ); ?></label></th>
+								<td><input type="text" id="kudos_db_version" name="kudos_db_version" value="<?php echo esc_attr( (string) get_option( MigrationHandler::SETTING_DB_VERSION ) ); ?>" class="regular-text" /></td>
+							</tr>
+						</table>
+						<?php submit_button( __( 'Save', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to update the migration history?', 'kudos-donations' ) ] ); ?>
+						<input type="hidden" name="kudos_action" value="kudos_update_migration_history" />
+					</form>
 
 					<?php do_action( 'kudos_debug_menu_actions_extra' ); ?>
 
