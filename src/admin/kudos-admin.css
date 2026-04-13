@@ -94,16 +94,6 @@ body.admin-color-modern {
 		@media screen and (max-width: 782px) {
 			position: initial;
 			top: initial;
-
-			.kudos-title, .kudos-version {
-				display: none;
-			}
-		}
-
-		.kudos-version {
-			border-radius: var(--kudos-rounded);
-			background-color: #efefef;
-			padding: 0.75em;
 		}
 
 		.status-text {

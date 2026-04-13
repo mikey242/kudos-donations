@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import logo from '../../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { Button, Flex, FlexItem } from '@wordpress/components';
+import { Button, Flex } from '@wordpress/components';
 import { TextControl, ToggleControl } from '../../../controls';
 import { Panel } from '../../../components';
 import { LogModal } from '../../LogModal';
@@ -28,64 +27,42 @@ const HelpTab = (): React.ReactNode => {
 					</Button>
 				</Flex>
 			</Panel>
-			<Panel header={__('Need some assistance?', 'kudos-donations')}>
+			<Panel
+				header={__('About', 'kudos-donations')}
+				spacing={2}
+				headerExtra={
+					<>
+						<span>
+							<strong>Plugin Version: </strong>
+							{window.kudos.version}
+						</span>
+					</>
+				}
+			>
 				<p>
-					{__(
-						"Don't hesitate to get in touch if you need any help or have a suggestion.",
-						'kudos-donations'
-					)}
+					Kudos Donations developed by Michael Iseard /{' '}
+					<a href="https://iseard.media">Iseard Media</a>
 				</p>
-				<Flex>
-					<FlexItem>
-						<Flex justify="flex-start">
-							<Button
-								variant="secondary"
-								icon="groups"
-								href="https://wordpress.org/support/plugin/kudos-donations/"
-								target="_blank"
-								rel="noreferrer"
-							>
-								{__('Support forums', 'kudos-donations')}
-							</Button>
-							<Button
-								variant="secondary"
-								icon="editor-help"
-								href="https://docs.kudosdonations.com/"
-								target="_blank"
-								rel="noreferrer"
-							>
-								{__(
-									'Visit our Documentation',
-									'kudos-donations'
-								)}
-							</Button>
-							<LogModal />
-						</Flex>
-					</FlexItem>
-					<FlexItem>
-						<Button
-							target="_blank"
-							rel="noreferrer"
-							variant="link"
-							title={__(
-								'Visit Kudos Donations',
-								'kudos-donations'
-							)}
-							aria-label={__(
-								'Visit Kudos Donations',
-								'kudos-donations'
-							)}
-							className="block"
-							href="https://kudosdonations.com"
-						>
-							<img
-								width="140"
-								src={logo}
-								className="mr-4"
-								alt="Kudos Logo"
-							/>
-						</Button>
-					</FlexItem>
+				<Flex justify="flex-start">
+					<Button
+						variant="secondary"
+						icon="groups"
+						href="https://wordpress.org/support/plugin/kudos-donations/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						{__('Support forums', 'kudos-donations')}
+					</Button>
+					<Button
+						variant="secondary"
+						icon="editor-help"
+						href="https://docs.kudosdonations.com/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						{__('Visit our Documentation', 'kudos-donations')}
+					</Button>
+					<LogModal />
 				</Flex>
 			</Panel>
 			<Panel header={__('Advanced', 'kudos-donations')}>

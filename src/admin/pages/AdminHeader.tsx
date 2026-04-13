@@ -22,7 +22,11 @@ export const AdminHeader = (): ReactNode => {
 		<>
 			<Panel className="kudos-admin-header">
 				<div className="kudos-admin-header-top admin-wrap-wide">
-					<Flex align="center" justify="space-between">
+					<Flex
+						align="center"
+						justify="space-between"
+						style={{ margin: '1em 0' }}
+					>
 						<FlexBlock>
 							<Flex
 								direction="row"
@@ -51,11 +55,6 @@ export const AdminHeader = (): ReactNode => {
 											'kudos-donations'
 										)}
 									</span>
-								</FlexItem>
-								<FlexItem>
-									<p className="kudos-version">
-										{window.kudos?.version}
-									</p>
 								</FlexItem>
 							</Flex>
 						</FlexBlock>
