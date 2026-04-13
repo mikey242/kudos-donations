@@ -60,13 +60,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function is_enabled(): bool {
-		return KUDOS_DEBUG;
-	}
-
-	/**
 	 * Add JS to the footer.
 	 */
 	private function add_js(): void {
@@ -292,6 +285,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * {@inheritDoc}
 	 */
 	public function get_parent_slug(): string {
-		return DonationsAdminPage::get_menu_slug();
+		return KUDOS_DEBUG ? DonationsAdminPage::get_menu_slug() : '';
 	}
 }
