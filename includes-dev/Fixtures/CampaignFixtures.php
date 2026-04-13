@@ -13,13 +13,14 @@ namespace IseardMedia\Kudos\Dev\Fixtures;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
 
 class CampaignFixtures extends BaseFixtures {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function before(): void {
-		$this->repository = new CampaignRepository( $this->wpdb );
+		$this->repository = new CampaignRepository( $this->wpdb, new CampaignSchema() );
 	}
 
 	/**

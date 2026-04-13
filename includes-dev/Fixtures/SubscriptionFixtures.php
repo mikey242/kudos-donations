@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Dev\Fixtures;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SubscriptionStatus;
 
 class SubscriptionFixtures extends BaseFixtures {
@@ -20,7 +21,7 @@ class SubscriptionFixtures extends BaseFixtures {
 	 * {@inheritDoc}
 	 */
 	protected function before(): void {
-		$this->repository = new SubscriptionRepository( $this->wpdb );
+		$this->repository = new SubscriptionRepository( $this->wpdb, new SubscriptionSchema() );
 	}
 
 	/**

@@ -19,6 +19,10 @@ use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
+use IseardMedia\Kudos\Domain\Schema\DonorSchema;
+use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
+use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
 
 class TransactionFixtures extends BaseFixtures {
@@ -31,8 +35,8 @@ class TransactionFixtures extends BaseFixtures {
 	 */
 	protected function before(): void {
 		delete_transient( self::SUBSCRIPTION_POOL_KEY );
-		$this->repository              = new TransactionRepository( $this->wpdb );
-		$this->subscription_repository = new SubscriptionRepository( $this->wpdb );
+		$this->repository              = new TransactionRepository( $this->wpdb, new TransactionSchema() );
+		$this->subscription_repository = new SubscriptionRepository( $this->wpdb, new SubscriptionSchema() );
 	}
 
 	/**
@@ -67,9 +71,9 @@ class TransactionFixtures extends BaseFixtures {
 			case SequenceType::ONEOFF:
 			case SequenceType::FIRST:
 				/** @var CampaignEntity[] $campaigns */
-				$campaigns = ( new CampaignRepository( $wpdb ) )->all();
+				$campaigns = ( new CampaignRepository( $wpdb, new CampaignSchema() ) )->all();
 				/** @var DonorEntity[] $donors */
-				$donors      = ( new DonorRepository( $wpdb ) )->all();
+				$donors      = ( new DonorRepository( $wpdb, new DonorSchema() ) )->all();
 				$campaign    = $campaigns[ array_rand( $campaigns ) ];
 				$campaign_id = $campaign->id;
 				$donor       = $donors ? $donors[ array_rand( $donors ) ] : null;

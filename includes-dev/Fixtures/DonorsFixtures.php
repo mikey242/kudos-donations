@@ -13,13 +13,14 @@ namespace IseardMedia\Kudos\Dev\Fixtures;
 
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Schema\DonorSchema;
 
 class DonorsFixtures extends BaseFixtures {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function before(): void {
-		$this->repository = new DonorRepository( $this->wpdb );
+		$this->repository = new DonorRepository( $this->wpdb, new DonorSchema() );
 	}
 
 	/**
