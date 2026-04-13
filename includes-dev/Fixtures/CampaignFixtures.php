@@ -16,6 +16,9 @@ use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
 
 class CampaignFixtures extends BaseFixtures {
+
+	private array $campaign_names = [];
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -40,13 +43,14 @@ class CampaignFixtures extends BaseFixtures {
 
 		$amount_types   = [ 'open', 'fixed', 'both' ];
 		$donation_types = [ 'oneoff', 'recurring', 'both' ];
-		$title          = $titles[ array_rand( $titles ) ];
 		$currencies     = [ 'EUR', 'USD', 'GBP', 'CHF', 'AUD' ];
 		$currency       = $currencies[ array_rand( $currencies ) ];
 
+		$title = $this->get_unique_campaign_name( $titles[ array_rand( $titles ) ] );
+
 		return new CampaignEntity(
 			[
-				'title'               => $title . ' #' . wp_rand( 1000, 9999 ),
+				'title'               => $title,
 				'goal'                => $this->faker->numberBetween( 500, 5000 ),
 				'currency'            => $currency,
 				'theme_color'         => $this->faker->hexColor(),
@@ -57,5 +61,20 @@ class CampaignFixtures extends BaseFixtures {
 				'minimum_donation'    => 1,
 			]
 		);
+	}
+
+	/**
+	 * Checks if campaign name already created and if so iterates # until unique.
+	 *
+	 * @param string $base Base name of the campaign to check.
+	 * @param int    $count The current iteration.
+	 */
+	private function get_unique_campaign_name( string $base, int $count = 0 ): string {
+		$name = $count > 0 ? $base . ' #' . $count : $base;
+		if ( \in_array( $name, $this->campaign_names, true ) ) {
+			return $this->get_unique_campaign_name( $base, $count + 1 );
+		}
+		$this->campaign_names[] = $name;
+		return $name;
 	}
 }
