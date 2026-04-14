@@ -660,7 +660,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_unmigrated_posts( BaseRepository $repository, string $post_type, int $limit ): array {
 		$migrated     = $repository->query( [ 'columns' => [ 'wp_post_id' ] ] );
-		$migrated_ids = array_map( fn( $row ) => $row->wp_post_id, $migrated );
+		$migrated_ids = array_values(
+			array_unique(
+				array_filter(
+					array_map( fn( $row ) => $row->wp_post_id, $migrated )
+				)
+			)
+		);
 
 		$args = [
 			'post_type'        => $post_type,
