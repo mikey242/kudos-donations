@@ -1,4 +1,5 @@
 {
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"features": {
 		"networking": true
 	},
@@ -13,6 +14,12 @@
 			"step": "login",
 			"username": "admin",
 			"password": "password"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "Kudos Donations"
+			}
 		},
 		{
 			"step": "defineWpConfigConsts",
