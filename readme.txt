@@ -115,6 +115,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.2 =
 * Improve admin notice handling
+* Improve handling of migration edge cases
 * Move version information to Settings > Help > About
 * Fix rare issue fetching campaign when cookie is invalid (e.g due to page caching)
 * Update dependencies
