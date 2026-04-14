@@ -116,7 +116,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			return 0;
 		}
 
+		$processed = 0;
+
 		foreach ( $ids as $post_id ) {
+			if ( null !== $donor_repo->find_one_by( [ 'wp_post_id' => $post_id ] ) ) {
+				continue;
+			}
+
 			$donor = new DonorEntity(
 				[
 					'wp_post_id'         => $post_id,
@@ -140,10 +146,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				$this->logger->error( "Failed to insert donor post $post_id", [ 'db_error' => $donor_repo->get_last_db_error() ] );
 			} else {
 				$this->logger->info( "Migrated donor post $post_id", [ 'id' => $result ] );
+				++$processed;
 			}
 		}
 
-		return \count( $ids );
+		return $processed;
 	}
 
 	/**
@@ -162,7 +169,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			return 0;
 		}
 
+		$processed = 0;
+
 		foreach ( $ids as $post_id ) {
+			if ( null !== $campaign_repo->find_one_by( [ 'wp_post_id' => $post_id ] ) ) {
+				continue;
+			}
+
 			$campaign = new CampaignEntity(
 				[
 					'wp_post_id'                 => $post_id,
@@ -219,10 +232,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				$this->logger->error( "Failed to insert campaign post $post_id", [ 'db_error' => $campaign_repo->get_last_db_error() ] );
 			} else {
 				$this->logger->info( "Migrated campaign post $post_id", [ 'id' => $result ] );
+				++$processed;
 			}
 		}
 
-		return \count( $ids );
+		return $processed;
 	}
 
 	/**
@@ -259,7 +273,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$donor_map[ $row->wp_post_id ] = $row->id;
 		}
 
+		$processed = 0;
+
 		foreach ( $ids as $post_id ) {
+			if ( null !== $transaction_repo->find_one_by( [ 'wp_post_id' => $post_id ] ) ) {
+				continue;
+			}
+
 			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
 			$donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
 
@@ -293,10 +313,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				$this->logger->error( "Failed to insert transaction post $post_id", [ 'db_error' => $transaction_repo->get_last_db_error() ] );
 			} else {
 				$this->logger->info( "Migrated transaction post $post_id", [ 'id' => $result ] );
+				++$processed;
 			}
 		}
 
-		return \count( $ids );
+		return $processed;
 	}
 
 	/**
@@ -339,7 +360,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$donor_map[ $row->wp_post_id ] = $row->id;
 		}
 
+		$processed = 0;
+
 		foreach ( $ids as $post_id ) {
+			if ( null !== $subscription_repo->find_one_by( [ 'wp_post_id' => $post_id ] ) ) {
+				continue;
+			}
+
 			$legacy_transaction_post_id = (int) get_post_meta( $post_id, 'transaction_id', true );
 			$transaction_id             = null;
 			$donor_id                   = null;
@@ -385,10 +412,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				$this->logger->error( "Failed to insert subscription post $post_id", [ 'db_error' => $subscription_repo->get_last_db_error() ] );
 			} else {
 				$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
+				++$processed;
 			}
 		}
 
-		return \count( $ids );
+		return $processed;
 	}
 
 	/**
