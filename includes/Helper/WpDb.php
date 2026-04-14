@@ -124,7 +124,7 @@ class WpDb {
 		$table = $this->table( $base_table_name );
 		return (bool) $this->get_var(
 			$this->prepare(
-				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = %s AND COLUMN_NAME = %s',
+				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s AND COLUMN_NAME = %s',
 				$table,
 				$column
 			)
