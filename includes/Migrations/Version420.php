@@ -31,6 +31,7 @@ use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\LinkService;
+
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
