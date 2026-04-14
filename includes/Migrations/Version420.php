@@ -669,7 +669,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			'orderby'          => 'ID',
 			'order'            => 'ASC',
 			'fields'           => 'ids',
-			'suppress_filters' => false,
+			'suppress_filters' => true,
 		];
 
 		if ( ! empty( $migrated_ids ) ) {
