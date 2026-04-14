@@ -99,7 +99,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			);
 		}
 		Localization::add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
-		Localization::add_front( 'currencies', Utils::get_currencies() );
 		Localization::add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
 
 		foreach ( self::SCRIPT_HANDLES as $handle ) {

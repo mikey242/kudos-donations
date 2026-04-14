@@ -17,7 +17,7 @@ import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 
-window.kudos.front = { Components, Controls, Contexts };
+window.kudos.front.api = { Components, Controls, Contexts };
 
 domReady(() => {
 	// Select the web components as target for render.

@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
 use IseardMedia\Kudos\Helper\Country;
 use IseardMedia\Kudos\Helper\Localization;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
 use Throwable;
@@ -51,6 +52,7 @@ class Plugin implements LoggerAwareInterface {
 			function (): void {
 				Localization::add_global( 'env', KUDOS_APP_ENV );
 				Localization::add_global( 'countries', Country::get_countries() );
+				Localization::add_global( 'currencies', Utils::get_currencies() );
 			}
 		);
 		$this->registrable_handler->process();

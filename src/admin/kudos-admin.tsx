@@ -9,9 +9,7 @@ import * as Components from './components';
 import * as Contexts from './contexts';
 import { getLicenceStatus } from '../utils/licence';
 
-window.kudos.getLicenceStatus = getLicenceStatus;
-
-window.kudos.admin = { Controls, Components, Contexts };
+window.kudos.admin.api = { Controls, Components, Contexts, getLicenceStatus };
 
 domReady(() => {
 	const container = document.getElementById('root');

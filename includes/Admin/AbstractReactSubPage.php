@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Localization;
-use IseardMedia\Kudos\Helper\Utils;
 
 abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
@@ -58,7 +57,6 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 
 			wp_set_script_translations( self::SCRIPT_HANDLE, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
 
-			Localization::add_admin( 'currencies', Utils::get_currencies() );
 			Localization::add_admin( 'codeEditor', $settings );
 			Localization::add_admin( 'version', [ KUDOS_VERSION ] );
 

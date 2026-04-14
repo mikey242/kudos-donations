@@ -22,7 +22,7 @@ export const Notices = (): React.ReactNode => {
 
 	// Add normal Kudos admin notices found in the window.kudos object.
 	useEffect(() => {
-		(window.kudos?.notices ?? []).forEach((notice) => {
+		(window.kudos?.admin?.notices ?? []).forEach((notice) => {
 			return createNotice(notice.status, notice.content, {
 				id: notice.id,
 				type: 'default',

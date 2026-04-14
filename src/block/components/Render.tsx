@@ -28,9 +28,9 @@ export const Render = ({
 	isContentReady = true,
 }: RenderProps) => {
 	// Set ready = false if there are stylesheets to load
-	const [ready, setReady] = useState(!window.kudos?.stylesheets);
+	const [ready, setReady] = useState(!window.kudos?.front?.stylesheets);
 	// Count number of stylesheets to load
-	const numSheetsRef = useRef(window.kudos?.stylesheets?.length);
+	const numSheetsRef = useRef(window.kudos?.front?.stylesheets?.length);
 
 	const updateLoadedSheets = () => {
 		numSheetsRef.current--;
@@ -66,12 +66,12 @@ export const Render = ({
 	return (
 		<root.div>
 			{/* Load global styles */}
-			{window.kudos?.customStyles && (
-				<style>{window.kudos?.customStyles}</style>
+			{window.kudos?.front?.customStyles && (
+				<style>{window.kudos?.front?.customStyles}</style>
 			)}
 
 			{/* Load the main stylesheet */}
-			{window.kudos?.stylesheets?.map((stylesheet, i) => (
+			{window.kudos?.front?.stylesheets?.map((stylesheet, i) => (
 				<link
 					key={i}
 					rel="stylesheet"
@@ -86,7 +86,7 @@ export const Render = ({
 			{/* Fontsize/Font/Theme */}
 			<style>
 				{`:host { 
-					font-size: ${window.kudos?.baseFontSize ?? '1.2rem'};
+					font-size: ${window.kudos?.front?.baseFontSize ?? '1.2rem'};
 					--kudos-font-heading: ${fonts?.header ?? 'cabinbold, sans-serif'} ;
 					--kudos-font-body: ${fonts?.body ?? 'montserratregular, sans-serif'};
 					--kudos-theme-primary: ${themeColor};

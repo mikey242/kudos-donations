@@ -8,7 +8,7 @@ import { KudosLogo } from './components';
 import metadata from './block.json';
 import { Edit, KudosButtonAttributes } from './form';
 
-window.kudos.front = { Components, Controls, Contexts };
+window.kudos.front.api = { Components, Controls, Contexts };
 
 /**
  * Register block.

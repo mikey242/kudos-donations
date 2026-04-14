@@ -16,7 +16,7 @@ interface ProviderProps {
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export const AdminProvider = ({ children }: ProviderProps) => {
-	const needsUpgrade = window.kudos?.needsUpgrade ?? false;
+	const needsUpgrade = window.kudos?.admin?.needsUpgrade ?? false;
 
 	if (needsUpgrade) {
 		return <MigrationModal />;

@@ -206,7 +206,7 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		$data = Localization::get_admin();
 
-		$this->assertTrue( $data['needsUpgrade'] );
+		$this->assertTrue( $data['admin']['needsUpgrade'] );
 	}
 
 	/**
@@ -221,6 +221,6 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		$data = Localization::get_admin();
 
-		$this->assertArrayNotHasKey( 'needsUpgrade', $data );
+		$this->assertArrayNotHasKey( 'needsUpgrade', $data['admin'] ?? [] );
 	}
 }

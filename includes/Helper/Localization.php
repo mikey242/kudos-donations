@@ -55,23 +55,21 @@ class Localization {
 	}
 
 	/**
-	 * Returns merged global + admin data, passed through a filter for addon extensibility.
+	 * Returns global data merged with admin-specific data nested under 'admin'.
+	 * The admin-specific data is passed through a filter for addon extensibility.
 	 */
 	public static function get_admin(): array {
-		return (array) apply_filters(
-			self::FILTER_ADMIN,
-			array_merge( self::$global, self::$admin )
-		);
+		$admin = (array) apply_filters( self::FILTER_ADMIN, self::$admin );
+		return array_merge( self::$global, [ 'admin' => $admin ] );
 	}
 
 	/**
-	 * Returns merged global + front data, passed through a filter for addon extensibility.
+	 * Returns global data merged with front-specific data nested under 'front'.
+	 * The front-specific data is passed through a filter for addon extensibility.
 	 */
 	public static function get_front(): array {
-		return (array) apply_filters(
-			self::FILTER_FRONT,
-			array_merge( self::$global, self::$front )
-		);
+		$front = (array) apply_filters( self::FILTER_FRONT, self::$front );
+		return array_merge( self::$global, [ 'front' => $front ] );
 	}
 
 	/**

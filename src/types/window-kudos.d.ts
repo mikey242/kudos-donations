@@ -1,5 +1,6 @@
 import CodeMirror from 'codemirror';
 import type { LicenceStatusString } from './licence';
+
 export interface KudosNotice {
 	id: string;
 	status: 'success' | 'error' | 'info' | 'warning';
@@ -8,30 +9,41 @@ export interface KudosNotice {
 	type: 'default' | 'snackbar';
 }
 
-export interface KudosGlobal {
+export interface KudosAdminData {
 	notices?: KudosNotice[];
-	isLicenceActive: boolean;
-	isAddonInstalled: boolean;
-	getLicenceStatus: () => Promise<LicenceStatusString>;
-	customStyles?: string;
-	stylesheets?: string[];
-	baseFontSize?: string;
-	currencies: Record<string, string>;
+	needsUpgrade?: boolean;
 	version?: string;
-	codeEditor: CodeEditorSettings;
-	needsUpgrade: boolean;
-	countries: Record<string, string>;
-	env?: string;
-	admin: {
+	codeEditor?: CodeEditorSettings;
+	api?: {
 		Controls: typeof import('../admin/controls');
 		Components: typeof import('../admin/components');
 		Contexts: typeof import('../admin/contexts');
+		getLicenceStatus: () => Promise<LicenceStatusString>;
 	};
-	front: {
+	[key: string]: unknown;
+}
+
+export interface KudosFrontData {
+	stylesheets?: string[];
+	customStyles?: string;
+	baseFontSize?: string;
+	api?: {
 		Controls: typeof import('../block/controls');
 		Components: typeof import('../block/components');
 		Contexts: typeof import('../block/contexts');
 	};
+	[key: string]: unknown;
+}
+
+export interface KudosGlobal {
+	currencies: Record<string, string>;
+	countries: Record<string, string>;
+	env?: string;
+	isLicenceActive: boolean;
+	isAddonInstalled: boolean;
+	debug?: boolean;
+	admin?: KudosAdminData;
+	front?: KudosFrontData;
 	[key: string]: unknown;
 }
 

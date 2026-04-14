@@ -34,7 +34,7 @@ const HelpTab = (): React.ReactNode => {
 					<>
 						<span>
 							<strong>Plugin Version: </strong>
-							{window.kudos.version}
+							{window.kudos?.admin?.version}
 						</span>
 					</>
 				}
