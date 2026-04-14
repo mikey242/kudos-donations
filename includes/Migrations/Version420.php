@@ -31,8 +31,6 @@ use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\LinkService;
-use WP_Post;
-
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
@@ -684,32 +682,41 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param BaseRepository $repository The repository to use for fetching already migrated posts.
 	 * @param string         $post_type The post type to fetch unmigrated posts from.
 	 * @param int            $limit The number of posts to fetch.
-	 * @return int[]|WP_Post[]
+	 * @return int[]
 	 */
 	public function get_unmigrated_posts( BaseRepository $repository, string $post_type, int $limit ): array {
+		global $wpdb;
+
 		$migrated     = $repository->query( [ 'columns' => [ 'wp_post_id' ] ] );
 		$migrated_ids = array_values(
 			array_unique(
 				array_filter(
-					array_map( fn( $row ) => $row->wp_post_id, $migrated )
+					array_map( fn( $row ) => $row->wp_post_id, $migrated ),
+					fn( $v ) => null !== $v && $v > 0
 				)
 			)
 		);
 
-		$args = [
-			'post_type'        => $post_type,
-			'post_status'      => 'any',
-			'posts_per_page'   => $limit,
-			'orderby'          => 'ID',
-			'order'            => 'ASC',
-			'fields'           => 'ids',
-			'suppress_filters' => true,
-		];
-
-		if ( ! empty( $migrated_ids ) ) {
-			$args['post__not_in'] = $migrated_ids;
+		if ( empty( $migrated_ids ) ) {
+			$results = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status != 'auto-draft' ORDER BY ID ASC LIMIT %d",
+					$post_type,
+					$limit
+				)
+			);
+		} else {
+			$not_in  = implode( ',', array_map( 'intval', $migrated_ids ) );
+			$results = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status != 'auto-draft' AND ID NOT IN ($not_in) ORDER BY ID ASC LIMIT %d",
+					$post_type,
+					$limit
+				)
+			);
 		}
 
-		return get_posts( $args );
+		return array_map( 'intval', $results ?: [] );
 	}
 }
