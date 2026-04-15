@@ -333,8 +333,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function is_enabled(): bool
-	{
+	public function is_enabled(): bool {
 		return KUDOS_DEBUG;
 	}
 

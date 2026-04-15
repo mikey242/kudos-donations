@@ -57,6 +57,7 @@ class Admin extends AbstractRegistrable {
 	 * Enables debug mode when the kudos_debug GET parameter is present.
 	 */
 	private function maybe_enable_debug_mode(): void {
+        //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['kudos_debug'] ) && current_user_can( 'manage_options' ) ) {
 			update_option( '_kudos_debug_mode', true );
 			wp_safe_redirect( remove_query_arg( 'kudos_debug' ) );
