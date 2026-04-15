@@ -10,7 +10,7 @@
 declare( strict_types=1 );
 
 // Stub constants expected by the plugin.
-define( 'KUDOS_VERSION', '4.2.2' );
+define( 'KUDOS_VERSION', '4.2.3' );
 define( 'KUDOS_DB_VERSION', '4.2.0' );
 define( 'KUDOS_PLUGIN_FILE', __DIR__ . '/kudos-donations.php' );
 define( 'KUDOS_PLUGIN_DIR', __DIR__ . '/' );
