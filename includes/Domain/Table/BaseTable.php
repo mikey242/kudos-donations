@@ -12,9 +12,10 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain\Table;
 
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Helper\WpDb;
 
-abstract class BaseTable implements ActivationAwareInterface {
+abstract class BaseTable implements ActivationAwareInterface, UpgradeAwareInterface {
 
 	/**
 	 * Our wpdb wrapper class.
@@ -36,6 +37,13 @@ abstract class BaseTable implements ActivationAwareInterface {
 	 * {@inheritDoc}
 	 */
 	public function on_plugin_activation(): void {
+		$this->create_table();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function on_plugin_upgrade(): void {
 		$this->create_table();
 	}
 
