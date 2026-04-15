@@ -2,7 +2,6 @@ import {
 	TabPanel,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
-	Flex,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminQueryParams } from '../hooks';
