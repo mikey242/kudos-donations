@@ -44,22 +44,13 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 */
 	public function __construct( iterable $migrations ) {
 		foreach ( $migrations as $migration ) {
-			$this->add( $migration );
+			$this->migrations[] = $migration;
 		}
 		usort(
 			$this->migrations,
 			fn( MigrationInterface $a, MigrationInterface $b ) =>
 			version_compare( $a->get_version(), $b->get_version() )
 		);
-	}
-
-	/**
-	 * Add service to list.
-	 *
-	 * @param MigrationInterface $migration Service.
-	 */
-	public function add( MigrationInterface $migration ): void {
-		$this->migrations[] = $migration;
 	}
 
 	/**
@@ -77,13 +68,14 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 			return;
 		}
 
-		// Enqueue background batch for any pending auto migrations.
-		if ( $this->has_pending_auto_migrations() ) {
+		$has_auto   = (bool) array_filter( $pending, fn( MigrationInterface $m ) => $m->is_auto() );
+		$has_manual = (bool) array_filter( $pending, fn( MigrationInterface $m ) => ! $m->is_auto() );
+
+		if ( $has_auto ) {
 			Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
 		}
 
-		// Only notify about non-auto migrations that require user confirmation.
-		if ( $this->should_upgrade() ) {
+		if ( $has_manual ) {
 			Localization::add_admin( 'needsUpgrade', true );
 
 			if ( ! Utils::is_kudos_admin() ) {
@@ -97,10 +89,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * Auto migrations are excluded — they run silently in the background.
 	 */
 	public function should_upgrade(): bool {
-		$db_version = get_option( self::SETTING_DB_VERSION );
-		if ( ! $db_version || ! version_compare( $db_version, KUDOS_DB_VERSION, '<' ) ) {
-			return false;
-		}
 		return (bool) array_filter(
 			$this->get_pending_migrations(),
 			fn( MigrationInterface $m ) => ! $m->is_auto()
@@ -154,63 +142,25 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * Returns true if any pending migration is marked as auto.
+	 * Action Scheduler callback: runs all jobs for each pending auto migration in one shot.
+	 * Stops at the first non-auto pending migration (ordering barrier).
 	 */
-	private function has_pending_auto_migrations(): bool {
-		return (bool) array_filter(
-			$this->get_pending_migrations(),
-			fn( MigrationInterface $m ) => $m->is_auto()
-		);
-	}
+	public function run_auto_migration_batch(): void {
+		$history = (array) get_option( self::SETTING_MIGRATION_HISTORY, [] );
 
-	/**
-	 * Runs one batch of auto work for auto migrations.
-	 *
-	 * @return bool True when work was processed and more may remain, false when done.
-	 */
-	private function process_auto_batch(): bool {
 		foreach ( $this->get_pending_migrations() as $migration ) {
 			if ( ! $migration->is_auto() ) {
-				// A non-auto migration is pending — stop here; auto migrations
-				// that come after it must not run until it is completed.
 				break;
 			}
 
-			$transient_key = $this->get_transient_key( $migration->get_version() );
-			$job_names     = $this->resume_jobs( array_keys( $migration->get_jobs() ), $transient_key );
-
-			foreach ( $job_names as $job_name ) {
-				$processed = $migration->run( $job_name );
-
-				if ( $processed > 0 ) {
-					set_transient( $transient_key, $job_name, HOUR_IN_SECONDS );
-					return true;
-				}
+			foreach ( array_keys( $migration->get_jobs() ) as $job_name ) {
+				$migration->run( $job_name );
 			}
+
+			$history[] = $migration->get_version();
+			$this->get_logger()->info( "Auto migration {$migration->get_version()} marked complete." );
 		}
 
-		return false;
-	}
-
-	/**
-	 * WP-Cron callback: runs one auto batch and reschedules if more work remains.
-	 * Marks auto migrations complete so they do not reappear as pending.
-	 */
-	public function run_auto_migration_batch(): void {
-		if ( $this->process_auto_batch() ) {
-			Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
-			return;
-		}
-
-		// Mark completed auto migrations in history and update DB version if possible.
-		$history = (array) get_option( self::SETTING_MIGRATION_HISTORY, [] );
-		foreach ( $this->get_pending_migrations() as $migration ) {
-			if ( $migration->is_auto() ) {
-				$history[] = $migration->get_version();
-				delete_transient( $this->get_transient_key( $migration->get_version() ) );
-				$this->get_logger()->info( "Auto migration {$migration->get_version()} marked complete." );
-			}
-		}
 		update_option( self::SETTING_MIGRATION_HISTORY, $history );
 
 		if ( empty( $this->get_pending_migrations() ) ) {
