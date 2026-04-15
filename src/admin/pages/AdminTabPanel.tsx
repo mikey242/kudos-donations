@@ -2,9 +2,14 @@ import {
 	TabPanel,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
+	Flex,
 } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
 import { useAdminQueryParams } from '../hooks';
 import type { ReactNode } from 'react';
+import { useEffect } from '@wordpress/element';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 
 export interface AdminTab {
 	name: string;
@@ -18,6 +23,18 @@ interface AdminTabPanelProps {
 
 export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
+	const { createWarningNotice } = useDispatch(noticesStore);
+	const tabExists =
+		!params.tab || tabs.some((tab: AdminTab) => tab.name === params.tab);
+
+	useEffect(() => {
+		if (!tabExists) {
+			createWarningNotice(
+				// translators: %s is the name of the tab.
+				sprintf(__('Cannot find tab "%s"'), params.tab)
+			);
+		}
+	}, [createWarningNotice, params.tab, tabExists]);
 
 	return (
 		<div className="kudos-settings-tab-panel">
