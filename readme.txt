@@ -115,6 +115,8 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.3 =
 * Fix issue where new subscriptions not appearing in the subscriptions table
+* Show warning if requested admin tab not found
+* Update dependencies
 
 = 4.2.2 =
 * Improve admin notice handling
