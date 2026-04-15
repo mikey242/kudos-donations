@@ -15,8 +15,7 @@ namespace IseardMedia\Kudos\Migrations;
  * @phpstan-type MigrationJob array{
  *       callback: callable,
  *       chunked?: bool,
- *       label?: string,
- *       auto?: bool
+ *       label?: string
  *   }
  */
 interface MigrationInterface {
@@ -42,4 +41,11 @@ interface MigrationInterface {
 	 * @return int Number of items processed. 0 means job is complete.
 	 */
 	public function run( string $job ): int;
+
+	/**
+	 * Whether this migration runs automatically without user confirmation.
+	 * Auto migrations never show the upgrade prompt and are marked complete
+	 * by the background batch runner.
+	 */
+	public function is_auto(): bool;
 }

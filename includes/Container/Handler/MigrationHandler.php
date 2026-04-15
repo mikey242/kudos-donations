@@ -31,12 +31,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	public const AUTO_MIGRATION_HOOK = 'kudos_run_auto_migration_batch';
 
 	/**
-	 * Option that stores the DB version for which the auto migration has
-	 * already completed, preventing repeated cron scheduling.
-	 */
-	private const AUTO_DONE_OPTION = '_kudos_auto_migration_done';
-
-	/**
 	 * Array of migrations.
 	 *
 	 * @var MigrationInterface[]
@@ -77,12 +71,20 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	public function register(): void {
 		add_action( self::AUTO_MIGRATION_HOOK, [ $this, 'run_auto_migration_batch' ] );
 
+		$pending = $this->get_pending_migrations();
+
+		if ( empty( $pending ) ) {
+			return;
+		}
+
+		// Enqueue background batch for any pending auto migrations.
+		if ( $this->has_pending_auto_migrations() ) {
+			Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
+		}
+
+		// Only notify about non-auto migrations that require user confirmation.
 		if ( $this->should_upgrade() ) {
-			Localization::add_admin( 'needsUpgrade', $this->should_upgrade() );
-			// Enqueue a background batch if auto-migratable jobs have not yet.
-			if ( get_option( self::AUTO_DONE_OPTION ) !== KUDOS_DB_VERSION ) {
-				Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
-			}
+			Localization::add_admin( 'needsUpgrade', true );
 
 			if ( ! Utils::is_kudos_admin() ) {
 				$this->add_migration_notice();
@@ -91,11 +93,18 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * Determines if a migration should be run.
+	 * Determines if there are pending migrations that require user confirmation.
+	 * Auto migrations are excluded — they run silently in the background.
 	 */
 	public function should_upgrade(): bool {
 		$db_version = get_option( self::SETTING_DB_VERSION );
-		return $db_version && version_compare( $db_version, KUDOS_DB_VERSION, '<' );
+		if ( ! $db_version || ! version_compare( $db_version, KUDOS_DB_VERSION, '<' ) ) {
+			return false;
+		}
+		return (bool) array_filter(
+			$this->get_pending_migrations(),
+			fn( MigrationInterface $m ) => ! $m->is_auto()
+		);
 	}
 
 	/**
@@ -145,26 +154,30 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * Runs one batch of the auto-migratable jobs only (no user confirmation required).
+	 * Returns true if any pending migration is marked as auto.
+	 */
+	private function has_pending_auto_migrations(): bool {
+		return (bool) array_filter(
+			$this->get_pending_migrations(),
+			fn( MigrationInterface $m ) => $m->is_auto()
+		);
+	}
+
+	/**
+	 * Runs one batch of auto work for auto migrations.
 	 *
-	 * Does NOT mark the migration complete in history or update the DB version —
-	 * that is reserved for the full manual migration so the admin backup prompt
-	 * still applies to the remaining data (donors, transactions, subscriptions…).
-	 *
-	 * @return bool True when a batch was processed and more work may remain,
-	 *              false when all auto jobs are done (or there were none).
+	 * @return bool True when work was processed and more may remain, false when done.
 	 */
 	private function process_auto_batch(): bool {
 		foreach ( $this->get_pending_migrations() as $migration ) {
-			$jobs      = $migration->get_jobs();
-			$auto_jobs = array_keys( array_filter( $jobs, fn( $job ) => $job['auto'] ?? false ) );
-
-			if ( empty( $auto_jobs ) ) {
-				continue;
+			if ( ! $migration->is_auto() ) {
+				// A non-auto migration is pending — stop here; auto migrations
+				// that come after it must not run until it is completed.
+				break;
 			}
 
 			$transient_key = $this->get_transient_key( $migration->get_version() );
-			$job_names     = $this->resume_jobs( $auto_jobs, $transient_key );
+			$job_names     = $this->resume_jobs( array_keys( $migration->get_jobs() ), $transient_key );
 
 			foreach ( $job_names as $job_name ) {
 				$processed = $migration->run( $job_name );
@@ -180,14 +193,28 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * WP-Cron callback: runs one auto-migration batch and reschedules if more remain.
-	 * Records completion so register() stops scheduling once all auto jobs are done.
+	 * WP-Cron callback: runs one auto batch and reschedules if more work remains.
+	 * Marks auto migrations complete so they do not reappear as pending.
 	 */
 	public function run_auto_migration_batch(): void {
 		if ( $this->process_auto_batch() ) {
 			Utils::enqueue_async_action( self::AUTO_MIGRATION_HOOK );
-		} else {
-			update_option( self::AUTO_DONE_OPTION, KUDOS_DB_VERSION );
+			return;
+		}
+
+		// Mark completed auto migrations in history and update DB version if possible.
+		$history = (array) get_option( self::SETTING_MIGRATION_HISTORY, [] );
+		foreach ( $this->get_pending_migrations() as $migration ) {
+			if ( $migration->is_auto() ) {
+				$history[] = $migration->get_version();
+				delete_transient( $this->get_transient_key( $migration->get_version() ) );
+				$this->get_logger()->info( "Auto migration {$migration->get_version()} marked complete." );
+			}
+		}
+		update_option( self::SETTING_MIGRATION_HISTORY, $history );
+
+		if ( empty( $this->get_pending_migrations() ) ) {
+			update_option( self::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 		}
 	}
 

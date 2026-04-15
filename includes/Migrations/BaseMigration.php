@@ -66,6 +66,13 @@ abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function is_auto(): bool {
+		return false;
+	}
+
+	/**
 	 * Returns the version of the migration.
 	 */
 	public function get_version(): string {
@@ -85,10 +92,9 @@ abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface
 	 * @param callable    $callback The callback to run.
 	 * @param string|null $label The label to display to the front-end.
 	 * @param bool        $chunked Whether the job processes in chunks.
-	 * @param bool        $auto Whether the job may run automatically without user confirmation.
-	 * @return array{callback: callable, chunked?: bool, label?: string, auto?: bool}
+	 * @return array{callback: callable, chunked?: bool, label?: string}
 	 */
-	protected function job( callable $callback, ?string $label = null, bool $chunked = true, bool $auto = false ): array {
-		return compact( 'callback', 'label', 'chunked', 'auto' );
+	protected function job( callable $callback, ?string $label = null, bool $chunked = true ): array {
+		return compact( 'callback', 'label', 'chunked' );
 	}
 }
