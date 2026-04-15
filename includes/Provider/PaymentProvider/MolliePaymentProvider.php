@@ -853,6 +853,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 				// Bail if failed to create subscription.
 				if ( false === $subscription_id ) {
+					$this->logger->error( 'Failed to create subscription.' );
 					return;
 				}
 
