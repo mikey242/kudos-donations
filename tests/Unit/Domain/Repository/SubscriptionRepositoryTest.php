@@ -159,6 +159,19 @@ class SubscriptionRepositoryTest extends BaseTestCase {
 	}
 
 	/**
+	 * Test that transaction_id roundtrips correctly through insert and retrieval.
+	 */
+	public function test_transaction_id_roundtrips_correctly(): void {
+		$transaction_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
+		$sub_id         = $this->subscription_repository->insert( new SubscriptionEntity( [ 'transaction_id' => $transaction_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var SubscriptionEntity $result */
+		$result = $this->subscription_repository->get( $sub_id );
+
+		$this->assertSame( $transaction_id, $result->transaction_id );
+	}
+
+	/**
 	 * Test that the auto-generated title contains the subscription singular name.
 	 */
 	public function test_insert_generates_title_with_subscription_label(): void {
