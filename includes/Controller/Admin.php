@@ -48,8 +48,20 @@ class Admin extends AbstractRegistrable {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$this->maybe_enable_debug_mode();
 		$this->handle_query_variables();
 		$this->show_notices();
+	}
+
+	/**
+	 * Enables debug mode when the kudos_debug GET parameter is present.
+	 */
+	private function maybe_enable_debug_mode(): void {
+		if ( isset( $_GET['kudos_debug'] ) && current_user_can( 'manage_options' ) ) {
+			update_option( '_kudos_debug_mode', true );
+			wp_safe_redirect( remove_query_arg( 'kudos_debug' ) );
+			exit;
+		}
 	}
 
 	/**

@@ -333,7 +333,15 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	/**
 	 * {@inheritDoc}
 	 */
+	public function is_enabled(): bool
+	{
+		return KUDOS_DEBUG;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_parent_slug(): string {
-		return KUDOS_DEBUG ? DonationsAdminPage::get_menu_slug() : '';
+		return DonationsAdminPage::get_menu_slug();
 	}
 }
