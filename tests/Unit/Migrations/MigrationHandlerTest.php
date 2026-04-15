@@ -23,9 +23,10 @@ class MigrationHandlerTest extends BaseTestCase {
 	/**
 	 * Create a mock migration with a given version.
 	 */
-	private function create_mock_migration( string $version ): MigrationInterface {
+	private function create_mock_migration( string $version, bool $auto = false ): MigrationInterface {
 		$mock = $this->createMock( MigrationInterface::class );
 		$mock->method( 'get_version' )->willReturn( $version );
+		$mock->method( 'is_auto' )->willReturn( $auto );
 		return $mock;
 	}
 
@@ -58,49 +59,38 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test that add() appends a migration.
+	 * Test should_upgrade returns false when there are no pending migrations.
 	 */
-	public function test_add_appends_migration(): void {
-		$handler = new MigrationHandler( [] );
-		$handler->add( $this->create_mock_migration( '5.0.0' ) );
-
-		$migrations = $handler->get_migrations();
-
-		$this->assertCount( 1, $migrations );
-		$this->assertSame( '5.0.0', $migrations[0]->get_version() );
-	}
-
-	/**
-	 * Test should_upgrade returns false when db version equals target.
-	 */
-	public function test_should_upgrade_returns_false_when_current(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
-
+	public function test_should_upgrade_returns_false_when_no_pending(): void {
 		$handler = new MigrationHandler( [] );
 
 		$this->assertFalse( $handler->should_upgrade() );
 	}
 
 	/**
-	 * Test should_upgrade returns true when db version is older.
+	 * Test should_upgrade returns false when all pending migrations are auto.
 	 */
-	public function test_should_upgrade_returns_true_when_outdated(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, '1.0.0' );
+	public function test_should_upgrade_returns_false_when_only_auto_pending(): void {
+		update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 
-		$handler = new MigrationHandler( [] );
+		$handler = new MigrationHandler(
+			[ $this->create_mock_migration( '4.2.3', true ) ]
+		);
+
+		$this->assertFalse( $handler->should_upgrade() );
+	}
+
+	/**
+	 * Test should_upgrade returns true when there is a pending non-auto migration.
+	 */
+	public function test_should_upgrade_returns_true_when_manual_pending(): void {
+		update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
+
+		$handler = new MigrationHandler(
+			[ $this->create_mock_migration( '4.2.0' ) ]
+		);
 
 		$this->assertTrue( $handler->should_upgrade() );
-	}
-
-	/**
-	 * Test should_upgrade returns false when db version is empty.
-	 */
-	public function test_should_upgrade_returns_false_when_empty(): void {
-		delete_option( MigrationHandler::SETTING_DB_VERSION );
-
-		$handler = new MigrationHandler( [] );
-
-		$this->assertFalse( $handler->should_upgrade() );
 	}
 
 	/**
@@ -161,14 +151,14 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test that register() adds an admin_notices hook when an upgrade is needed
-	 * and the current page is not a Kudos admin page.
+	 * Test that register() adds an admin_notices hook when a non-auto migration is
+	 * pending and the current page is not a Kudos admin page.
 	 */
 	public function test_register_adds_notice_when_upgrade_needed_outside_kudos(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, '4.1.3' );
+		update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 		unset( $_GET['page'] ); // Simulate being outside a Kudos admin page.
 
-		$handler = new MigrationHandler( [] );
+		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
 		$before  = $this->count_admin_notices_callbacks();
 
 		$handler->register();
@@ -181,10 +171,10 @@ class MigrationHandlerTest extends BaseTestCase {
 	 * (the React modal handles the prompt instead).
 	 */
 	public function test_register_suppresses_notice_on_kudos_admin_page(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, '4.1.3' );
+		update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 		$_GET['page'] = 'kudos-campaigns'; // Simulate being on a Kudos admin page.
 
-		$handler = new MigrationHandler( [] );
+		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
 		$before  = $this->count_admin_notices_callbacks();
 
 		$handler->register();
@@ -196,12 +186,12 @@ class MigrationHandlerTest extends BaseTestCase {
 
 	/**
 	 * Test that register() adds needsUpgrade=true to the localization filter
-	 * when an upgrade is pending.
+	 * when a non-auto migration is pending.
 	 */
 	public function test_register_sets_needs_upgrade_in_localization_when_pending(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, '4.1.3' );
+		update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 
-		$handler = new MigrationHandler( [] );
+		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
 		$handler->register();
 
 		$data = Localization::get_admin();
@@ -210,12 +200,9 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test that register() does not add needsUpgrade to the localization filter
-	 * when no upgrade is pending (the false default is provided by AbstractReactSubPage).
+	 * Test that register() does not add needsUpgrade when no non-auto migrations are pending.
 	 */
-	public function test_register_sets_needs_upgrade_false_when_current(): void {
-		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
-
+	public function test_register_does_not_set_needs_upgrade_when_no_manual_pending(): void {
 		$handler = new MigrationHandler( [] );
 		$handler->register();
 
