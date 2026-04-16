@@ -68,7 +68,7 @@ try {
 
 // Define screencast mode.
 if ( ! \defined( 'KUDOS_SCREENCAST_MODE' ) ) {
-	\define( 'KUDOS_SCREENCAST_MODE', isset( $_ENV['KUDOS_SCREENCAST_MODE'] ) && $_ENV['KUDOS_SCREENCAST_MODE']);
+	\define( 'KUDOS_SCREENCAST_MODE', isset( $_ENV['KUDOS_SCREENCAST_MODE'] ) && $_ENV['KUDOS_SCREENCAST_MODE'] );
 }
 
 // Set the environment as production if not specified.
