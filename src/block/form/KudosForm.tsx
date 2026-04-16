@@ -15,7 +15,6 @@ interface KudosFormProps {
 	label?: string;
 	alignment?: 'left' | 'center' | 'right';
 	previewMode?: boolean;
-	fullscreenMode?: boolean;
 }
 
 export const KudosForm = ({
@@ -23,7 +22,6 @@ export const KudosForm = ({
 	label,
 	alignment,
 	previewMode = false,
-	fullscreenMode = false,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp] = useState<number>(() => Date.now());
@@ -33,6 +31,8 @@ export const KudosForm = ({
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
 	const isFSLogo = displayAs === 'fslogo';
+	const isScreencastMode: boolean =
+		!!window.kudos?.screencastMode && !previewMode;
 
 	useEffect(() => {
 		if (!isModalOpen) {
@@ -151,13 +151,15 @@ export const KudosForm = ({
 			errors={campaignErrors}
 			className={clsx(
 				previewMode && 'pointer-events-none',
-				fullscreenMode &&
-					'z-[999999] fixed flex justify-center items-center top-0 left-0 w-full h-full bg-white'
+				isScreencastMode &&
+					'z-[999999] fixed top-0 bottom-0 flex justify-center items-center bg-white left-0 right-0',
+				isScreencastMode &&
+					'after:fixed after:w-full after:h-full after:top-0 after:left-0 after:bg-white after:z-[99999]'
 			)}
 			alignment={alignment}
 			isContentReady={!isLoading}
 		>
-			<>
+			<div className={clsx(isScreencastMode && 'z-[999999]')}>
 				{isFSLogo && <KudosLogoFullScreenAnimated />}
 				{isForm && renderDonationForm()}
 				{isModal && (
@@ -168,7 +170,7 @@ export const KudosForm = ({
 						{renderModal()}
 					</>
 				)}
-			</>
+			</div>
 		</Render>
 	);
 };

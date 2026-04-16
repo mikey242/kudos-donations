@@ -66,6 +66,11 @@ try {
 	$_ENV['KUDOS_APP_ENV'] = 'production';
 }
 
+// Define screencast mode.
+if ( ! \defined( 'KUDOS_SCREENCAST_MODE' ) ) {
+	\define( 'KUDOS_SCREENCAST_MODE', (bool) $_ENV['KUDOS_SCREENCAST_MODE'] );
+}
+
 // Set the environment as production if not specified.
 if ( ! isset( $_ENV['KUDOS_APP_ENV'] ) || '' === $_ENV['KUDOS_APP_ENV'] ) {
 	$_ENV['KUDOS_APP_ENV'] = 'production';

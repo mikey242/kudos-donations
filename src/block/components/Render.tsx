@@ -93,20 +93,18 @@ export const Render = ({
 				}`}
 			</style>
 
-			<div id="container">
-				<div
-					className={clsx(
-						className,
-						'flex font-body text-gray-900',
-						alignmentResult
-					)}
-				>
-					{ready && !errors ? (
-						<>{isContentReady ? children : <Spinner />}</>
-					) : (
-						<>{renderErrors()}</>
-					)}
-				</div>
+			<div
+				className={clsx(
+					className,
+					'flex font-body text-gray-900',
+					alignmentResult
+				)}
+			>
+				{ready && !errors ? (
+					<>{isContentReady ? children : <Spinner />}</>
+				) : (
+					<>{renderErrors()}</>
+				)}
 			</div>
 		</root.div>
 	);

@@ -44,6 +44,7 @@ export interface KudosGlobal {
 	debug?: boolean;
 	admin?: KudosAdminData;
 	front?: KudosFrontData;
+	screencastMode?: boolean;
 	[key: string]: unknown;
 }
 

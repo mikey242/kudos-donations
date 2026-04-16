@@ -6,6 +6,7 @@ import { Transition, TransitionChild } from '@headlessui/react';
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { ReactNode } from 'react';
+import { clsx } from 'clsx';
 
 interface KudosModalProps {
 	isOpen?: boolean;
@@ -23,6 +24,7 @@ export const KudosModal = ({
 	const targetRef = useRef<HTMLDivElement | null>(null);
 	const [firstElement, setFirstElement] = useState<HTMLElement | null>(null);
 	const [lastElement, setLastElement] = useState<HTMLElement | null>(null);
+	const { screencastMode } = window.kudos;
 
 	const toggle = useCallback(() => {
 		toggleModal();
@@ -98,7 +100,10 @@ export const KudosModal = ({
 					>
 						<div
 							id="modal-overlay"
-							className="fixed inset-0 bg-black/30"
+							className={clsx(
+								screencastMode && 'hidden',
+								'fixed inset-0 bg-black/30'
+							)}
 							aria-hidden="true"
 						/>
 					</TransitionChild>
@@ -121,7 +126,11 @@ export const KudosModal = ({
 							</span>
 							<div
 								id="modal"
-								className="inline-block bg-white rounded-t-lg xs:rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg w-full"
+								className={clsx(
+									screencastMode &&
+										'border-black border-[1px] border-solid',
+									'inline-block bg-white rounded-t-lg xs:rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg w-full'
+								)}
 							>
 								<div className="bg-white p-8">
 									<div
