@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Button, Flex, Panel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';

@@ -31,7 +31,7 @@ export interface Subscription extends BaseEntity {
 	vendor_subscription_id?: string;
 	donor?: Donor;
 	campaign?: Campaign;
-    token: string;
+	token: string;
 }
 
 export interface Donor extends BaseEntity {

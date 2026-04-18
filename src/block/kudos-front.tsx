@@ -4,8 +4,6 @@
  *  @see https://stackoverflow.com/questions/42274721/shadow-dom-and-reactjs
  */
 
-/* eslint-disable camelcase */
-
 import * as Components from './components';
 import * as Controls from './controls';
 import * as Contexts from './contexts';

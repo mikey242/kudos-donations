@@ -5,8 +5,6 @@ import { AdminHeader, MigrationModal, Notices } from '../pages';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { SLOT_PAGE_TITLE } from '../slot-names';
 import { createContext, useContext } from '@wordpress/element';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AdminContextValue {}
 
 interface ProviderProps {

@@ -10,9 +10,9 @@ export interface MolliePaymentMethod {
 	};
 	maximumAmount:
 		| {
-		value: string;
-		currency: string;
-	}
+				value: string;
+				currency: string;
+		  }
 		| []; // some were empty arrays
 }
 

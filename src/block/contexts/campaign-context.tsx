@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import {

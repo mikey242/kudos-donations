@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { createPortal, useEffect, useState } from '@wordpress/element';
 import React from 'react';

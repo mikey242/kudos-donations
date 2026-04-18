@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { __ } from '@wordpress/i18n';
 import {
 	FormTokenField,

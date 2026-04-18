@@ -8,7 +8,6 @@ import {
 	useEffect,
 	useState,
 } from '@wordpress/element';
-// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';

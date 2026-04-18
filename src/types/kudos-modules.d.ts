@@ -71,8 +71,5 @@ declare module '@kudos/front-components' {
 }
 
 declare module '@kudos/front-contexts' {
-	export {
-		CampaignProvider,
-		useCampaignContext,
-	} from '../block/contexts';
+	export { CampaignProvider, useCampaignContext } from '../block/contexts';
 }

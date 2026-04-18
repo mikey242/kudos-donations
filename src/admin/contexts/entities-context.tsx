@@ -126,7 +126,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				totalItems: response.total,
 				totalPages: response.total_pages,
 			});
-		} catch (error) {
+		} catch {
 			setState((prev) => ({ ...prev, hasResolved: true }));
 		}
 	}, [queryEntities, order, orderby, paged, where]);
