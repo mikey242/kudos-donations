@@ -51,8 +51,7 @@ class Plugin implements LoggerAwareInterface {
 			'init',
 			function (): void {
 				Localization::add_global( 'env', KUDOS_APP_ENV );
-				Localization::add_global( 'screencastMode', KUDOS_SCREENCAST_MODE );
-				Localization::add_global( 'countries', Country::get_countries() );
+Localization::add_global( 'countries', Country::get_countries() );
 				Localization::add_global( 'currencies', Utils::get_currencies() );
 			}
 		);
