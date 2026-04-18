@@ -114,7 +114,9 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 
 		return array_filter(
 			$this->migrations,
-			fn( MigrationInterface $migration ) => ! \in_array( $migration->get_version(), $history, true )
+			fn( MigrationInterface $migration ) =>
+				! \in_array( $migration->get_version(), $history, true ) &&
+				version_compare( $migration->get_version(), (string) get_option( self::SETTING_DB_VERSION, '0' ), '>' )
 		);
 	}
 
