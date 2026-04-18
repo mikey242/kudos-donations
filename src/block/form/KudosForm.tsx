@@ -125,7 +125,7 @@ export const KudosForm = ({
 	};
 
 	const renderDonationForm = () => (
-		<div className="w-full">
+		<div id="kudos-donation-form" className="w-full">
 			{formError && (
 				<small className="text-center block font-normal mb-4 text-sm text-red-500">
 					{formError}
@@ -148,10 +148,11 @@ export const KudosForm = ({
 			style={campaign?.custom_styles}
 			errors={campaignErrors}
 			className={clsx(previewMode && 'pointer-events-none')}
+			previewMode={previewMode}
 			alignment={alignment}
 			isContentReady={!isLoading}
 		>
-			<div>
+			<div id="kudos-content">
 				{isFSLogo && <KudosLogoFullScreenAnimated />}
 				{isForm && renderDonationForm()}
 				{isModal && (

@@ -15,6 +15,7 @@ interface RenderProps {
 	alignment?: 'left' | 'center' | 'right';
 	errors?: string[] | null;
 	isContentReady?: boolean;
+	previewMode?: boolean;
 }
 
 export const Render = ({
@@ -26,6 +27,7 @@ export const Render = ({
 	alignment,
 	errors = null,
 	isContentReady = true,
+	previewMode = false,
 }: RenderProps) => {
 	// Set ready = false if there are stylesheets to load
 	const [ready, setReady] = useState(!window.kudos?.front?.stylesheets);
@@ -64,7 +66,7 @@ export const Render = ({
 	);
 
 	return (
-		<root.div>
+		<root.div id="kudos-render-root">
 			{/* Load global styles */}
 			{window.kudos?.front?.customStyles && (
 				<style>{window.kudos?.front?.customStyles}</style>
@@ -99,6 +101,7 @@ export const Render = ({
 					'flex font-body text-gray-900',
 					alignmentResult
 				)}
+				data-preview={previewMode || undefined}
 			>
 				{ready && !errors ? (
 					<>{isContentReady ? children : <Spinner />}</>
