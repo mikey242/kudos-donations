@@ -1038,19 +1038,4 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			],
 		];
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function check_payment_status( string $payment_id ): ?string {
-		try {
-			$payment = $this->api_client->payments->get( $payment_id );
-
-			return $payment->status;
-		} catch ( RequestException $e ) {
-			$this->get_logger()->error( 'Error checking payment status', [ 'message' => $e->getMessage() ] );
-
-			return null;
-		}
-	}
 }

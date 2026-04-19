@@ -28,13 +28,6 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public static function get_slug(): string;
 
 	/**
-	 * Checks the status of provided payment
-	 *
-	 * @param string $payment_id The vendor's payment id.
-	 */
-	public function check_payment_status( string $payment_id ): ?string;
-
-	/**
 	 * Returns true if vendor supports recurring payments.
 	 */
 	public static function recurring_enabled(): bool;
