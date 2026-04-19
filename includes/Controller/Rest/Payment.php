@@ -348,9 +348,23 @@ class Payment extends BaseRestController {
 		);
 
 		$transaction_id = $this->transaction_repository->insert( $transaction );
+		$transaction    = $this->transaction_repository->get( $transaction_id );
+
+		// Append order_complete query args if the campaign is configured to show a return message.
+		if ( $campaign->show_return_message ) {
+			$action             = 'order_complete';
+			$args['return_url'] = add_query_arg(
+				[
+					'kudos_action'         => $action,
+					'kudos_transaction_id' => $transaction_id,
+					'kudos_nonce'          => wp_create_nonce( $action . $transaction_id ),
+				],
+				$args['return_url']
+			);
+		}
+
 		// Create payment with vendor.
-		$transaction = $this->transaction_repository->get( $transaction_id );
-		$url         = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
+		$url = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {

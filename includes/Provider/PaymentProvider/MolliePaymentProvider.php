@@ -422,22 +422,6 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 		$payment_args['value']             = number_format( \floatval( $payment_args['value'] ), 2, '.', '' );
 		$redirect_url                      = $payment_args['return_url'];
 
-		// Add order id query arg to return url if option to show message enabled.
-		/** @var CampaignEntity $campaign */
-		$campaign            = $this->campaign_repository->get( (int) $payment_args['campaign_id'] );
-		$show_return_message = $campaign->show_return_message;
-		if ( $show_return_message ) {
-			$action       = 'order_complete';
-			$redirect_url = add_query_arg(
-				[
-					'kudos_action'         => 'order_complete',
-					'kudos_transaction_id' => $transaction_id,
-					'kudos_nonce'          => wp_create_nonce( $action . $transaction_id ),
-				],
-				$payment_args['return_url']
-			);
-		}
-
 		// Create payment settings.
 		$payment_array = [
 			'amount'       => [
