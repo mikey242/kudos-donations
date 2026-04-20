@@ -23,7 +23,6 @@ bin
 .babelrc
 .DS_Store
 .distignore
-.eslintrc.json
 .git-blame-ignore-revs
 .github
 .gitignore
@@ -45,6 +44,7 @@ babel.config.cjs
 composer.json
 composer.lock
 composer.phar
+eslint.config.mjs
 jest-puppeteer.config.cjs
 jsconfig.json
 karma-story-editor.config.cjs
