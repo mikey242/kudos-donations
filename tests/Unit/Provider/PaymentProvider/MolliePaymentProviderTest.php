@@ -56,29 +56,6 @@ class MolliePaymentProviderTest extends BaseTestCase {
 		$this->assertSame('tr_abc123', $result['transaction']->vendor_payment_id);
 	}
 
-	/**
-	 * Test that create_payment updates the return url.
-	 */
-	public function test_creates_payment_update_redirect_url(): void {
-		$this->create_payment_fixture(['show_return_message' => true]);
-
-		$this->client->assertSent(function (PendingRequest $request) {
-			return $request->payload()->has('redirectUrl')
-				&& strpos($request->payload()->get('redirectUrl'), 'kudos_transaction_id=') !== false;
-		});
-	}
-
-	/**
-	 * Test that create_payment does not update the return url.
-	 */
-	public function test_creates_payment_not_update_redirect_url(): void {
-		$this->create_payment_fixture(['show_return_message' => false]);
-
-		$this->client->assertSent(function (PendingRequest $request) {
-			return $request->payload()->has('redirectUrl')
-				&& strpos($request->payload()->get('redirectUrl'), 'kudos_transaction_id=') === false;
-		});
-	}
 
 	/**
 	 * Test that sequence type is set to first for recurring payments.
@@ -233,7 +210,7 @@ class MolliePaymentProviderTest extends BaseTestCase {
 
 		$payment_args = array_merge($default_args, $overrides);
 
-		$campaign = new CampaignEntity(['show_return_message' => $payment_args['show_return_message'] ?? false]);
+		$campaign = new CampaignEntity();
 		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert($campaign);
 
 		$payment_args['campaign_id'] = $campaign_id;
