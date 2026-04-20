@@ -1,16 +1,14 @@
 {
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"phpVersion": "8.4",
 	"plugins": [
 		".", "https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
 	],
 	"port": 80,
-	"testsEnvironment": false,
-	"env": {
-		"development": {
-			"mysqlPort": "32770"
-		}
-	},
+	"mysqlPort": 32770,
+	"testsEnvironment": true,
 	"config": {
+		"KUDOS_DEMO_MODE": false,
 		"WP_DEBUG_DISPLAY": true,
 		"WP_DEBUG_LOG": true,
 		"SCRIPT_DEBUG": true,
