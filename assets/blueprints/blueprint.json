@@ -18,7 +18,11 @@
 		{
 			"step": "setSiteOptions",
 			"options": {
-				"blogname": "Kudos Donations"
+				"blogname": "Kudos Donations Demo",
+				"_kudos_payment_vendor": "demo",
+				"_kudos_vendor_mollie_profile": {
+					"name": "Demo account"
+				}
 			}
 		},
 		{
