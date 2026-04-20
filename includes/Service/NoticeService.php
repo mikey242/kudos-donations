@@ -31,8 +31,9 @@ class NoticeService implements HasSettingsInterface {
 	 * @param bool   $dismissible Whether the notice can be dismissed.
 	 * @param string $key Optional key to uniquely identify the notice.
 	 * @param bool   $logo Whether to include the logo or not.
+	 * @param bool   $kudos_only Whether to only show on Kudos Donations pages.
 	 */
-	public static function add_notice( string $message, string $level = self::INFO, bool $dismissible = true, string $key = '', bool $logo = true ): void {
+	public static function add_notice( string $message, string $level = self::INFO, bool $dismissible = true, string $key = '', bool $logo = true, bool $kudos_only = false ): void {
 		$notices = get_option( self::SETTING_ADMIN_NOTICES, [] );
 
 		// Use a key if provided, otherwise generate a unique key.
@@ -46,6 +47,7 @@ class NoticeService implements HasSettingsInterface {
 			'level'       => $level,
 			'dismissible' => $dismissible,
 			'logo'        => $logo,
+			'kudos_only'  => $kudos_only,
 		];
 
 		update_option( self::SETTING_ADMIN_NOTICES, $notices );
@@ -84,8 +86,9 @@ class NoticeService implements HasSettingsInterface {
 	 * @param bool    $dismissible Whether the notice can be dismissed by the user or not.
 	 * @param ?string $key Unique key for each notice.
 	 * @param bool    $logo Whether to include the logo or not.
+	 * @param bool    $kudos_only Whether to only show on Kudos Donations pages.
 	 */
-	public static function notice( string $raw_message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true ): void {
+	public static function notice( string $raw_message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true, bool $kudos_only = false ): void {
 		if ( $logo ) {
 			$message = "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $raw_message . '</div>';
 		} else {
@@ -106,12 +109,15 @@ class NoticeService implements HasSettingsInterface {
 				return $current;
 			}
 		);
-		add_action(
-			'admin_notices',
-			function () use ( $key, $level, $message, $dismissible ) {
-				NoticeService::render( $key, $level, $message, $dismissible );
-			}
-		);
+
+		if ( ! $kudos_only ) {
+			add_action(
+				'admin_notices',
+				function () use ( $key, $level, $message, $dismissible ) {
+					NoticeService::render( $key, $level, $message, $dismissible );
+				}
+			);
+		}
 	}
 
 	/**

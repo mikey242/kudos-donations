@@ -212,12 +212,14 @@ class Admin extends AbstractRegistrable {
 				$level       = $notice['level'] ?? NoticeService::INFO;
 				$dismissible = $notice['dismissible'] ?? true;
 				$logo        = $notice['logo'] ?? true;
+				$kudos_only  = $notice['kudos_only'] ?? false;
 				NoticeService::notice(
 					$message,
 					$level,
 					$dismissible,
 					(string) $key,
-					$logo
+					$logo,
+					$kudos_only
 				);
 			}
 		}
