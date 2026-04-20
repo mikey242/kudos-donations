@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
@@ -62,7 +63,7 @@ class DemoPaymentProvider extends AbstractProvider implements PaymentProviderInt
 	 */
 	public function init(): void {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
-		if ( KUDOS_DEMO_MODE ) {
+		if ( KUDOS_DEMO_MODE && Utils::is_kudos_admin() ) {
 			NoticeService::notice( __( 'Thanks for trying out Kudos Donations! Some settings can not be changed in demo mode.', 'kudos-donations' ), NoticeService::INFO, false, 'demo_mode' );
 		}
 	}
