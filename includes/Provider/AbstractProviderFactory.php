@@ -71,22 +71,27 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 */
 	public function get_provider(): ?ProviderInterface {
 		$selected_vendor = (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
-		/** @var array<string, string> $vendors */
-		$vendors = $this->provider_locator->getProvidedServices();
+		/** @var array<string, class-string<ProviderInterface>> $slug_map */
+		$slug_map = [];
 		/** @var class-string<ProviderInterface> $class */
-		foreach ( $vendors as $class => $_ ) {
-			if ( $class::get_slug() === $selected_vendor ) {
-				try {
-					/** @var T $vendor */
-					$vendor = $this->provider_locator->get( $class );
-					return $vendor;
-				} catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e ) {
-					$this->get_logger()->error( $e->getMessage() );
-				}
-			}
+		foreach ( array_keys( $this->provider_locator->getProvidedServices() ) as $class ) {
+			$slug_map[ $class::get_slug() ] = $class;
 		}
 
-		return null;
+		$class = $slug_map[ $selected_vendor ] ?? $slug_map[ $this->get_default_vendor() ] ?? null;
+
+		if ( null === $class ) {
+			return null;
+		}
+
+		try {
+			/** @var T $vendor */
+			$vendor = $this->provider_locator->get( $class );
+			return $vendor;
+		} catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e ) {
+			$this->get_logger()->error( $e->getMessage() );
+			return null;
+		}
 	}
 
 	/**
