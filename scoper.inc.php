@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Composer\InstalledVersions;
+
 /**
  * php-scoper entry point. Merges all per-package configs from config/php-scoper/.
  * Each *.inc.php file returns an array with 'finders' and 'patchers' keys.
@@ -31,6 +33,8 @@ return [
 		'Psr\\',
 		'Composer',
 	],
+	'exclude-classes'         => [ InstalledVersions::class ],
+	'exclude-files'           => [ 'vendor/composer/InstalledVersions.php' ],
 	'expose-global-constants' => false,
 	'expose-global-functions' => false,
 ];
