@@ -113,6 +113,10 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.6 =
+* Improve look of donation modal on mobile
+* Various demo mode improvements
+
 = 4.2.5 =
 * Implement demo mode for WordPress playground
 * "Show return message" now defaults to on
