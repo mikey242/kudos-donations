@@ -20,8 +20,9 @@
 			"options": {
 				"blogname": "Kudos Donations Demo",
 				"_kudos_payment_vendor": "demo",
-				"_kudos_vendor_mollie_profile": {
-					"name": "Demo account"
+				"_kudos_payment_vendor_status": {
+					"ready": true,
+					"text": "Mollie ready (Demo account)"
 				}
 			}
 		},
