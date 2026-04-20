@@ -80,7 +80,7 @@ class CampaignEntity extends BaseEntity {
 			'message_enabled'            => false,
 			'message_required'           => false,
 			'theme_color'                => '#ff9f1c',
-			'show_return_message'        => false,
+			'show_return_message'        => true,
 			'use_custom_return_url'      => false,
 			'payment_description_format' => __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' ),
 			'initial_title'              => __( 'Support us!', 'kudos-donations' ),
