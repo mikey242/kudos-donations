@@ -35,6 +35,7 @@ use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
+use IseardMedia\Kudos\Provider\PaymentProvider\DemoPaymentProvider;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
@@ -98,7 +99,12 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity}' );
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity,Provider/PaymentProvider/DemoPaymentProvider.php}' );
+
+	// Only create DemoPaymentProver in demo mode.
+	if ( defined( 'KUDOS_DEMO_MODE' ) && KUDOS_DEMO_MODE ) {
+		$services->set( DemoPaymentProvider::class );
+	}
 
 	// Configure logger.
 	$services->set( JsonFormatter::class );

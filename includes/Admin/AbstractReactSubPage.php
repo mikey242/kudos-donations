@@ -59,6 +59,7 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 
 			Localization::add_admin( 'codeEditor', $settings );
 			Localization::add_admin( 'version', [ KUDOS_VERSION ] );
+			Localization::add_admin( 'demoMode', KUDOS_DEMO_MODE );
 
 			wp_localize_script(
 				self::SCRIPT_HANDLE,

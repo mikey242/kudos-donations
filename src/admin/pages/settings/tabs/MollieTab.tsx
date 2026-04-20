@@ -132,7 +132,8 @@ const MollieTab = (): React.ReactNode => {
 			</Panel>
 			<Panel header={__('API Keys', 'kudos-donations')}>
 				{(['live', 'test'] as ApiMode[]).map((mode, i) => {
-					const isDisabled = !!apiKeyStatus[mode];
+					const isDisabled =
+						!!apiKeyStatus[mode] || window.kudos.admin?.demoMode;
 					return (
 						<Disabled key={i} isDisabled={isDisabled}>
 							<TextControl

@@ -37,6 +37,10 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
+		// Always return DemoPaymentProvider in demo mode.
+		if ( KUDOS_DEMO_MODE ) {
+			return DemoPaymentProvider::get_slug();
+		}
 		return MolliePaymentProvider::get_slug();
 	}
 

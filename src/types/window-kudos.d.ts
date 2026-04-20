@@ -20,6 +20,7 @@ export interface KudosAdminData {
 		Contexts: typeof import('../admin/contexts');
 		getLicenceStatus: () => Promise<LicenceStatusString>;
 	};
+	demoMode?: boolean;
 	[key: string]: unknown;
 }
 
