@@ -12,7 +12,6 @@ export interface KudosNotice {
 export interface KudosAdminData {
 	notices?: KudosNotice[];
 	needsUpgrade?: boolean;
-	version?: string;
 	codeEditor?: CodeEditorSettings;
 	api?: {
 		Controls: typeof import('../admin/controls');
@@ -37,6 +36,7 @@ export interface KudosFrontData {
 }
 
 export interface KudosGlobal {
+	version: Record<string, string>;
 	currencies: Record<string, string>;
 	countries: Record<string, string>;
 	env?: string;
