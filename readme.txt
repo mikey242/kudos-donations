@@ -114,8 +114,9 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.2.6 =
-* Improve look of donation modal on mobile
 * Various demo mode improvements
+* Improve look of donation modal on mobile
+* Fix php warning for missing InstalledVersions file
 
 = 4.2.5 =
 * Implement demo mode for WordPress playground
