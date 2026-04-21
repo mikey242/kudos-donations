@@ -91,6 +91,7 @@
       "@remove-from-vendor"
     ],
     "prefix-dependencies": [
+      "rm -rf third-party/vendor",
       "php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
       "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > ./third-party/composer.json",
       "@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
