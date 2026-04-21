@@ -4,7 +4,7 @@
     Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
     <br>
     <br>
-    <img src="assets/plugin/demo-1.gif" alt="Kudos Donations">
+    <img src="assets/plugin/demo-1.webp" alt="Kudos Donations">
 </div>
 
 ## Development
