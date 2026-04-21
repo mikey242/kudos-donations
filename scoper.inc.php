@@ -28,8 +28,7 @@ return [
 	'patchers'                => $patchers,
 	'exclude-namespaces'      => [
 		'IseardMedia\\Kudos\\',
-		'Psr\\',
-		'Composer',
+		'Psr\\'
 	],
 	'expose-global-constants' => false,
 	'expose-global-functions' => false,
