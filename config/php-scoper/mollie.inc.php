@@ -16,7 +16,7 @@ return [
 			->files()
 			->ignoreVCS( true )
 			->ignoreDotFiles( true )
-			->path( 'mollie/' )
+			->path( [ 'mollie/', 'composer/ca-bundle/' ] )
 			->in( 'vendor' ),
 	],
 	'patchers' => [
