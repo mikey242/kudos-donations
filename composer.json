@@ -95,7 +95,7 @@
       "php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
       "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > ./third-party/composer.json",
       "@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
-      "cp vendor/composer/InstalledVersions.php third-party/vendor/composer/InstalledVersions.php",
+      "cp vendor/composer/InstalledVersions.php third-party/vendor/composer/InstalledVersions.php && cp vendor/composer/installed.php third-party/vendor/composer/installed.php",
       "sed -i'.bak' -e 's/Composer\\\\Autoload/IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer\\\\Autoload/' -e 's/Composer\\\\\\\\InstalledVersions/IseardMedia\\\\\\\\Kudos\\\\\\\\ThirdParty\\\\\\\\Composer\\\\\\\\InstalledVersions/g' -e 's/^namespace Composer;$/namespace IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer;/' third-party/vendor/composer/*.php && rm -rf third-party/vendor/composer/*.php.bak",
       "php -r \"\\$map=require 'third-party/vendor/composer/autoload_classmap.php';\\$missing=array_filter(\\$map,fn(\\$f)=>!file_exists(\\$f));if(\\$missing){echo 'Missing scoped files:\\n'.implode(\\\"\\n\\\",array_keys(\\$missing)).\\\"\\n\\\";exit(1);}\""
     ]
