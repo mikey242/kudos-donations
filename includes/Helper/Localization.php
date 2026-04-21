@@ -17,8 +17,9 @@ namespace IseardMedia\Kudos\Helper;
  */
 class Localization {
 
-	public const FILTER_ADMIN = 'kudos_admin_localization';
-	public const FILTER_FRONT = 'kudos_front_localization';
+	public const FILTER_GLOBAL = 'kudos_global_localization';
+	public const FILTER_ADMIN  = 'kudos_admin_localization';
+	public const FILTER_FRONT  = 'kudos_front_localization';
 
 	private static array $global = [];
 	private static array $admin  = [];
@@ -52,6 +53,14 @@ class Localization {
 	 */
 	public static function add_front( string $key, $value ): void {
 		self::$front[ $key ] = $value;
+	}
+
+	/**
+	 * Returns global data.
+	 * The global data is passed through a filter for addon extensibility.
+	 */
+	public static function get_global(): array {
+		return (array) apply_filters( self::FILTER_GLOBAL, self::$global );
 	}
 
 	/**
