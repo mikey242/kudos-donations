@@ -7,13 +7,14 @@
 import * as Components from './components';
 import * as Controls from './controls';
 import * as Contexts from './contexts';
-import { KudosForm, KudosButtonAttributes } from './form';
+import { KudosForm } from './form';
 import { CampaignProvider } from './contexts';
 import Message, { PaymentStatus } from './form/Message';
 import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import { KudosButtonAttributes } from './form/Edit';
 
 window.kudos.front.api = { Components, Controls, Contexts };
 
