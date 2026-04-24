@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
-use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 
 class EncryptionService extends AbstractRegistrable {
@@ -38,33 +37,25 @@ class EncryptionService extends AbstractRegistrable {
 	}
 
 	/**
-	 * Verifies the provided token against the entity id.
+	 * Verifies the provided token against the given value.
 	 *
-	 * @throws Exception If invalid entity_id supplied.
-	 *
-	 * @param int    $entity_id The ID of the entity.
-	 * @param string $token The token.
+	 * @param string $value The value the token was generated from.
+	 * @param string $token The token to verify.
 	 */
-	public static function verify_token( int $entity_id, string $token ): bool {
+	public static function verify_token( string $value, string $token ): bool {
 		return hash_equals(
-			self::generate_token( $entity_id ),
+			self::generate_token( $value ),
 			$token
 		);
 	}
 
 	/**
-	 * Generates a unique token based on the entity id.
+	 * Generates a unique token for the given value.
 	 *
-	 * @throws Exception If entity ID invalid.
-	 *
-	 * @param int $entity_id The entity id to be hashed.
+	 * @param string $value The value to hash.
 	 */
-	public static function generate_token( int $entity_id ): ?string {
-		if ( $entity_id <= 0 ) {
-			throw new Exception( \sprintf( 'Invalid entity ID supplied to generate_token: %s', (int) $entity_id ) );
-		}
-
-		return wp_hash( (string) $entity_id, 'auth', 'sha256' );
+	public static function generate_token( string $value ): string {
+		return wp_hash( $value, 'auth', 'sha256' );
 	}
 
 	/**

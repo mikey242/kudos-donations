@@ -84,7 +84,7 @@ class Subscription extends BaseRepositoryRestController {
 		$item->donor       = $this->repository->get_donor( $item );
 		$item->transaction = $this->repository->get_transaction( $item );
 		$item->campaign    = $this->repository->get_campaign( $item );
-		$item->token       = EncryptionService::generate_token( $item->id );
+		$item->token       = EncryptionService::generate_token( (string) $item->id );
 		return (array) $item;
 	}
 
@@ -112,7 +112,7 @@ class Subscription extends BaseRepositoryRestController {
 
 		// Check if token is valid.
 		try {
-			if ( ! EncryptionService::verify_token( $entity_id, $token ) ) {
+			if ( ! EncryptionService::verify_token( (string) $entity_id, $token ) ) {
 				$this->logger->info( 'Invalid token supplied' );
 				return new WP_REST_Response(
 					[
