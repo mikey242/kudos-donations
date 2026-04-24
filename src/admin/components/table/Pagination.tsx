@@ -110,7 +110,6 @@ export const Pagination = ({
 							textAlign: 'center',
 							fontSize: '1rem',
 						}}
-						__nextHasNoMarginBottom
 						__next40pxDefaultSize
 					/>
 				) : (
