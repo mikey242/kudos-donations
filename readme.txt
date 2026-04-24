@@ -114,7 +114,9 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.2.8 =
+* Schedule open transaction checking in case of webhook failure
 * Fix unnecessary call to users rest endpoint on front-end
+* Fix "cookie check failed" error when using caching plugins
 
 = 4.2.7 =
 * Fix issue with missing ca-bundle causing Mollie requests to fail
