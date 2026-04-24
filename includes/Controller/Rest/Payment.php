@@ -218,7 +218,7 @@ class Payment extends BaseRestController {
 			return new WP_Error( 'transaction_not_found', 'Transaction not found' );
 		}
 
-		$this->vendor->handle_status_change( $transaction->vendor_payment_id );
+		$this->vendor->sync_transaction_status( $entity_id );
 
 		$data     = [
 			'status'   => $transaction->status,
@@ -355,6 +355,11 @@ class Payment extends BaseRestController {
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {
+			Utils::schedule_action(
+				strtotime( '+10 minutes' ),
+				'kudos_check_payment_status',
+				[ $transaction_id ]
+			);
 
 			// Send payment redirect URL.
 			return new WP_REST_Response(

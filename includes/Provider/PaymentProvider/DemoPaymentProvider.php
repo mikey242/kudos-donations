@@ -288,4 +288,13 @@ class DemoPaymentProvider extends AbstractProvider implements PaymentProviderInt
 	public function handle_status_change( string $vendor_payment_id ): void {
 		$this->logger->debug( 'Handle status change: ' . $vendor_payment_id );
 	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Not used in demo mode; completion is handled by the demo-confirm endpoint.
+	 */
+	public function sync_transaction_status( int $transaction_id ): void {
+		$this->logger->debug( 'Sync transaction status: ' . $transaction_id );
+	}
 }

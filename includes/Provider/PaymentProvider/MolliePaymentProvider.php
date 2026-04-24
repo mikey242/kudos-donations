@@ -666,6 +666,22 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function sync_transaction_status( int $transaction_id ): void {
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		if ( null === $transaction || null === $transaction->vendor_payment_id ) {
+			$this->logger->warning( 'sync_transaction_status: transaction not found or missing vendor ID', [ 'transaction_id' => $transaction_id ] );
+			return;
+		}
+		try {
+			$this->handle_status_change( $transaction->vendor_payment_id );
+		} catch ( RequestException $e ) {
+			$this->logger->error( $e->getMessage(), [ 'transaction_id' => $transaction_id ] );
+		}
+	}
+
+	/**
 	 * Mollie webhook handler.
 	 *
 	 * @throws RequestException If error communicating with Mollie.

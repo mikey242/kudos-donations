@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 
 class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_VENDOR        = '_kudos_payment_vendor';
@@ -23,20 +24,23 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	private MailerService $mailer_service;
 	private ReceiptService $invoice;
 	private TransactionRepository $transaction_repository;
+	private PaymentProviderFactory $payment_provider_factory;
 
 	/**
 	 * Payment service constructor.
 	 *
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
-	 * @param MailerService         $mailer_service Mailer service.
-	 * @param ReceiptService        $invoice Receipt service.
-	 * @param TransactionRepository $transaction_repository Transaction repository.
+	 * @param MailerService          $mailer_service Mailer service.
+	 * @param ReceiptService         $invoice Receipt service.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
+	 * @param PaymentProviderFactory $payment_provider_factory Payment provider factory.
 	 */
-	public function __construct( MailerService $mailer_service, ReceiptService $invoice, TransactionRepository $transaction_repository ) {
-		$this->mailer_service         = $mailer_service;
-		$this->invoice                = $invoice;
-		$this->transaction_repository = $transaction_repository;
+	public function __construct( MailerService $mailer_service, ReceiptService $invoice, TransactionRepository $transaction_repository, PaymentProviderFactory $payment_provider_factory ) {
+		$this->mailer_service           = $mailer_service;
+		$this->invoice                  = $invoice;
+		$this->transaction_repository   = $transaction_repository;
+		$this->payment_provider_factory = $payment_provider_factory;
 	}
 
 	/**
@@ -47,6 +51,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		add_action( 'kudos_transaction_paid', [ $this, 'handle_paid_transaction' ] );
 		// Second hook is to call another hook that runs when scheduled hook called.
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
+		// Fallback status check for transactions whose webhook never fired.
+		add_action( 'kudos_check_payment_status', [ $this, 'check_payment_status' ] );
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
 	}
@@ -103,6 +109,15 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			'kudos_process_transaction',
 			[ $transaction_id ]
 		);
+	}
+
+	/**
+	 * Fallback status sync for transactions whose webhook never arrived.
+	 *
+	 * @param int $transaction_id Transaction post id.
+	 */
+	public function check_payment_status( int $transaction_id ): void {
+		$this->payment_provider_factory->get_provider()->sync_transaction_status( $transaction_id );
 	}
 
 	/**
