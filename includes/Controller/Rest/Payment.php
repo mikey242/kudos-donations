@@ -209,16 +209,12 @@ class Payment extends BaseRestController {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
-		/**
-		 * @var ?TransactionEntity $transaction
-		 */
-		$transaction = $this->transaction_repository->get( $entity_id );
+		/** @var ?TransactionEntity $transaction */
+		$transaction = $this->vendor->sync_transaction_status( $entity_id );
 
 		if ( null === $transaction ) {
 			return new WP_Error( 'transaction_not_found', 'Transaction not found' );
 		}
-
-		$this->vendor->sync_transaction_status( $entity_id );
 
 		$data     = [
 			'status'   => $transaction->status,

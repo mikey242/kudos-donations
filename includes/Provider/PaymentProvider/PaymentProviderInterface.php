@@ -86,11 +86,12 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public function handle_status_change( string $vendor_payment_id ): void;
 
 	/**
-	 * Fetch the latest status from the vendor for the given local transaction and update it.
+	 * Fetch the latest status from the vendor for the given local transaction, update it, and return it.
 	 *
 	 * @param int $transaction_id Local transaction ID.
+	 * @return ?TransactionEntity The updated transaction, or null if not found.
 	 */
-	public function sync_transaction_status( int $transaction_id ): void;
+	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity;
 
 	/**
 	 * Returns true is the API is ready to communicate.

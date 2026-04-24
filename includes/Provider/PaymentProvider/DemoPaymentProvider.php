@@ -294,7 +294,7 @@ class DemoPaymentProvider extends AbstractProvider implements PaymentProviderInt
 	 *
 	 * Not used in demo mode; completion is handled by the demo-confirm endpoint.
 	 */
-	public function sync_transaction_status( int $transaction_id ): void {
-		$this->logger->debug( 'Sync transaction status: ' . $transaction_id );
+	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity {
+		return $this->transaction_repository->get( $transaction_id );
 	}
 }
