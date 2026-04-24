@@ -1,4 +1,3 @@
-import apiFetch from '@wordpress/api-fetch';
 import { createPortal, useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormRouter } from './FormRouter';
@@ -70,16 +69,21 @@ export const KudosForm = ({
 			}
 		}
 
-		return apiFetch({
-			path: '/kudos/v1/payment/create',
+		const root: string =
+			(window as Window & { wpApiSettings?: { root?: string } })
+				?.wpApiSettings?.root ?? '/wp-json/';
+		const url = `${root.replace(/\/$/, '')}/kudos/v1/payment/create`;
+
+		return fetch(url, {
 			method: 'POST',
 			body: new URLSearchParams(formData as any),
 		})
+			.then((res) => res.json())
 			.then((result: any) => {
 				if (result.success) {
 					window.location.href = result.url;
 				} else {
-					setFormError(result.data.message);
+					setFormError(result.data?.message ?? result.message);
 				}
 				return result;
 			})

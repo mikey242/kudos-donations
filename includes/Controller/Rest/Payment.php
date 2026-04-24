@@ -251,16 +251,6 @@ class Payment extends BaseRestController {
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( WP_REST_Request $request ): WP_REST_Response {
-		// Verify nonce.
-		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			return new WP_REST_Response(
-				[
-					'message' => __( 'Request invalid.', 'kudos-donations' ),
-				],
-				400
-			);
-		}
-
 		$values = $request->get_body_params();
 
 		// Check if bot filling tabs.
