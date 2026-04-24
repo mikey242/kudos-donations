@@ -23,6 +23,7 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
+use IseardMedia\Kudos\Service\EncryptionService;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -205,7 +206,7 @@ class Payment extends BaseRestController {
 		$entity_id = $request->get_param( 'id' );
 		$nonce     = $request->get_header( 'x-kudos-nonce' );
 
-		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $entity_id ) ) {
+		if ( ! EncryptionService::verify_token( 'order_complete' . $entity_id, $nonce ) ) {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
@@ -340,7 +341,7 @@ class Payment extends BaseRestController {
 				[
 					'kudos_action'         => $action,
 					'kudos_transaction_id' => $transaction_id,
-					'kudos_nonce'          => wp_create_nonce( $action . $transaction_id ),
+					'kudos_nonce'          => EncryptionService::generate_token( $action . $transaction_id ),
 				],
 				$args['return_url']
 			);

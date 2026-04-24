@@ -21,6 +21,7 @@ use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
+use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Service\SettingsService;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -229,6 +230,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- each case below performs its own token/hash verification.
 		if ( isset( $_REQUEST['kudos_action'] ) ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 
@@ -247,7 +249,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 						 */
 						$transaction = $this->transaction_repository->get( (int) $transaction_id );
 
-						if ( $transaction && $transaction->campaign_id && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
+						if ( $transaction && $transaction->campaign_id && EncryptionService::verify_token( $action . $transaction_id, $nonce ) ) {
 							$this->payment_status_modal_html(
 								(int) $transaction_id,
 								$transaction->campaign_id,
@@ -274,6 +276,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					break;
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
