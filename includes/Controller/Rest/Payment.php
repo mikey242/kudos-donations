@@ -218,10 +218,7 @@ class Payment extends BaseRestController {
 			return new WP_Error( 'transaction_not_found', 'Transaction not found' );
 		}
 
-		if ( PaymentStatus::OPEN === $transaction->status ) {
-			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
-			$this->vendor->handle_status_change( $transaction->vendor_payment_id );
-		}
+		$this->vendor->handle_status_change( $transaction->vendor_payment_id );
 
 		$data     = [
 			'status'   => $transaction->status,
