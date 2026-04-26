@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.8
+Stable tag: 4.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,10 +113,13 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.9 =
+* Update dependencies
+
 = 4.2.8 =
 * Schedule open transaction checking in case of webhook failure
+* Fix use tokens instead of WordPress nonces for front-end actions
 * Fix unnecessary call to users rest endpoint on front-end
-* Fix "cookie check failed" error when using caching plugins
 
 = 4.2.7 =
 * Fix issue with missing ca-bundle causing Mollie requests to fail
