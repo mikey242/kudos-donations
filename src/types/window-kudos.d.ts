@@ -57,16 +57,18 @@ export interface CodeEditorInstance {
 	codemirror: CodeMirror.Editor;
 }
 
+export interface WpGlobal {
+	codeEditor: {
+		initialize: (
+			id: string,
+			settings: CodeEditorSettings
+		) => CodeEditorInstance;
+	};
+}
+
 declare global {
 	interface Window {
 		kudos?: KudosGlobal;
-		wp: {
-			codeEditor: {
-				initialize: (
-					id: string,
-					settings: CodeEditorSettings
-				) => CodeEditorInstance;
-			};
-		};
+		wp: WpGlobal;
 	}
 }
