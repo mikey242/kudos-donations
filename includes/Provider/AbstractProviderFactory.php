@@ -35,7 +35,7 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		Localization::add_global( static::get_type_slug(), $this->get_providers() );
+		Localization::add_admin( static::get_type_slug(), $this->get_providers() );
 		$provider = $this->get_provider();
 		if ( null !== $provider ) {
 			$provider->init();
