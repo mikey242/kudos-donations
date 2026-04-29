@@ -42,7 +42,7 @@
 		"@wordpress/block-editor": "^15.17.0",
 		"@wordpress/blocks": "^15.17.0",
 		"@wordpress/browserslist-config": "^6.44.0",
-		"@wordpress/components": "^32.6.0",
+		"@wordpress/components": "^33.0.0",
 		"@wordpress/compose": "^7.44.0",
 		"@wordpress/core-data": "^7.44.0",
 		"@wordpress/data": "^10.44.0",
