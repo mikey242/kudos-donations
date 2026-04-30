@@ -896,7 +896,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			);
 		}
 
-		// Create action with post id as parameter.
+		// Create action with post id as parameter (e.g kudos_transaction_paid).
 		do_action( "kudos_transaction_$transaction->status", $transaction->id );
 	}
 
