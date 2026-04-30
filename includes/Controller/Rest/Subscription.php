@@ -150,6 +150,14 @@ class Subscription extends BaseRepositoryRestController {
 				$this->logger->error( 'Failed to update subscription status.', [ 'id' => $entity_id ] );
 			}
 
+			/**
+			 * Fires when a subscription is successfully cancelled.
+			 *
+			 * @param int $entity_id Local subscription ID.
+			 * @param int $donor_id  Local donor ID.
+			 */
+			do_action( 'kudos_subscription_cancelled', $entity_id, $subscription->donor_id );
+
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
