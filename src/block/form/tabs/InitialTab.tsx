@@ -23,6 +23,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		donation_type,
 		fixed_amounts,
 		amount_type,
+		single_amount,
 		maximum_donation,
 		show_goal,
 		goal,
@@ -89,6 +90,12 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		}
 	}, [donation_type, setValue, watchEmail]);
 
+	useEffect(() => {
+		if (amount_type === 'single' && single_amount) {
+			setValue('value', String(single_amount), { shouldValidate: true });
+		}
+	}, [amount_type, single_amount, setValue]);
+
 	return (
 		<BaseTab title={initial_title} description={initial_description}>
 			{show_goal && goal > 0 && (
@@ -102,15 +109,30 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 				</div>
 			)}
 
-			{amount_type !== 'open' && fixedAmountOptions.length > 0 && (
-				<RadioGroupControl
-					name="valueFixed"
-					ariaLabel={__('Fixed donation amount', 'kudos-donations')}
-					options={fixedAmountOptions}
-				/>
+			{amount_type === 'single' && single_amount && (
+				<p
+					id="single-amount"
+					className="text-center text-2xl font-bold my-4"
+				>
+					{currencySymbol}
+					{single_amount.toFixed(2)}
+				</p>
 			)}
 
-			{amount_type !== 'fixed' && (
+			{amount_type !== 'open' &&
+				amount_type !== 'single' &&
+				fixedAmountOptions.length > 0 && (
+					<RadioGroupControl
+						name="valueFixed"
+						ariaLabel={__(
+							'Fixed donation amount',
+							'kudos-donations'
+						)}
+						options={fixedAmountOptions}
+					/>
+				)}
+
+			{amount_type !== 'fixed' && amount_type !== 'single' && (
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
