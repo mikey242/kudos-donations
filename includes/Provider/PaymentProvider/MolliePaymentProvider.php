@@ -22,7 +22,6 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\ApiException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
@@ -40,7 +39,7 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SubscriptionStatus;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MolliePaymentProvider extends AbstractProvider implements PaymentProviderInterface {
+class MolliePaymentProvider extends AbstractPaymentProvider {
 	public const SETTING_PROFILE                = '_kudos_vendor_mollie_profile';
 	public const SETTING_API_MODE               = '_kudos_vendor_mollie_api_mode';
 	public const SETTING_RECURRING              = '_kudos_vendor_mollie_recurring';
@@ -867,14 +866,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			 * The payment has been (partially/fully) refunded.
 			 * The status of the payment is still "paid".
 			 */
-			do_action( 'kudos_mollie_refund', $transaction->id );
-			/**
-			 * Fires when a refund is confirmed by the payment provider webhook.
-			 * Use this hook for vendor-agnostic integrations.
-			 *
-			 * @param int $transaction_id Local transaction ID.
-			 */
-			do_action( 'kudos_transaction_refunded', $transaction->id );
+			$this->on_transaction_refunded( $transaction );
 
 			// Update transaction.
 			$transaction->status  = $payment->status;
@@ -896,8 +888,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			);
 		}
 
-		// Create action with post id as parameter (e.g kudos_transaction_paid).
-		do_action( "kudos_transaction_$transaction->status", $transaction->id );
+		$this->on_transaction_status_changed( $transaction );
 	}
 
 	/**

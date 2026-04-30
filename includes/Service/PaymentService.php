@@ -111,6 +111,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			'kudos_payment_confirmed',
 			$transaction_id,
 			[
+				'vendor'          => $transaction->vendor,
 				'sequence_type'   => $transaction->sequence_type,
 				'subscription_id' => $transaction->subscription_id,
 				'campaign_id'     => $transaction->campaign_id,

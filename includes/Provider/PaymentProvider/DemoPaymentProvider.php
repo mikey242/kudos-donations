@@ -17,12 +17,11 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class DemoPaymentProvider extends AbstractProvider implements PaymentProviderInterface, ActivationAwareInterface {
+class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationAwareInterface {
 
 	private TransactionRepository $transaction_repository;
 
@@ -185,7 +184,7 @@ class DemoPaymentProvider extends AbstractProvider implements PaymentProviderInt
 			$transaction->method            = 'demo';
 			$transaction->mode              = 'test';
 			$this->transaction_repository->update( $transaction );
-			do_action( 'kudos_transaction_paid', $transaction->id );
+			$this->on_transaction_status_changed( $transaction );
 		}
 
 		wp_safe_redirect( $return_url ? $return_url : get_site_url() );
