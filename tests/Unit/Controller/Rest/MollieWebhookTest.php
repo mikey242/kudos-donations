@@ -183,8 +183,8 @@ class MollieWebhookTest extends BaseTestCase {
 		$updated_transaction = $this->transaction_repository->get($transaction_id);
 		$this->assertEquals('paid', $updated_transaction->status);
 		$this->assertNotNull($updated_transaction->refunds);
-		// Verify that the refund action was triggered
-		$this->assertSame(1, did_action('kudos_mollie_refund'));
+        // Verify that the refund action was triggered
+		$this->assertSame(1, did_action('kudos_transaction_refunded'));
 	}
 
 	/**
