@@ -864,10 +864,17 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			}
 		} elseif ( $payment->hasRefunds() ) {
 			/*
-			 * The payment has been (partially) refunded.
+			 * The payment has been (partially/fully) refunded.
 			 * The status of the payment is still "paid".
 			 */
 			do_action( 'kudos_mollie_refund', $transaction->id );
+			/**
+			 * Fires when a refund is confirmed by the payment provider webhook.
+			 * Use this hook for vendor-agnostic integrations.
+			 *
+			 * @param int $transaction_id Local transaction ID.
+			 */
+			do_action( 'kudos_transaction_refunded', $transaction->id );
 
 			// Update transaction.
 			$transaction->status  = $payment->status;
