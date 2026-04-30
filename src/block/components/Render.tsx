@@ -96,6 +96,7 @@ export const Render = ({
 			</style>
 
 			<div
+				id="container"
 				className={clsx(
 					className,
 					'flex font-body text-gray-900',
