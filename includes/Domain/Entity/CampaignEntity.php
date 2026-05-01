@@ -25,6 +25,7 @@ class CampaignEntity extends BaseEntity {
 	public float $maximum_donation;
 	public string $donation_type;
 	public ?array $frequency_options;
+	public ?array $duration_options;
 	public bool $email_enabled;
 	public bool $email_required;
 	public bool $name_enabled;
@@ -72,6 +73,7 @@ class CampaignEntity extends BaseEntity {
 				'3 months'  => __( 'Quarterly', 'kudos-donations' ),
 				'1 month'   => __( 'Monthly', 'kudos-donations' ),
 			],
+			'duration_options'           => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
 			'email_enabled'              => true,
 			'email_required'             => true,
 			'name_enabled'               => true,

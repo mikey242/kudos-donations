@@ -13,13 +13,17 @@ interface FrequencyTabProps {
 }
 
 export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
-	const { subscription_title, subscription_description, frequency_options } =
-		campaign;
+	const {
+		subscription_title,
+		subscription_description,
+		frequency_options,
+		duration_options,
+	} = campaign;
 
 	const { setFocus, getValues } = useFormContext();
 
 	const duration = [];
-	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((i) =>
+	(duration_options ?? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).forEach((i) =>
 		duration.push({
 			value: i,
 			label:

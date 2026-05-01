@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration to add single_amount column to kudos_campaigns table.
+ * Migration to add single_amount and duration_options columns to kudos_campaigns table.
  *
  * @link https://github.com/mikey242/kudos-donations/
  *
@@ -43,10 +43,10 @@ class Version429 extends BaseMigration {
 	}
 
 	/**
-	 * Runs dbDelta on the campaigns table to add the single_amount column.
+	 * Runs dbDelta on the campaigns table to add any missing columns.
 	 */
 	public function add_single_amount_column(): void {
 		$this->campaigns_table->create_table();
-		$this->logger->info( 'Added single_amount column to kudos_campaigns table.' );
+		$this->logger->info( 'Added missing columns to kudos_campaigns table.' );
 	}
 }

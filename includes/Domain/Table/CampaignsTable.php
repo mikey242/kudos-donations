@@ -40,6 +40,7 @@ class CampaignsTable extends BaseTable {
 			maximum_donation decimal(10,2) DEFAULT NULL,
 			donation_type varchar(20) DEFAULT 'oneoff',
 			frequency_options text DEFAULT NULL,
+			duration_options text DEFAULT NULL,
 			email_enabled tinyint(1) DEFAULT 1,
 			email_required tinyint(1) DEFAULT 1,
 			name_enabled tinyint(1) DEFAULT 1,

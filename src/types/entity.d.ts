@@ -85,6 +85,7 @@ export interface Campaign extends BaseEntity {
 	payment_title: string;
 	payment_description: string;
 	frequency_options?: Record<string, string>;
+	duration_options?: number[];
 	return_message_title?: string;
 	return_message_text?: string;
 	total?: number;

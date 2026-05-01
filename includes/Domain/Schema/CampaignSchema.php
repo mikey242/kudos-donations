@@ -32,6 +32,7 @@ class CampaignSchema extends BaseSchema {
 			'maximum_donation'           => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
 			'donation_type'              => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'frequency_options'          => $this->make_schema_field( FieldType::OBJECT, [ $this, 'sanitize_json_field' ] ),
+			'duration_options'           => $this->make_schema_field( FieldType::OBJECT, [ $this, 'sanitize_json_field' ] ),
 			'email_enabled'              => $this->make_schema_field( FieldType::BOOLEAN, 'rest_sanitize_boolean' ),
 			'email_required'             => $this->make_schema_field( FieldType::BOOLEAN, 'rest_sanitize_boolean' ),
 			'name_enabled'               => $this->make_schema_field( FieldType::BOOLEAN, 'rest_sanitize_boolean' ),
