@@ -35,12 +35,13 @@ trait SanitizeTrait {
 	/**
 	 * Sanitize JSON field.
 	 *
-	 * @param mixed $value The field value to sanitize.
+	 * @param mixed $value        The field value to sanitize.
+	 * @param bool  $force_object Whether to force object encoding for numeric-keyed arrays.
 	 * @return false|string|null
 	 */
-	public function sanitize_json_field( $value ) {
+	public function sanitize_json_field( $value, bool $force_object = false ) {
 		if ( \is_array( $value ) || \is_object( $value ) ) {
-			return wp_json_encode( $value );
+			return wp_json_encode( $value, $force_object ? JSON_FORCE_OBJECT : 0 );
 		}
 
 		if ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
@@ -48,6 +49,16 @@ trait SanitizeTrait {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Sanitize JSON field, forcing object encoding even for numeric-keyed arrays.
+	 *
+	 * @param mixed $value The field value to sanitize.
+	 * @return false|string|null
+	 */
+	public function sanitize_json_object_field( $value ) {
+		return $this->sanitize_json_field( $value, true );
 	}
 
 	/**
