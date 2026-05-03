@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import { __, _n } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 import React from 'react';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { SelectControl, SelectOption } from '../../controls';
+import { SelectControl } from '../../controls';
 import type { Campaign } from '../../../types/entity';
 import { applyFilters } from '@wordpress/hooks';
 
@@ -22,35 +22,24 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 
 	const { setFocus, getValues } = useFormContext();
 
-	const duration = [];
-	(duration_options ?? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).forEach((i) =>
-		duration.push({
-			value: i,
-			label:
-				i === 0
-					? __('Continuous', 'kudos-donations')
-					: i + ' ' + _n('year', 'years', i, 'kudos-donations'),
-		})
-	);
-
 	const filteredDuration = applyFilters(
 		'kudosFormDuration',
-		duration
-	) as SelectOption[];
+		duration_options ?? {}
+	) as Record<string, string>;
 
 	const filteredFrequencyOptions = applyFilters(
 		'kudosFormFrequencyOptions',
-		frequency_options
-	);
+		frequency_options ?? {}
+	) as Record<string, string>;
 
 	useEffect(() => {
 		setFocus('recurring_frequency');
 	}, [setFocus]);
 
-	const isMoreThanOne = (years: number) => {
+	const isMoreThanOne = (years: string) => {
 		const frequency = getValues('recurring_frequency');
 		if (frequency) {
-			return (12 / parseInt(frequency, 10)) * years !== 1;
+			return (12 / parseInt(frequency, 10)) * parseInt(years, 10) !== 1;
 		}
 		return true;
 	};
@@ -70,10 +59,7 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 				}}
 				placeholder={__('Payment frequency', 'kudos-donations')}
 				options={Object.entries(filteredFrequencyOptions).map(
-					([value, label]) => ({
-						value,
-						label,
-					})
+					([value, label]) => ({ value, label })
 				)}
 			/>
 
@@ -91,8 +77,10 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 							'kudos-donations'
 						),
 				}}
-				placeholder={__('Donation duration', 'kudos-donations')}
-				options={filteredDuration}
+				placeholder={__('Duration', 'kudos-donations')}
+				options={Object.entries(filteredDuration).map(
+					([value, label]) => ({ value, label })
+				)}
 			/>
 		</BaseTab>
 	);
