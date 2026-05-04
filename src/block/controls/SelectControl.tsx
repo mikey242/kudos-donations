@@ -30,12 +30,13 @@ export const SelectControl = ({
 	ariaLabel,
 }: SelectControlProps) => {
 	const { setValue } = useFormContext();
+	const isSingle = options.length === 1;
 
 	useEffect(() => {
-		if (options.length === 1) {
+		if (isSingle) {
 			setValue(name, options[0].value);
 		}
-	}, [name, options, setValue]);
+	}, [isSingle, name, options, setValue]);
 
 	return (
 		<BaseController
@@ -45,13 +46,14 @@ export const SelectControl = ({
 			rules={rules}
 			render={({ error, field: { onChange, onBlur, value } }) => (
 				<Select
-					disabled={isDisabled ?? options.length === 1}
+					disabled={isDisabled || isSingle}
 					value={value ?? ''}
 					onChange={onChange}
 					onBlur={onBlur}
 					className={clsx(
 						'control mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',
 						'disabled:cursor-not-allowed disabled:bg-slate-100',
+						isSingle && 'bg-none',
 						error?.message
 							? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
 							: 'border-gray-300 focus:ring-primary focus:border-primary'
@@ -62,16 +64,28 @@ export const SelectControl = ({
 					}
 					aria-label={ariaLabel ?? placeholder}
 				>
-					{placeholder && (
-						<option disabled key={`placeholder_${name}`} value="">
-							{placeholder}
+					{isSingle ? (
+						<option value={options[0].value}>
+							{`${placeholder}: ${options[0].label}`}
 						</option>
+					) : (
+						<>
+							{placeholder && (
+								<option
+									disabled
+									key={`placeholder_${name}`}
+									value=""
+								>
+									{placeholder}
+								</option>
+							)}
+							{options.map((entry) => (
+								<option key={entry.value} value={entry.value}>
+									{entry.label}
+								</option>
+							))}
+						</>
 					)}
-					{options.map((entry) => (
-						<option key={entry.value} value={entry.value}>
-							{`${placeholder}: ${entry.label}`}
-						</option>
-					))}
 				</Select>
 			)}
 		/>
