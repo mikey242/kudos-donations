@@ -2,7 +2,8 @@ import React from 'react';
 import { BaseController } from './BaseController';
 import { clsx } from 'clsx';
 import { Select } from '@headlessui/react';
-import { RegisterOptions } from 'react-hook-form';
+import { RegisterOptions, useFormContext } from 'react-hook-form';
+import { useEffect } from '@wordpress/element';
 
 export interface SelectOption {
 	label: string;
@@ -18,6 +19,7 @@ interface SelectControlProps {
 	help?: string;
 	ariaLabel?: string;
 }
+
 export const SelectControl = ({
 	name,
 	rules,
@@ -27,6 +29,14 @@ export const SelectControl = ({
 	help,
 	ariaLabel,
 }: SelectControlProps) => {
+	const { setValue } = useFormContext();
+
+	useEffect(() => {
+		if (options.length === 1) {
+			setValue(name, options[0].value);
+		}
+	}, [name, options, setValue]);
+
 	return (
 		<BaseController
 			name={name}
@@ -35,16 +45,13 @@ export const SelectControl = ({
 			rules={rules}
 			render={({ error, field: { onChange, onBlur, value } }) => (
 				<Select
-					disabled={isDisabled}
+					disabled={isDisabled ?? options.length === 1}
 					value={value ?? ''}
 					onChange={onChange}
 					onBlur={onBlur}
 					className={clsx(
-						// General
 						'control mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',
-						// Disabled
 						'disabled:cursor-not-allowed disabled:bg-slate-100',
-						// Invalid
 						error?.message
 							? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
 							: 'border-gray-300 focus:ring-primary focus:border-primary'
@@ -62,7 +69,7 @@ export const SelectControl = ({
 					)}
 					{options.map((entry) => (
 						<option key={entry.value} value={entry.value}>
-							{entry.label}
+							{`${placeholder}: ${entry.label}`}
 						</option>
 					))}
 				</Select>
