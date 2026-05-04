@@ -106,7 +106,7 @@ class CampaignEntity extends BaseEntity {
 			'message_title'              => __( 'Message', 'kudos-donations' ),
 			'message_description'        => __( 'Leave a message.', 'kudos-donations' ),
 			'payment_title'              => __( 'Payment', 'kudos-donations' ),
-			'payment_description'        => __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
+			'payment_description'        => __( 'By clicking submit you agree to the following payment:', 'kudos-donations' ),
 			'return_message_title'       => __( 'Payment received', 'kudos-donations' ),
 			'return_message_text'        => __( 'Thank you for your donation!', 'kudos-donations' ),
 		];

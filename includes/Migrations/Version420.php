@@ -219,7 +219,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'message_title'              => get_post_meta( $post_id, 'message_title', true ) ?: __( 'Message', 'kudos-donations' ),
 					'message_description'        => get_post_meta( $post_id, 'message_description', true ) ?: __( 'Leave a message.', 'kudos-donations' ),
 					'payment_title'              => get_post_meta( $post_id, 'payment_title', true ) ?: __( 'Payment', 'kudos-donations' ),
-					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ) ?: __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
+					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ) ?: __( 'By clicking submit you agree to the following payment:', 'kudos-donations' ),
 					'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ) ?: __( 'Payment received', 'kudos-donations' ),
 					'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ) ?: __( 'Thank you for your donation!', 'kudos-donations' ),
 					'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post_id ),
