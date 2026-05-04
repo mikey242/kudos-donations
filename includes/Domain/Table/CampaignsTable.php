@@ -35,7 +35,6 @@ class CampaignsTable extends BaseTable {
 			additional_funds decimal(10, 2) DEFAULT NULL,
 			amount_type varchar(20) DEFAULT 'fixed',
 			fixed_amounts text DEFAULT NULL,
-			single_amount decimal(10,2) DEFAULT NULL,
 			minimum_donation decimal(10,2) DEFAULT NULL,
 			maximum_donation decimal(10,2) DEFAULT NULL,
 			donation_type varchar(20) DEFAULT 'oneoff',

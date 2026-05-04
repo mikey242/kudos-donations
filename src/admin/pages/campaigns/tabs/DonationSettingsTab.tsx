@@ -87,38 +87,11 @@ export const DonationSettingsTab = ({
 							label: __('Open + Fixed', 'kudos-donations'),
 							value: 'both',
 						},
-						{
-							label: __('Single', 'kudos-donations'),
-							value: 'single',
-						},
 					]}
-				/>
-				<TextControl
-					name="single_amount"
-					type="number"
-					isDisabled={amountType !== 'single'}
-					prefix={currencySymbol}
-					label={__('Single amount', 'kudos-donations')}
-					help={__(
-						'The fixed amount donors will pay — they cannot change this.',
-						'kudos-donations'
-					)}
-					rules={{
-						required: __('Amount is required', 'kudos-donations'),
-						min: {
-							value: 1,
-							message: __(
-								'Minimum value is 1',
-								'kudos-donations'
-							),
-						},
-					}}
 				/>
 				<FormTokenField
 					name="fixed_amounts"
-					isDisabled={
-						amountType === 'open' || amountType === 'single'
-					}
+					isDisabled={amountType === 'open'}
 					maxLength={5}
 					rules={{
 						validate: (value) => {
@@ -164,7 +137,7 @@ export const DonationSettingsTab = ({
 						),
 					}}
 					help={__(
-						'List of fixed amounts (max 5).',
+						'List of fixed amounts (max 5). Enter a single value to lock the campaign to that amount.',
 						'kudos-donations'
 					)}
 					label={__('Fixed amounts', 'kudos-donations')}

@@ -52,9 +52,8 @@ export interface Campaign extends BaseEntity {
 	goal?: number;
 	show_goal: boolean;
 	additional_funds?: string;
-	amount_type: 'fixed' | 'open' | 'both' | 'single';
+	amount_type: 'fixed' | 'open' | 'both';
 	fixed_amounts?: string[];
-	single_amount?: number;
 	minimum_donation?: number;
 	maximum_donation?: number;
 	donation_type: 'one-off' | 'recurring' | 'both';

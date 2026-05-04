@@ -23,7 +23,6 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		donation_type,
 		fixed_amounts,
 		amount_type,
-		single_amount,
 		maximum_donation,
 		show_goal,
 		goal,
@@ -62,6 +61,11 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		}));
 	}, [fixed_amounts, currencySymbol]);
 
+	const singleValue =
+		amount_type === 'fixed' && fixedAmountOptions?.length === 1
+			? fixedAmountOptions[0].value
+			: undefined;
+
 	useEffect(() => {
 		if (!isRecurringAllowed) {
 			setValue('recurring', false);
@@ -91,10 +95,10 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 	}, [donation_type, setValue, watchEmail]);
 
 	useEffect(() => {
-		if (amount_type === 'single' && single_amount) {
-			setValue('value', String(single_amount), { shouldValidate: true });
+		if (singleValue) {
+			setValue('value', singleValue, { shouldValidate: true });
 		}
-	}, [amount_type, single_amount, setValue]);
+	}, [singleValue, setValue]);
 
 	return (
 		<BaseTab title={initial_title} description={initial_description}>
@@ -109,18 +113,18 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 				</div>
 			)}
 
-			{amount_type === 'single' && single_amount && (
+			{singleValue && (
 				<p
 					id="single-amount"
 					className="text-center text-xl font-bold my-4"
 				>
-					{`${__('Amount', 'kudos-donations')}: ${currencySymbol}${single_amount.toFixed(2)}`}
+					{`${__('Amount', 'kudos-donations')}: ${fixedAmountOptions[0].label}`}
 				</p>
 			)}
 
-			{amount_type !== 'open' &&
-				amount_type !== 'single' &&
-				fixedAmountOptions.length > 0 && (
+			{!singleValue &&
+				amount_type !== 'open' &&
+				fixedAmountOptions?.length > 0 && (
 					<RadioGroupControl
 						name="valueFixed"
 						ariaLabel={__(
@@ -131,7 +135,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 					/>
 				)}
 
-			{amount_type !== 'fixed' && amount_type !== 'single' && (
+			{amount_type !== 'fixed' && (
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
