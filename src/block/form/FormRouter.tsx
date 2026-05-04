@@ -90,18 +90,22 @@ export const FormRouter = ({
 	const firstUpdate = useRef<boolean>(true);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const methods: UseFormReturn<FormData> = useForm<FormData>({
-		defaultValues: {
-			recurring: false,
-			business_name: '',
-			city: '',
-			country: '',
-			postcode: '',
-			street: '',
-			message: '',
-			name: '',
-			email: '',
-			language: navigator.language,
-		},
+		defaultValues: applyFilters(
+			'kudosFormDefaultValues',
+			{
+				recurring: false,
+				business_name: '',
+				city: '',
+				country: '',
+				postcode: '',
+				street: '',
+				message: '',
+				name: '',
+				email: '',
+				language: navigator.language,
+			},
+			campaign
+		) as FormData,
 	});
 
 	const Tabs = useMemo<TabDefinition[]>(
