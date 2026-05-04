@@ -112,7 +112,7 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 			{amount_type === 'single' && single_amount && (
 				<p
 					id="single-amount"
-					className="text-center text-2xl font-bold my-4"
+					className="text-center text-xl font-bold my-4"
 				>
 					{`${__('Amount', 'kudos-donations')}: ${currencySymbol}${single_amount.toFixed(2)}`}
 				</p>
