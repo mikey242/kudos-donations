@@ -114,7 +114,8 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.2.9 =
-* New 'Single' donation option
+* Make single fixed value more useful by removing need to click by pre-setting the value
+* Add missing container id
 * Update dependencies
 
 = 4.2.8 =
