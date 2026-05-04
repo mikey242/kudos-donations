@@ -109,7 +109,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 
 	return (
 		<BaseTab title={payment_title} description={payment_description}>
-			<div className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
+			<div className="kudos_summary text-left block bg-slate-100 p-2 border-solid border border-primary rounded-md">
 				<p className="my-1">
 					<strong>{__('Name', 'kudos-donations')}: </strong>
 					<span>
