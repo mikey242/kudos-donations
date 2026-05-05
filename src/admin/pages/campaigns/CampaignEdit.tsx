@@ -2,13 +2,21 @@ import { useEffect, useMemo } from '@wordpress/element';
 import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
-import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
+import type { AdminTab } from '../AdminTabPanel';
+import { AdminTabPanel } from '../AdminTabPanel';
 import {
-	GeneralTab,
-	TextFieldsTab,
-	DonationSettingsTab,
-	OptionalFieldsTab,
-	CustomCSSTab,
+	CampaignDetailsPanel,
+	AfterPaymentPanel,
+	InitialTabPanel,
+	SubscriptionTabPanel,
+	AddressTabPanel,
+	MessageTabPanel,
+	PaymentTabPanel,
+	SubscriptionPanel,
+	PaymentPanel,
+	OptionalFieldsPanel,
+	PolicyLinksPanel,
+	CustomCSSPanel,
 } from './tabs';
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
@@ -86,33 +94,68 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 				{
 					name: 'general',
 					title: __('General', 'kudos-donations'),
-					content: <GeneralTab campaign={campaign} />,
+					panels: [
+						{
+							name: 'campaign-details',
+							content: (
+								<CampaignDetailsPanel campaign={campaign} />
+							),
+						},
+						{
+							name: 'after-payment',
+							content: <AfterPaymentPanel />,
+						},
+					],
 				},
 				{
 					name: 'text-fields',
 					title: __('Text', 'kudos-donations'),
-					content: <TextFieldsTab />,
+					panels: [
+						{ name: 'initial-tab', content: <InitialTabPanel /> },
+						{
+							name: 'subscription-tab',
+							content: <SubscriptionTabPanel />,
+						},
+						{ name: 'address-tab', content: <AddressTabPanel /> },
+						{ name: 'message-tab', content: <MessageTabPanel /> },
+						{ name: 'payment-tab', content: <PaymentTabPanel /> },
+					],
 				},
 				{
 					name: 'donation-settings',
 					title: __('Donation settings', 'kudos-donations'),
-					content: (
-						<DonationSettingsTab
-							recurringEnabled={
-								settings._kudos_payment_vendor_status.recurring
-							}
-						/>
-					),
+					panels: [
+						{
+							name: 'subscription',
+							content: (
+								<SubscriptionPanel
+									recurringEnabled={
+										settings._kudos_payment_vendor_status
+											.recurring
+									}
+								/>
+							),
+						},
+						{ name: 'payment', content: <PaymentPanel /> },
+					],
 				},
 				{
 					name: 'optional-fields',
 					title: __('Optional fields', 'kudos-donations'),
-					content: <OptionalFieldsTab />,
+					panels: [
+						{
+							name: 'optional-fields',
+							content: <OptionalFieldsPanel />,
+						},
+						{ name: 'policy-links', content: <PolicyLinksPanel /> },
+					],
 				},
 				{
-					name: 'Custom CSS',
+					name: 'custom-css',
 					title: __('Custom CSS', 'kudos-donations'),
-					content: <CustomCSSTab />,
+					panels: [
+						{ name: 'custom-css', content: <CustomCSSPanel /> },
+					],
 				},
 			]),
 		[campaign, settings._kudos_payment_vendor_status.recurring]

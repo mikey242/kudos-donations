@@ -1,12 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl } from '../../../controls';
 import { useEffect, useRef } from '@wordpress/element';
-import type { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Panel } from '../../../components';
-import { PanelList } from '../../AdminTabPanel';
+import { CodeEditorSettings } from '../../../../types/window-kudos';
 
-const CustomCSSPanel = () => {
+export const CustomCSSPanel = () => {
 	const { setValue } = useFormContext();
 	const editorRef = useRef<HTMLTextAreaElement | null>(null);
 	const editorId: string = 'css-editor';
@@ -15,7 +14,7 @@ const CustomCSSPanel = () => {
 		if (editorRef.current) {
 			const editor = window?.wp.codeEditor?.initialize(
 				editorId,
-				window?.kudos.codeEditor
+				window?.kudos?.codeEditor as CodeEditorSettings
 			);
 			editor?.codemirror.on('change', () => {
 				const value = editor.codemirror.getValue();
@@ -40,11 +39,3 @@ const CustomCSSPanel = () => {
 		</Panel>
 	);
 };
-
-export const CustomCSSTab = (): ReactNode => (
-	<PanelList
-		namespace="kudosCampaignPanels"
-		tabName="custom-css"
-		defaultPanels={[{ name: 'custom-css', content: <CustomCSSPanel /> }]}
-	/>
-);

@@ -6,19 +6,19 @@ import {
 	TextControl,
 	ToggleControl,
 } from '../../../controls';
-import type { ReactNode } from 'react';
 import { useWatch } from 'react-hook-form';
 import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../../components';
 import { isValidUrl } from '../../../../utils';
 import { getCurrencySymbol } from '../../../../utils/currency';
-import { PanelList } from '../../AdminTabPanel';
 
-interface GeneralTabProps {
+export interface CampaignDetailsPanelProps {
 	campaign: Campaign;
 }
 
-const CampaignDetailsPanel = ({ campaign }: GeneralTabProps) => {
+export const CampaignDetailsPanel = ({
+	campaign,
+}: CampaignDetailsPanelProps) => {
 	const { currencies } = window.kudos;
 	const watchDisplayGoal = useWatch({ name: 'show_goal' });
 	const watchCurrency = useWatch({ name: 'currency' });
@@ -102,7 +102,7 @@ const CampaignDetailsPanel = ({ campaign }: GeneralTabProps) => {
 	);
 };
 
-const AfterPaymentPanel = () => {
+export const AfterPaymentPanel = () => {
 	const watchUseReturnMessage = useWatch({ name: 'show_return_message' });
 	const watchUseReturnURL = useWatch({ name: 'use_custom_return_url' });
 
@@ -150,21 +150,3 @@ const AfterPaymentPanel = () => {
 		</Panel>
 	);
 };
-
-export const GeneralTab = ({ campaign }: GeneralTabProps): ReactNode => (
-	<PanelList
-		namespace="kudosCampaignPanels"
-		tabName="general"
-		defaultPanels={[
-			{
-				name: 'campaign-details',
-				content: <CampaignDetailsPanel campaign={campaign} />,
-			},
-			{
-				name: 'after-payment',
-				content: <AfterPaymentPanel />,
-			},
-		]}
-		args={campaign}
-	/>
-);

@@ -18,50 +18,19 @@ import type { AllSettings } from '../../../../types/all-settings';
 
 type InstallState = 'idle' | 'installing' | 'installed' | 'failed';
 
-const PlusTab = (): React.ReactNode => {
-	const { updateSetting, settings } = useSettingsContext<AllSettings>();
+export const AddonPanel = () => {
+	const { settings } = useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const [pendingKey, setPendingKey] = useState('');
-	const [activating, setActivating] = useState(false);
+	const { _kudos_licence_status: licenceStatus } = settings;
 	const [installState, setInstallState] = useState<InstallState>(
 		window.kudos?.isAddonInstalled ? 'installed' : 'idle'
 	);
 	const [justInstalled, setJustInstalled] = useState(false);
 
-	const {
-		_kudos_licence_key: licenceKey,
-		_kudos_licence_status: licenceStatus,
-	} = settings;
-
-	const isSet = !!licenceKey;
-
-	const handleActivate = async () => {
-		setActivating(true);
-		try {
-			const response = await updateSetting(
-				'_kudos_licence_key',
-				pendingKey as AllSettings['_kudos_licence_key']
-			);
-			const newStatus = (response as AllSettings)._kudos_licence_status;
-			if (newStatus?.valid) {
-				setPendingKey('');
-				void createSuccessNotice(
-					__('Licence activated', 'kudos-donations'),
-					{ type: 'snackbar' }
-				);
-			} else {
-				void createErrorNotice(
-					__(
-						'Invalid licence key. Please check and try again.',
-						'kudos-donations'
-					)
-				);
-			}
-		} finally {
-			setActivating(false);
-		}
-	};
+	if (!licenceStatus?.valid) {
+		return null;
+	}
 
 	const handleInstall = async () => {
 		setInstallState('installing');
@@ -85,16 +54,6 @@ const PlusTab = (): React.ReactNode => {
 				)
 			);
 		}
-	};
-
-	const handleReset = async () => {
-		await updateSetting(
-			'_kudos_licence_key',
-			'' as AllSettings['_kudos_licence_key']
-		);
-		void createSuccessNotice(__('Licence reset', 'kudos-donations'), {
-			type: 'snackbar',
-		});
 	};
 
 	let addonButton: React.ReactNode;
@@ -136,75 +95,121 @@ const PlusTab = (): React.ReactNode => {
 	}
 
 	return (
-		<>
-			{licenceStatus?.valid && (
-				<Panel header={__('Add-on', 'kudos-donations')}>
-					<Flex justify="space-between" align="center">
-						<span>
-							{__('Kudos Donations Plus', 'kudos-donations')}
-						</span>
-						{addonButton}
-					</Flex>
-				</Panel>
-			)}
-			<Panel header={__('Licence key', 'kudos-donations')}>
-				<p>
-					{__(
-						'Add additional functionality to Kudos Donations and help fund future development. Click the "Visit documentation" link below for more information.',
-						'kudos-donations'
-					)}
-				</p>
-				<InputControl
-					__next40pxDefaultSize
-					label={__('Licence key', 'kudos-donations')}
-					value={isSet ? licenceKey : pendingKey}
-					type={isSet ? 'password' : 'text'}
-					readOnly={isSet}
-					disabled={isSet || activating}
-					onChange={isSet ? () => {} : setPendingKey}
-				/>
-				{licenceStatus?.valid && (
-					<Flex
-						justify="flex-end"
-						gap={1}
-						style={{ marginBottom: '1em' }}
-					>
-						<Icon icon="yes-alt" />
-						<span>
-							{__('Valid until:', 'kudos-donations') +
-								' ' +
-								licenceStatus.expires_at}
-						</span>
-					</Flex>
-				)}
-				<Flex justify="space-between">
-					<ExternalLink href="https://docs.kudosdonations.com/docs/plus">
-						{__('Visit documentation', 'kudos-donations')}
-					</ExternalLink>
-					{isSet ? (
-						<Button
-							type="button"
-							variant="link"
-							isDestructive={true}
-							onClick={() => void handleReset()}
-						>
-							{__('Reset licence', 'kudos-donations')}
-						</Button>
-					) : (
-						<Button
-							type="button"
-							variant="primary"
-							isBusy={activating}
-							disabled={activating || !pendingKey}
-							onClick={() => void handleActivate()}
-						>
-							{__('Activate', 'kudos-donations')}
-						</Button>
-					)}
-				</Flex>
-			</Panel>
-		</>
+		<Panel header={__('Add-on', 'kudos-donations')}>
+			<Flex justify="space-between" align="center">
+				<span>{__('Kudos Donations Plus', 'kudos-donations')}</span>
+				<>{addonButton}</>
+			</Flex>
+		</Panel>
 	);
 };
 
-export { PlusTab };
+export const LicenceKeyPanel = () => {
+	const { updateSetting, settings } = useSettingsContext<AllSettings>();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
+	const {
+		_kudos_licence_key: licenceKey,
+		_kudos_licence_status: licenceStatus,
+	} = settings;
+	const [pendingKey, setPendingKey] = useState('');
+	const [activating, setActivating] = useState(false);
+
+	const isSet = !!licenceKey;
+
+	const handleActivate = async () => {
+		setActivating(true);
+		try {
+			const response = await updateSetting(
+				'_kudos_licence_key',
+				pendingKey as AllSettings['_kudos_licence_key']
+			);
+			const newStatus = (response as AllSettings)._kudos_licence_status;
+			if (newStatus?.valid) {
+				setPendingKey('');
+				void createSuccessNotice(
+					__('Licence activated', 'kudos-donations'),
+					{ type: 'snackbar' }
+				);
+			} else {
+				void createErrorNotice(
+					__(
+						'Invalid licence key. Please check and try again.',
+						'kudos-donations'
+					)
+				);
+			}
+		} finally {
+			setActivating(false);
+		}
+	};
+
+	const handleReset = async () => {
+		await updateSetting(
+			'_kudos_licence_key',
+			'' as AllSettings['_kudos_licence_key']
+		);
+		void createSuccessNotice(__('Licence reset', 'kudos-donations'), {
+			type: 'snackbar',
+		});
+	};
+
+	return (
+		<Panel header={__('Licence key', 'kudos-donations')}>
+			<p>
+				{__(
+					'Add additional functionality to Kudos Donations and help fund future development. Click the "Visit documentation" link below for more information.',
+					'kudos-donations'
+				)}
+			</p>
+			<InputControl
+				__next40pxDefaultSize
+				label={__('Licence key', 'kudos-donations')}
+				value={isSet ? licenceKey : pendingKey}
+				type={isSet ? 'password' : 'text'}
+				readOnly={isSet}
+				disabled={isSet || activating}
+				onChange={isSet ? () => {} : setPendingKey}
+			/>
+			{licenceStatus?.valid && (
+				<Flex
+					justify="flex-end"
+					gap={1}
+					style={{ marginBottom: '1em' }}
+				>
+					<Icon icon="yes-alt" />
+					<span>
+						{__('Valid until:', 'kudos-donations') +
+							' ' +
+							licenceStatus.expires_at}
+					</span>
+				</Flex>
+			)}
+			<Flex justify="space-between">
+				<ExternalLink href="https://docs.kudosdonations.com/docs/plus">
+					{__('Visit documentation', 'kudos-donations')}
+				</ExternalLink>
+				{isSet ? (
+					<Button
+						type="button"
+						variant="link"
+						isDestructive={true}
+						onClick={() => void handleReset()}
+					>
+						{__('Reset licence', 'kudos-donations')}
+					</Button>
+				) : (
+					<Button
+						type="button"
+						variant="primary"
+						isBusy={activating}
+						disabled={activating || !pendingKey}
+						onClick={() => void handleActivate()}
+					>
+						{__('Activate', 'kudos-donations')}
+					</Button>
+				)}
+			</Flex>
+		</Panel>
+	);
+};

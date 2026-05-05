@@ -2,9 +2,24 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { EmailTab, HelpTab, ReceiptTab, MollieTab, PlusTab } from './tabs';
+import {
+	ApiModePanel,
+	PaymentMethodsPanel,
+	ApiKeysPanel,
+	EmailReceiptsPanel,
+	SmtpSettingsPanel,
+	TestEmailPanel,
+	YourDetailsPanel,
+	OtherPanel,
+	AddonPanel,
+	LicenceKeyPanel,
+	ShareTheLovePanel,
+	AboutPanel,
+	AdvancedPanel,
+} from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
+import type { AdminTab } from '../AdminTabPanel';
 import { Button, Fill, Flex, FlexItem } from '@wordpress/components';
 import { Spacer } from '../../components';
 import { useSettingsContext } from '../../contexts';
@@ -33,12 +48,6 @@ export const SaveButton = ({
 	</Button>
 );
 
-interface SettingsTab {
-	name: string;
-	title: string;
-	content: React.ReactNode;
-}
-
 export const SettingsPage = (): React.ReactNode => {
 	const { settingsReady, settingsSaving, updateSettings, settings } =
 		useSettingsContext<AllSettings>();
@@ -52,34 +61,51 @@ export const SettingsPage = (): React.ReactNode => {
 		formRef.current?.requestSubmit();
 	};
 
-	// Define tabs and panels
-	const tabs: SettingsTab[] = applyFilters('kudosSettingsTabs', [
+	const tabs: AdminTab[] = applyFilters('kudosSettingsTabs', [
 		{
 			name: 'mollie',
 			title: __('Mollie', 'kudos-donations'),
-			content: <MollieTab />,
+			panels: [
+				{ name: 'api-mode', content: <ApiModePanel /> },
+				{ name: 'payment-methods', content: <PaymentMethodsPanel /> },
+				{ name: 'api-keys', content: <ApiKeysPanel /> },
+			],
 		},
 		{
 			name: 'email',
 			title: __('Email', 'kudos-donations'),
-			content: <EmailTab />,
+			panels: [
+				{ name: 'email-receipts', content: <EmailReceiptsPanel /> },
+				{ name: 'smtp-settings', content: <SmtpSettingsPanel /> },
+				{ name: 'test-email', content: <TestEmailPanel /> },
+			],
 		},
 		{
 			name: 'receipt',
 			title: __('Receipt', 'kudos-donations'),
-			content: <ReceiptTab />,
+			panels: [
+				{ name: 'your-details', content: <YourDetailsPanel /> },
+				{ name: 'other', content: <OtherPanel /> },
+			],
 		},
 		{
 			name: 'plus',
 			title: 'Plus',
-			content: <PlusTab />,
+			panels: [
+				{ name: 'addon', content: <AddonPanel /> },
+				{ name: 'licence-key', content: <LicenceKeyPanel /> },
+			],
 		},
 		{
 			name: 'help',
 			title: __('Help', 'kudos-donations'),
-			content: <HelpTab />,
+			panels: [
+				{ name: 'share-the-love', content: <ShareTheLovePanel /> },
+				{ name: 'about', content: <AboutPanel /> },
+				{ name: 'advanced', content: <AdvancedPanel /> },
+			],
 		},
-	]) as SettingsTab[];
+	]) as AdminTab[];
 
 	useEffect(() => {
 		if (settings) {

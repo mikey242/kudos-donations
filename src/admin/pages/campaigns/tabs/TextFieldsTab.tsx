@@ -1,10 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl, TextControl } from '../../../controls';
-import type { ReactNode } from 'react';
 import { Panel } from '../../../components';
-import { PanelList } from '../../AdminTabPanel';
 
-const InitialTabPanel = () => (
+export const InitialTabPanel = () => (
 	<Panel header={__('Initial tab', 'kudos-donations')}>
 		<TextControl
 			name="initial_title"
@@ -17,7 +15,7 @@ const InitialTabPanel = () => (
 	</Panel>
 );
 
-const SubscriptionTabPanel = () => (
+export const SubscriptionTabPanel = () => (
 	<Panel header={__('Subscription tab', 'kudos-donations')}>
 		<TextControl
 			name="subscription_title"
@@ -30,7 +28,7 @@ const SubscriptionTabPanel = () => (
 	</Panel>
 );
 
-const AddressTabPanel = () => (
+export const AddressTabPanel = () => (
 	<Panel header={__('Address tab', 'kudos-donations')}>
 		<TextControl
 			name="address_title"
@@ -43,7 +41,7 @@ const AddressTabPanel = () => (
 	</Panel>
 );
 
-const MessageTabPanel = () => (
+export const MessageTabPanel = () => (
 	<Panel header={__('Message tab', 'kudos-donations')}>
 		<TextControl
 			name="message_title"
@@ -56,7 +54,7 @@ const MessageTabPanel = () => (
 	</Panel>
 );
 
-const PaymentTabPanel = () => (
+export const PaymentTabPanel = () => (
 	<Panel header={__('Payment tab', 'kudos-donations')}>
 		<TextControl
 			name="payment_title"
@@ -67,18 +65,4 @@ const PaymentTabPanel = () => (
 			label={__('Text', 'kudos-donations')}
 		/>
 	</Panel>
-);
-
-export const TextFieldsTab = (): ReactNode => (
-	<PanelList
-		namespace="kudosCampaignPanels"
-		tabName="text-fields"
-		defaultPanels={[
-			{ name: 'initial-tab', content: <InitialTabPanel /> },
-			{ name: 'subscription-tab', content: <SubscriptionTabPanel /> },
-			{ name: 'address-tab', content: <AddressTabPanel /> },
-			{ name: 'message-tab', content: <MessageTabPanel /> },
-			{ name: 'payment-tab', content: <PaymentTabPanel /> },
-		]}
-	/>
 );

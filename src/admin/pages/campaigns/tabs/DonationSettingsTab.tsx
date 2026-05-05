@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import type { ReactNode } from 'react';
 import {
 	FormTokenField,
 	RadioGroupControl,
@@ -9,13 +8,14 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel } from '../../../components';
 import { useEffect } from '@wordpress/element';
 import { getCurrencySymbol } from '../../../../utils/currency';
-import { PanelList } from '../../AdminTabPanel';
 
-interface DonationSettingsTabProps {
+export interface SubscriptionPanelProps {
 	recurringEnabled?: boolean;
 }
 
-const SubscriptionPanel = ({ recurringEnabled }: DonationSettingsTabProps) => {
+export const SubscriptionPanel = ({
+	recurringEnabled,
+}: SubscriptionPanelProps) => {
 	const { setValue, getValues } = useFormContext();
 	const donationType = useWatch({ name: 'donation_type' });
 
@@ -60,7 +60,7 @@ const SubscriptionPanel = ({ recurringEnabled }: DonationSettingsTabProps) => {
 	);
 };
 
-const PaymentPanel = () => {
+export const PaymentPanel = () => {
 	const amountType = useWatch({ name: 'amount_type' });
 	const currency = useWatch({ name: 'currency' });
 	const maxDonation = useWatch({ name: 'maximum_donation' });
@@ -168,22 +168,3 @@ const PaymentPanel = () => {
 		</Panel>
 	);
 };
-
-export const DonationSettingsTab = ({
-	recurringEnabled = false,
-}: DonationSettingsTabProps): ReactNode => (
-	<PanelList
-		namespace="kudosCampaignPanels"
-		tabName="donation-settings"
-		defaultPanels={[
-			{
-				name: 'subscription',
-				content: (
-					<SubscriptionPanel recurringEnabled={recurringEnabled} />
-				),
-			},
-			{ name: 'payment', content: <PaymentPanel /> },
-		]}
-		args={{ recurringEnabled }}
-	/>
-);
