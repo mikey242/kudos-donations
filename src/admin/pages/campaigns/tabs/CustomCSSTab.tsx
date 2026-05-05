@@ -4,21 +4,19 @@ import { useEffect, useRef } from '@wordpress/element';
 import type { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Panel } from '../../../components';
+import { PanelList } from '../../AdminTabPanel';
 
-export const CustomCSSTab = (): ReactNode => {
-	const { setValue } = useFormContext(); // Get methods from React Hook Form
-	const editorRef = useRef<HTMLTextAreaElement | null>(null); // Ref for the textarea
-	const editorId: string = 'css-editor'; // Unique ID for the textarea
+const CustomCSSPanel = () => {
+	const { setValue } = useFormContext();
+	const editorRef = useRef<HTMLTextAreaElement | null>(null);
+	const editorId: string = 'css-editor';
 
 	useEffect(() => {
 		if (editorRef.current) {
-			// Initialize the CodeMirror editor
 			const editor = window?.wp.codeEditor?.initialize(
 				editorId,
 				window?.kudos.codeEditor
 			);
-
-			// Update the form state whenever the CodeMirror content changes
 			editor?.codemirror.on('change', () => {
 				const value = editor.codemirror.getValue();
 				setValue('custom_styles', value, { shouldValidate: true });
@@ -42,3 +40,11 @@ export const CustomCSSTab = (): ReactNode => {
 		</Panel>
 	);
 };
+
+export const CustomCSSTab = (): ReactNode => (
+	<PanelList
+		namespace="kudosCampaignPanels"
+		tabName="custom-css"
+		defaultPanels={[{ name: 'custom-css', content: <CustomCSSPanel /> }]}
+	/>
+);

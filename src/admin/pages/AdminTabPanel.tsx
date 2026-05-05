@@ -6,15 +6,50 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminQueryParams } from '../hooks';
 import type { ReactNode } from 'react';
+import React from 'react';
 import { useEffect } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import { applyFilters } from '@wordpress/hooks';
 
 export interface AdminTab {
 	name: string;
 	title: string;
 	content: ReactNode;
 }
+
+export interface AdminPanel {
+	name: string;
+	content: ReactNode;
+}
+
+interface PanelListProps {
+	namespace: string;
+	tabName: string;
+	defaultPanels: AdminPanel[];
+	args?: unknown;
+}
+
+export const PanelList = ({
+	namespace,
+	tabName,
+	defaultPanels,
+	args,
+}: PanelListProps): ReactNode => {
+	const panels = applyFilters(
+		`${namespace}.${tabName}`,
+		defaultPanels,
+		...(args !== undefined ? [args] : [])
+	) as AdminPanel[];
+
+	return (
+		<>
+			{panels.map(({ name, content }) => (
+				<React.Fragment key={name}>{content}</React.Fragment>
+			))}
+		</>
+	);
+};
 
 interface AdminTabPanelProps {
 	tabs: AdminTab[];
