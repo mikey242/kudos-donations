@@ -63,6 +63,7 @@ declare module '@kudos/front-controls' {
 
 declare module '@kudos/front-components' {
 	export {
+		Message,
 		KudosLogo,
 		KudosLogoFullScreenAnimated,
 		ProgressBar,

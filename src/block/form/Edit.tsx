@@ -4,26 +4,19 @@ import { CampaignProvider, useCampaignContext } from '../contexts/';
 import { __ } from '@wordpress/i18n';
 import {
 	ExternalLink,
-	Flex,
 	PanelBody,
 	RadioControl,
 	SelectControl,
 	TextControl,
 } from '@wordpress/components';
 import { KudosForm } from './KudosForm';
-import { KudosLogo } from '../components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import type { Campaign } from '../../types/entity';
 import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';
-
-export interface KudosButtonAttributes {
-	button_label: string;
-	type: 'form' | 'button';
-	alignment: 'left' | 'center' | 'right';
-	campaign_id?: string;
-}
+import { Message } from '../components';
+import { KudosButtonAttributes } from '../index';
 export const Edit = (props: BlockEditProps<KudosButtonAttributes>) => {
 	const { campaign_id } = props.attributes;
 
@@ -44,10 +37,11 @@ type SelectOption = {
 	value: string;
 	disabled?: boolean;
 };
-const ButtonEdit = ({
-	attributes: { button_label, type, alignment },
-	setAttributes,
-}: ButtonEditProps) => {
+const ButtonEdit = (props: ButtonEditProps) => {
+	const {
+		attributes: { button_label, type, alignment },
+		setAttributes,
+	} = props;
 	const { campaign } = useCampaignContext();
 	const blockProps = useBlockProps();
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -193,15 +187,12 @@ const ButtonEdit = ({
 					alignment={alignment}
 				/>
 			) : (
-				<Flex justify="flex-start">
-					<KudosLogo style={{ maxWidth: '32px' }} />
-					<p>
-						{__(
-							'Please select a campaign from the sidebar',
-							'kudos-donations'
-						)}
-					</p>
-				</Flex>
+				<Message
+					message={__(
+						'Please select a campaign from the sidebar',
+						'kudos-donations'
+					)}
+				/>
 			)}
 		</div>
 	);

@@ -18,7 +18,7 @@ const KudosLogo = ({
 		<svg
 			className={clsx(
 				className,
-				'kudos-logo logo origin-center duration-500 ease-in-out m-auto'
+				'kudos-logo logo origin-center duration-500 ease-in-out'
 			)}
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 555 449"
