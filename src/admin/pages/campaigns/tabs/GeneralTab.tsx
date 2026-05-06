@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import {
 	ColorPicker,
 	SelectControl,
@@ -13,7 +14,7 @@ import { isValidUrl } from '../../../../utils';
 import { getCurrencySymbol } from '../../../../utils/currency';
 import { useEntitiesContext } from '../../../contexts';
 
-export const CampaignDetailsPanel = () => {
+const CampaignDetailsPanel = () => {
 	const { currentEntity: campaign } = useEntitiesContext<Campaign>();
 	const { currencies } = window.kudos;
 	const watchDisplayGoal = useWatch({ name: 'show_goal' });
@@ -103,7 +104,7 @@ export const CampaignDetailsPanel = () => {
 	);
 };
 
-export const AfterPaymentPanel = () => {
+const AfterPaymentPanel = () => {
 	const watchUseReturnMessage = useWatch({ name: 'show_return_message' });
 	const watchUseReturnURL = useWatch({ name: 'use_custom_return_url' });
 
@@ -150,4 +151,13 @@ export const AfterPaymentPanel = () => {
 			/>
 		</Panel>
 	);
+};
+
+export const GeneralTab: AdminTab = {
+	name: 'general',
+	title: __('General', 'kudos-donations'),
+	panels: [
+		{ name: 'campaign-details', content: <CampaignDetailsPanel /> },
+		{ name: 'after-payment', content: <AfterPaymentPanel /> },
+	],
 };

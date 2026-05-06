@@ -1,11 +1,12 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import { Button, Flex } from '@wordpress/components';
 import { TextControl, ToggleControl } from '../../../controls';
 import { Panel } from '../../../components';
 import { LogModal } from '../../LogModal';
 import React from 'react';
 
-export const ShareTheLovePanel = () => (
+const ShareTheLovePanel = () => (
 	<Panel header={__('Share the love', 'kudos-donations')} spacing={2}>
 		<p className="mb-2">
 			{__(
@@ -27,7 +28,7 @@ export const ShareTheLovePanel = () => (
 	</Panel>
 );
 
-export const AboutPanel = () => (
+const AboutPanel = () => (
 	<Panel
 		header={__('About', 'kudos-donations')}
 		spacing={2}
@@ -68,7 +69,7 @@ export const AboutPanel = () => (
 	</Panel>
 );
 
-export const AdvancedPanel = () => (
+const AdvancedPanel = () => (
 	<Panel header={__('Advanced', 'kudos-donations')}>
 		<ToggleControl
 			name="_kudos_always_load_assets"
@@ -96,3 +97,13 @@ export const AdvancedPanel = () => (
 		/>
 	</Panel>
 );
+
+export const HelpTab: AdminTab = {
+	name: 'help',
+	title: __('Help', 'kudos-donations'),
+	panels: [
+		{ name: 'share-the-love', content: <ShareTheLovePanel /> },
+		{ name: 'about', content: <AboutPanel /> },
+		{ name: 'advanced', content: <AdvancedPanel /> },
+	],
+};

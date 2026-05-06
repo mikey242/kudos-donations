@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import { TextControl, ToggleControl, CheckboxControl } from '../../../controls';
 import { useWatch } from 'react-hook-form';
 import { Panel, PanelRow } from '../../../components';
 
-export const OptionalFieldsPanel = () => {
+const OptionalFieldsPanel = () => {
 	const watchAddress = useWatch({ name: 'address_enabled' });
 	const watchName = useWatch({ name: 'name_enabled' });
 	const watchEmail = useWatch({ name: 'email_enabled' });
@@ -84,7 +85,7 @@ export const OptionalFieldsPanel = () => {
 	);
 };
 
-export const PolicyLinksPanel = () => (
+const PolicyLinksPanel = () => (
 	<Panel header={__('Policy links', 'kudos-donations')}>
 		<TextControl
 			name="terms_link"
@@ -104,3 +105,12 @@ export const PolicyLinksPanel = () => (
 		/>
 	</Panel>
 );
+
+export const OptionalFieldsTab: AdminTab = {
+	name: 'optional-fields',
+	title: __('Optional fields', 'kudos-donations'),
+	panels: [
+		{ name: 'optional-fields', content: <OptionalFieldsPanel /> },
+		{ name: 'policy-links', content: <PolicyLinksPanel /> },
+	],
+};

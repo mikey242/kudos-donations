@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { TextAreaControl, TextControl } from '../../../controls';
 import { Panel } from '../../../components';
 
-export const YourDetailsPanel = () => (
+const YourDetailsPanel = () => (
 	<Panel header={__('Your details', 'kudos-donations')}>
 		<TextAreaControl
 			name="_kudos_invoice_company_address"
@@ -21,7 +22,7 @@ export const YourDetailsPanel = () => (
 	</Panel>
 );
 
-export const OtherPanel = () => (
+const OtherPanel = () => (
 	<Panel header={__('Other', 'kudos-donations')}>
 		<TextControl
 			name="_kudos_invoice_number"
@@ -34,3 +35,12 @@ export const OtherPanel = () => (
 		/>
 	</Panel>
 );
+
+export const ReceiptTab: AdminTab = {
+	name: 'receipt',
+	title: __('Receipt', 'kudos-donations'),
+	panels: [
+		{ name: 'your-details', content: <YourDetailsPanel /> },
+		{ name: 'other', content: <OtherPanel /> },
+	],
+};

@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../../contexts';
@@ -18,7 +19,7 @@ import type { AllSettings } from '../../../../types/all-settings';
 
 type InstallState = 'idle' | 'installing' | 'installed' | 'failed';
 
-export const AddonPanel = () => {
+const AddonPanel = () => {
 	const { settings } = useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -104,7 +105,7 @@ export const AddonPanel = () => {
 	);
 };
 
-export const LicenceKeyPanel = () => {
+const LicenceKeyPanel = () => {
 	const { updateSetting, settings } = useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -212,4 +213,13 @@ export const LicenceKeyPanel = () => {
 			</Flex>
 		</Panel>
 	);
+};
+
+export const PlusTab: AdminTab = {
+	name: 'plus',
+	title: 'Plus',
+	panels: [
+		{ name: 'addon', content: <AddonPanel /> },
+		{ name: 'licence-key', content: <LicenceKeyPanel /> },
+	],
 };

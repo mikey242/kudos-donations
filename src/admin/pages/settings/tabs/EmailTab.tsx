@@ -1,5 +1,6 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
@@ -11,7 +12,7 @@ import { RadioControl, TextControl, ToggleControl } from '../../../controls';
 import type { WPErrorResponse, WPResponse } from '../../../../types/wp';
 import { Panel } from '../../../components';
 
-export const EmailReceiptsPanel = () => {
+const EmailReceiptsPanel = () => {
 	const watchSendReceipts = useWatch({ name: '_kudos_email_receipt_enable' });
 
 	return (
@@ -46,7 +47,7 @@ export const EmailReceiptsPanel = () => {
 	);
 };
 
-export const SmtpSettingsPanel = () => {
+const SmtpSettingsPanel = () => {
 	const watchCustom = useWatch({ name: '_kudos_smtp_enable' });
 	const { updateSetting, settings } = useSettingsContext();
 	const passwordDisabled = !!settings._kudos_smtp_password;
@@ -194,7 +195,7 @@ export const SmtpSettingsPanel = () => {
 	);
 };
 
-export const TestEmailPanel = () => {
+const TestEmailPanel = () => {
 	const { getValues } = useFormContext();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -250,4 +251,14 @@ export const TestEmailPanel = () => {
 			</Flex>
 		</Panel>
 	);
+};
+
+export const EmailTab: AdminTab = {
+	name: 'email',
+	title: __('Email', 'kudos-donations'),
+	panels: [
+		{ name: 'email-receipts', content: <EmailReceiptsPanel /> },
+		{ name: 'smtp-settings', content: <SmtpSettingsPanel /> },
+		{ name: 'test-email', content: <TestEmailPanel /> },
+	],
 };

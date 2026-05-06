@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl, TextControl } from '../../../controls';
 import { Panel } from '../../../components';
+import type { AdminTab } from '../../AdminTabPanel';
 
-export const InitialTextPanel = () => (
+const InitialTextPanel = () => (
 	<Panel header={__('Initial tab', 'kudos-donations')}>
 		<TextControl
 			name="initial_title"
@@ -15,7 +16,7 @@ export const InitialTextPanel = () => (
 	</Panel>
 );
 
-export const SubscriptionTextPanel = () => (
+const SubscriptionTextPanel = () => (
 	<Panel header={__('Subscription tab', 'kudos-donations')}>
 		<TextControl
 			name="subscription_title"
@@ -28,7 +29,7 @@ export const SubscriptionTextPanel = () => (
 	</Panel>
 );
 
-export const AddressTextPanel = () => (
+const AddressTextPanel = () => (
 	<Panel header={__('Address tab', 'kudos-donations')}>
 		<TextControl
 			name="address_title"
@@ -41,7 +42,7 @@ export const AddressTextPanel = () => (
 	</Panel>
 );
 
-export const MessageTextPanel = () => (
+const MessageTextPanel = () => (
 	<Panel header={__('Message tab', 'kudos-donations')}>
 		<TextControl
 			name="message_title"
@@ -54,7 +55,7 @@ export const MessageTextPanel = () => (
 	</Panel>
 );
 
-export const PaymentTextPanel = () => (
+const PaymentTextPanel = () => (
 	<Panel header={__('Payment tab', 'kudos-donations')}>
 		<TextControl
 			name="payment_title"
@@ -66,3 +67,15 @@ export const PaymentTextPanel = () => (
 		/>
 	</Panel>
 );
+
+export const TextFieldsTab: AdminTab = {
+	name: 'text-fields',
+	title: __('Text', 'kudos-donations'),
+	panels: [
+		{ name: 'initial-tab', content: <InitialTextPanel /> },
+		{ name: 'subscription-tab', content: <SubscriptionTextPanel /> },
+		{ name: 'address-tab', content: <AddressTextPanel /> },
+		{ name: 'message-tab', content: <MessageTextPanel /> },
+		{ name: 'payment-tab', content: <PaymentTextPanel /> },
+	],
+};

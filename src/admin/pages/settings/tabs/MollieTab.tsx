@@ -1,4 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
@@ -17,7 +18,7 @@ import type { AllSettings } from '../../../../types/all-settings';
 
 type ApiMode = 'live' | 'test';
 
-export const ApiModePanel = () => {
+const ApiModePanel = () => {
 	const { settings } = useSettingsContext<AllSettings>();
 	const {
 		_kudos_vendor_mollie_api_key_live: liveKey,
@@ -50,7 +51,7 @@ export const ApiModePanel = () => {
 	);
 };
 
-export const PaymentMethodsPanel = () => {
+const PaymentMethodsPanel = () => {
 	const { checkingApiKey, checkApiKey, settings } =
 		useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
@@ -131,7 +132,7 @@ export const PaymentMethodsPanel = () => {
 	);
 };
 
-export const ApiKeysPanel = () => {
+const ApiKeysPanel = () => {
 	const { checkingApiKey, updateSettings, settings } =
 		useSettingsContext<AllSettings>();
 	const {
@@ -199,4 +200,14 @@ export const ApiKeysPanel = () => {
 			</Flex>
 		</Panel>
 	);
+};
+
+export const MollieTab: AdminTab = {
+	name: 'mollie',
+	title: __('Mollie', 'kudos-donations'),
+	panels: [
+		{ name: 'api-mode', content: <ApiModePanel /> },
+		{ name: 'payment-methods', content: <PaymentMethodsPanel /> },
+		{ name: 'api-keys', content: <ApiKeysPanel /> },
+	],
 };

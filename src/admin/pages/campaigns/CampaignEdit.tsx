@@ -1,22 +1,15 @@
-import { useEffect, useMemo } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { AdminTab } from '../AdminTabPanel';
 import { AdminTabPanel } from '../AdminTabPanel';
 import {
-	CampaignDetailsPanel,
-	AfterPaymentPanel,
-	InitialTextPanel,
-	SubscriptionTextPanel,
-	AddressTextPanel,
-	MessageTextPanel,
-	PaymentTextPanel,
-	SubscriptionPanel,
-	PaymentPanel,
-	OptionalFieldsPanel,
-	PolicyLinksPanel,
-	CustomCSSPanel,
+	GeneralTab,
+	TextFieldsTab,
+	DonationSettingsTab,
+	OptionalFieldsTab,
+	CustomCSSTab,
 } from './tabs';
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
@@ -84,69 +77,13 @@ const CampaignEdit = (): ReactNode => {
 		void handleUpdate(data);
 	};
 
-	const tabs = useMemo(
-		() =>
-			applyFilters('kudosCampaignTabs', [
-				{
-					name: 'general',
-					title: __('General', 'kudos-donations'),
-					panels: [
-						{
-							name: 'campaign-details',
-							content: <CampaignDetailsPanel />,
-						},
-						{
-							name: 'after-payment',
-							content: <AfterPaymentPanel />,
-						},
-					],
-				},
-				{
-					name: 'text-fields',
-					title: __('Text', 'kudos-donations'),
-					panels: [
-						{ name: 'initial-tab', content: <InitialTextPanel /> },
-						{
-							name: 'subscription-tab',
-							content: <SubscriptionTextPanel />,
-						},
-						{ name: 'address-tab', content: <AddressTextPanel /> },
-						{ name: 'message-tab', content: <MessageTextPanel /> },
-						{ name: 'payment-tab', content: <PaymentTextPanel /> },
-					],
-				},
-				{
-					name: 'donation-settings',
-					title: __('Donation settings', 'kudos-donations'),
-					panels: [
-						{
-							name: 'subscription',
-							content: <SubscriptionPanel />,
-						},
-						{ name: 'payment', content: <PaymentPanel /> },
-					],
-				},
-				{
-					name: 'optional-fields',
-					title: __('Optional fields', 'kudos-donations'),
-					panels: [
-						{
-							name: 'optional-fields',
-							content: <OptionalFieldsPanel />,
-						},
-						{ name: 'policy-links', content: <PolicyLinksPanel /> },
-					],
-				},
-				{
-					name: 'custom-css',
-					title: __('Custom CSS', 'kudos-donations'),
-					panels: [
-						{ name: 'custom-css', content: <CustomCSSPanel /> },
-					],
-				},
-			]),
-		[]
-	) as AdminTab[];
+	const tabs = applyFilters('kudosCampaignTabs', [
+		GeneralTab,
+		TextFieldsTab,
+		DonationSettingsTab,
+		OptionalFieldsTab,
+		CustomCSSTab,
+	]) as AdminTab[];
 
 	if (!campaign) {
 		return null;

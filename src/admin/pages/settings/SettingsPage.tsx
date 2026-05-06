@@ -2,21 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {
-	ApiModePanel,
-	PaymentMethodsPanel,
-	ApiKeysPanel,
-	EmailReceiptsPanel,
-	SmtpSettingsPanel,
-	TestEmailPanel,
-	YourDetailsPanel,
-	OtherPanel,
-	AddonPanel,
-	LicenceKeyPanel,
-	ShareTheLovePanel,
-	AboutPanel,
-	AdvancedPanel,
-} from './tabs';
+import { MollieTab, EmailTab, ReceiptTab, PlusTab, HelpTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import type { AdminTab } from '../AdminTabPanel';
@@ -61,50 +47,12 @@ export const SettingsPage = (): React.ReactNode => {
 		formRef.current?.requestSubmit();
 	};
 
-	const tabs: AdminTab[] = applyFilters('kudosSettingsTabs', [
-		{
-			name: 'mollie',
-			title: __('Mollie', 'kudos-donations'),
-			panels: [
-				{ name: 'api-mode', content: <ApiModePanel /> },
-				{ name: 'payment-methods', content: <PaymentMethodsPanel /> },
-				{ name: 'api-keys', content: <ApiKeysPanel /> },
-			],
-		},
-		{
-			name: 'email',
-			title: __('Email', 'kudos-donations'),
-			panels: [
-				{ name: 'email-receipts', content: <EmailReceiptsPanel /> },
-				{ name: 'smtp-settings', content: <SmtpSettingsPanel /> },
-				{ name: 'test-email', content: <TestEmailPanel /> },
-			],
-		},
-		{
-			name: 'receipt',
-			title: __('Receipt', 'kudos-donations'),
-			panels: [
-				{ name: 'your-details', content: <YourDetailsPanel /> },
-				{ name: 'other', content: <OtherPanel /> },
-			],
-		},
-		{
-			name: 'plus',
-			title: 'Plus',
-			panels: [
-				{ name: 'addon', content: <AddonPanel /> },
-				{ name: 'licence-key', content: <LicenceKeyPanel /> },
-			],
-		},
-		{
-			name: 'help',
-			title: __('Help', 'kudos-donations'),
-			panels: [
-				{ name: 'share-the-love', content: <ShareTheLovePanel /> },
-				{ name: 'about', content: <AboutPanel /> },
-				{ name: 'advanced', content: <AdvancedPanel /> },
-			],
-		},
+	const tabs = applyFilters('kudosSettingsTabs', [
+		MollieTab,
+		EmailTab,
+		ReceiptTab,
+		PlusTab,
+		HelpTab,
 	]) as AdminTab[];
 
 	useEffect(() => {

@@ -1,11 +1,12 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import { TextAreaControl } from '../../../controls';
 import { useEffect, useRef } from '@wordpress/element';
 import { useFormContext } from 'react-hook-form';
 import { Panel } from '../../../components';
 import { CodeEditorSettings } from '../../../../types/window-kudos';
 
-export const CustomCSSPanel = () => {
+const CustomCSSPanel = () => {
 	const { setValue } = useFormContext();
 	const editorRef = useRef<HTMLTextAreaElement | null>(null);
 	const editorId: string = 'css-editor';
@@ -38,4 +39,10 @@ export const CustomCSSPanel = () => {
 			/>
 		</Panel>
 	);
+};
+
+export const CustomCSSTab: AdminTab = {
+	name: 'custom-css',
+	title: __('Custom CSS', 'kudos-donations'),
+	panels: [{ name: 'custom-css', content: <CustomCSSPanel /> }],
 };

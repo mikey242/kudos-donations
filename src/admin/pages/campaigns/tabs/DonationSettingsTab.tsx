@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import type { AdminTab } from '../../AdminTabPanel';
 import {
 	FormTokenField,
 	RadioGroupControl,
@@ -11,7 +12,7 @@ import { getCurrencySymbol } from '../../../../utils/currency';
 import { useSettingsContext } from '../../../contexts';
 import type { AllSettings } from '../../../../types/all-settings';
 
-export const SubscriptionPanel = () => {
+const SubscriptionPanel = () => {
 	const { settings } = useSettingsContext<AllSettings>();
 	const recurringEnabled = settings._kudos_payment_vendor_status.recurring;
 	const { setValue, getValues } = useFormContext();
@@ -58,7 +59,7 @@ export const SubscriptionPanel = () => {
 	);
 };
 
-export const PaymentPanel = () => {
+const PaymentPanel = () => {
 	const amountType = useWatch({ name: 'amount_type' });
 	const currency = useWatch({ name: 'currency' });
 	const maxDonation = useWatch({ name: 'maximum_donation' });
@@ -165,4 +166,13 @@ export const PaymentPanel = () => {
 			/>
 		</Panel>
 	);
+};
+
+export const DonationSettingsTab: AdminTab = {
+	name: 'donation-settings',
+	title: __('Donation settings', 'kudos-donations'),
+	panels: [
+		{ name: 'subscription', content: <SubscriptionPanel /> },
+		{ name: 'payment', content: <PaymentPanel /> },
+	],
 };
