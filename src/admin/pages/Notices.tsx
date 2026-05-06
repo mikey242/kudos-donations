@@ -43,11 +43,14 @@ export const Notices = (): React.ReactNode => {
 
 	return (
 		<>
-			<div className="admin-wrap">
-				{/* @ts-ignore */}
-				<NoticeList notices={defaultNotices} onRemove={removeNotice} />
-			</div>
-			{/* @ts-ignore */}
+			{defaultNotices.length > 0 && (
+				<div className="admin-wrap">
+					<NoticeList
+						notices={defaultNotices}
+						onRemove={removeNotice}
+					/>
+				</div>
+			)}
 			<SnackbarList notices={snackbarNotices} onRemove={removeNotice} />
 		</>
 	);
