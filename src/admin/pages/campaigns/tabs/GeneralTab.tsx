@@ -11,17 +11,18 @@ import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../../components';
 import { isValidUrl } from '../../../../utils';
 import { getCurrencySymbol } from '../../../../utils/currency';
+import { useEntitiesContext } from '../../../contexts';
 
-export interface CampaignDetailsPanelProps {
-	campaign: Campaign;
-}
-
-export const CampaignDetailsPanel = ({
-	campaign,
-}: CampaignDetailsPanelProps) => {
+export const CampaignDetailsPanel = () => {
+	const { currentEntity: campaign } = useEntitiesContext<Campaign>();
 	const { currencies } = window.kudos;
 	const watchDisplayGoal = useWatch({ name: 'show_goal' });
 	const watchCurrency = useWatch({ name: 'currency' });
+
+	if (!campaign) {
+		return null;
+	}
+
 	const currencySymbol = getCurrencySymbol(watchCurrency);
 
 	return (

@@ -21,7 +21,7 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { useEntitiesContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
@@ -46,13 +46,10 @@ const NavigationButtons = ({ campaign, onBack }): ReactNode => (
 	</>
 );
 
-interface CampaignEditProps {
-	campaign: Campaign;
-}
-
-const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
+const CampaignEdit = (): ReactNode => {
 	const { updateParams } = useAdminQueryParams();
-	const { settings } = useSettingsContext();
+	const { handleUpdate, currentEntity: campaign } =
+		useEntitiesContext<Campaign>();
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -62,7 +59,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 	});
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
-	const { handleUpdate } = useEntitiesContext();
 
 	useEffect(() => {
 		if (campaign) {
@@ -97,9 +93,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 					panels: [
 						{
 							name: 'campaign-details',
-							content: (
-								<CampaignDetailsPanel campaign={campaign} />
-							),
+							content: <CampaignDetailsPanel />,
 						},
 						{
 							name: 'after-payment',
@@ -127,14 +121,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 					panels: [
 						{
 							name: 'subscription',
-							content: (
-								<SubscriptionPanel
-									recurringEnabled={
-										settings._kudos_payment_vendor_status
-											.recurring
-									}
-								/>
-							),
+							content: <SubscriptionPanel />,
 						},
 						{ name: 'payment', content: <PaymentPanel /> },
 					],
@@ -158,7 +145,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): ReactNode => {
 					],
 				},
 			]),
-		[campaign, settings._kudos_payment_vendor_status.recurring]
+		[]
 	) as AdminTab[];
 
 	if (!campaign) {

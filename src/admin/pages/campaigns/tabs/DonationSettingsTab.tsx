@@ -8,14 +8,12 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel } from '../../../components';
 import { useEffect } from '@wordpress/element';
 import { getCurrencySymbol } from '../../../../utils/currency';
+import { useSettingsContext } from '../../../contexts';
+import type { AllSettings } from '../../../../types/all-settings';
 
-export interface SubscriptionPanelProps {
-	recurringEnabled?: boolean;
-}
-
-export const SubscriptionPanel = ({
-	recurringEnabled,
-}: SubscriptionPanelProps) => {
+export const SubscriptionPanel = () => {
+	const { settings } = useSettingsContext<AllSettings>();
+	const recurringEnabled = settings._kudos_payment_vendor_status.recurring;
 	const { setValue, getValues } = useFormContext();
 	const donationType = useWatch({ name: 'donation_type' });
 

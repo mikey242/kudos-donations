@@ -29,6 +29,7 @@ interface QueryArgs {
 
 interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	entities: T[];
+	currentEntity: T | null;
 	hasResolved: boolean;
 	totalPages: number;
 	totalItems: number;
@@ -73,7 +74,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 	children,
 }: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
-	const { paged, order, orderby, where } = params;
+	const { paged, order, orderby, where, entity: entityId } = params;
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 	const [state, setState] = useState<EntityState<T>>({
@@ -306,10 +307,28 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		[handleSave]
 	);
 
+	const [currentEntity, setCurrentEntity] = useState<T | null>(null);
+
+	useEffect(() => {
+		if (!entityId) {
+			setCurrentEntity(null);
+			return;
+		}
+		const found = state.entities.find((e) => e.id === entityId);
+		if (found) {
+			setCurrentEntity(found);
+		} else if (state.hasResolved) {
+			apiFetch<T>({ path: `/kudos/v1/${entityType}/${entityId}` })
+				.then(setCurrentEntity)
+				.catch(() => setCurrentEntity(null));
+		}
+	}, [entityId, entityType, state.entities, state.hasResolved]);
+
 	return (
 		<EntitiesContext.Provider
 			value={{
 				entities: state.entities,
+				currentEntity,
 				hasResolved: state.hasResolved,
 				totalItems: state.totalItems,
 				totalPages: state.totalPages,

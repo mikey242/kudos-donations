@@ -15,8 +15,7 @@ import {
 } from '@wordpress/components';
 import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
 
-interface PostEditProps<T extends BaseEntity = BaseEntity> {
-	data: T;
+interface PostEditProps {
 	fields: Field[];
 }
 
@@ -57,12 +56,11 @@ const NavigationButtons = ({
 );
 
 export const SingleEntityEdit = <T extends BaseEntity>({
-	data,
 	fields,
-}: PostEditProps<T>): React.ReactNode => {
-	const [formData, setFormData] = useState<T | null>(data ?? null);
+}: PostEditProps): React.ReactNode => {
+	const { currentEntity, handleUpdate } = useEntitiesContext<T>();
+	const [formData, setFormData] = useState<T | null>(currentEntity ?? null);
 	const { updateParams } = useAdminQueryParams();
-	const { handleUpdate } = useEntitiesContext();
 
 	const onSave = useCallback(() => {
 		void handleUpdate(formData);
@@ -73,8 +71,8 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 	}, [updateParams]);
 
 	useEffect(() => {
-		setFormData(data);
-	}, [data]);
+		setFormData(currentEntity ?? null);
+	}, [currentEntity]);
 
 	const handleFormChange = (fieldData: Record<string, unknown>) => {
 		const merged = { ...formData, ...fieldData };

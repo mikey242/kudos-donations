@@ -14,7 +14,7 @@ interface EntityPageProps {
 		editPost: (id: string | number) => void,
 		newPost: (e: React.SyntheticEvent | Partial<BaseEntity>) => void
 	) => React.ReactNode;
-	renderEdit?: (post: BaseEntity) => React.ReactNode;
+	renderEdit?: () => React.ReactNode;
 }
 
 export const EntityPage = ({
@@ -23,9 +23,7 @@ export const EntityPage = ({
 }: EntityPageProps): React.ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
 	const { entity: entityId } = params;
-	const [currentEntity, setCurrentEntity] = useState<BaseEntity | null>(null);
-	const { entities, handleNew, entityType, hasResolved } =
-		useEntitiesContext<BaseEntity>();
+	const { handleNew, entityType } = useEntitiesContext<BaseEntity>();
 
 	const newPost = async () => {
 		await handleNew().then((response) => {
@@ -39,23 +37,6 @@ export const EntityPage = ({
 		void updateParams({ entity: id });
 	};
 
-	useEffect(() => {
-		if (entityId && hasResolved) {
-			const found = entities.find(
-				(entity) => Number(entity.id) === Number(entityId)
-			);
-			if (found) {
-				setCurrentEntity(found);
-			} else {
-				apiFetch({
-					path: addQueryArgs(`/kudos/v1/${entityType}/${entityId}`),
-				}).then((response: BaseEntity) => {
-					setCurrentEntity(response);
-				});
-			}
-		}
-	}, [entityId, entities, entityType, hasResolved]);
-
 	const entityActions = applyFilters(
 		'kudosEntityPageActions',
 		[],
@@ -68,7 +49,7 @@ export const EntityPage = ({
 				<Fill name={SLOT_HEADER_ACTIONS_EXTRA}>{entityActions}</Fill>
 			)}
 			{entityId && renderEdit ? (
-				<div className="admin-wrap"> {renderEdit(currentEntity)}</div>
+				<div className="admin-wrap">{renderEdit()}</div>
 			) : (
 				<div className="admin-wrap-wide">
 					{renderTable(editPost, newPost)}

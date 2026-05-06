@@ -12,7 +12,6 @@ import { SubscriptionsTable } from './subscriptions';
 import { DonorsTable } from './donors';
 import { SettingsPage } from './settings';
 import { SingleEntityEdit } from './SingleEntityEdit';
-import { Campaign } from '../../types/entity';
 import { applyFilters } from '@wordpress/hooks';
 
 export interface PageConfig {
@@ -40,9 +39,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 							handleEdit={editEntity}
 						/>
 					)}
-					renderEdit={(currentCampaign) => (
-						<CampaignEdit campaign={currentCampaign as Campaign} />
-					)}
+					renderEdit={() => <CampaignEdit />}
 				/>
 			</EntitiesProvider>
 		),
@@ -61,7 +58,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 					renderTable={(editEntity) => (
 						<TransactionsTable handleEdit={editEntity} />
 					)}
-					renderEdit={(entity) => <TransactionEdit entity={entity} />}
+					renderEdit={() => <TransactionEdit />}
 				/>
 			</EntitiesProvider>
 		),
@@ -80,75 +77,72 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 					renderTable={(editEntity) => (
 						<SubscriptionsTable handleEdit={editEntity} />
 					)}
-					renderEdit={(entity) =>
-						entity && (
-							<SingleEntityEdit
-								data={entity}
-								fields={[
-									{
-										id: 'title',
-										label: 'Title',
-										type: 'text',
-									},
-									{
-										id: 'value',
-										label: 'Value',
-										type: 'text',
-									},
-									{
-										id: 'currency',
-										label: 'Currency',
-										type: 'text',
-									},
-									{
-										id: 'status',
-										label: 'Status',
-										type: 'text',
-									},
-									{
-										id: 'frequency',
-										label: 'Frequency',
-										type: 'text',
-									},
-									{
-										id: 'years',
-										label: 'Years',
-										type: 'integer',
-									},
-									{
-										id: 'transaction_id',
-										label: 'Transaction id',
-										type: 'text',
-									},
-									{
-										id: 'vendor_customer_id',
-										label: 'Vendor customer id',
-										type: 'text',
-									},
-									{
-										id: 'vendor_subscription_id',
-										label: 'Vendor subscription id',
-										type: 'text',
-									},
-									{
-										id: 'campaign_id',
-										label: 'Campaign id',
-										type: 'integer',
-									},
-									{
-										id: 'donor_id',
-										label: 'Donor id',
-										type: 'integer',
-									},
-									{
-										id: 'created_at',
-										label: 'Created at',
-										type: 'datetime',
-									},
-								]}
-							/>
-						)
-					}
+					renderEdit={() => (
+						<SingleEntityEdit
+							fields={[
+								{
+									id: 'title',
+									label: 'Title',
+									type: 'text',
+								},
+								{
+									id: 'value',
+									label: 'Value',
+									type: 'text',
+								},
+								{
+									id: 'currency',
+									label: 'Currency',
+									type: 'text',
+								},
+								{
+									id: 'status',
+									label: 'Status',
+									type: 'text',
+								},
+								{
+									id: 'frequency',
+									label: 'Frequency',
+									type: 'text',
+								},
+								{
+									id: 'years',
+									label: 'Years',
+									type: 'integer',
+								},
+								{
+									id: 'transaction_id',
+									label: 'Transaction id',
+									type: 'text',
+								},
+								{
+									id: 'vendor_customer_id',
+									label: 'Vendor customer id',
+									type: 'text',
+								},
+								{
+									id: 'vendor_subscription_id',
+									label: 'Vendor subscription id',
+									type: 'text',
+								},
+								{
+									id: 'campaign_id',
+									label: 'Campaign id',
+									type: 'integer',
+								},
+								{
+									id: 'donor_id',
+									label: 'Donor id',
+									type: 'integer',
+								},
+								{
+									id: 'created_at',
+									label: 'Created at',
+									type: 'datetime',
+								},
+							]}
+						/>
+					)}
 				/>
 			</EntitiesProvider>
 		),
@@ -167,57 +161,54 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 					renderTable={(editEntity) => (
 						<DonorsTable handleEdit={editEntity} />
 					)}
-					renderEdit={(entity) =>
-						entity && (
-							<SingleEntityEdit
-								data={entity}
-								fields={[
-									{
-										id: 'title',
-										label: 'Title',
-										type: 'text',
-									},
-									{ id: 'name', label: 'Name', type: 'text' },
-									{
-										id: 'business_name',
-										label: 'Business name',
-										type: 'text',
-									},
-									{
-										id: 'street',
-										label: 'Street',
-										type: 'text',
-									},
-									{ id: 'city', label: 'City', type: 'text' },
-									{
-										id: 'postcode',
-										label: 'Postcode',
-										type: 'text',
-									},
-									{
-										id: 'country',
-										label: 'Country',
-										type: 'text',
-									},
-									{
-										id: 'vendor_customer_id',
-										label: 'Vendor customer id',
-										type: 'text',
-									},
-									{
-										id: 'locale',
-										label: 'Locale',
-										type: 'text',
-									},
-									{
-										id: 'created_at',
-										label: 'Created at',
-										type: 'datetime',
-									},
-								]}
-							/>
-						)
-					}
+					renderEdit={() => (
+						<SingleEntityEdit
+							fields={[
+								{
+									id: 'title',
+									label: 'Title',
+									type: 'text',
+								},
+								{ id: 'name', label: 'Name', type: 'text' },
+								{
+									id: 'business_name',
+									label: 'Business name',
+									type: 'text',
+								},
+								{
+									id: 'street',
+									label: 'Street',
+									type: 'text',
+								},
+								{ id: 'city', label: 'City', type: 'text' },
+								{
+									id: 'postcode',
+									label: 'Postcode',
+									type: 'text',
+								},
+								{
+									id: 'country',
+									label: 'Country',
+									type: 'text',
+								},
+								{
+									id: 'vendor_customer_id',
+									label: 'Vendor customer id',
+									type: 'text',
+								},
+								{
+									id: 'locale',
+									label: 'Locale',
+									type: 'text',
+								},
+								{
+									id: 'created_at',
+									label: 'Created at',
+									type: 'datetime',
+								},
+							]}
+						/>
+					)}
 				/>
 			</EntitiesProvider>
 		),

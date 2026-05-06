@@ -1,20 +1,18 @@
-import type { BaseEntity, Campaign } from '../../../types/entity';
+import type { Campaign } from '../../../types/entity';
 import React from 'react';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { SingleEntityEdit } from '../SingleEntityEdit';
-
-interface PostEditProps {
-	entity: BaseEntity;
-}
+import { useEntitiesContext } from '../../contexts';
 
 interface Element {
 	value: any;
 	label: string;
 }
 
-export const TransactionEdit = ({ entity }: PostEditProps): React.ReactNode => {
+export const TransactionEdit = (): React.ReactNode => {
+	const { currentEntity } = useEntitiesContext();
 	const [campaigns, setCampaigns] = useState<Element[]>();
 
 	const fetchPosts = useCallback(async () => {
@@ -36,13 +34,12 @@ export const TransactionEdit = ({ entity }: PostEditProps): React.ReactNode => {
 		void fetchPosts();
 	}, [fetchPosts]);
 
-	if (!entity) {
+	if (!currentEntity) {
 		return null;
 	}
 
 	return (
 		<SingleEntityEdit
-			data={entity}
 			fields={[
 				{
 					id: 'title',
