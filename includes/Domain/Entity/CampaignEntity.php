@@ -62,6 +62,7 @@ class CampaignEntity extends BaseEntity {
 		return [
 			'currency'                   => 'EUR',
 			'show_goal'                  => false,
+			'goal'                       => 500,
 			'amount_type'                => 'fixed',
 			'fixed_amounts'              => [ '5', '10', '25', '50' ],
 			'minimum_donation'           => 1.0,
