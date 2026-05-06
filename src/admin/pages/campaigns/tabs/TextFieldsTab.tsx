@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { TextAreaControl, TextControl } from '../../../controls';
 import { Panel } from '../../../components';
 
-export const InitialTabPanel = () => (
+export const InitialTextPanel = () => (
 	<Panel header={__('Initial tab', 'kudos-donations')}>
 		<TextControl
 			name="initial_title"
@@ -15,7 +15,7 @@ export const InitialTabPanel = () => (
 	</Panel>
 );
 
-export const SubscriptionTabPanel = () => (
+export const SubscriptionTextPanel = () => (
 	<Panel header={__('Subscription tab', 'kudos-donations')}>
 		<TextControl
 			name="subscription_title"
@@ -28,7 +28,7 @@ export const SubscriptionTabPanel = () => (
 	</Panel>
 );
 
-export const AddressTabPanel = () => (
+export const AddressTextPanel = () => (
 	<Panel header={__('Address tab', 'kudos-donations')}>
 		<TextControl
 			name="address_title"
@@ -41,7 +41,7 @@ export const AddressTabPanel = () => (
 	</Panel>
 );
 
-export const MessageTabPanel = () => (
+export const MessageTextPanel = () => (
 	<Panel header={__('Message tab', 'kudos-donations')}>
 		<TextControl
 			name="message_title"
@@ -54,7 +54,7 @@ export const MessageTabPanel = () => (
 	</Panel>
 );
 
-export const PaymentTabPanel = () => (
+export const PaymentTextPanel = () => (
 	<Panel header={__('Payment tab', 'kudos-donations')}>
 		<TextControl
 			name="payment_title"
