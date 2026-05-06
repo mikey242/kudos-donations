@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react';
-import { Slot, SlotFillProvider } from '@wordpress/components';
-import { Spacer } from '../components';
+import { Flex, SlotFillProvider } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../pages';
 import { NuqsAdapter } from 'nuqs/adapters/react';
-import { SLOT_PAGE_TITLE } from '../slot-names';
-import { createContext, useContext } from '@wordpress/element';
-interface AdminContextValue {}
+import { createContext, useContext, useState } from '@wordpress/element';
+
+interface AdminContextValue {
+	setPageTitle: (title: string | null) => void;
+}
 
 interface ProviderProps {
 	children: ReactNode;
@@ -28,13 +29,18 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 };
 
 export const InnerAdminProvider = ({ children }) => {
+	const [pageTitle, setPageTitle] = useState<string | null>(null);
+
 	return (
-		<AdminContext.Provider value={{}}>
+		<AdminContext.Provider value={{ setPageTitle }}>
 			<SlotFillProvider>
 				<AdminHeader />
+				{pageTitle && (
+					<Flex justify="center">
+						<h2>{pageTitle}</h2>
+					</Flex>
+				)}
 				<Notices />
-				<Spacer size={7} />
-				<Slot name={SLOT_PAGE_TITLE} />
 				<>{children}</>
 			</SlotFillProvider>
 		</AdminContext.Provider>

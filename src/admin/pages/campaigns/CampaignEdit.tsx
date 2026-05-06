@@ -1,4 +1,4 @@
-import { useEffect } from '@wordpress/element';
+import { useEffect, useLayoutEffect } from '@wordpress/element';
 import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -14,7 +14,7 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useEntitiesContext } from '../../contexts';
+import { useEntitiesContext, useAdminContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
@@ -43,6 +43,15 @@ const CampaignEdit = (): ReactNode => {
 	const { updateParams } = useAdminQueryParams();
 	const { handleUpdate, currentEntity: campaign } =
 		useEntitiesContext<Campaign>();
+	const { setPageTitle } = useAdminContext();
+
+	useLayoutEffect(() => {
+		if (campaign?.title) {
+			setPageTitle(`Edit: ${campaign.title}`);
+		}
+		return () => setPageTitle(null);
+	}, [campaign?.title, setPageTitle]);
+
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
