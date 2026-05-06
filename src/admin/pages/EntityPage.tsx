@@ -1,9 +1,6 @@
-import { useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
 import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
-import apiFetch from '@wordpress/api-fetch';
-import { addQueryArgs } from '@wordpress/url';
 import { Fill } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
