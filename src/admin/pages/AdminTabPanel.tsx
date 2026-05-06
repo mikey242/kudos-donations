@@ -49,7 +49,7 @@ export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 			>
 				{(tab) => (
 					<VStack spacing={4}>
-						{tab.panels.map(({ name, content }) => (
+						{tab.panels?.map(({ name, content }) => (
 							<Fragment key={name}>{content}</Fragment>
 						))}
 					</VStack>
