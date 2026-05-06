@@ -46,7 +46,9 @@ export const EntityPage = ({
 	return (
 		<>
 			{entityActions.length > 0 && (
-				<Fill name={SLOT_HEADER_ACTIONS_EXTRA}>{entityActions}</Fill>
+				<Fill name={SLOT_HEADER_ACTIONS_EXTRA}>
+					<>{entityActions}</>
+				</Fill>
 			)}
 			{entityId && renderEdit ? (
 				<div className="admin-wrap">{renderEdit()}</div>

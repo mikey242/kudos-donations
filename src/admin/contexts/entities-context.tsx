@@ -344,7 +344,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				queryParams: params,
 			}}
 		>
-			{children}
+			<>{children}</>
 		</EntitiesContext.Provider>
 	);
 };
