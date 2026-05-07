@@ -12,7 +12,6 @@ import { useSettingsContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
-import { isLicenceActive } from '../../../utils/licence';
 
 interface SaveButtonProps {
 	isSaving: boolean;
@@ -35,8 +34,13 @@ export const SaveButton = ({
 );
 
 export const SettingsPage = (): React.ReactNode => {
-	const { settingsReady, settingsSaving, updateSettings, settings } =
-		useSettingsContext<AllSettings>();
+	const {
+		settingsReady,
+		settingsSaving,
+		updateSettings,
+		settings,
+		isLicenceActive,
+	} = useSettingsContext<AllSettings>();
 	const formMethods = useForm({
 		defaultValues: settings,
 	});
@@ -72,17 +76,14 @@ export const SettingsPage = (): React.ReactNode => {
 					<Fill name={SLOT_HEADER_ACTIONS}>
 						<FlexItem>
 							<span className="status-text">
-								{isLicenceActive(
-									settings._kudos_licence_status
-								) && __('licence active', 'kudos-donations')}
+								{isLicenceActive &&
+									__('licence active', 'kudos-donations')}
 							</span>
 						</FlexItem>
 						<FlexItem>
 							<span
 								className={clsx(
-									isLicenceActive(
-										settings._kudos_licence_status
-									)
+									isLicenceActive
 										? 'ready status-icon'
 										: 'not-ready'
 								)}

@@ -41,7 +41,6 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		Localization::add_global( 'isLicenceActive', self::is_active() );
 		Localization::add_global( 'isAddonInstalled', apply_filters( 'kudos_is_addon_installed', false ) );
 		add_filter( 'pre_update_option_' . self::SETTING_KUDOS_LICENCE_KEY, [ $this, 'handle_key_update' ], 10, 2 );
 	}

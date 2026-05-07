@@ -17,9 +17,11 @@ import { IntroGuide } from '../pages';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 import { dirtyValues } from '../../utils';
+import { isLicenceActive } from '../../utils/licence';
 
 interface SettingsContextValue<T extends BaseSettings> {
 	settings: T;
+	isLicenceActive: boolean;
 	setSettings: (newSettings: T) => void;
 	checkingApiKey: boolean;
 	fetchSettings: () => Promise<void>;
@@ -146,6 +148,10 @@ export const SettingsProvider = <T extends BaseSettings>({
 		});
 	}
 
+	const licenceActive = isLicenceActive(
+		(settings as any)._kudos_licence_status ?? {}
+	);
+
 	async function checkApiKey(): Promise<any> {
 		setCheckingApiKey(true);
 		return apiFetch({
@@ -168,6 +174,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 		<SettingsContext.Provider
 			value={{
 				settings,
+				isLicenceActive: licenceActive,
 				checkingApiKey,
 				checkApiKey,
 				fetchSettings,

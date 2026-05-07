@@ -40,7 +40,6 @@ export interface KudosGlobal {
 	currencies: Record<string, string>;
 	countries: Record<string, string>;
 	env?: string;
-	isLicenceActive: boolean;
 	isAddonInstalled: boolean;
 	debug?: boolean;
 	admin?: KudosAdminData;
