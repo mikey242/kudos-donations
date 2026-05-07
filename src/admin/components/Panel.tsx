@@ -31,7 +31,7 @@ export const Panel = ({
 	footer = null,
 	initialOpen = true,
 	spacing = 5,
-	disabled = true,
+	disabled = false,
 }: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
 	return (
