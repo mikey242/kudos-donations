@@ -768,7 +768,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			// Save new transaction.
 			$transaction    = new TransactionEntity(
 				[
-					'donor_id'           => $donor_id ?? '',
+					'donor_id'           => null !== $donor_id ? (int) $donor_id : null,
 					'campaign_id'        => $campaign_id,
 					'subscription_id'    => $subscription_id,
 					'vendor_customer_id' => $subscription->customerId,
