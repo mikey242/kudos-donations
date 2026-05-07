@@ -47,7 +47,7 @@ export const Panel = ({
 			</CardHeader>
 			<Disabled isDisabled={disabled}>
 				{open && (
-					<CardBody style={disabled && { opacity: '0.5' }}>
+					<CardBody style={disabled ? { opacity: 0.5 } : undefined}>
 						<VStack spacing={spacing}>{children}</VStack>
 					</CardBody>
 				)}
