@@ -71,13 +71,10 @@ const AddonPanel = () => {
 		);
 	} else if (installState === 'installed') {
 		addonButton = (
-			<Button
-				type="button"
-				disabled={true}
-				icon={<Icon icon="yes-alt" />}
-			>
+			<p style={{ color: 'var(--kudos-colour-success)' }}>
+				<Icon icon="yes-alt" />{' '}
 				{__('Add-on installed', 'kudos-donations')}
-			</Button>
+			</p>
 		);
 	} else {
 		addonButton = (
@@ -176,7 +173,10 @@ const LicenceKeyPanel = () => {
 				<Flex
 					justify="flex-end"
 					gap={1}
-					style={{ marginBottom: '1em' }}
+					style={{
+						marginBottom: '1em',
+						color: 'var(--kudos-colour-success)',
+					}}
 				>
 					<Icon icon="yes-alt" />
 					<span>
