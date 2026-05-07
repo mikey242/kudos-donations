@@ -36,6 +36,8 @@
 		"@tailwindcss/forms": "^0.5.10",
 		"@types/codemirror": "^5.60.15",
 		"@types/lodash": "^4.17.16",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
 		"@types/react-select-country-list": "^2.2.3",
 		"@wordpress/api-fetch": "^7.44.0",
 		"@wordpress/babel-preset-default": "^8.44.0",
@@ -101,13 +103,13 @@
 		"fixtures": "wp-env run cli wp kudos:fixtures:all --delete --force",
 		"make-zip": "rm -f kudos-donations.zip && php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 	},
+	"overrides": {
+		"@types/react": "$@types/react",
+		"@types/react-dom": "$@types/react-dom"
+	},
 	"wp-env": {
 		"plugin-dir": "kudos-donations",
 		"plugin-name": "Kudos Donations",
 		"welcome-build-command": "npm run production"
-	},
-	"overrides": {
-		"@types/react": "$@types/react",
-		"@types/react-dom": "$@types/react-dom"
 	}
 }
