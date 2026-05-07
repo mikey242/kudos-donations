@@ -17,9 +17,11 @@ import { confirmDelete } from '../../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 import { getCurrencySymbol } from '../../../utils/currency';
-export const CampaignsTable = ({ handleEdit, handleNew }): ReactNode => {
-	const { setParams } = useAdminQueryParams();
+export const CampaignsTable = ({ handleNew }): ReactNode => {
+	const { setParams, updateParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
+
+	const handleEdit = (id: number) => void updateParams({ entity: id });
 
 	const changeView = (postId: number) => {
 		void setParams({

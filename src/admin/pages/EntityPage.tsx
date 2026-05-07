@@ -8,7 +8,6 @@ import React, { ReactNode } from 'react';
 
 interface EntityPageProps {
 	renderTable: (
-		editPost: (id: string | number) => void,
 		newPost: (e: React.SyntheticEvent | Partial<BaseEntity>) => void
 	) => React.ReactNode;
 	renderEdit?: () => React.ReactNode;
@@ -30,10 +29,6 @@ export const EntityPage = ({
 		});
 	};
 
-	const editPost = (id: number) => {
-		void updateParams({ entity: id });
-	};
-
 	const entityActions = applyFilters(
 		'kudosEntityPageActions',
 		[],
@@ -50,9 +45,7 @@ export const EntityPage = ({
 			{entityId && renderEdit ? (
 				<div className="admin-wrap">{renderEdit()}</div>
 			) : (
-				<div className="admin-wrap-wide">
-					{renderTable(editPost, newPost)}
-				</div>
+				<div className="admin-wrap-wide">{renderTable(newPost)}</div>
 			)}
 		</>
 	);

@@ -7,10 +7,12 @@ import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { confirmDelete } from '../../../utils';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-export const DonorsTable = ({ handleEdit }): React.ReactNode => {
+export const DonorsTable = (): React.ReactNode => {
 	const { settings } = useSettingsContext();
-	const { setParams } = useAdminQueryParams();
+	const { setParams, updateParams } = useAdminQueryParams();
 	const { handleDelete } = useEntitiesContext();
+
+	const handleEdit = (id: number) => void updateParams({ entity: id });
 
 	const changeView = (postId: number) => {
 		void setParams({

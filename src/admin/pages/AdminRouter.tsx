@@ -33,11 +33,8 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 				entityType="campaign"
 			>
 				<EntityPage
-					renderTable={(editEntity, newEntity) => (
-						<CampaignsTable
-							handleNew={newEntity}
-							handleEdit={editEntity}
-						/>
+					renderTable={(newEntity) => (
+						<CampaignsTable handleNew={newEntity} />
 					)}
 					renderEdit={() => <CampaignEdit />}
 				/>
@@ -55,9 +52,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 				entityType="transaction"
 			>
 				<EntityPage
-					renderTable={(editEntity) => (
-						<TransactionsTable handleEdit={editEntity} />
-					)}
+					renderTable={() => <TransactionsTable />}
 					renderEdit={() => <TransactionEdit />}
 				/>
 			</EntitiesProvider>
@@ -74,9 +69,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 				entityType="subscription"
 			>
 				<EntityPage
-					renderTable={(editEntity) => (
-						<SubscriptionsTable handleEdit={editEntity} />
-					)}
+					renderTable={() => <SubscriptionsTable />}
 					renderEdit={() => (
 						<SingleEntityEdit
 							fields={[
@@ -158,9 +151,7 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 				entityType="donor"
 			>
 				<EntityPage
-					renderTable={(editEntity) => (
-						<DonorsTable handleEdit={editEntity} />
-					)}
+					renderTable={() => <DonorsTable />}
 					renderEdit={() => (
 						<SingleEntityEdit
 							fields={[

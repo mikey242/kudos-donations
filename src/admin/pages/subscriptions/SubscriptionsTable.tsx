@@ -26,8 +26,10 @@ const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	completed: { title: __('Completed', 'kudos-donations'), icon: 'yes' },
 };
 
-export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
-	const { setParams } = useAdminQueryParams();
+export const SubscriptionsTable = (): React.ReactNode => {
+	const { setParams, updateParams } = useAdminQueryParams();
+
+	const handleEdit = (id: number) => void updateParams({ entity: id });
 	const { settings } = useSettingsContext();
 	const { handleDelete, fetchEntities } = useEntitiesContext();
 	const { createSuccessNotice, createErrorNotice } =

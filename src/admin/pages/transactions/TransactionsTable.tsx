@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import { useAdminQueryParams } from '../../hooks';
 import { confirmDelete } from '../../../utils';
 import type { Campaign, Transaction } from '../../../types/entity';
 import {
@@ -21,9 +22,12 @@ const transactionStatusConfig: Record<string, StatusConfig> = {
 	failed: { title: __('Failed', 'kudos-donations'), icon: 'warning' },
 };
 
-export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
+export const TransactionsTable = (): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { handleDelete } = useEntitiesContext();
+	const { updateParams } = useAdminQueryParams();
+
+	const handleEdit = (id: number) => void updateParams({ entity: id });
 
 	const headerItems: HeaderItem[] = [
 		{
