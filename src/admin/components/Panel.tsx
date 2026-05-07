@@ -9,9 +9,10 @@ import {
 	Flex,
 	FlexBlock,
 	CardFooter,
+	Disabled,
 } from '@wordpress/components';
-import React from 'react';
 import { useState } from '@wordpress/element';
+import React from 'react';
 
 interface PanelProps {
 	header: string;
@@ -20,6 +21,7 @@ interface PanelProps {
 	footer?: React.ReactNode;
 	initialOpen?: boolean;
 	spacing?: number;
+	disabled?: boolean;
 }
 
 export const Panel = ({
@@ -29,6 +31,7 @@ export const Panel = ({
 	footer = null,
 	initialOpen = true,
 	spacing = 5,
+	disabled = true,
 }: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
 	return (
@@ -42,12 +45,14 @@ export const Panel = ({
 				</Heading>
 				{headerExtra && <>{headerExtra}</>}
 			</CardHeader>
-			{open && (
-				<CardBody>
-					<VStack spacing={spacing}>{children}</VStack>
-				</CardBody>
-			)}
-			{footer && <CardFooter>{footer}</CardFooter>}
+			<Disabled isDisabled={disabled}>
+				{open && (
+					<CardBody style={disabled && { opacity: '0.5' }}>
+						<VStack spacing={spacing}>{children}</VStack>
+					</CardBody>
+				)}
+				{footer && <CardFooter>{footer}</CardFooter>}
+			</Disabled>
 		</Card>
 	);
 };
