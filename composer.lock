@@ -450,16 +450,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.10.0",
+            "version": "v3.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "ef526b9e4eb0c87e294f275e4f11d07b33e08a34"
+                "reference": "6c12186d53e9368b66d35da23c2b879c7a1c8616"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/ef526b9e4eb0c87e294f275e4f11d07b33e08a34",
-                "reference": "ef526b9e4eb0c87e294f275e4f11d07b33e08a34",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/6c12186d53e9368b66d35da23c2b879c7a1c8616",
+                "reference": "6c12186d53e9368b66d35da23c2b879c7a1c8616",
                 "shasum": ""
             },
             "require": {
@@ -540,9 +540,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.10.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.11.0"
             },
-            "time": "2026-04-15T10:56:54+00:00"
+            "time": "2026-05-06T16:15:18+00:00"
         },
         {
             "name": "monolog/monolog",
