@@ -116,6 +116,7 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.2.9 =
 * Make single fixed value more useful by removing need to click by pre-setting the value
 * Add missing container id
+* Fix rare instance where donor_id is passed as a string to a new transaction
 * Update dependencies
 
 = 4.2.8 =
