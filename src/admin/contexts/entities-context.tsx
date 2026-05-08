@@ -15,17 +15,11 @@ import { Icon } from '@wordpress/components';
 import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
-import { addQueryArgs } from '@wordpress/url';
-
-interface QueryArgs {
-	page?: number;
-	per_page?: number;
-	columns?: string[];
-	orderby?: string;
-	order?: string;
-	where?: Record<string, string | number>;
-	[key: string]: unknown;
-}
+import {
+	queryEntities as queryEntitiesApi,
+	type QueryArgs,
+	type EntityRestResponse,
+} from '../utils/query-entities';
 
 interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	entities: T[];
@@ -45,11 +39,7 @@ interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	queryParams: ReturnType<typeof useAdminQueryParams>['params'];
 }
 
-export interface EntityRestResponse<T extends BaseEntity> {
-	items: T[];
-	total: number;
-	total_pages: number;
-}
+export type { EntityRestResponse };
 
 const EntitiesContext = createContext<EntitiesContextValue<any> | null>(null);
 
@@ -85,30 +75,8 @@ export const EntitiesProvider = <T extends BaseEntity>({
 	});
 
 	const queryEntities = useCallback(
-		async (args: QueryArgs): Promise<EntityRestResponse<T>> => {
-			let response: Response;
-			try {
-				response = await apiFetch({
-					path: addQueryArgs(`/kudos/v1/${entityType}`, args),
-					parse: false,
-				});
-			} catch (e: any) {
-				// apiFetch rejects with the raw Response on non-ok status
-				if (e instanceof Response) {
-					throw await e.json();
-				}
-				throw e;
-			}
-			const items: T[] = await response.json();
-			return {
-				items,
-				total: parseInt(response.headers.get('X-WP-Total') ?? '0', 10),
-				total_pages: parseInt(
-					response.headers.get('X-WP-TotalPages') ?? '1',
-					10
-				),
-			};
-		},
+		(args: QueryArgs): Promise<EntityRestResponse<T>> =>
+			queryEntitiesApi<T>(entityType, args),
 		[entityType]
 	);
 

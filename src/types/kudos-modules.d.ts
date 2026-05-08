@@ -33,12 +33,16 @@ declare module '@kudos/admin-components' {
 	} from '../admin/components';
 }
 
+declare module '@kudos/admin-utils' {
+	export { queryEntities, getLicenceStatus } from '../admin/utils';
+	export type { QueryArgs, EntityRestResponse } from '../admin/utils';
+}
+
 declare module '@kudos/admin-contexts' {
 	export {
 		AdminProvider,
 		useAdminContext,
 		EntitiesProvider,
-		EntityRestResponse,
 		useEntitiesContext,
 		SettingsProvider,
 		useSettingsContext,

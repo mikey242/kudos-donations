@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
-import type { LicenceStatus, LicenceStatusString } from '../types/licence';
+import type { LicenceStatus, LicenceStatusString } from '../../types/licence';
 
 export const isLicenceActive = (
 	status: LicenceStatus | Record<string, never>

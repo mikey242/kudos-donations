@@ -7,9 +7,14 @@ import { AdminRouter } from './pages';
 import * as Controls from './controls';
 import * as Components from './components';
 import * as Contexts from './contexts';
-import { getLicenceStatus } from '../utils/licence';
+import * as Utils from './utils';
 
-window.kudos.admin.api = { Controls, Components, Contexts, getLicenceStatus };
+window.kudos.admin.api = {
+	Controls,
+	Components,
+	Contexts,
+	Utils,
+};
 
 domReady(() => {
 	const container = document.getElementById('root');

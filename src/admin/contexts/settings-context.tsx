@@ -17,7 +17,7 @@ import { IntroGuide } from '../pages';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 import { dirtyValues } from '../../utils';
-import { isLicenceActive } from '../../utils/licence';
+import { isLicenceActive } from '../utils';
 
 interface SettingsContextValue<T extends BaseSettings> {
 	settings: T;

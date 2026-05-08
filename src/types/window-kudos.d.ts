@@ -1,5 +1,4 @@
 import CodeMirror from 'codemirror';
-import type { LicenceStatusString } from './licence';
 
 export interface KudosNotice {
 	id: string;
@@ -17,7 +16,7 @@ export interface KudosAdminData {
 		Controls: typeof import('../admin/controls');
 		Components: typeof import('../admin/components');
 		Contexts: typeof import('../admin/contexts');
-		getLicenceStatus: () => Promise<LicenceStatusString>;
+		Utils: typeof import('../admin/utils');
 	};
 	demoMode?: boolean;
 	[key: string]: unknown;
