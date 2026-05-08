@@ -14,7 +14,7 @@ import {
 import { useState } from '@wordpress/element';
 import React from 'react';
 
-interface PanelProps {
+export interface PanelProps {
 	header: string;
 	headerExtra?: React.ReactNode;
 	children: React.ReactNode;
