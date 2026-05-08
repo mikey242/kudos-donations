@@ -161,6 +161,11 @@ body.admin-color-modern {
 		margin: auto;
 	}
 
+	.admin-wrap-extra-wide {
+		max-width: 1290px;
+		margin: auto;
+	}
+
 	.kudos-settings-tab-panel {
 
 		.components-tab-panel__tabs {
