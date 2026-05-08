@@ -3,13 +3,13 @@ import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import { copySmall } from '@wordpress/icons';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalDivider as Divider,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
 	Button,
-	Icon,
 	Modal,
 	RadioControl,
 } from '@wordpress/components';
@@ -38,9 +38,9 @@ export default function GenerateShortcode({
 	const closeModal = () => setOpen(false);
 
 	const onCopy = () => {
+		closeModal();
 		void createSuccessNotice(__('Shortcode copied', 'kudos-donations'), {
 			type: 'snackbar',
-			icon: <Icon icon="clipboard" />,
 		});
 	};
 
@@ -137,9 +137,8 @@ export default function GenerateShortcode({
 					<Button
 						ref={copyRef}
 						type="button"
-						icon="clipboard"
+						icon={copySmall}
 						variant="secondary"
-						onClick={closeModal}
 					>
 						{__('Copy shortcode', 'kudos-donations')}
 					</Button>
