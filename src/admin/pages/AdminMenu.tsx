@@ -1,9 +1,14 @@
 import { Button, Flex } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
 import { useAdminQueryParams } from '../hooks';
-import { AdminPages } from './AdminRouter';
+import { defaultAdminPages, type PageConfig } from './AdminRouter';
 import type { ReactNode, MouseEvent } from 'react';
 
 export const AdminMenu = (): ReactNode => {
+	const adminPages = applyFilters(
+		'kudosAdminPages',
+		defaultAdminPages
+	) as PageConfig[];
 	const { params, setParams } = useAdminQueryParams();
 	const { page: currentView } = params;
 
@@ -16,7 +21,7 @@ export const AdminMenu = (): ReactNode => {
 	return (
 		<div className="kudos-admin-menu">
 			<Flex className="admin-wrap" justify="center" align="center">
-				{AdminPages.map(({ label, view, icon }) => {
+				{adminPages.map(({ label, view, icon }) => {
 					const isActive = currentView === view;
 					return (
 						<Button

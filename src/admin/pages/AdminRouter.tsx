@@ -21,7 +21,7 @@ export interface PageConfig {
 	component: () => ReactNode;
 }
 
-export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
+export const defaultAdminPages: PageConfig[] = [
 	{
 		label: __('Campaigns', 'kudos-donations'),
 		view: 'kudos-campaigns',
@@ -210,13 +210,17 @@ export const AdminPages: PageConfig[] = applyFilters('kudosAdminPages', [
 		icon: 'admin-settings',
 		component: () => <SettingsPage />,
 	},
-]) as PageConfig[];
+];
 
 export const AdminRouter = (): ReactNode => {
+	const adminPages = applyFilters(
+		'kudosAdminPages',
+		defaultAdminPages
+	) as PageConfig[];
 	const { params } = useAdminQueryParams();
-	const page = params.page || AdminPages[0].view;
+	const page = params.page || adminPages[0].view;
 
-	const pageConfig = AdminPages.find((p) => p.view === page);
+	const pageConfig = adminPages.find((p) => p.view === page);
 
 	if (!pageConfig) {
 		return (
