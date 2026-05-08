@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.9
+Stable tag: 4.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,9 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+= 4.2.10 =
+* Fix success notification not shown after copying shortcode to clipboard
 
 = 4.2.9 =
 * Make single fixed value more useful by removing need to click by pre-setting the value
