@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class SubscriptionEntity extends BaseEntity {
 
+	public ?float $total = null;
 	public ?int $transaction_id;
 	public ?TransactionEntity $transaction;
 	public string $status;

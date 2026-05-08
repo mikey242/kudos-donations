@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Domain\Entity;
 class CampaignEntity extends BaseEntity {
 
 	public string $currency;
-	public ?float $total;
+	public ?float $total = null;
 	public ?float $goal;
 	public bool $show_goal;
 	public ?float $additional_funds;

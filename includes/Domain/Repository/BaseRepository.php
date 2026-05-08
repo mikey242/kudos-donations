@@ -289,12 +289,34 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		if ( ! empty( $parts['params'] ) ) {
 			$sql = $this->wpdb->prepare( $sql, ...$parts['params'] );
 
-			if ( false === $sql ) {
+			if ( null === $sql ) {
 				return 0;
 			}
 		}
 
 		return (int) $this->wpdb->get_var( (string) $sql );
+	}
+
+	/**
+	 * Sum a column for results of a specific query.
+	 *
+	 * @param string                     $column The column to sum.
+	 * @param array<string, scalar|null> $where  The WHERE clause.
+	 */
+	public function sum_query( string $column, array $where = [] ): float {
+		$parts     = $this->build_where_clause( $where );
+		$where_sql = $parts['condition'] ? 'WHERE ' . $parts['condition'] : '';
+		$sql       = "SELECT SUM(`$column`) FROM $this->table $where_sql";
+
+		if ( ! empty( $parts['params'] ) ) {
+			$sql = $this->wpdb->prepare( $sql, ...$parts['params'] );
+
+			if ( null === $sql ) {
+				return 0.0;
+			}
+		}
+
+		return (float) $this->wpdb->get_var( (string) $sql );
 	}
 
 	/**
