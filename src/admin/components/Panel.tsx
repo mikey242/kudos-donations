@@ -22,6 +22,7 @@ interface PanelProps {
 	initialOpen?: boolean;
 	spacing?: number;
 	disabled?: boolean;
+	collapsable?: boolean;
 }
 
 export const Panel = ({
@@ -32,13 +33,14 @@ export const Panel = ({
 	initialOpen = true,
 	spacing = 5,
 	disabled = false,
+	collapsable = true,
 }: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
 	return (
 		<Card>
 			<CardHeader
-				style={{ cursor: 'pointer' }}
-				onClick={() => setOpen(!open)}
+				style={{ cursor: collapsable ? 'pointer' : 'default' }}
+				onClick={collapsable ? () => setOpen(!open) : null}
 			>
 				<Heading size={16} level={3}>
 					{header}
