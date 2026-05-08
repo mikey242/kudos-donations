@@ -322,16 +322,43 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Generate the WHERE SQL clause.
 	 *
-	 * @param array<string, scalar|null> $criteria The criteria.
+	 * Supports equality shorthand: [ 'column' => $value ]
+	 * and range operators: [ 'column' => [ 'operator' => '>=', 'value' => $value ] ]
+	 * For BETWEEN: [ 'column' => [ 'operator' => 'BETWEEN', 'value' => [ $from, $to ] ] ]
+	 *
+	 * @param array $criteria The criteria.
 	 */
 	private function build_where_clause( array $criteria ): array {
-		$clauses = [];
-		$params  = [];
+		$clauses           = [];
+		$params            = [];
+		$allowed_operators = [ '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'BETWEEN' ];
 
 		foreach ( $criteria as $column => $value ) {
 			if ( ! $this->is_valid_column( $column ) ) {
 				continue;
 			}
+
+			if ( \is_array( $value ) && isset( $value['operator'], $value['value'] ) ) {
+				$operator = strtoupper( (string) $value['operator'] );
+				if ( ! \in_array( $operator, $allowed_operators, true ) ) {
+					continue;
+				}
+
+				if ( 'BETWEEN' === $operator ) {
+					if ( ! \is_array( $value['value'] ) || 2 !== \count( $value['value'] ) ) {
+						continue;
+					}
+					$clauses[] = "`$column` BETWEEN %s AND %s";
+					$params[]  = $value['value'][0];
+					$params[]  = $value['value'][1];
+				} else {
+					$format    = \is_int( $value['value'] ) ? '%d' : ( \is_float( $value['value'] ) ? '%f' : '%s' );
+					$clauses[] = "`$column` $operator $format";
+					$params[]  = $value['value'];
+				}
+				continue;
+			}
+
 			if ( null === $value ) {
 				$clauses[] = "`$column` IS NULL";
 			} elseif ( \is_int( $value ) ) {

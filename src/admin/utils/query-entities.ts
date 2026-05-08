@@ -2,13 +2,22 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import type { BaseEntity } from '../../types/entity';
 
+export type WhereValue =
+	| string
+	| number
+	| {
+			operator: '=' | '!=' | '>' | '>=' | '<' | '<=' | 'LIKE';
+			value: string | number;
+	  }
+	| { operator: 'BETWEEN'; value: [string | number, string | number] };
+
 export interface QueryArgs {
 	page?: number;
 	per_page?: number;
 	columns?: string[];
 	orderby?: string;
 	order?: string;
-	where?: Record<string, string | number>;
+	where?: Record<string, WhereValue>;
 	[key: string]: unknown;
 }
 

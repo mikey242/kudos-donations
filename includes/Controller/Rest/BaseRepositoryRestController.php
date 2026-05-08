@@ -367,9 +367,48 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	/**
 	 * Sanitizes known fields and filters out unknown ones.
 	 *
+	 * Supports scalar equality: [ 'column' => $value ]
+	 * and range operators: [ 'column' => [ 'operator' => '>=', 'value' => $value ] ]
+	 *
 	 * @param array $value The "where" value.
 	 */
 	public function sanitize_where_field( array $value ): array {
-		return $this->repository->get_schema()->sanitize_data_from_schema( $value );
+		$schema            = $this->repository->get_schema()->get_column_schema();
+		$allowed_operators = [ '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'BETWEEN' ];
+		$sanitized         = [];
+
+		foreach ( $value as $field => $condition ) {
+			if ( ! \array_key_exists( $field, $schema ) ) {
+				continue;
+			}
+
+			$callback = $schema[ $field ]['sanitize_callback'] ?? null;
+			$sanitize = fn( $v ) => $callback && \is_callable( $callback ) ? \call_user_func( $callback, $v ) : $v;
+
+			if ( \is_array( $condition ) && isset( $condition['operator'], $condition['value'] ) ) {
+				$operator = strtoupper( (string) $condition['operator'] );
+				if ( ! \in_array( $operator, $allowed_operators, true ) ) {
+					continue;
+				}
+
+				if ( 'BETWEEN' === $operator ) {
+					if ( ! \is_array( $condition['value'] ) || 2 !== \count( $condition['value'] ) ) {
+						continue;
+					}
+					$sanitized_value = array_map( $sanitize, array_values( $condition['value'] ) );
+				} else {
+					$sanitized_value = $sanitize( $condition['value'] );
+				}
+
+				$sanitized[ $field ] = [
+					'operator' => $operator,
+					'value'    => $sanitized_value,
+				];
+			} else {
+				$sanitized[ $field ] = $sanitize( $condition );
+			}
+		}
+
+		return $sanitized;
 	}
 }
