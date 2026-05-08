@@ -41,7 +41,7 @@ class Transaction extends BaseRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function prepare_item( BaseEntity $item ): array {
-		$item->campaign     = $this->repository->get_campaign( $item, [ 'title' ] );
+		$item->campaign     = $this->repository->get_campaign( $item, [ 'title', 'theme_color' ] );
 		$item->donor        = $this->repository->get_donor( $item, [ 'name', 'email' ] );
 		$item->subscription = $this->repository->get_subscription( $item );
 
