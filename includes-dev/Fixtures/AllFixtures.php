@@ -32,8 +32,8 @@ class AllFixtures {
 	 * [--count-transaction=<number>]
 	 * : How many transactions to create.
 	 *
-	 *  [--count-subscription=<number>]
-	 *  : How many subscriptions to create.
+	 * [--count-subscription=<number>]
+	 * : How many subscriptions to create.
 	 *
 	 * [--delete]
 	 * : Delete all existing entities before generating new ones.
