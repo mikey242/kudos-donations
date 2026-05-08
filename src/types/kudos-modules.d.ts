@@ -1,3 +1,16 @@
+declare module '@kudos/types' {
+	export type {
+		BaseEntity,
+		Transaction,
+		Subscription,
+		Donor,
+		Campaign,
+	} from '../types/entity';
+	export type { BaseSettings } from '../types/settings';
+	export type { LicenceStatus, LicenceStatusString } from '../types/licence';
+	export type { WPResponse, WPErrorResponse } from '../types/wp';
+}
+
 declare module '@kudos/admin-controls' {
 	export {
 		ControlProps,
@@ -34,7 +47,11 @@ declare module '@kudos/admin-components' {
 }
 
 declare module '@kudos/admin-utils' {
-	export { queryEntities, getLicenceStatus } from '../admin/utils';
+	export {
+		queryEntities,
+		getLicenceStatus,
+		isLicenceActive,
+	} from '../admin/utils';
 	export type { QueryArgs, EntityRestResponse } from '../admin/utils';
 }
 
