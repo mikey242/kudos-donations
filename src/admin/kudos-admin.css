@@ -5,6 +5,7 @@ body.admin-color-modern {
 	--wp-admin-theme-color: #ff9f1c;
 	--wp-admin-theme-color-darker-10: #ff8e1c;
 	--wp-admin-theme-color-darker-20: #ff821c;
+	--wp-admin-theme-secondary-color: #2ec4b6;
 }
 
 .rounded {
