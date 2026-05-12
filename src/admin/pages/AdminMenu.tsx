@@ -1,14 +1,10 @@
 import { Button, Flex } from '@wordpress/components';
-import { applyFilters } from '@wordpress/hooks';
 import { useAdminQueryParams } from '../hooks';
-import { defaultAdminPages, type PageConfig } from './AdminRouter';
+import { useAdminPages } from './AdminRouter';
 import type { ReactNode, MouseEvent } from 'react';
 
 export const AdminMenu = (): ReactNode => {
-	const adminPages = applyFilters(
-		'kudosAdminPages',
-		defaultAdminPages
-	) as PageConfig[];
+	const adminPages = useAdminPages();
 	const { params, setParams } = useAdminQueryParams();
 	const { page: currentView } = params;
 
