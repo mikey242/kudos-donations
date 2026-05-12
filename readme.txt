@@ -115,6 +115,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.10 =
 * Fix success notification not shown after copying shortcode to clipboard
+* Fix kudosAdminPages filter timing issue
 * Various security updates
 * Update dev dependencies
 
