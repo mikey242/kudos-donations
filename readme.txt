@@ -115,6 +115,8 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.10 =
 * Fix success notification not shown after copying shortcode to clipboard
+* Various security updates
+* Update dev dependencies
 
 = 4.2.9 =
 * Make single fixed value more useful by removing need to click by pre-setting the value
