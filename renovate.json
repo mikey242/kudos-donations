@@ -5,7 +5,7 @@
 		"mergeConfidence:all-badges"
 	],
 	"constraints": {
-		"php": "7.4.0"
+		"php": "7.4.33"
 	},
 	"constraintsFiltering": "strict",
 	"composer": {
