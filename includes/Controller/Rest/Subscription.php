@@ -16,9 +16,7 @@ use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
-use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
@@ -40,19 +38,16 @@ class Subscription extends BaseRepositoryRestController {
 	 */
 	protected BaseRepository $repository;
 	private ?PaymentProviderInterface $vendor;
-	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Subscription routes constructor.
 	 *
 	 * @param PaymentProviderFactory $factory Current vendor.
 	 * @param SubscriptionRepository $subscription Subscription repository.
-	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 */
-	public function __construct( PaymentProviderFactory $factory, SubscriptionRepository $subscription, TransactionRepository $transaction_repository ) {
-		$this->repository             = $subscription;
-		$this->vendor                 = $factory->get_provider();
-		$this->transaction_repository = $transaction_repository;
+	public function __construct( PaymentProviderFactory $factory, SubscriptionRepository $subscription ) {
+		$this->repository = $subscription;
+		$this->vendor     = $factory->get_provider();
 	}
 
 	/**
@@ -90,13 +85,6 @@ class Subscription extends BaseRepositoryRestController {
 		$item->transaction = $this->repository->get_transaction( $item );
 		$item->campaign    = $this->repository->get_campaign( $item );
 		$item->token       = EncryptionService::generate_token( (string) $item->id );
-		$item->total       = $this->transaction_repository->sum_query(
-			'value',
-			[
-				'subscription_id' => $item->id,
-				'status'          => PaymentStatus::PAID,
-			]
-		);
 		return (array) $item;
 	}
 

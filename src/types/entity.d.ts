@@ -32,7 +32,6 @@ export interface Subscription extends BaseEntity {
 	donor?: Donor;
 	campaign?: Campaign;
 	token: string;
-	total?: number;
 }
 
 export interface Donor extends BaseEntity {
@@ -46,7 +45,6 @@ export interface Donor extends BaseEntity {
 	country?: string;
 	vendor_customer_id?: string;
 	transaction_count?: number;
-	total?: number;
 }
 
 export interface Campaign extends BaseEntity {

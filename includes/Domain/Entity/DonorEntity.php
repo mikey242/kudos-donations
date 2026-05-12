@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class DonorEntity extends BaseEntity {
 
-	public ?float $total = null;
 	public ?string $mode;
 	public string $email;
 	public ?string $business_name;
