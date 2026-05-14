@@ -22,6 +22,7 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\ApiException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
@@ -135,7 +136,19 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	protected function config_client(): bool {
 		// Gets the key associated with the specified mode.
-		$mode   = $this->get_api_mode();
+		$mode = $this->get_api_mode();
+		if ( 'test' === $mode ) {
+			NoticeService::notice(
+				\sprintf(
+					// translators: %s is the URL to the Mollie settings page.
+					__( 'Mollie is currently in test mode, please <a href="%s">switch to live</a> before going to production.', 'kudos-donations' ),
+					admin_url( 'admin.php?page=kudos-settings&tab=mollie' )
+				),
+				NoticeService::WARNING,
+				false,
+				'mollie-test-mode'
+			);
+		}
 		$option = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
 		$key    = $this->get_decrypted_key( $option );
 

@@ -205,9 +205,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 					isColumnLayout={true}
 					label="Donation form"
 				>
-					<div>
-						<CampaignSelector />
-					</div>
+					<CampaignSelector />
 				</Placeholder>
 			)}
 		</div>
