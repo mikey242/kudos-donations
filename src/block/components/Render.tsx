@@ -66,7 +66,7 @@ export const Render = ({
 	);
 
 	return (
-		<root.div id="kudos-render-root">
+		<root.div className="kudos-render-root">
 			{/* Load global styles */}
 			{window.kudos?.front?.customStyles && (
 				<style>{window.kudos?.front?.customStyles}</style>
