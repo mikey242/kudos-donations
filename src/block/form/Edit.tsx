@@ -5,6 +5,7 @@ import { __ } from '@wordpress/i18n';
 import {
 	ExternalLink,
 	PanelBody,
+	Placeholder,
 	RadioControl,
 	SelectControl,
 	TextControl,
@@ -15,7 +16,7 @@ import type { Campaign } from '../../types/entity';
 import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';
-import { Message } from '../components';
+import { KudosLogo } from '../components';
 import { KudosButtonAttributes } from '../index';
 export const Edit = (props: BlockEditProps<KudosButtonAttributes>) => {
 	const { campaign_id } = props.attributes;
@@ -94,7 +95,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 
 	const CampaignSelector = () => (
 		<SelectControl
-			label={__('Select Campaign', 'kudos-donations')}
+			label={__('Campaign', 'kudos-donations')}
 			value={campaign?.id.toString() ?? ''}
 			onChange={onChangeCampaign}
 			options={options}
@@ -187,12 +188,27 @@ const ButtonEdit = (props: ButtonEditProps) => {
 					alignment={alignment}
 				/>
 			) : (
-				<Message
-					message={__(
-						'Please select a campaign from the sidebar',
+				<Placeholder
+					icon={
+						<KudosLogo
+							style={{
+								width: '24px',
+								height: '24px',
+								padding: '5px',
+							}}
+						/>
+					}
+					instructions={__(
+						'Please select a campaign',
 						'kudos-donations'
 					)}
-				/>
+					isColumnLayout={true}
+					label="Donation Form"
+				>
+					<div>
+						<CampaignSelector />
+					</div>
+				</Placeholder>
 			)}
 		</div>
 	);
