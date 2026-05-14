@@ -203,7 +203,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 						'kudos-donations'
 					)}
 					isColumnLayout={true}
-					label="Donation Form"
+					label="Donation form"
 				>
 					<div>
 						<CampaignSelector />
