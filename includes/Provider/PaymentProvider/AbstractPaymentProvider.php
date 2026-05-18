@@ -12,7 +12,10 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\AbstractProvider;
+use IseardMedia\Kudos\Service\NoticeService;
 
 /**
  * Base class for all payment providers.
@@ -23,6 +26,62 @@ use IseardMedia\Kudos\Provider\AbstractProvider;
  * across providers and cannot be accidentally omitted.
  */
 abstract class AbstractPaymentProvider extends AbstractProvider implements PaymentProviderInterface {
+
+	protected TransactionRepository $transaction_repository;
+
+	/**
+	 * Returns the shared webhook REST URL used by all payment providers.
+	 */
+	public static function get_webhook_url(): string {
+		return get_rest_url( null, 'kudos/v1/payment/webhook' );
+	}
+
+	/**
+	 * Enqueues an async action to process a payment status change for this provider.
+	 *
+	 * @param string $payment_id The vendor payment or session ID.
+	 */
+	final protected function enqueue_status_change_action( string $payment_id ): void {
+		Utils::enqueue_async_action(
+			'kudos_' . static::get_slug() . '_handle_status_change',
+			[ 'payment_id' => $payment_id ],
+			'kudos-donations'
+		);
+	}
+
+	/**
+	 * Displays an admin notice indicating this provider is in test mode.
+	 */
+	final protected function show_test_mode_notice(): void {
+		NoticeService::notice(
+			\sprintf(
+				// translators: 1: payment provider name, 2: URL to provider settings page.
+				__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
+				static::get_name(),
+				admin_url( 'admin.php?page=kudos-settings&tab=' . static::get_slug() )
+			),
+			NoticeService::WARNING,
+			false,
+			static::get_slug() . '-test-mode'
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity {
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		if ( null === $transaction || null === $transaction->vendor_payment_id ) {
+			$this->get_logger()->warning( 'sync_transaction_status: transaction not found or missing vendor ID', [ 'transaction_id' => $transaction_id ] );
+			return null;
+		}
+		try {
+			$this->handle_status_change( $transaction->vendor_payment_id );
+		} catch ( \Exception $e ) {
+			$this->get_logger()->error( $e->getMessage(), [ 'transaction_id' => $transaction_id ] );
+		}
+		return $this->transaction_repository->get( $transaction_id );
+	}
 
 	/**
 	 * Fires the transaction status hook.

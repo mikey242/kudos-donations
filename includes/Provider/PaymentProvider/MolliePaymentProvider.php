@@ -22,7 +22,6 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\ApiException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
@@ -51,7 +50,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	public const SETTING_PAYMENT_METHODS        = '_kudos_vendor_mollie_payment_methods';
 	public MollieApiClient $api_client;
 	private CampaignRepository $campaign_repository;
-	private TransactionRepository $transaction_repository;
 	private DonorRepository $donor_repository;
 	private SubscriptionRepository $subscription_repository;
 
@@ -138,16 +136,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		// Gets the key associated with the specified mode.
 		$mode = $this->get_api_mode();
 		if ( 'test' === $mode ) {
-			NoticeService::notice(
-				\sprintf(
-					// translators: %s is the URL to the Mollie settings page.
-					__( 'Mollie is currently in test mode, please <a href="%s">switch to live</a> before going to production.', 'kudos-donations' ),
-					admin_url( 'admin.php?page=kudos-settings&tab=mollie' )
-				),
-				NoticeService::WARNING,
-				false,
-				'mollie-test-mode'
-			);
+			$this->show_test_mode_notice();
 		}
 		$option = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
 		$key    = $this->get_decrypted_key( $option );
@@ -359,7 +348,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		// Cancel the subscription via Mollie's API.
 		try {
 			$response = $customer->cancelSubscription( $subscription->vendor_subscription_id );
-			$this->logger->info( 'Mollie subscription cancelled', [ 'subscription' => $subscription ] );
+			$this->get_logger()->info( 'Mollie subscription cancelled', [ 'subscription' => $subscription ] );
 
 			return ( PaymentStatus::CANCELED === $response->status );
 		} catch ( ApiException $e ) {
@@ -367,7 +356,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			try {
 				$mollie_subscription = $customer->getSubscription( $subscription->vendor_subscription_id );
 				if ( PaymentStatus::CANCELED === $mollie_subscription->status ) {
-					$this->logger->info( 'Subscription already cancelled with Mollie.', [ 'vendor_subscription_id' => $subscription->vendor_subscription_id ] );
+					$this->get_logger()->info( 'Subscription already cancelled with Mollie.', [ 'vendor_subscription_id' => $subscription->vendor_subscription_id ] );
 					return true;
 				}
             // phpcs:ignore
@@ -509,7 +498,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 
 		// Bail if no donor id found on transaction.
 		if ( null === $transaction->donor_id ) {
-			$this->logger->error( 'No donor found on transaction, aborting subscription creation', [ 'transaction' => $transaction ] );
+			$this->get_logger()->error( 'No donor found on transaction, aborting subscription creation', [ 'transaction' => $transaction ] );
 			return false;
 		}
 
@@ -517,7 +506,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 
 		// Bail if no vendor customer id.
 		if ( null === $vendor_customer_id ) {
-			$this->logger->error( 'No vendor id found on donor, aborting subscription creation', [ 'transaction' => $transaction ] );
+			$this->get_logger()->error( 'No vendor id found on donor, aborting subscription creation', [ 'transaction' => $transaction ] );
 			return false;
 		}
 
@@ -527,7 +516,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$customer   = $this->get_customer( $vendor_customer_id );
 
 		if ( null === $customer ) {
-			$this->logger->error( 'Customer not found with Mollie, aborting subscription creation', [ 'vendor_customer_id' => $vendor_customer_id ] );
+			$this->get_logger()->error( 'Customer not found with Mollie, aborting subscription creation', [ 'vendor_customer_id' => $vendor_customer_id ] );
 			return false;
 		}
 
@@ -555,7 +544,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 				$subscription_entity = $subscriptions->get( $subscription_id ); // Subscription entity needs to be re-fetched to get new title.
 
 				if ( false === $subscription_id ) {
-					$this->logger->error( 'Error inserting subscription into database, aborting subscription creation', [ 'subscription_entity' => $subscription_entity ] );
+					$this->get_logger()->error( 'Error inserting subscription into database, aborting subscription creation', [ 'subscription_entity' => $subscription_entity ] );
 					return false;
 				}
 
@@ -623,16 +612,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Returns the Mollie Rest URL.
-	 */
-	public static function get_webhook_url(): string {
-		$route = 'kudos/v1/payment/webhook';
-
-		// Otherwise, return normal rest URL.
-		return get_rest_url( null, $route );
-	}
-
-	/**
 	 * Mollie webhook handler.
 	 *
 	 * @param WP_REST_Request $request Request object.
@@ -669,30 +648,9 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		);
 
 		// Process the payment asynchronously.
-		Utils::enqueue_async_action(
-			'kudos_mollie_handle_status_change',
-			[ 'payment_id' => $payment_id ],
-			'kudos-donations'
-		);
+		$this->enqueue_status_change_action( $payment_id );
 
 		return $response;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity {
-		$transaction = $this->transaction_repository->get( $transaction_id );
-		if ( null === $transaction || null === $transaction->vendor_payment_id ) {
-			$this->logger->warning( 'sync_transaction_status: transaction not found or missing vendor ID', [ 'transaction_id' => $transaction_id ] );
-			return null;
-		}
-		try {
-			$this->handle_status_change( $transaction->vendor_payment_id );
-		} catch ( RequestException $e ) {
-			$this->logger->error( $e->getMessage(), [ 'transaction_id' => $transaction_id ] );
-		}
-		return $this->transaction_repository->get( $transaction_id );
 	}
 
 	/**
@@ -867,7 +825,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 
 				// Bail if failed to create subscription.
 				if ( false === $subscription_id ) {
-					$this->logger->error( 'Failed to create subscription.' );
+					$this->get_logger()->error( 'Failed to create subscription.' );
 					return;
 				}
 
