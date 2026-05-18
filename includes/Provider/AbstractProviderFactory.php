@@ -65,12 +65,17 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	abstract protected function get_interface_class(): string;
 
 	/**
-	 * Create a vendor instance.
+	 * Returns a provider instance.
 	 *
+	 * When $slug is null, resolves the currently active provider from settings,
+	 * falling back to the default vendor if the saved slug is not registered.
+	 *
+	 * @param string|null $slug Optional provider slug to look up directly.
 	 * @return T|null
 	 */
-	public function get_provider(): ?ProviderInterface {
-		$selected_vendor = (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
+	public function get_provider( ?string $slug = null ): ?ProviderInterface {
+		$resolved = $slug ?? (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
+
 		/** @var array<string, class-string<ProviderInterface>> $slug_map */
 		$slug_map = [];
 		/** @var class-string<ProviderInterface> $class */
@@ -78,7 +83,9 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 			$slug_map[ $class::get_slug() ] = $class;
 		}
 
-		$class = $slug_map[ $selected_vendor ] ?? $slug_map[ $this->get_default_vendor() ] ?? null;
+		$class = null === $slug
+			? ( $slug_map[ $resolved ] ?? $slug_map[ $this->get_default_vendor() ] ?? null )
+			: ( $slug_map[ $resolved ] ?? null );
 
 		if ( null === $class ) {
 			return null;
