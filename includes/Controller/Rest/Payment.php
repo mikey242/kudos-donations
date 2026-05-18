@@ -283,6 +283,7 @@ class Payment extends BaseRestController {
 
 			$donor_args = [
 				'mode'          => $this->vendor->get_api_mode(),
+				'vendor'        => $this->vendor::get_slug(),
 				'email'         => $args['email'],
 				'name'          => $args['name'],
 				'business_name' => $args['business_name'],
@@ -293,11 +294,12 @@ class Payment extends BaseRestController {
 				'locale'        => Utils::normalize_locale( $args['language'] ),
 			];
 
-			// Search for existing donor based on email and mode.
+			// Search for existing donor based on email, mode, and vendor.
 			$donor = $this->donor_repository->find_one_by(
 				[
-					'email' => $args['email'],
-					'mode'  => $this->vendor->get_api_mode(),
+					'email'  => $args['email'],
+					'mode'   => $this->vendor->get_api_mode(),
+					'vendor' => $this->vendor::get_slug(),
 				]
 			);
 

@@ -548,6 +548,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 						'transaction_id' => $transaction->id,
 						'donor_id'       => $transaction->donor_id,
 						'campaign_id'    => $transaction->campaign_id,
+						'vendor'         => self::get_slug(),
 					]
 				);
 				$subscription_id     = $subscriptions->insert( $subscription_entity );

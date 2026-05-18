@@ -36,6 +36,7 @@ class SubscriptionsTable extends BaseTable {
 			donor_id bigint(20) unsigned DEFAULT NULL,
 			campaign_id bigint(20) unsigned DEFAULT NULL,
 			transaction_id bigint(20) unsigned DEFAULT NULL,
+			vendor varchar(50) DEFAULT NULL,
 			vendor_customer_id varchar(255),
 			vendor_subscription_id varchar(255),
 			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

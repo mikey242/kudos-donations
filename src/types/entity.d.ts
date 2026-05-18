@@ -28,6 +28,7 @@ export interface Subscription extends BaseEntity {
 	status: string;
 	customer_id: string;
 	transaction_id?: number;
+	vendor?: string;
 	vendor_subscription_id?: string;
 	donor?: Donor;
 	campaign?: Campaign;
@@ -37,6 +38,7 @@ export interface Subscription extends BaseEntity {
 export interface Donor extends BaseEntity {
 	email: string;
 	mode: 'test' | 'live' | string;
+	vendor?: string;
 	name?: string;
 	business_name?: string;
 	street?: string;

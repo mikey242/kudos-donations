@@ -36,6 +36,7 @@ class DonorsTable extends BaseTable {
 			postcode varchar(50),
 			city varchar(100),
 			country char(2),
+			vendor varchar(50) DEFAULT NULL,
 			vendor_customer_id varchar(255),
 			locale char(5) DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,

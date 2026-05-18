@@ -24,6 +24,7 @@ class SubscriptionEntity extends BaseEntity {
 	public ?DonorEntity $donor;
 	public ?int $campaign_id;
 	public ?CampaignEntity $campaign;
+	public ?string $vendor;
 	public ?string $vendor_customer_id;
 	public ?string $vendor_subscription_id;
 	public ?string $token;

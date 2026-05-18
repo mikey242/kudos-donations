@@ -30,6 +30,7 @@ class DonorSchema extends BaseSchema {
 			'city'               => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'country'            => $this->make_schema_field( FieldType::STRING, [ $this, 'sanitize_country' ] ),
 			'locale'             => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'vendor'             => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'vendor_customer_id' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 		];
 	}
