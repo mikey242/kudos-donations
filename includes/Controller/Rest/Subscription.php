@@ -18,7 +18,6 @@ use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
-use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -37,17 +36,17 @@ class Subscription extends BaseRepositoryRestController {
 	 * @var SubscriptionRepository
 	 */
 	protected BaseRepository $repository;
-	private ?PaymentProviderInterface $vendor;
+	private PaymentProviderFactory $factory;
 
 	/**
 	 * Subscription routes constructor.
 	 *
-	 * @param PaymentProviderFactory $factory Current vendor.
+	 * @param PaymentProviderFactory $factory Payment provider factory.
 	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
 	public function __construct( PaymentProviderFactory $factory, SubscriptionRepository $subscription ) {
 		$this->repository = $subscription;
-		$this->vendor     = $factory->get_provider();
+		$this->factory    = $factory;
 	}
 
 	/**
@@ -138,8 +137,13 @@ class Subscription extends BaseRepositoryRestController {
 		 */
 		$subscription = $this->repository->get( $entity_id );
 
+		// Resolve the provider that owns this subscription, falling back to the active provider.
+		$provider = $subscription && $subscription->vendor
+			? $this->factory->get_provider( $subscription->vendor )
+			: $this->factory->get_provider();
+
 		// Cancel subscription with vendor.
-		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
+		$result = $subscription && $provider && $provider->cancel_subscription( $subscription );
 
 		if ( $result ) {
 			// Cancelling was successful. Update entity with cancelled status.
