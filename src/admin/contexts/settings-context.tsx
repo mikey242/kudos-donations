@@ -18,6 +18,7 @@ import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 import { dirtyValues } from '../../utils';
 import { isLicenceActive } from '../utils';
+import { doAction } from '@wordpress/hooks';
 
 interface SettingsContextValue<T extends BaseSettings> {
 	settings: T;
@@ -117,6 +118,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 							{ type: 'snackbar', icon: <Icon icon="saved" /> }
 						);
 						setSettings(response);
+						doAction('kudos_settings_saved', response);
 						resolve();
 					}, 500);
 				});
