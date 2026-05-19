@@ -24,4 +24,9 @@ interface ProviderInterface {
 	 * Initialise the provider's hooks and configuration.
 	 */
 	public function init(): void;
+
+	/**
+	 * Return true if provider is enabled.
+	 */
+	public static function is_enabled(): bool;
 }

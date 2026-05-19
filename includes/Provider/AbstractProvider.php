@@ -18,4 +18,11 @@ use Psr\Log\LoggerAwareInterface;
 abstract class AbstractProvider implements ProviderInterface, HasSettingsInterface, EncryptionAwareInterface, LoggerAwareInterface {
 	use SafeLoggerTrait;
 	use EncryptionAwareTrait;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function is_enabled(): bool {
+		return true;
+	}
 }

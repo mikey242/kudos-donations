@@ -11,6 +11,7 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
+use Exception;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\Utils;
@@ -77,7 +78,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 		}
 		try {
 			$this->handle_status_change( $transaction->vendor_payment_id );
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->get_logger()->error( $e->getMessage(), [ 'transaction_id' => $transaction_id ] );
 		}
 		return $this->transaction_repository->get( $transaction_id );
@@ -92,7 +93,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 * @param TransactionEntity $transaction The transaction whose status changed.
 	 */
 	final protected function on_transaction_status_changed( TransactionEntity $transaction ): void {
-		do_action( "kudos_transaction_{$transaction->status}", $transaction->id, static::get_slug() );
+		do_action( "kudos_transaction_$transaction->status", $transaction->id, static::get_slug() );
 	}
 
 	/**

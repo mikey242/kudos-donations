@@ -75,13 +75,7 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 */
 	public function get_provider( ?string $slug = null ): ?ProviderInterface {
 		$resolved = $slug ?? (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
-
-		/** @var array<string, class-string<ProviderInterface>> $slug_map */
-		$slug_map = [];
-		/** @var class-string<ProviderInterface> $class */
-		foreach ( array_keys( $this->provider_locator->getProvidedServices() ) as $class ) {
-			$slug_map[ $class::get_slug() ] = $class;
-		}
+		$slug_map = $this->get_enabled_slug_map();
 
 		$class = null === $slug
 			? ( $slug_map[ $resolved ] ?? $slug_map[ $this->get_default_vendor() ] ?? null )
@@ -108,17 +102,28 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 */
 	private function get_providers(): array {
 		$providers = [];
-
-		/**
-		 * @var class-string<ProviderInterface> $vendor_class
-		 */
-		foreach ( $this->provider_locator->getProvidedServices() as $vendor_class => $_ ) {
+		foreach ( $this->get_enabled_slug_map() as $slug => $class ) {
 			$providers[] = [
-				'slug'  => $vendor_class::get_slug(),
-				'label' => $vendor_class::get_name(),
+				'slug'  => $slug,
+				'label' => $class::get_name(),
 			];
 		}
-
 		return $providers;
+	}
+
+	/**
+	 * Returns a slug map of enabled providers.
+	 *
+	 * @return array<string, class-string<ProviderInterface>>
+	 */
+	private function get_enabled_slug_map(): array {
+		$slug_map = [];
+		/** @var class-string<ProviderInterface> $class */
+		foreach ( array_keys( $this->provider_locator->getProvidedServices() ) as $class ) {
+			if ( $class::is_enabled() ) {
+				$slug_map[ $class::get_slug() ] = $class;
+			}
+		}
+		return $slug_map;
 	}
 }
