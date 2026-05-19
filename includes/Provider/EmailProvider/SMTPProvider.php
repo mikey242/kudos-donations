@@ -58,6 +58,13 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_icon_svg(): string {
+		return '';
+	}
+
+	/**
 	 * Sets HTML as the content type.
 	 */
 	public function set_html_mail_content_type(): string {

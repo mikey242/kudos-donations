@@ -29,4 +29,9 @@ interface ProviderInterface {
 	 * Return true if provider is enabled.
 	 */
 	public static function is_enabled(): bool;
+
+	/**
+	 * Returns an svg logo.
+	 */
+	public static function get_icon_svg(): string;
 }

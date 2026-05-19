@@ -19,6 +19,7 @@ export interface KudosAdminData {
 		Utils: typeof import('../admin/utils');
 	};
 	demoMode?: boolean;
+	payment_vendors?: Array<{ slug: string; label: string; icon: string }>;
 	[key: string]: unknown;
 }
 

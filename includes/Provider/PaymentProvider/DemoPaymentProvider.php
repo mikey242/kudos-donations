@@ -23,7 +23,7 @@ use WP_REST_Response;
 
 class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationAwareInterface {
 
-	private TransactionRepository $transaction_repository;
+	protected TransactionRepository $transaction_repository;
 
 	/**
 	 * DemoPaymentProvider constructor.
@@ -55,6 +55,13 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 */
 	public static function get_slug(): string {
 		return 'demo';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_icon_svg(): string {
+		return '';
 	}
 
 	/**

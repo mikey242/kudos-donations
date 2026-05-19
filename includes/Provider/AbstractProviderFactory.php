@@ -106,6 +106,7 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 			$providers[] = [
 				'slug'  => $slug,
 				'label' => $class::get_name(),
+				'icon'  => $class::get_icon_svg(),
 			];
 		}
 		return $providers;
