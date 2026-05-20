@@ -61,7 +61,7 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 * {@inheritDoc}
 	 */
 	public static function get_icon_svg(): string {
-		return '';
+		return '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 300 300"><path d="M0 0h300v300H0z" style="display:inline;fill:#2ec4b6;fill-opacity:1;stroke-width:.79375;paint-order:stroke fill markers"/><path d="M88.586 79.91a43 43 0 0 1 11.302-1.498h100.224c3.914 0 7.694.527 11.292 1.498a28.64 28.64 0 0 0-25.61-15.817h-71.589A28.64 28.64 0 0 0 88.586 79.91M56.934 150a28.636 28.636 0 0 1 28.636-28.636h128.86A28.636 28.636 0 0 1 243.066 150v57.271a28.636 28.636 0 0 1-28.636 28.636H85.57a28.636 28.636 0 0 1-28.636-28.636Zm28.636-42.953c-3.914 0-7.694.523-11.302 1.497a28.64 28.64 0 0 1 25.62-15.817h100.224a28.64 28.64 0 0 1 25.61 15.817 43 43 0 0 0-11.292-1.497z" style="fill:#fff;fill-opacity:1;stroke-width:9.54522"/></svg>';
 	}
 
 	/**
