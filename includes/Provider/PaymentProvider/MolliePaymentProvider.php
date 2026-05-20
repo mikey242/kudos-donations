@@ -655,7 +655,9 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		);
 
 		// Process the payment asynchronously.
-		$this->enqueue_status_change_action( $payment_id );
+		if ( $payment_id ) {
+			$this->enqueue_status_change_action( $payment_id );
+		}
 
 		return $response;
 	}
