@@ -94,7 +94,7 @@
 		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
 		"lint:js": "wp-scripts lint-js ./src",
 		"packages-update": "wp-scripts packages-update",
-		"fixtures": "wp-env run cli wp kudos:fixtures:all --delete --force",
+		"fixtures": "wp-env run cli wp kudos:fixtures:all --delete --force --count-campaign=20 --count-donor=50 --count-transaction=200 --count-subscription=10",
 		"make-zip": "rm -f kudos-donations.zip && php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 	},
 	"overrides": {
