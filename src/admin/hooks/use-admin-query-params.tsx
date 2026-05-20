@@ -33,6 +33,7 @@ const defaultParams = {
 	tab: null,
 	page: '',
 	paged: 1,
+	panel: null,
 	...defaultTableFilterParams,
 };
 
@@ -44,7 +45,7 @@ export const useAdminQueryParams = () => {
 
 		tab: parseAsString.withDefault(defaultParams.tab),
 		page: parseAsString.withDefault(defaultParams.page),
-
+		panel: parseAsString.withDefault(defaultParams.panel),
 		paged: parseAsInteger
 			.withDefault(defaultParams.paged)
 			.withOptions({ history: 'push' }),

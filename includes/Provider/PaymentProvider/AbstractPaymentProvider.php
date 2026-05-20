@@ -59,7 +59,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 				// translators: 1: payment provider name, 2: URL to provider settings page.
 				__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
 				static::get_name(),
-				admin_url( 'admin.php?page=kudos-settings&tab=payment' )
+				admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
 			),
 			NoticeService::WARNING,
 			false,

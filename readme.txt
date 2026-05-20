@@ -116,6 +116,8 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.2.11 =
 * Improve block placeholder in block editor
 * Show admin notice when payment provider is in 'test' mode
+* Admin panels can now be highlighted based on the panel URL parameter
+* Admin snackbar notifications have new icons
 * Preparation for adding Stripe payment provider
 * Update wordpress monorepo
 * Update react-hook-form to v7.76.0

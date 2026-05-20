@@ -11,8 +11,9 @@ import {
 	CardFooter,
 	Disabled,
 } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useLayoutEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
+import { useAdminQueryParams } from '../hooks';
 
 const PanelFooter = ({ children }: { children: React.ReactNode }) => (
 	<>{children}</>
@@ -20,6 +21,7 @@ const PanelFooter = ({ children }: { children: React.ReactNode }) => (
 PanelFooter.displayName = 'Panel.Footer';
 
 export interface PanelProps {
+	name?: string;
 	header: string;
 	headerExtra?: React.ReactNode;
 	children: React.ReactNode;
@@ -30,6 +32,7 @@ export interface PanelProps {
 }
 
 export const Panel = ({
+	name = null,
 	header,
 	headerExtra,
 	children,
@@ -38,8 +41,12 @@ export const Panel = ({
 	disabled = false,
 	collapsable = true,
 }: PanelProps) => {
-	const [open, setOpen] = useState(initialOpen);
-
+	const {
+		params: { panel },
+	} = useAdminQueryParams();
+	const isHighlighted = name && panel === name;
+	const [open, setOpen] = useState(initialOpen || !!isHighlighted);
+	const ref = useRef(null);
 	const childArray = React.Children.toArray(children);
 	const footer = childArray.find(
 		(child) => React.isValidElement(child) && child.type === PanelFooter
@@ -48,8 +55,27 @@ export const Panel = ({
 		(child) => !(React.isValidElement(child) && child.type === PanelFooter)
 	);
 
+	useLayoutEffect(() => {
+		if (isHighlighted && ref.current) {
+			ref.current.scrollIntoView({
+				block: 'center',
+				behavior: 'smooth',
+			});
+		}
+	}, [isHighlighted]);
+
 	return (
-		<Card>
+		<Card
+			ref={ref}
+			style={
+				isHighlighted
+					? {
+							boxShadow:
+								'var(--wp-admin-theme-color) 0px 0px 0px 2px',
+						}
+					: undefined
+			}
+		>
 			<CardHeader
 				style={{ cursor: collapsable ? 'pointer' : 'default' }}
 				onClick={collapsable ? () => setOpen(!open) : null}
