@@ -110,7 +110,7 @@ const PaymentMethodsPanel = () => {
 					'kudos-donations'
 				)}
 			</p>
-			<Flex justify="space-between">
+			<Panel.Footer>
 				<ExternalLink href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring">
 					{__(
 						'Read more about Mollie recurring payments',
@@ -126,7 +126,7 @@ const PaymentMethodsPanel = () => {
 				>
 					{__('Refresh Payment Methods', 'kudos-donations')}
 				</Button>
-			</Flex>
+			</Panel.Footer>
 		</Panel>
 	);
 };
@@ -174,7 +174,7 @@ const ApiKeysPanel = () => {
 					</Disabled>
 				);
 			})}
-			<Flex justify="space-between">
+			<Panel.Footer>
 				<ExternalLink href="https://my.mollie.com/dashboard/developers/api-keys">
 					{__('Visit Mollie dashboard', 'kudos-donations')}.
 				</ExternalLink>
@@ -196,7 +196,7 @@ const ApiKeysPanel = () => {
 				>
 					{__('Reset Mollie', 'kudos-donations')}
 				</Button>
-			</Flex>
+			</Panel.Footer>
 		</Panel>
 	);
 };

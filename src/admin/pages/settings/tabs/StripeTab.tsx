@@ -92,7 +92,7 @@ const ApiKeysPanel = () => {
 					</Disabled>
 				);
 			})}
-			<Flex justify="space-between">
+			<Panel.Footer>
 				<ExternalLink href="https://dashboard.stripe.com/apikeys">
 					{__('Visit Stripe dashboard', 'kudos-donations')}.
 				</ExternalLink>
@@ -113,7 +113,7 @@ const ApiKeysPanel = () => {
 				>
 					{__('Reset Stripe', 'kudos-donations')}
 				</Button>
-			</Flex>
+			</Panel.Footer>
 		</Panel>
 	);
 };

@@ -238,7 +238,7 @@ const TestEmailPanel = () => {
 					'kudos-donations'
 				)}
 			/>
-			<Flex justify="flex-end">
+			<Panel.Footer>
 				<Button
 					type="button"
 					variant="secondary"
@@ -248,7 +248,7 @@ const TestEmailPanel = () => {
 				>
 					{__('Send', 'kudos-donations')}
 				</Button>
-			</Flex>
+			</Panel.Footer>
 		</Panel>
 	);
 };

@@ -14,11 +14,15 @@ import {
 import { useState } from '@wordpress/element';
 import React from 'react';
 
+const PanelFooter = ({ children }: { children: React.ReactNode }) => (
+	<>{children}</>
+);
+PanelFooter.displayName = 'Panel.Footer';
+
 export interface PanelProps {
 	header: string;
 	headerExtra?: React.ReactNode;
 	children: React.ReactNode;
-	footer?: React.ReactNode;
 	initialOpen?: boolean;
 	spacing?: number;
 	disabled?: boolean;
@@ -29,13 +33,21 @@ export const Panel = ({
 	header,
 	headerExtra,
 	children,
-	footer = null,
 	initialOpen = true,
 	spacing = 5,
 	disabled = false,
 	collapsable = true,
 }: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
+
+	const childArray = React.Children.toArray(children);
+	const footer = childArray.find(
+		(child) => React.isValidElement(child) && child.type === PanelFooter
+	) as React.ReactElement | undefined;
+	const bodyChildren = childArray.filter(
+		(child) => !(React.isValidElement(child) && child.type === PanelFooter)
+	);
+
 	return (
 		<Card>
 			<CardHeader
@@ -50,7 +62,7 @@ export const Panel = ({
 			<Disabled isDisabled={disabled}>
 				{open && (
 					<CardBody style={disabled ? { opacity: 0.5 } : undefined}>
-						<VStack spacing={spacing}>{children}</VStack>
+						<VStack spacing={spacing}>{bodyChildren}</VStack>
 					</CardBody>
 				)}
 				{footer && <CardFooter>{footer}</CardFooter>}
@@ -58,6 +70,8 @@ export const Panel = ({
 		</Card>
 	);
 };
+
+Panel.Footer = PanelFooter;
 
 export const PanelRow = ({ children }: { children: React.ReactNode }) => (
 	<Flex gap={5} align="flex-start" justify="flex-start">
