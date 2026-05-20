@@ -67,7 +67,7 @@ declare module '@kudos/admin-contexts' {
 		useSettingsContext,
 	} from '../admin/contexts';
 	export { useFormContext, useWatch } from 'react-hook-form';
-	export { useOnSettingsSaved } from '../admin/hooks';
+	export { useOnSettingsSaved, usePageTitle } from '../admin/hooks';
 }
 
 declare module '@kudos/front-controls' {
