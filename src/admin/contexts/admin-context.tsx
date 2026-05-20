@@ -35,12 +35,12 @@ export const InnerAdminProvider = ({ children }) => {
 		<AdminContext.Provider value={{ setPageTitle }}>
 			<SlotFillProvider>
 				<AdminHeader />
+				<Notices />
 				{pageTitle && (
 					<Flex justify="center">
 						<h2>{pageTitle}</h2>
 					</Flex>
 				)}
-				<Notices />
 				<>{children}</>
 			</SlotFillProvider>
 		</AdminContext.Provider>
