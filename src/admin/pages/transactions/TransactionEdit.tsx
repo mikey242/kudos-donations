@@ -103,6 +103,11 @@ export const TransactionEdit = (): React.ReactNode => {
 					type: 'integer',
 				},
 				{
+					id: 'checkout_url',
+					label: 'Checkout URL',
+					type: 'text',
+				},
+				{
 					id: 'created_at',
 					label: 'Created at',
 					type: 'datetime',
