@@ -3,7 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { DetailsModal, Table } from '../../components';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import {
+	useEntitiesContext,
+	usePageTitle,
+	useSettingsContext,
+} from '../../contexts';
 import { confirmDelete } from '../../../utils';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
@@ -11,6 +15,8 @@ export const DonorsTable = (): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams, updateParams } = useAdminQueryParams();
 	const { handleDelete } = useEntitiesContext();
+
+	usePageTitle(__('Donors', 'kudos-donations'));
 
 	const handleEdit = (id: number) => void updateParams({ entity: id });
 

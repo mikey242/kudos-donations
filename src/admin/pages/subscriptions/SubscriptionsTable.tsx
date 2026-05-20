@@ -11,7 +11,11 @@ import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/entity';
 import type { StatusConfig } from '../../components';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import {
+	useEntitiesContext,
+	usePageTitle,
+	useSettingsContext,
+} from '../../contexts';
 import { confirmDelete } from '../../../utils';
 import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
@@ -28,6 +32,8 @@ const subscriptionStatusConfig: Record<string, StatusConfig> = {
 
 export const SubscriptionsTable = (): React.ReactNode => {
 	const { setParams, updateParams } = useAdminQueryParams();
+
+	usePageTitle(__('Subscriptions', 'kudos-donations'));
 
 	const handleEdit = (id: number) => void updateParams({ entity: id });
 	const { settings } = useSettingsContext();

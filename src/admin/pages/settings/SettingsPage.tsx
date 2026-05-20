@@ -8,7 +8,7 @@ import { AdminTabPanel } from '../AdminTabPanel';
 import type { AdminTab } from '../AdminTabPanel';
 import { Button, Fill, Flex, FlexItem } from '@wordpress/components';
 import { Spacer } from '../../components';
-import { useSettingsContext } from '../../contexts';
+import { usePageTitle, useSettingsContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
@@ -46,6 +46,8 @@ export const SettingsPage = (): React.ReactNode => {
 	});
 	const { formState } = formMethods;
 	const formRef = useRef<HTMLFormElement | null>(null);
+
+	usePageTitle(__('Settings', 'kudos-donations'));
 
 	const handleSave = () => {
 		formRef.current?.requestSubmit();

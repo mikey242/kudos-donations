@@ -15,11 +15,13 @@ import { useEntitiesContext } from '../../contexts';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { confirmDelete } from '../../../utils';
 import type { Campaign } from '../../../types/entity';
-import { useAdminQueryParams } from '../../hooks';
+import { useAdminQueryParams, usePageTitle } from '../../hooks';
 import { getCurrencySymbol } from '../../../utils/currency';
 export const CampaignsTable = ({ handleNew }): ReactNode => {
 	const { setParams, updateParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
+
+	usePageTitle(__('Campaigns', 'kudos-donations'));
 
 	const handleEdit = (id: number) => void updateParams({ entity: id });
 
