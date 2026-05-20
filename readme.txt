@@ -115,7 +115,10 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.11 =
 * Improve block placeholder in block editor
-* Show admin notice when Mollie is in 'test' mode
+* Show admin notice when payment provider is in 'test' mode
+* Preparation for adding Stripe payment provider
+* Update wordpress monorepo
+* Update react-hook-form to v7.76.0
 
 = 4.2.10 =
 * Fix success notification not shown after copying shortcode to clipboard
