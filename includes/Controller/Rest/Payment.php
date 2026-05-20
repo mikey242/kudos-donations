@@ -305,9 +305,11 @@ class Payment extends BaseRestController {
 
 			if ( empty( $donor ) ) {
 				// Create new customer with vendor if none found.
-				$customer                         = $this->vendor->create_customer( $args['email'], $args['name'] );
-				$donor_args['vendor_customer_id'] = $customer->id;
-				$donor                            = $this->donor_repository->new_entity( $donor_args );
+				$customer = $this->vendor->create_customer( $args['email'], $args['name'] );
+				if ( false !== $customer ) {
+					$donor_args['vendor_customer_id'] = $customer->id;
+				}
+				$donor = $this->donor_repository->new_entity( $donor_args );
 			} else {
 				// Otherwise update existing donor object.
 				$donor->merge( $donor_args );
