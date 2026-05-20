@@ -1,4 +1,5 @@
 export * from './admin-context';
 export * from './entities-context';
 export * from './settings-context';
-export { useFormContext } from 'react-hook-form';
+export { useFormContext, useWatch } from 'react-hook-form';
+export { useOnSettingsSaved } from '../hooks';
