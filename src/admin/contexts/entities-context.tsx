@@ -11,7 +11,6 @@ import type { ReactNode, SyntheticEvent } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Icon } from '@wordpress/components';
 import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
@@ -158,7 +157,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 					),
 					{
 						type: 'snackbar',
-						icon: <Icon icon="saved" />,
+						icon: '✅',
 					}
 				);
 
@@ -211,7 +210,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 					),
 					{
 						type: 'snackbar',
-						icon: <Icon icon="plus" />,
+						icon: '✅',
 					}
 				);
 			}
@@ -236,7 +235,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 					),
 					{
 						type: 'snackbar',
-						icon: <Icon icon="trash" />,
+						icon: '🗑️',
 					}
 				);
 			} catch (error: any) {

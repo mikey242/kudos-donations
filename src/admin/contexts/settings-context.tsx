@@ -12,7 +12,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Flex, Icon, Spinner } from '@wordpress/components';
+import { Flex, Spinner } from '@wordpress/components';
 import { IntroGuide } from '../pages';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
@@ -115,7 +115,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 					setTimeout(() => {
 						createSuccessNotice(
 							__('Settings updated', 'kudos-donations'),
-							{ type: 'snackbar', icon: <Icon icon="saved" /> }
+							{ type: 'snackbar', icon: '✅' }
 						);
 						setSettings(response);
 						doAction('kudos_settings_saved', response);

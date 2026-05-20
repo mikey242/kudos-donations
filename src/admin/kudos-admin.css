@@ -22,6 +22,11 @@ body.admin-color-modern {
 	margin-left: 1em;
 }
 
+.components-snackbar .components-snackbar__icon {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
 .components-modal__frame.components-guide.kudos-intro-guide {
 	width: 500px;
 	max-height: 580px;
