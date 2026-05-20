@@ -44,7 +44,7 @@ class SubscriptionFixtures extends BaseFixtures {
 				'vendor_subscription_id' => $vendor_id,
 				'status'                 => SubscriptionStatus::ACTIVE,
 				'value'                  => $this->faker->numberBetween( 20, 200 ),
-                'vendor'                 => 'mollie'
+				'vendor'                 => 'mollie',
 			]
 		);
 	}
