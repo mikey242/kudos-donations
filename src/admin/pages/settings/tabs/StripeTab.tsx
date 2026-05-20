@@ -22,7 +22,7 @@ const ApiModePanel = () => {
 	} = settings;
 
 	return (
-		<Panel header={__('API Mode', 'kudos-donations')}>
+		<Panel name="apimode" header={__('API Mode', 'kudos-donations')}>
 			<RadioGroupControl
 				name="_kudos_vendor_stripe_api_mode"
 				label={__('API Mode', 'kudos-donations')}
@@ -60,7 +60,7 @@ const ApiKeysPanel = () => {
 	};
 
 	return (
-		<Panel header={__('API Keys', 'kudos-donations')}>
+		<Panel name="apikeys" header={__('API Keys', 'kudos-donations')}>
 			{(['live', 'test'] as ApiMode[]).map((mode, i) => {
 				const isDisabled =
 					!!apiKeyStatus[mode] || window.kudos.admin?.demoMode;
