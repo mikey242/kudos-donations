@@ -43,7 +43,9 @@ declare module '@kudos/admin-components' {
 		HeaderItem,
 		Table,
 		TableControls,
+		ProviderSelector,
 	} from '../admin/components';
+	export type { Provider } from '../admin/components';
 }
 
 declare module '@kudos/admin-utils' {
@@ -64,7 +66,8 @@ declare module '@kudos/admin-contexts' {
 		SettingsProvider,
 		useSettingsContext,
 	} from '../admin/contexts';
-	export { useFormContext } from 'react-hook-form';
+	export { useFormContext, useWatch } from 'react-hook-form';
+	export { useOnSettingsSaved } from '../admin/hooks';
 }
 
 declare module '@kudos/front-controls' {

@@ -1,5 +1,4 @@
 import { __, sprintf } from '@wordpress/i18n';
-import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
@@ -202,12 +201,10 @@ const ApiKeysPanel = () => {
 	);
 };
 
-export const MollieTab: AdminTab = {
-	name: 'mollie',
-	title: __('Mollie', 'kudos-donations'),
-	panels: [
-		{ name: 'api-mode', content: <ApiModePanel /> },
-		{ name: 'payment-methods', content: <PaymentMethodsPanel /> },
-		{ name: 'api-keys', content: <ApiKeysPanel /> },
-	],
-};
+export const MolliePanels = (): React.ReactNode => (
+	<>
+		<ApiModePanel />
+		<PaymentMethodsPanel />
+		<ApiKeysPanel />
+	</>
+);
