@@ -37,6 +37,7 @@ class DonorsFixtures extends BaseFixtures {
 				'street'             => $this->faker->streetAddress(),
 				'city'               => $this->faker->city(),
 				'vendor_customer_id' => 'cst_' . wp_rand( 1000000, 9999999 ),
+				'vendor'             => 'mollie',
 			]
 		);
 	}

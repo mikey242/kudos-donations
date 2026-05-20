@@ -114,6 +114,7 @@ class TransactionFixtures extends BaseFixtures {
 				'mode'              => 'live',
 				'status'            => 'paid',
 				'subscription_id'   => $subscription_id,
+				'vendor'            => 'mollie',
 			]
 		);
 	}
