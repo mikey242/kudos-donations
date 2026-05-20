@@ -102,7 +102,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity,Provider/PaymentProvider/DemoPaymentProvider.php}' );
 
 	// Only create DemoPaymentProver in demo mode.
-	if ( defined( 'KUDOS_DEMO_MODE' ) && KUDOS_DEMO_MODE ) {
+	if ( KUDOS_DEMO_MODE || KUDOS_ENV_IS_DEVELOPMENT ) {
 		$services->set( DemoPaymentProvider::class );
 	}
 
