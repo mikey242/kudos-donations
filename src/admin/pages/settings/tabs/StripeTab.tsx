@@ -1,15 +1,11 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useSettingsContext } from '../../../contexts';
-import {
-	Button,
-	Disabled,
-	ExternalLink,
-	Flex,
-	Icon,
-} from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
+import { Button, Disabled, ExternalLink, Icon } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../../controls';
-import { Panel } from '../../../components';
+import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 
 type ApiMode = 'live' | 'test';
@@ -43,6 +39,76 @@ const ApiModePanel = () => {
 					'kudos-donations'
 				)}
 			/>
+		</Panel>
+	);
+};
+
+const PaymentMethodsPanel = () => {
+	const { checkingApiKey, checkApiKey, settings } =
+		useSettingsContext<AllSettings>();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
+	const { _kudos_payment_vendor_status: status } = settings;
+
+	const isReady = status?.ready ?? false;
+	const statusText = isReady
+		? sprintf(
+				/* translators: %s is the payment vendor name */
+				__('%s ready', 'kudos-donations'),
+				'Stripe'
+			)
+		: null;
+
+	const refresh = () => {
+		checkApiKey().then((response) => {
+			if (response.success) {
+				void createSuccessNotice(response?.message, {
+					type: 'snackbar',
+				});
+			} else {
+				void createErrorNotice(response?.message);
+			}
+		});
+	};
+
+	return (
+		<Panel
+			name="payment-methods"
+			header={__('Payment methods', 'kudos-donations')}
+			headerExtra={
+				isReady && (
+					<strong style={{ color: 'var(--kudos-colour-success)' }}>
+						{statusText}
+						<Icon icon="yes" />
+					</strong>
+				)
+			}
+		>
+			<PaymentMethodsList methods={status?.methods} />
+			<p>
+				{__(
+					"These are the payment methods enabled on your Stripe account. Stripe's Payment Element will automatically show the most relevant methods to each donor based on their location and currency.",
+					'kudos-donations'
+				)}
+			</p>
+			<Panel.Footer>
+				<ExternalLink href="https://dashboard.stripe.com/settings/payment_methods">
+					{__(
+						'Manage payment methods in Stripe Dashboard',
+						'kudos-donations'
+					)}
+					.
+				</ExternalLink>
+				<Button
+					onClick={refresh}
+					type="button"
+					variant="link"
+					isBusy={checkingApiKey}
+					disabled={checkingApiKey}
+				>
+					{__('Refresh', 'kudos-donations')}
+				</Button>
+			</Panel.Footer>
 		</Panel>
 	);
 };
@@ -107,7 +173,6 @@ const ApiKeysPanel = () => {
 							_kudos_vendor_stripe_api_key_test: '',
 							_kudos_vendor_stripe_api_mode: 'test',
 							_kudos_vendor_stripe_webhook: {},
-							_kudos_payment_vendor_status: {},
 						});
 					}}
 				>
@@ -141,12 +206,7 @@ const WebhookPanel = () => {
 					'kudos-donations'
 				)}
 			</p>
-			<Flex direction="column" gap={2}>
-				<code style={{ wordBreak: 'break-all' }}>{webhookUrl}</code>
-				<ExternalLink href="https://dashboard.stripe.com/webhooks">
-					{__('Open Stripe Dashboard', 'kudos-donations')}
-				</ExternalLink>
-			</Flex>
+			<code style={{ wordBreak: 'break-all' }}>{webhookUrl}</code>
 			<TextControl
 				name="_kudos_vendor_stripe_webhook.secret"
 				label={__('Signing secret', 'kudos-donations')}
@@ -156,6 +216,11 @@ const WebhookPanel = () => {
 					'kudos-donations'
 				)}
 			/>
+			<Panel.Footer>
+				<ExternalLink href="https://dashboard.stripe.com/webhooks">
+					{__('Open Stripe Dashboard', 'kudos-donations')}
+				</ExternalLink>
+			</Panel.Footer>
 		</Panel>
 	);
 };
@@ -163,6 +228,7 @@ const WebhookPanel = () => {
 export const StripePanels = (): React.ReactNode => (
 	<>
 		<ApiModePanel />
+		<PaymentMethodsPanel />
 		<ApiKeysPanel />
 		<WebhookPanel />
 	</>

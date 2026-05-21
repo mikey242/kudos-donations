@@ -3,16 +3,9 @@ import React from 'react';
 import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import {
-	Button,
-	Disabled,
-	ExternalLink,
-	Flex,
-	FlexItem,
-	Icon,
-} from '@wordpress/components';
+import { Button, Disabled, ExternalLink, Icon } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../../controls';
-import { Panel } from '../../../components';
+import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 
 type ApiMode = 'live' | 'test';
@@ -104,7 +97,7 @@ const PaymentMethodsPanel = () => {
 				</strong>
 			}
 		>
-			{renderPaymentMethods()}
+			<PaymentMethodsList methods={status?.methods} />
 			<p>
 				{__(
 					"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear as a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
