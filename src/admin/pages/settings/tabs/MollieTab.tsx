@@ -7,6 +7,7 @@ import { Button, Disabled, ExternalLink, Icon } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../../controls';
 import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
+import type { AdminPanel } from '../../AdminTabPanel';
 
 type ApiMode = 'live' | 'test';
 
@@ -18,7 +19,7 @@ const ApiModePanel = () => {
 	} = settings;
 
 	return (
-		<Panel name="apimode" header={__('API Mode', 'kudos-donations')}>
+		<Panel header={__('API Mode', 'kudos-donations')}>
 			<RadioGroupControl
 				name="_kudos_vendor_mollie_api_mode"
 				label={__('API Mode', 'kudos-donations')}
@@ -73,7 +74,6 @@ const PaymentMethodsPanel = () => {
 
 	return (
 		<Panel
-			name="status"
 			header={__('Available payment methods', 'kudos-donations')}
 			headerExtra={
 				isReady && (
@@ -125,7 +125,7 @@ const ApiKeysPanel = () => {
 	};
 
 	return (
-		<Panel name="apikeys" header={__('API Keys', 'kudos-donations')}>
+		<Panel header={__('API Keys', 'kudos-donations')}>
 			{(['live', 'test'] as ApiMode[]).map((mode, i) => {
 				const isDisabled =
 					!!apiKeyStatus[mode] || window.kudos.admin?.demoMode;
@@ -179,10 +179,8 @@ const ApiKeysPanel = () => {
 	);
 };
 
-export const MolliePanels = (): React.ReactNode => (
-	<>
-		<ApiModePanel />
-		<PaymentMethodsPanel />
-		<ApiKeysPanel />
-	</>
-);
+export const molliePanels: AdminPanel[] = [
+	{ name: 'apimode', content: <ApiModePanel /> },
+	{ name: 'status', content: <PaymentMethodsPanel /> },
+	{ name: 'apikeys', content: <ApiKeysPanel /> },
+];

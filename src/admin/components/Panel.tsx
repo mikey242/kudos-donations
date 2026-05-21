@@ -11,9 +11,17 @@ import {
 	CardFooter,
 	Disabled,
 } from '@wordpress/components';
-import { useLayoutEffect, useRef, useState } from '@wordpress/element';
+import {
+	createContext,
+	useContext,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from '@wordpress/element';
 import React from 'react';
 import { useAdminQueryParams } from '../hooks';
+
+export const PanelNameContext = createContext<string | null>(null);
 
 const PanelFooter = ({ children }: { children: React.ReactNode }) => (
 	<>{children}</>
@@ -44,7 +52,9 @@ export const Panel = ({
 	const {
 		params: { panel },
 	} = useAdminQueryParams();
-	const isHighlighted = name && panel === name;
+	const contextName = useContext(PanelNameContext);
+	const resolvedName = name ?? contextName;
+	const isHighlighted = resolvedName && panel === resolvedName;
 	const [open, setOpen] = useState(initialOpen || isHighlighted);
 	const [selected, setSelected] = useState(false);
 	const ref = useRef(null);

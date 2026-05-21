@@ -6,7 +6,8 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminQueryParams } from '../hooks';
 import type { ReactNode } from 'react';
-import { Fragment, useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
+import { PanelNameContext } from '../components';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 
@@ -58,7 +59,9 @@ export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 				{(tab) => (
 					<VStack spacing={4}>
 						{tab.panels?.map(({ name, content }) => (
-							<Fragment key={name}>{content}</Fragment>
+							<PanelNameContext.Provider key={name} value={name}>
+								{content}
+							</PanelNameContext.Provider>
 						))}
 					</VStack>
 				)}

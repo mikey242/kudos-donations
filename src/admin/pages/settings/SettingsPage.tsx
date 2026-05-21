@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { PaymentTab, EmailTab, ReceiptTab, PlusTab, HelpTab } from './tabs';
+import { paymentTab, EmailTab, ReceiptTab, PlusTab, HelpTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import type { AdminTab } from '../AdminTabPanel';
@@ -54,7 +54,7 @@ export const SettingsPage = (): React.ReactNode => {
 	};
 
 	const tabs = applyFilters('kudosSettingsTabs', [
-		PaymentTab,
+		paymentTab(),
 		EmailTab,
 		ReceiptTab,
 		PlusTab,

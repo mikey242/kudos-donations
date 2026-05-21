@@ -1,18 +1,18 @@
 import { __ } from '@wordpress/i18n';
-import type { AdminTab } from '../../AdminTabPanel';
+import type { AdminTab, AdminPanel } from '../../AdminTabPanel';
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../../contexts';
 import { Panel, ProviderSelector } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
-import { MolliePanels } from './MollieTab';
-import { StripePanels } from './StripeTab';
+import { molliePanels } from './MollieTab';
+import { stripePanels } from './StripeTab';
 import { Flex, Notice, Button } from '@wordpress/components';
 
-const vendorComponents: Record<string, () => React.ReactNode> = {
-	mollie: MolliePanels,
-	stripe: StripePanels,
-	demo: () => null,
+const vendorPanels: Record<string, AdminPanel[]> = {
+	mollie: molliePanels,
+	stripe: stripePanels,
+	demo: [],
 };
 
 const VendorSelectorPanel = () => {
@@ -94,22 +94,23 @@ const VendorSelectorPanel = () => {
 	);
 };
 
-const VendorPanels = () => {
+const vendorSelectorPanel: AdminPanel = {
+	name: 'vendor-selector',
+	content: <VendorSelectorPanel />,
+};
+
+export const paymentTab = (): AdminTab => {
 	const { settings } = useSettingsContext<AllSettings>();
 	const vendors = window.kudos?.admin?.payment_vendors ?? [];
 	const savedVendor = settings._kudos_payment_vendor;
 	const isValid = vendors.some(({ slug }) => slug === savedVendor);
 	const resolvedVendor = isValid ? savedVendor : vendors[0]?.slug;
-	const Panels =
-		(resolvedVendor && vendorComponents[resolvedVendor]) || MolliePanels;
-	return <Panels />;
-};
+	const panels =
+		(resolvedVendor && vendorPanels[resolvedVendor]) ?? molliePanels;
 
-export const PaymentTab: AdminTab = {
-	name: 'payment',
-	title: __('Payment', 'kudos-donations'),
-	panels: [
-		{ name: 'vendor-selector', content: <VendorSelectorPanel /> },
-		{ name: 'vendor-panels', content: <VendorPanels /> },
-	],
+	return {
+		name: 'payment',
+		title: __('Payment', 'kudos-donations'),
+		panels: [vendorSelectorPanel, ...panels],
+	};
 };
