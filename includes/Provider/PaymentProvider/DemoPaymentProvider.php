@@ -201,13 +201,6 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function recurring_enabled(): bool {
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function is_vendor_ready(): bool {
 		return true;
 	}

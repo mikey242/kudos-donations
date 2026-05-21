@@ -171,13 +171,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public static function recurring_enabled(): bool {
-		return (bool) get_option( self::SETTING_RECURRING, false );
-	}
-
-	/**
 	 * Uses get_payment_methods to determine if account can receive recurring payments.
 	 */
 	private function can_use_recurring(): bool {

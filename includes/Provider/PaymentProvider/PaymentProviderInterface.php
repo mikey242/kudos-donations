@@ -28,11 +28,6 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public static function get_slug(): string;
 
 	/**
-	 * Returns true if vendor supports recurring payments.
-	 */
-	public static function recurring_enabled(): bool;
-
-	/**
 	 * Refresh the local vendor settings.
 	 */
 	public function refresh(): bool;
