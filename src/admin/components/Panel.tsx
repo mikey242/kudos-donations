@@ -45,7 +45,8 @@ export const Panel = ({
 		params: { panel },
 	} = useAdminQueryParams();
 	const isHighlighted = name && panel === name;
-	const [open, setOpen] = useState(initialOpen || !!isHighlighted);
+	const [open, setOpen] = useState(initialOpen || isHighlighted);
+	const [selected, setSelected] = useState(false);
 	const ref = useRef(null);
 	const childArray = React.Children.toArray(children);
 	const footer = childArray.find(
@@ -56,21 +57,20 @@ export const Panel = ({
 	);
 
 	useLayoutEffect(() => {
-		if (isHighlighted && ref.current) {
-			ref.current.scrollIntoView({
-				block: 'center',
-				behavior: 'smooth',
-			});
-			ref.current.classList.add('selected');
-			const highlightTimeout = setTimeout(() => {
-				ref.current.classList.remove('selected');
-			}, 2000);
-			return () => clearTimeout(highlightTimeout);
+		if (!isHighlighted || !ref.current) {
+			return;
 		}
+		ref.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		setSelected(true);
+		const t = setTimeout(() => setSelected(false), 2000);
+		return () => clearTimeout(t);
 	}, [isHighlighted]);
 
 	return (
-		<Card ref={ref} className={'kudos-admin-panel'}>
+		<Card
+			ref={ref}
+			className={`kudos-admin-panel${selected ? ' selected' : ''}`}
+		>
 			<CardHeader
 				style={{ cursor: collapsable ? 'pointer' : 'default' }}
 				onClick={collapsable ? () => setOpen(!open) : null}
