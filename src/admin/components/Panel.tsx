@@ -61,21 +61,15 @@ export const Panel = ({
 				block: 'center',
 				behavior: 'smooth',
 			});
+			ref.current.classList.add('selected');
+			setTimeout(() => {
+				ref.current.classList.remove('selected');
+			}, 2000);
 		}
 	}, [isHighlighted]);
 
 	return (
-		<Card
-			ref={ref}
-			style={
-				isHighlighted
-					? {
-							boxShadow:
-								'var(--wp-admin-theme-color) 0px 0px 0px 2px',
-						}
-					: undefined
-			}
-		>
+		<Card ref={ref} className={'kudos-admin-panel'}>
 			<CardHeader
 				style={{ cursor: collapsable ? 'pointer' : 'default' }}
 				onClick={collapsable ? () => setOpen(!open) : null}
