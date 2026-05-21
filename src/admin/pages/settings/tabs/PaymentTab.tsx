@@ -99,7 +99,7 @@ const vendorSelectorPanel: AdminPanel = {
 	content: <VendorSelectorPanel />,
 };
 
-export const paymentTab = (): AdminTab => {
+export const usePaymentTab = (): AdminTab => {
 	const { settings } = useSettingsContext<AllSettings>();
 	const vendors = window.kudos?.admin?.payment_vendors ?? [];
 	const savedVendor = settings._kudos_payment_vendor;
