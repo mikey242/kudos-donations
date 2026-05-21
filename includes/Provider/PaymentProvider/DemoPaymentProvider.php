@@ -76,7 +76,7 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 *
 	 * Registers the demo checkout and confirm REST routes.
 	 */
-	public function init(): void {
+	protected function setup(): void {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 

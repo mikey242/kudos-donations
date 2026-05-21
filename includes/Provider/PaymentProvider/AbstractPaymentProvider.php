@@ -38,6 +38,22 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	abstract protected function get_cache_setting(): ?string;
 
 	/**
+	 * Provider-specific setup: register hooks, configure the API client, etc.
+	 * Called automatically by init() before notices are shown.
+	 */
+	abstract protected function setup(): void;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	final public function init(): void {
+		$this->setup();
+		if ( null !== $this->get_cache_setting() ) {
+			$this->show_status_notices();
+		}
+	}
+
+	/**
 	 * Returns provider-specific fields to merge into get_status(). Override in subclasses.
 	 *
 	 * @param array $data The cached data for the current provider and mode.
@@ -105,18 +121,33 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	/**
 	 * Displays an admin notice indicating this provider is in test mode.
 	 */
-	final protected function show_test_mode_notice(): void {
-		NoticeService::notice(
-			\sprintf(
+	final protected function show_status_notices(): void {
+		if ( 'test' === $this->get_api_mode() ) {
+			NoticeService::notice(
+				\sprintf(
 				// translators: 1: payment provider name, 2: URL to provider settings page.
-				__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
-				static::get_name(),
-				admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
-			),
-			NoticeService::WARNING,
-			false,
-			static::get_slug() . '-test-mode'
-		);
+					__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
+					static::get_name(),
+					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
+				),
+				NoticeService::WARNING,
+				false,
+				static::get_slug() . '-test-mode'
+			);
+		}
+		if ( ! $this->is_vendor_ready() ) {
+			NoticeService::notice(
+				\sprintf(
+				// translators: 1: payment provider name, 2: URL to provider settings page.
+					__( '%1$s API keys not set or no payment methods found. Please <a href="%2$s">check your settings</a>.', 'kudos-donations' ),
+					static::get_name(),
+					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' )
+				),
+				NoticeService::WARNING,
+				false,
+				static::get_slug() . '-not-ready'
+			);
+		}
 	}
 
 	/**
