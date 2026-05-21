@@ -13,6 +13,7 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
+use Exception;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
@@ -22,7 +23,6 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\ApiException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
@@ -40,14 +40,12 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 class MolliePaymentProvider extends AbstractPaymentProvider {
-	public const SETTING_PROFILE                = '_kudos_vendor_mollie_profile';
+	public const SETTING_CACHE                  = '_kudos_vendor_mollie_cache';
 	public const SETTING_API_MODE               = '_kudos_vendor_mollie_api_mode';
-	public const SETTING_RECURRING              = '_kudos_vendor_mollie_recurring';
 	public const SETTING_API_KEY_LIVE           = '_kudos_vendor_mollie_api_key_live';
 	public const SETTING_API_KEY_TEST           = '_kudos_vendor_mollie_api_key_test';
 	public const SETTING_API_KEY_ENCRYPTED_LIVE = '_kudos_vendor_mollie_api_key_encrypted_live';
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_mollie_api_key_encrypted_test';
-	public const SETTING_PAYMENT_METHODS        = '_kudos_vendor_mollie_payment_methods';
 	public MollieApiClient $api_client;
 	private CampaignRepository $campaign_repository;
 	private DonorRepository $donor_repository;
@@ -78,9 +76,15 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$this->config_client();
 		$this->set_user_agent();
 
-		// Handle API key saving.
+		if ( 'test' === $this->get_api_mode() ) {
+			$this->show_test_mode_notice();
+		}
+
+		// Encrypt key on save; trigger refresh when encrypted key changes.
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
+		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 3 );
+		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_TEST, [ $this, 'handle_key_updated' ], 10, 3 );
 	}
 
 	/**
@@ -108,24 +112,32 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function is_vendor_ready(): bool {
-		$mode    = $this->get_api_mode();
-		$option  = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
-		$key     = $this->get_decrypted_key( $option );
-		$methods = (array) get_option( self::SETTING_PAYMENT_METHODS );
-		return ! empty( $key ) && ! empty( $methods );
+		return $this->get_status()['ready'];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function vendor_status(): array {
-		$name  = get_option( self::SETTING_PROFILE )['name'] ?? null;
-		$ready = $this->is_vendor_ready();
+	public function get_status(): array {
+		$mode    = $this->get_api_mode();
+		$option  = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
+		$key     = $this->get_decrypted_key( $option );
+		$cache   = (array) get_option( self::SETTING_CACHE, [] );
+		$data    = isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
+		$stored  = isset( $data['methods'] ) ? (array) $data['methods'] : [];
+		$ready   = ! empty( $key ) && ! empty( $stored );
+		$methods = array_map(
+			fn( $m ) => [
+				'id'    => $m['id'],
+				'label' => $m['description'],
+			],
+			$stored
+		);
 		return [
 			'ready'     => $ready,
-			'recurring' => $ready && $this->can_use_recurring(),
-			// translators: %s is the name of the payment vendor (e.g Mollie).
-			'text'      => \sprintf( __( '%s ready', 'kudos-donations' ), self::get_name() ) . ( \is_string( $name ) && '' !== $name ? ' (' . $name . ')' : '' ),
+			'recurring' => $ready && ! empty( $data['recurring'] ),
+			'account'   => $data['profile'] ?? '',
+			'methods'   => $methods,
 		];
 	}
 
@@ -141,10 +153,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	protected function config_client(): bool {
 		// Gets the key associated with the specified mode.
-		$mode = $this->get_api_mode();
-		if ( 'test' === $mode ) {
-			$this->show_test_mode_notice();
-		}
+		$mode   = $this->get_api_mode();
 		$option = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
 		$key    = $this->get_decrypted_key( $option );
 
@@ -152,7 +161,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			try {
 				$this->api_client->setApiKey( $key );
 				return true;
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->get_logger()->critical( $e->getMessage() );
 			}
 		}
@@ -197,12 +206,12 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	public function handle_key_update( string $value, string $_old_value, string $option ): string {
 		$mode             = ( self::SETTING_API_KEY_LIVE === $option ) ? 'live' : 'test';
 		$encrypted_option = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
-		$filter_name      = "kudos_mollie_{$mode}_key_validation";
 
 		if ( ! $value ) {
 			update_option( $encrypted_option, '' );
-			update_option( self::SETTING_PAYMENT_METHODS, [] );
-
+			$cache          = (array) get_option( self::SETTING_CACHE, [] );
+			$cache[ $mode ] = [];
+			update_option( self::SETTING_CACHE, $cache );
 			return $value;
 		}
 
@@ -210,19 +219,32 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		// length is wrong, which would crash the site on subsequent page loads.
 		try {
 			$this->api_client->setApiKey( $value );
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->get_logger()->error( 'Invalid Mollie API key: ' . $e->getMessage() );
 			return $_old_value;
 		}
 
-		$should_skip_refresh = apply_filters( $filter_name, false );
-
 		// Auto-set the mode to match the key being updated.
 		update_option( self::SETTING_API_MODE, $mode );
 
-		$callback = ! $should_skip_refresh ? [ $this, 'refresh' ] : null;
+		return $this->save_encrypted_key( $value, $encrypted_option );
+	}
 
-		return $this->save_encrypted_key( $value, $encrypted_option, $callback );
+	/**
+	 * Triggers a refresh after the encrypted key option is saved.
+	 *
+	 * @param string $old_value Previous encrypted value.
+	 * @param string $new_value New encrypted value (empty when key was cleared).
+	 * @param string $option    Encrypted option name.
+	 */
+	public function handle_key_updated( string $old_value, string $new_value, string $option ): void {
+		if ( ! $new_value ) {
+			return;
+		}
+		$mode = ( self::SETTING_API_KEY_ENCRYPTED_LIVE === $option ) ? 'live' : 'test';
+		if ( ! apply_filters( "kudos_mollie_{$mode}_key_validation", false ) ) {
+			$this->refresh();
+		}
 	}
 
 
@@ -233,18 +255,17 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 
 		// Bail if unable to set api key with Mollie.
 		if ( ! $this->config_client() ) {
+			$this->get_logger()->error( 'Failed to set API key with Mollie' );
 			return false;
 		}
 
-		// Rebuild Mollie settings.
+		$mode = $this->get_api_mode();
+
 		$payment_methods = array_map(
 			function ( Method $method ) {
 				return [
-					'id'            => $method->id,
-					'description'   => $method->description,
-					'image'         => $method->image->svg,
-					'minimumAmount' => $method->minimumAmount,
-					'maximumAmount' => (array) $method->maximumAmount,
+					'id'          => $method->id,
+					'description' => $method->description,
 				];
 			},
 			(array) $this->get_active_payment_methods()
@@ -252,59 +273,41 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 
 		$this->get_logger()->debug( 'Mollie payment methods', $payment_methods );
 
-		// No payment methods found, return false.
 		if ( empty( $payment_methods ) ) {
-			return false;
+			$this->logger->info( 'No payment methods found for Mollie' );
+			return true;
 		}
 
 		try {
-			// Handle SEPA Direct Debit separately.
 			$sepa = $this->api_client->methods->get( PaymentMethod::DIRECTDEBIT );
 			if ( PaymentMethodStatus::ACTIVATED === $sepa->status ) {
 				$payment_methods[] = [
-					'id'            => $sepa->id,
-					'description'   => $sepa->description,
-					'image'         => $sepa->image->svg,
-					'minimumAmount' => $sepa->minimumAmount,
-					'maximumAmount' => $sepa->maximumAmount,
+					'id'          => $sepa->id,
+					'description' => $sepa->description,
 				];
 			}
 		} catch ( RequestException $e ) {
 			$this->get_logger()->critical( 'Direct debit payment method not found', [ 'message' => $e->getMessage() ] );
 		}
 
+		$profile_name = '';
 		try {
-			// Get profile.
-			$profile = $this->api_client->profiles->getCurrent();
+			$profile      = $this->api_client->profiles->getCurrent();
+			$profile_name = $profile->name ?? '';
 			$this->get_logger()->debug( 'Mollie profile fetched', [ $profile ] );
-			// Update profile.
-			update_option(
-				self::SETTING_PROFILE,
-				[
-					'id'      => $profile->id,
-					'mode'    => $profile->mode,
-					'name'    => $profile->name,
-					'website' => $profile->website,
-					'status'  => $profile->status,
-				]
-			);
 		} catch ( RequestException $e ) {
 			$this->get_logger()->warning( 'Cannot get Mollie profile', [ 'message' => $e->getMessage() ] );
 		}
 
 		$this->get_logger()->debug( 'Mollie refreshed connection settings' );
 
-		// Update payment methods.
-		update_option(
-			self::SETTING_PAYMENT_METHODS,
-			$payment_methods
-		);
-
-		// Update recurring status.
-		update_option( self::SETTING_RECURRING, $this->can_use_recurring() );
-
-		// Update vendor status.
-		update_option( PaymentService::SETTING_VENDOR_STATUS, $this->vendor_status() );
+		$cache          = (array) get_option( self::SETTING_CACHE, [] );
+		$cache[ $mode ] = [
+			'methods'   => $payment_methods,
+			'recurring' => $this->can_use_recurring(),
+			'profile'   => $profile_name,
+		];
+		update_option( self::SETTING_CACHE, $cache );
 
 		return true;
 	}
@@ -928,29 +931,10 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	public static function get_settings(): array {
 		return [
-			self::SETTING_PROFILE                => [
+			self::SETTING_CACHE                  => [
 				'type'         => FieldType::OBJECT,
-				'show_in_rest' => [
-					'schema' => [
-						'properties' => [
-							'id'      => [
-								'type' => FieldType::STRING,
-							],
-							'mode'    => [
-								'type' => FieldType::STRING,
-							],
-							'name'    => [
-								'type' => FieldType::STRING,
-							],
-							'website' => [
-								'type' => FieldType::STRING,
-							],
-							'status'  => [
-								'type' => FieldType::STRING,
-							],
-						],
-					],
-				],
+				'show_in_rest' => false,
+				'default'      => [],
 			],
 			self::SETTING_API_MODE               => [
 				'type'         => FieldType::STRING,
@@ -974,56 +958,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			self::SETTING_API_KEY_ENCRYPTED_TEST => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => false,
-			],
-			self::SETTING_RECURRING              => [
-				'type'         => FieldType::BOOLEAN,
-				'show_in_rest' => true,
-				'default'      => false,
-			],
-			self::SETTING_PAYMENT_METHODS        => [
-				'type'         => FieldType::ARRAY,
-				'show_in_rest' => [
-					'schema' => [
-						'type'  => FieldType::ARRAY,
-						'items' => [
-							'type'       => FieldType::OBJECT,
-							'properties' => [
-								'id'            => [
-									'type' => FieldType::STRING,
-								],
-								'description'   => [
-									'type' => FieldType::STRING,
-								],
-								'image'         => [
-									'type' => FieldType::STRING,
-								],
-								'minimumAmount' => [
-									'type'       => FieldType::OBJECT,
-									'properties' => [
-										'value'    => [
-											'type' => FieldType::STRING,
-										],
-										'currency' => [
-											'type' => FieldType::STRING,
-										],
-									],
-								],
-								'maximumAmount' => [
-									'type'       => FieldType::OBJECT,
-									'properties' => [
-										'value'    => [
-											'type' => FieldType::STRING,
-										],
-										'currency' => [
-											'type' => FieldType::STRING,
-										],
-									],
-								],
-							],
-						],
-					],
-				],
-				'default'      => [],
 			],
 		];
 	}

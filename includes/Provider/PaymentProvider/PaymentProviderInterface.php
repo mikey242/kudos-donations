@@ -89,19 +89,18 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity;
 
 	/**
-	 * Returns true is the API is ready to communicate.
+	 * Returns true if the API is ready to communicate.
 	 */
 	public function is_vendor_ready(): bool;
 
 	/**
-	 * Returns the status of the vendor in an array.
+	 * Returns the current vendor status derived from stored settings.
 	 *
-	 * @returns array{
-	 *     ready: bool,  // Result of is_vendor_ready.
-	 *     text: string  // The message to display to the end user.
-	 * }
+	 * Providers may add: methods (array), account (string), and other vendor-specific fields.
+	 *
+	 * @return array{ready: bool, recurring: bool, methods?: array, account?: string}
 	 */
-	public function vendor_status(): array;
+	public function get_status(): array;
 
 	/**
 	 * Returns the api mode.

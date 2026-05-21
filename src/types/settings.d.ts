@@ -1,3 +1,15 @@
+export interface VendorPaymentMethod {
+	id: string;
+	label: string;
+}
+
+export interface VendorStatus {
+	ready: boolean;
+	recurring: boolean;
+	account?: string;
+	methods?: VendorPaymentMethod[];
+}
+
 export interface BaseSettings {
 	_kudos_always_load_assets: boolean;
 	_kudos_invoice_number: number;
@@ -10,6 +22,7 @@ export interface BaseSettings {
 	_kudos_donations_version: string;
 	_kudos_migration_status: string[];
 	_kudos_payment_vendor: 'mollie' | 'stripe' | 'demo' | string;
+	_kudos_payment_vendor_status: VendorStatus;
 	_kudos_show_intro: boolean | null;
 	_kudos_debug_mode: boolean;
 	_kudos_base_font_size: string; // e.g., '1.2rem'
@@ -19,9 +32,4 @@ export interface BaseSettings {
 	_kudos_custom_smtp: string | null;
 	_kudos_smtp_password: string;
 	_kudos_smtp_enable: boolean;
-	_kudos_payment_vendor_status?: {
-		ready?: boolean;
-		recurring?: boolean;
-		text?: string;
-	};
 }

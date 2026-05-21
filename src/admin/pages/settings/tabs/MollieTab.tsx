@@ -48,29 +48,16 @@ const PaymentMethodsPanel = () => {
 		useSettingsContext<AllSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const { _kudos_vendor_mollie_payment_methods: paymentMethods } = settings;
+	const { _kudos_payment_vendor_status: status } = settings;
 
-	const renderPaymentMethods = (): React.ReactNode => {
-		if (paymentMethods.length === 0) {
-			return <i>{__('No payment methods found.', 'kudos-donations')}</i>;
-		}
-
-		return (
-			<Flex wrap justify="none" direction="row">
-				{paymentMethods.map((method) => (
-					<FlexItem key={method.id}>
-						<Flex>
-							<img
-								alt={`${method.description} icon`}
-								src={method.image}
-							/>
-							<strong>{method.description}</strong>
-						</Flex>
-					</FlexItem>
-				))}
-			</Flex>
-		);
-	};
+	const isReady = status?.ready ?? false;
+	const statusText = isReady
+		? sprintf(
+				/* translators: %s is the payment vendor name */
+				__('%s ready', 'kudos-donations'),
+				'Mollie'
+			) + (status?.account ? ` (${status.account})` : '')
+		: null;
 
 	const refresh = () => {
 		checkApiKey().then((response) => {
@@ -89,12 +76,12 @@ const PaymentMethodsPanel = () => {
 			name="status"
 			header={__('Available payment methods', 'kudos-donations')}
 			headerExtra={
-				<strong style={{ color: 'var(--kudos-colour-success)' }}>
-					{settings._kudos_payment_vendor_status.text}
-					{settings._kudos_payment_vendor_status.ready && (
+				isReady && (
+					<strong style={{ color: 'var(--kudos-colour-success)' }}>
+						{statusText}
 						<Icon icon="yes" />
-					)}
-				</strong>
+					</strong>
+				)
 			}
 		>
 			<PaymentMethodsList methods={status?.methods} />
@@ -179,12 +166,9 @@ const ApiKeysPanel = () => {
 					isDestructive={true}
 					onClick={() => {
 						void updateSettings({
-							_kudos_vendor_mollie_recurring: false,
 							_kudos_vendor_mollie_api_key_live: '',
 							_kudos_vendor_mollie_api_key_test: '',
 							_kudos_vendor_mollie_api_mode: 'test',
-							_kudos_vendor_mollie_profile: null,
-							_kudos_payment_vendor_status: {},
 						});
 					}}
 				>

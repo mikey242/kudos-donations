@@ -208,6 +208,16 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	/**
 	 * {@inheritDoc}
 	 */
+	public function get_status(): array {
+		return [
+			'ready'     => true,
+			'recurring' => false,
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_api_mode(): string {
 		return 'test';
 	}
@@ -217,16 +227,6 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 */
 	public function refresh(): bool {
 		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function vendor_status(): array {
-		return [
-			'ready' => true,
-			'text'  => __( 'Demo mode active.', 'kudos-donations' ),
-		];
 	}
 
 	/**

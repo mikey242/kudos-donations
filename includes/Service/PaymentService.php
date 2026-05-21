@@ -57,8 +57,25 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Fallback status check for transactions whose webhook never fired.
 		add_action( 'kudos_check_payment_status', [ $this, 'check_payment_status' ] );
-		// Replace returned get_home_url with app_url if defined.
-		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
+		// Virtual status option: computed from stored settings, never written to DB.
+		add_filter( 'pre_option_' . self::SETTING_VENDOR_STATUS, [ $this, 'get_vendor_status' ] );
+		add_filter( 'pre_update_option_' . self::SETTING_VENDOR_STATUS, fn( $update, $old ) => $old, 10, 2 );
+	}
+
+	/**
+	 * Returns the current vendor's status derived from stored settings.
+	 *
+	 * @return array{ready: bool, recurring: bool}
+	 */
+	public function get_vendor_status(): array {
+		$provider = $this->payment_provider_factory->get_provider();
+		if ( null === $provider ) {
+			return [
+				'ready'     => false,
+				'recurring' => false,
+			];
+		}
+		return $provider->get_status();
 	}
 
 	/**
@@ -150,19 +167,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	}
 
 	/**
-	 * Replaces the home url with the url defined in $_ENV['KUDOS_APP_URL'].
-	 *
-	 * @param string $url The full URL.
-	 * @param string $path The rest route.
-	 */
-	public function use_alternate_app_url( string $url, string $path ): string {
-		if ( isset( $_ENV['KUDOS_APP_URL'] ) && '/kudos/v1/payment/webhook' === $path ) {
-			return str_replace( get_home_url(), sanitize_url( $_ENV['KUDOS_APP_URL'] ), $url );
-		}
-		return $url;
-	}
-
-	/**
 	 * Schedules processing of successful transaction.
 	 *
 	 * @param int $transaction_id The post id of the transaction.
@@ -190,7 +194,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param int $transaction_id Transaction post id.
 	 */
 	public function process_transaction( int $transaction_id ) {
-		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
+		$this->logger->info( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
 
 		// Generate invoice.
 		$this->invoice->generate_receipt( $transaction_id );
@@ -213,15 +217,21 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 				'type'         => FieldType::OBJECT,
 				'show_in_rest' => [
 					'schema' => [
-						'properties' => [
-							'ready'     => [
-								'type' => FieldType::BOOLEAN,
-							],
-							'recurring' => [
-								'type' => FieldType::BOOLEAN,
-							],
-							'text'      => [
-								'type' => FieldType::STRING,
+						'type'                 => FieldType::OBJECT,
+						'additionalProperties' => true,
+						'properties'           => [
+							'ready'     => [ 'type' => FieldType::BOOLEAN ],
+							'recurring' => [ 'type' => FieldType::BOOLEAN ],
+							'account'   => [ 'type' => FieldType::STRING ],
+							'methods'   => [
+								'type'  => FieldType::ARRAY,
+								'items' => [
+									'type'       => FieldType::OBJECT,
+									'properties' => [
+										'id'    => [ 'type' => FieldType::STRING ],
+										'label' => [ 'type' => FieldType::STRING ],
+									],
+								],
 							],
 						],
 					],
@@ -229,7 +239,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 				'default'      => [
 					'ready'     => false,
 					'recurring' => false,
-					'text'      => '',
 				],
 			],
 		];
