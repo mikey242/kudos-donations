@@ -111,34 +111,15 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function is_vendor_ready(): bool {
-		return $this->get_status()['ready'];
+	protected function get_cache_setting(): string {
+		return self::SETTING_CACHE;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_status(): array {
-		$mode    = $this->get_api_mode();
-		$option  = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
-		$key     = $this->get_decrypted_key( $option );
-		$cache   = (array) get_option( self::SETTING_CACHE, [] );
-		$data    = isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
-		$stored  = isset( $data['methods'] ) ? (array) $data['methods'] : [];
-		$ready   = ! empty( $key ) && ! empty( $stored );
-		$methods = array_map(
-			fn( $m ) => [
-				'id'    => $m['id'],
-				'label' => $m['description'],
-			],
-			$stored
-		);
-		return [
-			'ready'     => $ready,
-			'recurring' => $ready && ! empty( $data['recurring'] ),
-			'account'   => $data['profile'] ?? '',
-			'methods'   => $methods,
-		];
+	protected function get_status_extra( array $data ): array {
+		return [ 'account' => $data['profile'] ?? '' ];
 	}
 
 	/**

@@ -296,4 +296,11 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	public function sync_transaction_status( int $transaction_id ): ?TransactionEntity {
 		return $this->transaction_repository->get( $transaction_id );
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_cache_setting(): ?string {
+		return null;
+	}
 }

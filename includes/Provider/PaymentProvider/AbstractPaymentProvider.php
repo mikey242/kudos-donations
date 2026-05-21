@@ -5,6 +5,8 @@
  * @link https://github.com/mikey242/kudos-donations
  *
  * @copyright 2026 Iseard Media
+ *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
  */
 
 declare( strict_types=1 );
@@ -29,6 +31,56 @@ use IseardMedia\Kudos\Service\NoticeService;
 abstract class AbstractPaymentProvider extends AbstractProvider implements PaymentProviderInterface {
 
 	protected TransactionRepository $transaction_repository;
+
+	/**
+	 * Returns the option name for this provider's mode-keyed cache.
+	 */
+	abstract protected function get_cache_setting(): ?string;
+
+	/**
+	 * Returns provider-specific fields to merge into get_status(). Override in subclasses.
+	 *
+	 * @param array $data The cached data for the current provider and mode.
+	 */
+	protected function get_status_extra( array $data ): array {
+		return [];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_status(): array {
+		$setting = $this->get_cache_setting();
+		$cache   = $setting ? (array) get_option( $setting, [] ) : [];
+		$mode    = $this->get_api_mode();
+		$option  = \constant( static::class . '::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
+		$key     = $this->get_decrypted_key( $option );
+		$data    = isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
+		$stored  = isset( $data['methods'] ) ? (array) $data['methods'] : [];
+		$ready   = ! empty( $key ) && ! empty( $stored );
+		$methods = array_map(
+			fn( $m ) => [
+				'id'    => $m['id'],
+				'label' => $m['description'],
+			],
+			$stored
+		);
+		return array_merge(
+			[
+				'ready'     => $ready,
+				'recurring' => $ready && ! empty( $data['recurring'] ),
+				'methods'   => $methods,
+			],
+			$this->get_status_extra( $data )
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function is_vendor_ready(): bool {
+		return $this->get_status()['ready'];
+	}
 
 	/**
 	 * Returns the shared webhook REST URL used by all payment providers.
