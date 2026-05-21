@@ -62,9 +62,10 @@ export const Panel = ({
 				behavior: 'smooth',
 			});
 			ref.current.classList.add('selected');
-			setTimeout(() => {
+			const highlightTimeout = setTimeout(() => {
 				ref.current.classList.remove('selected');
 			}, 2000);
+			return () => clearTimeout(highlightTimeout);
 		}
 	}, [isHighlighted]);
 
