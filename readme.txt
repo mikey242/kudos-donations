@@ -121,6 +121,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Preparation for adding Stripe payment provider
 * Update wordpress monorepo
 * Update react-hook-form to v7.76.0
+* Update mollie/mollie-api-php to v3.12.0
 
 = 4.2.10 =
 * Fix success notification not shown after copying shortcode to clipboard
