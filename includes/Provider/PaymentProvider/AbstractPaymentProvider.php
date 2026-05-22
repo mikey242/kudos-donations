@@ -119,7 +119,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
-	 * Displays an admin notice indicating this provider is in test mode.
+	 * Displays important status notices.
 	 */
 	final protected function show_status_notices(): void {
 		if ( 'test' === $this->get_api_mode() ) {
