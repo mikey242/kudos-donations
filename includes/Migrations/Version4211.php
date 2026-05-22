@@ -14,6 +14,8 @@ namespace IseardMedia\Kudos\Migrations;
 use IseardMedia\Kudos\Domain\Table\DonorsTable;
 use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 
 class Version4211 extends BaseMigration {
 
@@ -22,13 +24,17 @@ class Version4211 extends BaseMigration {
 	private DonorsTable $donors_table;
 	private SubscriptionsTable $subscriptions_table;
 
+	private PaymentProviderInterface $provider;
+
 	/**
-	 * @param DonorsTable        $donors_table        The donors table class.
-	 * @param SubscriptionsTable $subscriptions_table The subscriptions table class.
+	 * @param DonorsTable            $donors_table        The donors table class.
+	 * @param SubscriptionsTable     $subscriptions_table The subscriptions table class.
+	 * @param PaymentProviderFactory $provider Used for fetching the current payment provider.
 	 */
-	public function __construct( DonorsTable $donors_table, SubscriptionsTable $subscriptions_table ) {
+	public function __construct( DonorsTable $donors_table, SubscriptionsTable $subscriptions_table, PaymentProviderFactory $provider ) {
 		$this->donors_table        = $donors_table;
 		$this->subscriptions_table = $subscriptions_table;
+		$this->provider            = $provider->get_provider();
 	}
 
 	/**
@@ -47,6 +53,7 @@ class Version4211 extends BaseMigration {
 			'backfill_vendor_donors'          => $this->job( [ $this, 'backfill_vendor_donors' ], 'Backfilling vendor column for existing donors' ),
 			'add_vendor_column_subscriptions' => $this->job( [ $this, 'add_vendor_column_subscriptions' ], 'Adding vendor column to subscriptions table', false ),
 			'backfill_vendor_subscriptions'   => $this->job( [ $this, 'backfill_vendor_subscriptions' ], 'Backfilling vendor column for existing subscriptions' ),
+			'refresh_payment_provider'        => $this->job( [ $this, 'refresh_payment_provider' ], 'Refreshing payment provider cache', false ),
 		];
 	}
 
@@ -86,6 +93,13 @@ class Version4211 extends BaseMigration {
 	public function backfill_vendor_subscriptions( int $limit ): int {
 		global $wpdb;
 		return $this->backfill_table( $wpdb->prefix . SubscriptionsTable::get_name(), $limit );
+	}
+
+	/**
+	 * Refresh the current payment provider's cache.
+	 */
+	public function refresh_payment_provider(): void {
+		$this->provider->refresh();
 	}
 
 	/**
