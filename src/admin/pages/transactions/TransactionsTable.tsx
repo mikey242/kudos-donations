@@ -2,11 +2,7 @@ import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import {
-	useEntitiesContext,
-	usePageTitle,
-	useSettingsContext,
-} from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { confirmDelete } from '../../../utils';
 import type { Campaign, Transaction } from '../../../types/entity';
@@ -30,8 +26,6 @@ export const TransactionsTable = (): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { handleDelete } = useEntitiesContext();
 	const { updateParams } = useAdminQueryParams();
-
-	usePageTitle(__('Transactions', 'kudos-donations'));
 
 	const handleEdit = (id: number) => void updateParams({ entity: id });
 
