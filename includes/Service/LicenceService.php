@@ -64,7 +64,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		}
 
 		$response = $this->activate_licence( $new_value );
-		$valid    = $response && isset( $response->success ) && (bool) $response->success;
+		$valid    = $response && isset( $response->success ) && $response->success;
 
 		if ( ! $valid ) {
 			return $old_value;
