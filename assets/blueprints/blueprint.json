@@ -22,7 +22,8 @@
 				"_kudos_payment_vendor": "demo",
 				"_kudos_payment_vendor_status": {
 					"ready": true,
-					"text": "Mollie ready (Demo account)"
+					"recurring": false,
+					"account": "Demo account"
 				}
 			}
 		},
