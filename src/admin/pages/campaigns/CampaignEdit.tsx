@@ -15,7 +15,7 @@ import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import { useEntitiesContext } from '../../contexts';
-import { useAdminQueryParams, usePageTitle } from '../../hooks';
+import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { Button, Fill } from '@wordpress/components';
@@ -43,8 +43,6 @@ const CampaignEdit = (): ReactNode => {
 	const { updateParams } = useAdminQueryParams();
 	const { handleUpdate, currentEntity: campaign } =
 		useEntitiesContext<Campaign>();
-	usePageTitle(campaign?.title ? `Edit: ${campaign.title}` : null);
-
 	const methods = useForm({
 		defaultValues: {
 			...campaign,

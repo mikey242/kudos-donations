@@ -1,6 +1,6 @@
 import { useEntitiesContext } from '../contexts';
 import type { BaseEntity } from '../../types/entity';
-import { useAdminQueryParams } from '../hooks';
+import { useAdminQueryParams, usePageTitle } from '../hooks';
 import { Fill } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
@@ -19,7 +19,13 @@ export const EntityPage = ({
 }: EntityPageProps): React.ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
 	const { entity: entityId } = params;
-	const { handleNew, entityType } = useEntitiesContext<BaseEntity>();
+	const { handleNew, entityType, pluralName, currentEntity } =
+		useEntitiesContext<BaseEntity>();
+	usePageTitle(
+		entityId
+			? currentEntity?.title && `Edit: ${currentEntity.title}`
+			: pluralName
+	);
 
 	const newPost = async () => {
 		await handleNew().then((response) => {

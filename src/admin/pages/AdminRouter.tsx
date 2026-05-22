@@ -1,6 +1,6 @@
 import { Flex, IconType } from '@wordpress/components';
 import type { ReactNode } from 'react';
-import { useAdminQueryParams, usePageTitle } from '../hooks';
+import { useAdminQueryParams } from '../hooks';
 import { EntitiesProvider } from '../contexts';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
@@ -221,8 +221,6 @@ export const AdminRouter = (): ReactNode => {
 	const page = params.page || adminPages[0].view;
 
 	const pageConfig = adminPages.find((p) => p.view === page);
-
-	usePageTitle(pageConfig?.label ?? null);
 
 	if (!pageConfig) {
 		return (
