@@ -5,8 +5,8 @@ import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../../contexts';
 import { Panel, ProviderSelector } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
-import { molliePanels } from './MollieTab';
-import { stripePanels } from './StripeTab';
+import { molliePanels } from './MolliePanels';
+import { stripePanels } from './StripePanels';
 import { Flex, Notice, Button } from '@wordpress/components';
 
 const vendorPanels: Record<string, AdminPanel[]> = {
