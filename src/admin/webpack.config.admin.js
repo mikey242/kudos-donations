@@ -12,7 +12,7 @@ module.exports = merge(commonConfig, {
 		new CopyWebpackPlugin({
 			patterns: [
 				{
-					from: resolve(__dirname, '../images'),
+					from: resolve(__dirname, '../images/logo-colour.png'),
 					to: 'images',
 				},
 			],
