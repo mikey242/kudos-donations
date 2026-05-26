@@ -27,6 +27,11 @@ class Notice extends BaseRestController {
 	public function get_routes(): array {
 
 		return [
+			''         => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_notices' ],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+			],
 			'/dismiss' => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'dismiss_notice' ],
@@ -40,6 +45,13 @@ class Notice extends BaseRestController {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
+	}
+
+	/**
+	 * Returns all current notices formatted for the frontend.
+	 */
+	public function get_notices(): WP_REST_Response {
+		return new WP_REST_Response( NoticeService::get_formatted_notices(), 200 );
 	}
 
 	/**

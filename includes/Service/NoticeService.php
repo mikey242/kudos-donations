@@ -24,6 +24,13 @@ class NoticeService implements HasSettingsInterface {
 	public const WARNING               = 'notice-warning';
 
 	/**
+	 * All notices that have passed through notice() during this request.
+	 *
+	 * @var array<string, array{id: string, status: string, content: string, isDismissible: bool, type: string}>
+	 */
+	private static array $collected = [];
+
+	/**
 	 * Add a new notice.
 	 *
 	 * @param string $message The notice message.
@@ -64,6 +71,16 @@ class NoticeService implements HasSettingsInterface {
 	}
 
 	/**
+	 * Returns all notices that have passed through notice() during this request,
+	 * formatted for the REST API / frontend.
+	 *
+	 * @return list<array{id: string, status: string, content: string, isDismissible: bool, type: string}>
+	 */
+	public static function get_formatted_notices(): array {
+		return array_values( self::$collected );
+	}
+
+	/**
 	 * Dismiss a notice by key.
 	 *
 	 * @param string $key The key of the notice to dismiss.
@@ -97,15 +114,23 @@ class NoticeService implements HasSettingsInterface {
 		if ( \is_null( $key ) ) {
 			$key = wp_generate_uuid4();
 		}
+
+		$status = substr( $level, strpos( $level, '-' ) + 1 );
+
+		// Collect for the REST endpoint; keyed by ID so repeat calls overwrite.
+		$notice                  = [
+			'id'            => $key,
+			'status'        => $status,
+			'content'       => $raw_message,
+			'isDismissible' => $dismissible,
+			'type'          => 'default',
+		];
+		self::$collected[ $key ] = $notice;
+
 		add_filter(
 			Localization::FILTER_ADMIN,
-			function ( $current ) use ( $raw_message, $level, $dismissible, $key ) {
-				$current['notices'][] = [
-					'id'            => $key,
-					'status'        => substr( $level, strpos( $level, '-' ) + 1 ),
-					'content'       => $raw_message,
-					'isDismissible' => $dismissible,
-				];
+			function ( $current ) use ( $notice ) {
+				$current['notices'][] = $notice;
 				return $current;
 			}
 		);
