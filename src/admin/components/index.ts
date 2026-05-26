@@ -1,3 +1,4 @@
+export * from './NoticesButton';
 export * from './Panel';
 export * from './PaymentIcon';
 export * from './PaymentMethodsList';

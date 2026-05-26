@@ -118,9 +118,10 @@ For general information on how to use shortcodes, please visit [this page](https
 * Show admin notice when payment provider is in 'test' mode
 * Admin panels can now be highlighted based on the panel URL parameter
 * Admin snackbar notifications have new icons
+* New notification component for regular notices
 * Preparation for adding Stripe payment provider
 * Update wordpress monorepo
-* Update react-hook-form to v7.76.0
+* Update react-hook-form to v7.76.1
 * Update mollie/mollie-api-php to v3.12.0
 
 = 4.2.10 =
