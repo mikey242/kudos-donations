@@ -61,9 +61,7 @@ class Notice extends BaseRestController {
 	 */
 	public function dismiss_notice( WP_REST_Request $request ): WP_REST_Response {
 		$key = $request->get_param( 'id' );
-		if ( NoticeService::dismiss_notice( $key ) ) {
-			return new WP_REST_Response( [ 'message' => __( 'Notice dismissed.', 'kudos-donations' ) ], 200 );
-		}
-		return new WP_REST_Response( [ 'message' => __( 'Notice not found.', 'kudos-donations' ) ], 404 );
+		NoticeService::dismiss_notice( $key );
+		return new WP_REST_Response( [ 'message' => __( 'Notice dismissed.', 'kudos-donations' ) ], 200 );
 	}
 }
