@@ -92,7 +92,7 @@ export const NoticesButton = ({
 								key={notice.id}
 								status={notice.status}
 								onDismiss={() => onRemove(notice.id)}
-								__unstableHTML={notice.__unstableHTML}
+								__unstableHTML
 							>
 								{notice.content}
 							</Notice>
