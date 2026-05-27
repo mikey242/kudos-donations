@@ -1,10 +1,4 @@
-import {
-	Button,
-	Flex,
-	Icon,
-	Tooltip,
-	VisuallyHidden,
-} from '@wordpress/components';
+import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table, StatusIcon } from '../../components';
 import React from 'react';
@@ -52,7 +46,7 @@ export const SubscriptionsTable = (): React.ReactNode => {
 
 			await createSuccessNotice(response.message, {
 				type: 'snackbar',
-				icon: <Icon icon="dismiss" />,
+				icon: '✅',
 			});
 
 			fetchEntities();
