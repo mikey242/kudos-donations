@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 
 class NoticeService implements HasSettingsInterface {
@@ -118,22 +117,13 @@ class NoticeService implements HasSettingsInterface {
 		$status = substr( $level, strpos( $level, '-' ) + 1 );
 
 		// Collect for the REST endpoint; keyed by ID so repeat calls overwrite.
-		$notice                  = [
+		self::$collected[ $key ] = [
 			'id'            => $key,
 			'status'        => $status,
 			'content'       => $raw_message,
 			'isDismissible' => $dismissible,
 			'type'          => 'default',
 		];
-		self::$collected[ $key ] = $notice;
-
-		add_filter(
-			Localization::FILTER_ADMIN,
-			function ( $current ) use ( $notice ) {
-				$current['notices'][] = $notice;
-				return $current;
-			}
-		);
 
 		if ( ! $kudos_only ) {
 			add_action(
