@@ -156,20 +156,17 @@ export const SettingsProvider = <T extends BaseSettings>({
 
 	async function checkApiKey(): Promise<any> {
 		setCheckingApiKey(true);
-		return apiFetch({
-			path: 'kudos/v1/payment/test',
-			method: 'POST',
-		})
-			.then((response) => {
-				return response;
-			})
-			.catch((response) => {
-				return response;
-			})
-			.finally(() => {
-				fetchSettings();
-				setCheckingApiKey(false);
+		try {
+			return await apiFetch({
+				path: 'kudos/v1/payment/test',
+				method: 'POST',
 			});
+		} catch (response) {
+			return response;
+		} finally {
+			await fetchSettings();
+			setCheckingApiKey(false);
+		}
 	}
 
 	return (
