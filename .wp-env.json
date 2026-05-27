@@ -6,7 +6,7 @@
 	],
 	"port": 80,
 	"mysqlPort": 32770,
-	"testsEnvironment": true,
+	"testsEnvironment": false,
 	"config": {
 		"KUDOS_DEMO_MODE": false,
 		"WP_DEBUG_DISPLAY": true,
