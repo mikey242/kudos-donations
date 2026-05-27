@@ -93,7 +93,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 	async function updateSettings(data: T, dirtyFields = null): Promise<void> {
 		// If dirty fields have been specified, then filter out unchanged data.
 		if (dirtyFields) {
-			data = dirtyValues(dirtyFields, data);
+			data = dirtyValues(dirtyFields, data as Record<string, any>) as T;
 		}
 
 		setSettingsSaving(true);
