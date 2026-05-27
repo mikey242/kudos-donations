@@ -1,10 +1,12 @@
 import { useCallback, useEffect } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect, select as storeSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { store as noticesStore } from '@wordpress/notices';
+import type { KudosNotice } from '../../types/window-kudos';
+import { useOnSettingsSaved } from './use-on-settings-saved';
 
 export const useAdminNotices = () => {
-	const { removeNotice, createNotice } = useDispatch(noticesStore);
+	const { createNotice, removeNotice } = useDispatch(noticesStore);
 
 	const handleRemove = useCallback(
 		(id: string) => {
@@ -18,24 +20,43 @@ export const useAdminNotices = () => {
 		[removeNotice]
 	);
 
-	// Add normal Kudos admin notices found in the window.kudos object.
-	useEffect(() => {
-		(window.kudos?.admin?.notices ?? []).forEach((notice) => {
-			createNotice(notice.status, notice.content, {
-				id: notice.id,
-				type: 'default',
-				isDismissible: notice.isDismissible,
-				__unstableHTML: true,
-			});
-		});
-	}, [createNotice]);
+	// Fetches the current server notices, clears any existing default notices,
+	const fetchAndSyncNotices = useCallback(() => {
+		apiFetch<KudosNotice[]>({ path: '/kudos/v1/notice' })
+			.then((fresh) => {
+				storeSelect(noticesStore)
+					.getNotices()
+					.filter((n) => n.type === 'default')
+					.forEach((n) => removeNotice(n.id));
+				fresh.forEach((notice) =>
+					createNotice(notice.status, notice.content, {
+						id: notice.id,
+						type: 'default',
+						isDismissible: notice.isDismissible,
+						__unstableHTML: true,
+					})
+				);
+			})
+			.catch(() => {});
+	}, [createNotice, removeNotice]);
 
-	const notices = useSelect(
-		(select) => select(noticesStore).getNotices(),
+	useEffect(() => {
+		fetchAndSyncNotices();
+	}, [fetchAndSyncNotices]);
+
+	useOnSettingsSaved(fetchAndSyncNotices);
+
+	const adminNotices = useSelect(
+		(select) =>
+			select(noticesStore)
+				.getNotices()
+				.filter((n) => n.type === 'default'),
 		[]
 	);
 
-	return { notices, handleRemove };
+	return { adminNotices, handleRemove };
 };
 
-export type AdminNotice = ReturnType<typeof useAdminNotices>['notices'][number];
+export type AdminNotice = ReturnType<
+	typeof useAdminNotices
+>['adminNotices'][number];
