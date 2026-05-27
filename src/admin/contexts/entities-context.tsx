@@ -122,7 +122,10 @@ export const EntitiesProvider = <T extends BaseEntity>({
 						__('Error creating %1$s: %2$s', 'kudos-donations'),
 						singularName,
 						error.message
-					)
+					),
+					{
+						type: 'snackbar',
+					}
 				);
 				return null;
 			}
@@ -134,7 +137,8 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		async (data: Partial<T>) => {
 			if (!data.id) {
 				void createErrorNotice(
-					__('Cannot update without an ID.', 'kudos-donations')
+					__('Cannot update without an ID.', 'kudos-donations'),
+					{ type: 'snackbar' }
 				);
 				return null;
 			}
@@ -169,7 +173,8 @@ export const EntitiesProvider = <T extends BaseEntity>({
 						__('Error updating %1$s: %2$s', 'kudos-donations'),
 						singularName,
 						error.message
-					)
+					),
+					{ type: 'snackbar' }
 				);
 				return null;
 			}

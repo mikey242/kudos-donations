@@ -67,7 +67,7 @@ const PaymentMethodsPanel = () => {
 					type: 'snackbar',
 				});
 			} else {
-				void createErrorNotice(response?.message);
+				void createErrorNotice(response?.message, { type: 'snackbar' });
 			}
 		});
 	};

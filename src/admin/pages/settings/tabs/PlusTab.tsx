@@ -52,7 +52,8 @@ const AddonPanel = () => {
 				__(
 					'Failed to install add-on. Please check the logs and try again.',
 					'kudos-donations'
-				)
+				),
+				{ type: 'snackbar' }
 			);
 		}
 	};
@@ -134,7 +135,8 @@ const LicenceKeyPanel = () => {
 					__(
 						'Invalid licence key. Please check and try again.',
 						'kudos-donations'
-					)
+					),
+					{ type: 'snackbar' }
 				);
 			}
 		} finally {

@@ -68,7 +68,10 @@ const CampaignEdit = (): ReactNode => {
 				__(
 					'There are invalid fields in the form. Please check the fields and correct any errors.',
 					'kudos-donations'
-				)
+				),
+				{
+					type: 'snackbar',
+				}
 			);
 		}
 	}, [createWarningNotice, formState]);

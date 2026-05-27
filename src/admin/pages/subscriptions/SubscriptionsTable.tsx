@@ -51,7 +51,7 @@ export const SubscriptionsTable = (): React.ReactNode => {
 
 			fetchEntities();
 		} catch (error: any) {
-			void createErrorNotice(error.message);
+			void createErrorNotice(error.message, { type: 'snackbar' });
 			return null;
 		}
 	};

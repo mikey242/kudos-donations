@@ -37,7 +37,10 @@ export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 		if (!tabExists) {
 			createWarningNotice(
 				// translators: %s is the name of the tab.
-				sprintf(__('Cannot find tab "%s"'), params.tab)
+				sprintf(__('Cannot find tab "%s"'), params.tab),
+				{
+					type: 'snackbar',
+				}
 			);
 		}
 	}, [createWarningNotice, params.tab, tabExists]);
