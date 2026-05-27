@@ -133,19 +133,15 @@ export const SettingsProvider = <T extends BaseSettings>({
 			});
 	}
 
-	// Update an individual setting, uses current state if value not specified.
+	// Update an individual setting.
 	async function updateSetting(
 		option: keyof T,
 		value: T[keyof T]
 	): Promise<T> {
-		// Create WordPress settings model.
-		const model = new api.models.Settings({
-			[option]: value,
-		});
-
-		// Save to database.
+		const model = new api.models.Settings({ [option]: value });
 		return model.save().then((response: T) => {
 			setSettings(response);
+			doAction('kudos_settings_saved', response);
 			return response;
 		});
 	}
