@@ -121,6 +121,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * New notification component for regular notices
 * Preparation for adding Stripe payment provider
 * Fix empty duration options for recurring payments
+* Plugin now short-circuits on fatal error
 * Update wordpress monorepo
 * Update react-hook-form to v7.77.0
 * Update mollie/mollie-api-php to v3.13.0
