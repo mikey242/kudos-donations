@@ -95,9 +95,31 @@ if ( file_exists( $dev_bootstrap ) ) {
 }
 
 /**
+ * Shutdown handler that stores fatal errors originating from this plugin.
+ */
+function handle_fatal_error(): void {
+	$error       = error_get_last();
+	$fatal_types = [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR ];
+
+	if ( ! $error || ! \in_array( $error['type'], $fatal_types, true ) ) {
+		return;
+	}
+
+	if ( strpos( $error['file'], KUDOS_PLUGIN_DIR ) !== 0 ) {
+		return;
+	}
+
+	update_option( '_kudos_fatal_error', $error['message'] . ' in ' . $error['file'] . ':' . $error['line'], false );
+}
+
+register_shutdown_function( __NAMESPACE__ . '\handle_fatal_error' );
+
+/**
  * Handle plugin activation.
  */
 function activate(): void {
+	delete_option( '_kudos_fatal_error' );
+
 	( new CompatibilityService() )->on_plugin_activation();
 
 	try {
@@ -131,6 +153,20 @@ register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
  * Bootstrap the plugin.
  */
 function bootstrap_plugin(): void {
+	$last_error = get_option( '_kudos_fatal_error' );
+
+	if ( $last_error ) {
+		NoticeService::notice(
+			\sprintf(
+				/* translators: %s: error message */
+				__( 'Kudos Donations has been disabled due to a fatal error: %s. Deactivate and reactivate the plugin to retry.', 'kudos-donations' ),
+				(string) $last_error
+			),
+			NoticeService::ERROR
+		);
+		return;
+	}
+
 	try {
 		ContainerFactory::create()->get( Plugin::class )->register();
 	} catch ( \Throwable $e ) {
