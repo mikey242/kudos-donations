@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Migrations;
 
+use IseardMedia\Kudos\Domain\Table\CampaignsTable;
 use IseardMedia\Kudos\Domain\Table\DonorsTable;
 use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
@@ -20,7 +21,6 @@ use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 class Version4211 extends BaseMigration {
 
 	protected string $version = '4.2.11';
-
 	private DonorsTable $donors_table;
 	private SubscriptionsTable $subscriptions_table;
 
@@ -53,6 +53,7 @@ class Version4211 extends BaseMigration {
 			'backfill_vendor_donors'          => $this->job( [ $this, 'backfill_vendor_donors' ], 'Backfilling vendor column for existing donors' ),
 			'add_vendor_column_subscriptions' => $this->job( [ $this, 'add_vendor_column_subscriptions' ], 'Adding vendor column to subscriptions table', false ),
 			'backfill_vendor_subscriptions'   => $this->job( [ $this, 'backfill_vendor_subscriptions' ], 'Backfilling vendor column for existing subscriptions' ),
+			'backfill_duration_options'       => $this->job( [ $this, 'backfill_duration_options' ], 'Backfilling duration options for existing campaigns' ),
 			'refresh_payment_provider'        => $this->job( [ $this, 'refresh_payment_provider' ], 'Refreshing payment provider cache', false ),
 		];
 	}
@@ -100,6 +101,59 @@ class Version4211 extends BaseMigration {
 	 */
 	public function refresh_payment_provider(): void {
 		$this->provider->refresh();
+	}
+
+	/**
+	 * Sets the default duration_options on campaigns that have a NULL value.
+	 *
+	 * @param int $limit Chunk size.
+	 * @return int Number of rows updated; 0 when done.
+	 */
+	public function backfill_duration_options( int $limit ): int {
+		global $wpdb;
+
+		$table = $wpdb->prefix . CampaignsTable::get_name();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$ids = $wpdb->get_col(
+			$wpdb->prepare( 'SELECT id FROM %i WHERE duration_options IS NULL LIMIT %d', $table, $limit )
+		);
+
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$default = wp_json_encode(
+			[
+				'0'  => __( 'Continuous', 'kudos-donations' ),
+				'1'  => __( '1 year', 'kudos-donations' ),
+				'2'  => __( '2 years', 'kudos-donations' ),
+				'3'  => __( '3 years', 'kudos-donations' ),
+				'4'  => __( '4 years', 'kudos-donations' ),
+				'5'  => __( '5 years', 'kudos-donations' ),
+				'6'  => __( '6 years', 'kudos-donations' ),
+				'7'  => __( '7 years', 'kudos-donations' ),
+				'8'  => __( '8 years', 'kudos-donations' ),
+				'9'  => __( '9 years', 'kudos-donations' ),
+				'10' => __( '10 years', 'kudos-donations' ),
+			],
+			JSON_FORCE_OBJECT
+		);
+
+		$safe_ids = implode( ',', array_map( 'intval', $ids ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE %i SET duration_options = %s WHERE id IN ($safe_ids)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$table,
+				$default
+			)
+		);
+
+		$this->logger->info( 'Backfilled duration_options for ' . \count( $ids ) . ' campaigns.' );
+
+		return \count( $ids );
 	}
 
 	/**
