@@ -53,7 +53,7 @@ class Version4211 extends BaseMigration {
 			'backfill_vendor_donors'          => $this->job( [ $this, 'backfill_vendor_donors' ], 'Backfilling vendor column for existing donors' ),
 			'add_vendor_column_subscriptions' => $this->job( [ $this, 'add_vendor_column_subscriptions' ], 'Adding vendor column to subscriptions table', false ),
 			'backfill_vendor_subscriptions'   => $this->job( [ $this, 'backfill_vendor_subscriptions' ], 'Backfilling vendor column for existing subscriptions' ),
-			'backfill_duration_options'       => $this->job( [ $this, 'backfill_duration_options' ], 'Backfilling duration options for existing campaigns' ),
+			'backfill_duration_options'       => $this->job( [ $this, 'backfill_duration_options' ], 'Backfilling duration options for existing campaigns', false ),
 			'refresh_payment_provider'        => $this->job( [ $this, 'refresh_payment_provider' ], 'Refreshing payment provider cache', false ),
 		];
 	}
@@ -105,22 +105,19 @@ class Version4211 extends BaseMigration {
 
 	/**
 	 * Sets the default duration_options on campaigns that have a NULL value.
-	 *
-	 * @param int $limit Chunk size.
-	 * @return int Number of rows updated; 0 when done.
 	 */
-	public function backfill_duration_options( int $limit ): int {
+	public function backfill_duration_options(): void {
 		global $wpdb;
 
 		$table = $wpdb->prefix . CampaignsTable::get_name();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$ids = $wpdb->get_col(
-			$wpdb->prepare( 'SELECT id FROM %i WHERE duration_options IS NULL LIMIT %d', $table, $limit )
+			$wpdb->prepare( "SELECT id FROM %i WHERE duration_options IS NULL OR duration_options = ''", $table )
 		);
 
 		if ( empty( $ids ) ) {
-			return 0;
+			return;
 		}
 
 		$default = wp_json_encode(
@@ -152,8 +149,6 @@ class Version4211 extends BaseMigration {
 		);
 
 		$this->logger->info( 'Backfilled duration_options for ' . \count( $ids ) . ' campaigns.' );
-
-		return \count( $ids );
 	}
 
 	/**
