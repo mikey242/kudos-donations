@@ -120,9 +120,10 @@ For general information on how to use shortcodes, please visit [this page](https
 * Admin snackbar notifications have new icons
 * New notification component for regular notices
 * Preparation for adding Stripe payment provider
+* Fix empty duration options for recurring payments
 * Update wordpress monorepo
-* Update react-hook-form to v7.76.1
-* Update mollie/mollie-api-php to v3.12.0
+* Update react-hook-form to v7.77.0
+* Update mollie/mollie-api-php to v3.13.0
 
 = 4.2.10 =
 * Fix success notification not shown after copying shortcode to clipboard
