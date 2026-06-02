@@ -78,16 +78,6 @@ class Plugin implements LoggerAwareInterface {
 	}
 
 	/**
-	 * Runs on plugin deactivation.
-	 */
-	public function on_plugin_deactivation(): void {
-		$this->logger->info(
-			'Plugin deactivated',
-			[ 'version' => KUDOS_VERSION ]
-		);
-	}
-
-	/**
 	 * Act on plugin uninstall.
 	 */
 	public function on_plugin_uninstall(): void {}

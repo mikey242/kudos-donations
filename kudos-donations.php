@@ -119,14 +119,6 @@ register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
  * Handles plugin deactivation.
  */
 function deactivate(): void {
-	try {
-		ContainerFactory::create()->get( Plugin::class )->on_plugin_deactivation();
-	} catch ( \Throwable $e ) {
-        // phpcs:disable WordPress.PHP.DevelopmentFunctions
-		error_log( $e->getMessage() );
-		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
-	}
-
 	/**
 	 * Fires after plugin deactivation.
 	 */
