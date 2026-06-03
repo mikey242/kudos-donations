@@ -18,7 +18,6 @@ use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\LinkService;
-use IseardMedia\Kudos\Service\NoticeService;
 
 class Admin extends AbstractRegistrable {
 
@@ -50,7 +49,6 @@ class Admin extends AbstractRegistrable {
 	public function register(): void {
 		$this->maybe_enable_debug_mode();
 		$this->handle_query_variables();
-		$this->show_notices();
 	}
 
 	/**
@@ -174,53 +172,6 @@ class Admin extends AbstractRegistrable {
 				default:
 					$this->logger->debug( 'Action not implemented', [ 'action' => $action ] );
 					break;
-			}
-		}
-	}
-
-	/**
-	 * Shows admin notices stored in the option.
-	 */
-	public function show_notices(): void {
-		$notices = NoticeService::get_notices();
-		if ( $notices ) {
-			add_action(
-				'admin_print_footer_scripts',
-				function () {
-					echo '
-					<script type="text/javascript">
-						const notices = document.querySelectorAll(".kudos-notice")
-						notices.forEach((notice) => {
-                            notice.addEventListener("click", function() {
-                                const key = notice.dataset.noticeKey;
-                                fetch("' . esc_url( rest_url( '/kudos/v1/notice/dismiss' ) ) . '", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                		"X-WP-Nonce": "' . esc_attr( wp_create_nonce( 'wp_rest' ) ) . '"
-                                    },
-                                    body: JSON.stringify({ id: key })
-                                })
-                            })
-						})
-					</script>
-				';
-				}
-			);
-			foreach ( $notices as $key => $notice ) {
-				$message     = $notice['message'] ?? $notice;
-				$level       = $notice['level'] ?? NoticeService::INFO;
-				$dismissible = $notice['dismissible'] ?? true;
-				$logo        = $notice['logo'] ?? true;
-				$kudos_only  = $notice['kudos_only'] ?? false;
-				NoticeService::notice(
-					$message,
-					$level,
-					$dismissible,
-					(string) $key,
-					$logo,
-					$kudos_only
-				);
 			}
 		}
 	}
