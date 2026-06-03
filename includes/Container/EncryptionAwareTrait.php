@@ -72,14 +72,27 @@ trait EncryptionAwareTrait {
 	 * Decrypt the stored API key.
 	 *
 	 * @param string $encrypted_option The option to decrypt.
+	 * @param string $settings_url     Optional URL to the relevant settings page, included in the error notice.
 	 */
-	protected function get_decrypted_key( string $encrypted_option ): string {
+	protected function get_decrypted_key( string $encrypted_option, string $settings_url = '' ): string {
 		$encrypted_key = get_option( $encrypted_option, '' );
 		$decrypted     = $this->get_encryption()->decrypt( $encrypted_key );
 
 		// If salt check failed or decryption failed.
 		if ( false === $decrypted ) {
-			NoticeService::add_notice( "Error decrypting key '$encrypted_option'. Please reset the key and add it again.", NoticeService::ERROR, true, $encrypted_option );
+			$message = $settings_url
+				? \sprintf(
+					/* translators: %1$s: Name of setting being decrypted. %2$s: URL to settings page. */
+					__( 'Error decrypting "%1$s". Please <a href="%2$s">reset it</a> and add it again.', 'kudos-donations' ),
+					$encrypted_option,
+					$settings_url
+				)
+				: \sprintf(
+				/* translators: %s: Name of setting being decrypted. */
+					__( 'Error decrypting "%s". Please reset it and add it again.', 'kudos-donations' ),
+					$encrypted_option
+				);
+			NoticeService::add_notice( $message, NoticeService::ERROR, true, $encrypted_option );
 			return '';
 		}
 

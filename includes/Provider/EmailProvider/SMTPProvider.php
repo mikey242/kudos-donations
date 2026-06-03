@@ -134,7 +134,10 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 			$custom_config = $this->custom_smtp_config;
 
 			// Get password.
-			$password = $this->get_decrypted_key( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
+			$password = $this->get_decrypted_key(
+				self::SETTING_SMTP_PASSWORD_ENCRYPTED,
+				admin_url( 'admin.php?page=kudos-settings&tab=email&panel=smtp-settings' )
+			);
 
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];

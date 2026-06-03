@@ -63,14 +63,22 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
+	 * Returns the decrypted API key for the current mode.
+	 */
+	protected function get_api_key(): string {
+		$mode   = $this->get_api_mode();
+		$option = \constant( static::class . '::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
+		return $this->get_decrypted_key( $option, admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' ) );
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function get_status(): array {
 		$setting = $this->get_cache_setting();
 		$cache   = $setting ? (array) get_option( $setting, [] ) : [];
 		$mode    = $this->get_api_mode();
-		$option  = \constant( static::class . '::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
-		$key     = $this->get_decrypted_key( $option );
+		$key     = $this->get_api_key();
 		$data    = isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
 		$stored  = isset( $data['methods'] ) ? (array) $data['methods'] : [];
 		$ready   = ! empty( $key ) && ! empty( $stored );

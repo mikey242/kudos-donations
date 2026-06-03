@@ -128,9 +128,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	protected function config_client(): bool {
 		// Gets the key associated with the specified mode.
-		$mode   = $this->get_api_mode();
-		$option = \constant( 'self::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
-		$key    = $this->get_decrypted_key( $option );
+		$key = $this->get_api_key();
 
 		if ( $key ) {
 			try {
