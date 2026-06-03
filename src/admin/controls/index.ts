@@ -2,6 +2,7 @@ export * from './BaseControl';
 export * from './CheckboxControl';
 export * from './ColorPicker';
 export * from './FormTokenField';
+export * from './ProviderSelector';
 export * from './RadioControl';
 export * from './RadioGroupControl';
 export * from './SelectControl';

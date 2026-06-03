@@ -18,6 +18,7 @@ declare module '@kudos/admin-controls' {
 		CheckboxControl,
 		ColorPicker,
 		FormTokenField,
+		ProviderSelector,
 		RadioOption,
 		RadioControl,
 		RadioGroupOption,
@@ -43,7 +44,6 @@ declare module '@kudos/admin-components' {
 		HeaderItem,
 		Table,
 		TableControls,
-		ProviderSelector,
 	} from '../admin/components';
 	export type { Provider } from '../admin/components';
 }

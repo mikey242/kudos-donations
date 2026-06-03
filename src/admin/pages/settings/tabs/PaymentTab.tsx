@@ -3,11 +3,14 @@ import type { AdminTab, AdminPanel } from '../../AdminTabPanel';
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../../contexts';
-import { Panel, ProviderSelector } from '../../../components';
+import { Panel } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 import { molliePanels } from './MolliePanels';
 import { stripePanels } from './StripePanels';
-import { Flex, Notice, Button } from '@wordpress/components';
+import { Flex, Notice } from '@wordpress/components';
+import { store as noticesStore } from '@wordpress/notices';
+import { useDispatch } from '@wordpress/data';
+import { ProviderSelector } from '../../../controls';
 
 const vendorPanels: Record<string, AdminPanel[]> = {
 	mollie: molliePanels,
@@ -18,78 +21,45 @@ const vendorPanels: Record<string, AdminPanel[]> = {
 const VendorSelectorPanel = () => {
 	const { settings, updateSetting } = useSettingsContext<AllSettings>();
 	const vendors = window.kudos?.admin?.payment_vendors ?? [];
-	const [modalOpen, setModalOpen] = useState(false);
+	const { createErrorNotice } = useDispatch(noticesStore);
+
 	const [isSaving, setIsSaving] = useState(false);
 	const savedVendor = settings._kudos_payment_vendor;
 
 	const handleSave = async (slug: string) => {
 		setIsSaving(true);
 		try {
-			await updateSetting(
-				'_kudos_payment_vendor',
-				slug as AllSettings['_kudos_payment_vendor']
-			);
+			return await updateSetting('_kudos_payment_vendor', slug);
+		} catch (e) {
+			await createErrorNotice((e as Error).message);
 		} finally {
 			setIsSaving(false);
-			setModalOpen(false);
 		}
-	};
-
-	const handleClose = () => {
-		setModalOpen(false);
 	};
 
 	if (vendors.length <= 1) {
 		return null;
 	}
 
-	const currentVendor = vendors.find((v) => v.slug === savedVendor);
-
 	return (
 		<>
 			<Panel header={__('Payment Provider', 'kudos-donations')}>
 				<Flex justify="space-between" align="center">
-					<div
-						style={{
-							display: 'flex',
-							alignItems: 'center',
-							gap: '0.5em',
-						}}
+					<ProviderSelector
+						vendors={vendors}
+						currentVendor={savedVendor}
+						onSave={handleSave}
+						isSaving={isSaving}
 					>
-						{currentVendor?.icon && (
-							<img
-								width={35}
-								height={35}
-								alt=""
-								src={`data:image/svg+xml;utf8,${encodeURIComponent(currentVendor.icon)}`}
-							/>
-						)}
-						<strong>{currentVendor?.label ?? savedVendor}</strong>
-					</div>
-					<Button
-						variant="link"
-						isDestructive
-						onClick={() => setModalOpen(true)}
-					>
-						{__('Change provider', 'kudos-donations')}
-					</Button>
+						<Notice status="warning" isDismissible={false}>
+							{__(
+								'Switching payment providers will not migrate existing subscriptions or donor records.',
+								'kudos-donations'
+							)}
+						</Notice>
+					</ProviderSelector>
 				</Flex>
 			</Panel>
-			<ProviderSelector
-				isOpen={modalOpen}
-				onClose={handleClose}
-				vendors={vendors}
-				currentVendor={savedVendor}
-				onSave={handleSave}
-				isSaving={isSaving}
-			>
-				<Notice status="warning" isDismissible={false}>
-					{__(
-						'Switching payment providers will not migrate existing subscriptions or donor records.',
-						'kudos-donations'
-					)}
-				</Notice>
-			</ProviderSelector>
 		</>
 	);
 };
