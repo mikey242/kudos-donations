@@ -8,6 +8,7 @@ namespace IseardMedia\Kudos\Tests\Migrations;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
+use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
 /**
@@ -18,6 +19,7 @@ class MigrationHandlerTest extends BaseTestCase {
 	protected function tearDown(): void {
 		parent::tearDown();
 		Localization::reset();
+		NoticeService::reset();
 	}
 
 	/**
@@ -140,18 +142,7 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
-	 * Returns the total number of admin_notices callbacks across all priorities.
-	 */
-	private function count_admin_notices_callbacks(): int {
-		global $wp_filter;
-		if ( ! isset( $wp_filter['admin_notices'] ) ) {
-			return 0;
-		}
-		return array_sum( array_map( 'count', $wp_filter['admin_notices']->callbacks ) );
-	}
-
-	/**
-	 * Test that register() adds an admin_notices hook when a non-auto migration is
+	 * Test that register() queues a notice when a non-auto migration is
 	 * pending and the current page is not a Kudos admin page.
 	 */
 	public function test_register_adds_notice_when_upgrade_needed_outside_kudos(): void {
@@ -159,15 +150,13 @@ class MigrationHandlerTest extends BaseTestCase {
 		unset( $_GET['page'] ); // Simulate being outside a Kudos admin page.
 
 		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
-		$before  = $this->count_admin_notices_callbacks();
-
 		$handler->register();
 
-		$this->assertGreaterThan( $before, $this->count_admin_notices_callbacks(), 'An admin_notices hook should have been added.' );
+		$this->assertNotEmpty( NoticeService::get_formatted_notices(), 'A notice should have been queued.' );
 	}
 
 	/**
-	 * Test that register() does NOT add a notice when on a Kudos admin page
+	 * Test that register() does NOT queue a notice when on a Kudos admin page
 	 * (the React modal handles the prompt instead).
 	 */
 	public function test_register_suppresses_notice_on_kudos_admin_page(): void {
@@ -175,13 +164,11 @@ class MigrationHandlerTest extends BaseTestCase {
 		$_GET['page'] = 'kudos-campaigns'; // Simulate being on a Kudos admin page.
 
 		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
-		$before  = $this->count_admin_notices_callbacks();
-
 		$handler->register();
 
 		unset( $_GET['page'] );
 
-		$this->assertSame( $before, $this->count_admin_notices_callbacks(), 'No admin_notices hook should be added on a Kudos admin page.' );
+		$this->assertEmpty( NoticeService::get_formatted_notices(), 'No notice should be queued on a Kudos admin page.' );
 	}
 
 	/**

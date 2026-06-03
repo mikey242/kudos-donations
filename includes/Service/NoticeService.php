@@ -238,6 +238,13 @@ class NoticeService implements HasSettingsInterface {
 	}
 
 	/**
+	 * Resets all in-memory notices. Intended for use in tests.
+	 */
+	public static function reset(): void {
+		self::$notices = [];
+	}
+
+	/**
 	 * Returns all settings in array.
 	 */
 	public static function get_settings(): array {
