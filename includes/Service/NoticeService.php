@@ -23,125 +23,162 @@ class NoticeService implements HasSettingsInterface {
 	public const WARNING               = 'notice-warning';
 
 	/**
-	 * All notices that have passed through notice() during this request.
+	 * Unified in-memory notice store for this request.
 	 *
-	 * @var array<string, array{id: string, status: string, content: string, isDismissible: bool, type: string}>
+	 * @var array<string, array{message: string, level: string, dismissible: bool, logo: bool, kudos_only: bool}>
 	 */
-	private static array $collected = [];
+	private static array $notices = [];
 
 	/**
-	 * Add a new notice.
+	 * Load persisted notices from the DB and register the admin_notices render hook.
+	 * Must be called early (e.g. on plugins_loaded) so notices are available to both
+	 * REST endpoints and admin pages.
+	 */
+	public static function init(): void {
+		$stored = get_option( self::SETTING_ADMIN_NOTICES, [] );
+		if ( \is_array( $stored ) ) {
+			foreach ( $stored as $key => $data ) {
+				self::$notices[ $key ] = $data;
+			}
+		}
+		add_action( 'admin_notices', [ self::class, 'render_all' ] );
+	}
+
+	/**
+	 * Add a runtime notice (current request only, not persisted).
 	 *
-	 * @param string $message The notice message.
-	 * @param string $level The level (info, success, warning, error).
+	 * Use when the condition is always true while it exists — e.g. test mode active,
+	 * API keys missing, migration needed. The notice is regenerated every request.
+	 *
+	 * @param string  $message     The notice message.
+	 * @param string  $level       The level (info, success, warning, error).
+	 * @param bool    $dismissible Whether the notice can be dismissed.
+	 * @param ?string $key         Optional key to identify the notice (allows overwriting).
+	 * @param bool    $logo        Whether to include the Kudos logo.
+	 * @param bool    $kudos_only  Whether to only show on Kudos Donations pages.
+	 */
+	public static function notice( string $message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true, bool $kudos_only = false ): void {
+		if ( \is_null( $key ) ) {
+			$key = wp_generate_uuid4();
+		}
+		self::$notices[ $key ] = compact( 'message', 'level', 'dismissible', 'logo', 'kudos_only' );
+	}
+
+	/**
+	 * Add a persisted notice (stored in DB, survives page reloads until dismissed).
+	 *
+	 * Use when the notice is triggered by a one-off event — e.g. a webhook registration
+	 * failure, a decryption error — where the condition won't recur on every request.
+	 *
+	 * @param string $message     The notice message.
+	 * @param string $level       The level (info, success, warning, error).
 	 * @param bool   $dismissible Whether the notice can be dismissed.
-	 * @param string $key Optional key to uniquely identify the notice.
-	 * @param bool   $logo Whether to include the logo or not.
-	 * @param bool   $kudos_only Whether to only show on Kudos Donations pages.
+	 * @param string $key         Optional key to identify the notice (allows overwriting).
+	 * @param bool   $logo        Whether to include the Kudos logo.
+	 * @param bool   $kudos_only  Whether to only show on Kudos Donations pages.
 	 */
 	public static function add_notice( string $message, string $level = self::INFO, bool $dismissible = true, string $key = '', bool $logo = true, bool $kudos_only = false ): void {
-		$notices = get_option( self::SETTING_ADMIN_NOTICES, [] );
-
-		// Use a key if provided, otherwise generate a unique key.
 		if ( ! $key ) {
 			$key = wp_generate_uuid4();
 		}
+		$data                  = compact( 'message', 'level', 'dismissible', 'logo', 'kudos_only' );
+		self::$notices[ $key ] = $data;
 
-		// Add the notice.
-		$notices[ $key ] = [
-			'message'     => $message,
-			'level'       => $level,
-			'dismissible' => $dismissible,
-			'logo'        => $logo,
-			'kudos_only'  => $kudos_only,
-		];
-
-		update_option( self::SETTING_ADMIN_NOTICES, $notices );
+		$stored         = get_option( self::SETTING_ADMIN_NOTICES, [] );
+		$stored[ $key ] = $data;
+		update_option( self::SETTING_ADMIN_NOTICES, $stored );
 	}
 
 	/**
-	 * Retrieve all notices.
+	 * Dismiss a notice by key. Removes from memory and DB (idempotent).
 	 *
-	 * @return array The list of notices.
+	 * @param string $key The notice key.
 	 */
-	public static function get_notices(): array {
-		$notices = get_option( self::SETTING_ADMIN_NOTICES, [] );
-		return \is_array( $notices ) ? $notices : [];
+	public static function dismiss_notice( string $key ): void {
+		unset( self::$notices[ $key ] );
+
+		$stored = get_option( self::SETTING_ADMIN_NOTICES, [] );
+		if ( isset( $stored[ $key ] ) ) {
+			unset( $stored[ $key ] );
+			update_option( self::SETTING_ADMIN_NOTICES, $stored );
+		}
 	}
 
 	/**
-	 * Returns all notices that have passed through notice() during this request,
-	 * formatted for the REST API / frontend.
+	 * Returns all current notices formatted for the REST API / frontend.
 	 *
 	 * @return list<array{id: string, status: string, content: string, isDismissible: bool, type: string}>
 	 */
 	public static function get_formatted_notices(): array {
-		return array_values( self::$collected );
+		$formatted = [];
+		foreach ( self::$notices as $key => $notice ) {
+			$formatted[] = [
+				'id'            => $key,
+				'status'        => substr( $notice['level'], strpos( $notice['level'], '-' ) + 1 ),
+				'content'       => $notice['message'],
+				'isDismissible' => $notice['dismissible'],
+				'type'          => 'default',
+			];
+		}
+		return $formatted;
 	}
 
 	/**
-	 * Dismiss a notice by key.
-	 *
-	 * @param string $key The key of the notice to dismiss.
+	 * Renders all non-kudos-only notices via the admin_notices hook.
 	 */
-	public static function dismiss_notice( string $key ): bool {
-		$notices = get_option( self::SETTING_ADMIN_NOTICES, [] );
+	public static function render_all(): void {
+		$renderable = array_filter(
+			self::$notices,
+			static fn( $n ) => ! $n['kudos_only']
+		);
 
-		if ( isset( $notices[ $key ] ) ) {
-			unset( $notices[ $key ] );
-			return update_option( self::SETTING_ADMIN_NOTICES, $notices );
+		if ( ! $renderable ) {
+			return;
 		}
-		return false;
+
+		self::enqueue_dismiss_script();
+
+		foreach ( $renderable as $key => $notice ) {
+			$message = $notice['logo']
+				? "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $notice['message'] . '</div>'
+				: $notice['message'];
+
+			self::render( $key, $notice['level'], $message, $notice['dismissible'] );
+		}
 	}
 
 	/**
-	 * Sets up the message and adds the hook.
-	 *
-	 * @param string  $raw_message The message content.
-	 * @param string  $level The message level.
-	 * @param bool    $dismissible Whether the notice can be dismissed by the user or not.
-	 * @param ?string $key Unique key for each notice.
-	 * @param bool    $logo Whether to include the logo or not.
-	 * @param bool    $kudos_only Whether to only show on Kudos Donations pages.
+	 * Outputs the inline script that wires up dismiss clicks on non-React admin pages.
 	 */
-	public static function notice( string $raw_message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true, bool $kudos_only = false ): void {
-		if ( $logo ) {
-			$message = "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $raw_message . '</div>';
-		} else {
-			$message = $raw_message;
-		}
-		if ( \is_null( $key ) ) {
-			$key = wp_generate_uuid4();
-		}
-
-		$status = substr( $level, strpos( $level, '-' ) + 1 );
-
-		// Collect for the REST endpoint; keyed by ID so repeat calls overwrite.
-		self::$collected[ $key ] = [
-			'id'            => $key,
-			'status'        => $status,
-			'content'       => $raw_message,
-			'isDismissible' => $dismissible,
-			'type'          => 'default',
-		];
-
-		if ( ! $kudos_only ) {
-			add_action(
-				'admin_notices',
-				function () use ( $key, $level, $message, $dismissible ) {
-					NoticeService::render( $key, $level, $message, $dismissible );
-				}
-			);
-		}
+	private static function enqueue_dismiss_script(): void {
+		add_action(
+			'admin_print_footer_scripts',
+			static function () {
+				echo '<script type="text/javascript">
+					document.querySelectorAll(".kudos-notice").forEach(function(notice) {
+						notice.addEventListener("click", function() {
+							fetch("' . esc_url( rest_url( '/kudos/v1/notice/dismiss' ) ) . '", {
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+									"X-WP-Nonce": "' . esc_attr( wp_create_nonce( 'wp_rest' ) ) . '"
+								},
+								body: JSON.stringify({ id: notice.dataset.noticeKey })
+							});
+						});
+					});
+				</script>';
+			}
+		);
 	}
 
 	/**
 	 * Generates the notice markup.
 	 *
-	 * @param string $key Unique key for each notice.
-	 * @param string $level The alert level.
-	 * @param string $message The message to display.
-	 * @param bool   $dismissible Whether the notice can be dismissed by the user or not.
+	 * @param string $key         Unique key for each notice.
+	 * @param string $level       The alert level.
+	 * @param string $message     The message to display.
+	 * @param bool   $dismissible Whether the notice can be dismissed.
 	 */
 	private static function render( string $key, string $level, string $message, bool $dismissible = true ): void {
 		printf(
