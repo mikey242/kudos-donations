@@ -153,8 +153,6 @@ register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
  * Bootstrap the plugin.
  */
 function bootstrap_plugin(): void {
-	NoticeService::init();
-
 	$last_error = get_option( '_kudos_fatal_error' );
 
 	if ( $last_error ) {
@@ -177,4 +175,5 @@ function bootstrap_plugin(): void {
 	}
 }
 
+add_action( 'plugins_loaded', [ NoticeService::class, 'init' ], 5 );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\bootstrap_plugin' );
