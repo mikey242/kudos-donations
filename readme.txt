@@ -113,6 +113,11 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.12 =
+* Fix duplicate campaign button not working
+* Fix some notices not showing correctly in the admin
+* Update wordpress monorepo
+
 = 4.2.11 =
 * Improve block placeholder in block editor
 * Show admin notice when payment provider is in 'test' mode
