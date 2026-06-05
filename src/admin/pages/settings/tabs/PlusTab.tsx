@@ -96,7 +96,10 @@ const AddonPanel = () => {
 	return (
 		<Panel header={__('Add-on', 'kudos-donations')}>
 			<Flex justify="space-between" align="center">
-				<span>{__('Kudos Donations Plus', 'kudos-donations')}</span>
+				<span>
+					{__('Kudos Donations Plus', 'kudos-donations')}{' '}
+					<strong>({window.kudos.version?.plus})</strong>
+				</span>
 				<>{addonButton}</>
 			</Flex>
 		</Panel>
