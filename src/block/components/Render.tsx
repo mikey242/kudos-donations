@@ -99,7 +99,7 @@ export const Render = ({
 				id="container"
 				className={clsx(
 					className,
-					'font-body text-gray-900',
+					'flex font-body text-gray-900',
 					alignmentResult
 				)}
 				data-preview={previewMode || undefined}

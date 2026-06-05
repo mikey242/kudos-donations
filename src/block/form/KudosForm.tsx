@@ -155,7 +155,7 @@ export const KudosForm = ({
 			alignment={alignment}
 			isContentReady={!isLoading}
 		>
-			<div id="kudos-content">
+			<div id="kudos-content" className={clsx(isForm && 'w-full')}>
 				{isFSLogo && <KudosLogoFullScreenAnimated />}
 				{isForm && renderDonationForm()}
 				{isModal && (

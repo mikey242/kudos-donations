@@ -116,6 +116,7 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.2.12 =
 * Fix duplicate campaign button not working
 * Fix some notices not showing correctly in the admin
+* Fix block alignment not working
 * Update wordpress monorepo
 
 = 4.2.11 =
