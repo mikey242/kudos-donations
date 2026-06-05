@@ -52,6 +52,16 @@ trait SanitizeTrait {
 	}
 
 	/**
+	 * Sanitize JSON field for use as a WP REST API sanitize_callback.
+	 *
+	 * @param mixed $value The field value to sanitize.
+	 * @return false|string|null
+	 */
+	public function rest_sanitize_json_field( $value ) {
+		return $this->sanitize_json_field( $value );
+	}
+
+	/**
 	 * Sanitize JSON field, forcing object encoding even for numeric-keyed arrays.
 	 *
 	 * @param mixed $value The field value to sanitize.

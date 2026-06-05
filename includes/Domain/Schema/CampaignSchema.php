@@ -26,7 +26,7 @@ class CampaignSchema extends BaseSchema {
 			'show_goal'                  => $this->make_schema_field( FieldType::BOOLEAN, 'rest_sanitize_boolean' ),
 			'additional_funds'           => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
 			'amount_type'                => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
-			'fixed_amounts'              => $this->make_schema_field( FieldType::OBJECT, [ $this, 'sanitize_json_field' ] ),
+			'fixed_amounts'              => $this->make_schema_field( FieldType::OBJECT, [ $this, 'rest_sanitize_json_field' ] ),
 			'minimum_donation'           => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
 			'maximum_donation'           => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
 			'donation_type'              => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
