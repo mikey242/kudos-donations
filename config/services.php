@@ -49,6 +49,7 @@ use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\IntrospectionProcessor;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
+use IseardMedia\Kudos\ThirdParty\Stripe\StripeClient;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -130,6 +131,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	// Enable Lazy loading for specific services/libraries.
 	$services->set( Dompdf::class )->lazy();
 	$services->set( MollieApiClient::class )->lazy();
+	$services->set( StripeClient::class )->lazy();
 	$services->set( TwigService::class )->lazy();
 	$services->set( PDFService::class )->lazy();
 
