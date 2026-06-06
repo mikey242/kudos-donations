@@ -138,7 +138,7 @@ const ApiKeysPanel = () => (
 						`sk_${mode}_`
 					)
 				}
-				/>
+			/>
 		))}
 		<Panel.Footer>
 			<ExternalLink href="https://dashboard.stripe.com/apikeys">
