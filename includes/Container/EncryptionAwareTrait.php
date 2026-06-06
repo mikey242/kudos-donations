@@ -55,17 +55,17 @@ trait EncryptionAwareTrait {
 
 		$num_asterisks = substr_count( $value, '*' );
 		$count         = \strlen( $value );
-		if ( $num_asterisks !== $count ) {
-			$encrypted_key = $this->get_encryption()->encrypt( $value );
-			$stars         = str_repeat( '*', \strlen( $value ) );
-			$result        = update_option( $encrypted_option, $encrypted_key );
-			if ( $result && \is_callable( $callback ) ) {
-				\call_user_func( $callback );
-			}
-			return $stars;
+		if ( '1' === $value || $num_asterisks === $count ) {
+			return $value;
 		}
 
-		return $value;
+		$encrypted_key = $this->get_encryption()->encrypt( $value );
+		$result        = update_option( $encrypted_option, $encrypted_key );
+		if ( $result && \is_callable( $callback ) ) {
+			\call_user_func( $callback );
+		}
+
+		return '1';
 	}
 
 	/**

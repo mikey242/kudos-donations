@@ -3,8 +3,12 @@ import React from 'react';
 import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Button, Disabled, ExternalLink, Icon } from '@wordpress/components';
-import { RadioGroupControl, TextControl } from '../../../controls';
+import { Button, ExternalLink, Icon } from '@wordpress/components';
+import {
+	RadioGroupControl,
+	SecretControl,
+	TextControl,
+} from '../../../controls';
 import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 import type { AdminPanel } from '../../AdminTabPanel';
@@ -113,75 +117,36 @@ const PaymentMethodsPanel = () => {
 	);
 };
 
-const ApiKeysPanel = () => {
-	const { checkingApiKey, updateSettings, settings } =
-		useSettingsContext<AllSettings>();
-	const {
-		_kudos_vendor_stripe_api_key_live: liveKey,
-		_kudos_vendor_stripe_api_key_test: testKey,
-	} = settings;
-	const apiKeyStatus: Record<ApiMode, string> = {
-		live: liveKey,
-		test: testKey,
-	};
-
-	return (
-		<Panel header={__('API Keys', 'kudos-donations')}>
-			{(['live', 'test'] as ApiMode[]).map((mode, i) => {
-				const isDisabled =
-					!!apiKeyStatus[mode] || window.kudos.admin?.demoMode;
-				return (
-					<Disabled key={i} isDisabled={isDisabled}>
-						<TextControl
-							key={i}
-							isDisabled={isDisabled}
-							name={`_kudos_vendor_stripe_api_key_${mode}`}
-							prefix={<Icon icon="shield" />}
-							type={isDisabled ? 'password' : 'text'}
-							rules={{
-								validate: (value: string) =>
-									!value ||
-									value.startsWith(`rk_${mode}_`) ||
-									value.startsWith(`sk_${mode}_`) ||
-									sprintf(
-										/* translators: 1: restricted key prefix, 2: secret key prefix */
-										__(
-											'Key must start with "%1$s" or "%2$s"',
-											'kudos-donations'
-										),
-										`rk_${mode}_`,
-										`sk_${mode}_`
-									),
-							}}
-							label={mode + ' key'}
-						/>
-					</Disabled>
-				);
-			})}
-			<Panel.Footer>
-				<ExternalLink href="https://dashboard.stripe.com/apikeys">
-					{__('Visit Stripe dashboard', 'kudos-donations')}.
-				</ExternalLink>
-				<Button
-					type="button"
-					variant="link"
-					disabled={checkingApiKey}
-					isDestructive={true}
-					onClick={() => {
-						void updateSettings({
-							_kudos_vendor_stripe_api_key_live: '',
-							_kudos_vendor_stripe_api_key_test: '',
-							_kudos_vendor_stripe_api_mode: 'test',
-							_kudos_vendor_stripe_webhook: {},
-						});
-					}}
-				>
-					{__('Reset Stripe', 'kudos-donations')}
-				</Button>
-			</Panel.Footer>
-		</Panel>
-	);
-};
+const ApiKeysPanel = () => (
+	<Panel header={__('API Keys', 'kudos-donations')}>
+		{(['test', 'live'] as ApiMode[]).map((mode) => (
+			<SecretControl
+				key={mode}
+				name={`_kudos_vendor_stripe_api_key_${mode}`}
+				label={mode + ' key'}
+				validate={(value) =>
+					!value ||
+					value.startsWith(`rk_${mode}_`) ||
+					value.startsWith(`sk_${mode}_`) ||
+					sprintf(
+						/* translators: 1: restricted key prefix, 2: secret key prefix */
+						__(
+							'Key must start with "%1$s" or "%2$s"',
+							'kudos-donations'
+						),
+						`rk_${mode}_`,
+						`sk_${mode}_`
+					)
+				}
+				/>
+		))}
+		<Panel.Footer>
+			<ExternalLink href="https://dashboard.stripe.com/apikeys">
+				{__('Visit Stripe dashboard', 'kudos-donations')}.
+			</ExternalLink>
+		</Panel.Footer>
+	</Panel>
+);
 
 const WebhookPanel = () => {
 	const { settings } = useSettingsContext<AllSettings>();

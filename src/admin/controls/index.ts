@@ -1,4 +1,5 @@
 export * from './BaseControl';
+export * from './SecretControl';
 export * from './CheckboxControl';
 export * from './ColorPicker';
 export * from './FormTokenField';
