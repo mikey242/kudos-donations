@@ -4,11 +4,15 @@ import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
-import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Button, Disabled, Flex, Icon, PanelRow } from '@wordpress/components';
-import { RadioControl, TextControl, ToggleControl } from '../../../controls';
+import { Button, PanelRow } from '@wordpress/components';
+import {
+	RadioControl,
+	SecretControl,
+	TextControl,
+	ToggleControl,
+} from '../../../controls';
 import type { WPErrorResponse, WPResponse } from '../../../../types/wp';
 import { Panel } from '../../../components';
 
@@ -49,8 +53,6 @@ const EmailReceiptsPanel = () => {
 
 const SmtpSettingsPanel = () => {
 	const watchCustom = useWatch({ name: '_kudos_smtp_enable' });
-	const { updateSetting, settings } = useSettingsContext();
-	const passwordDisabled = !!settings._kudos_smtp_password;
 
 	return (
 		<Panel header={__('SMTP settings', 'kudos-donations')}>
@@ -129,37 +131,14 @@ const SmtpSettingsPanel = () => {
 							),
 						}}
 					/>
-					<Disabled isDisabled={passwordDisabled}>
-						<TextControl
-							name="_kudos_smtp_password"
-							prefix={<Icon icon="shield" />}
-							label={__('Password', 'kudos-donations')}
-							help={__(
-								'This password will be encrypted in the database.',
-								'kudos-donations'
-							)}
-							type="password"
-							rules={{
-								required: __(
-									'This field is required.',
-									'kudos-donations'
-								),
-							}}
-						/>
-					</Disabled>
-					<Flex justify="flex-end">
-						<Button
-							type="button"
-							variant="link"
-							isDestructive={true}
-							className="ml-auto text-red-600 underline text-right cursor-pointer block"
-							onClick={() =>
-								updateSetting('_kudos_smtp_password', '')
-							}
-						>
-							{__('Reset password', 'kudos-donations')}
-						</Button>
-					</Flex>
+					<SecretControl
+						name="_kudos_smtp_password"
+						label={__('Password', 'kudos-donations')}
+						help={__(
+							'This password will be encrypted in the database.',
+							'kudos-donations'
+						)}
+					/>
 					<TextControl
 						name="_kudos_custom_smtp.from_email"
 						label={__('From address', 'kudos-donations')}
