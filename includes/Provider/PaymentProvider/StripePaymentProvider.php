@@ -694,7 +694,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 *
 	 * @param string $invoice_id The Stripe invoice ID.
 	 */
-	public function handle_invoice_payment( string $invoice_id ): void {
+	private function handle_invoice_payment( string $invoice_id ): void {
 		$client = $this->get_client();
 		if ( null === $client ) {
 			return;
