@@ -66,7 +66,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$this->transaction_repository  = $transaction_repository;
 		$this->donor_repository        = $donor_repository;
 		$this->subscription_repository = $subscription_repository;
-		add_action( 'kudos_mollie_handle_status_change', [ $this, 'handle_status_change' ] );
 	}
 
 	/**

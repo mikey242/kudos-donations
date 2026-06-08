@@ -47,6 +47,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 * {@inheritDoc}
 	 */
 	final public function init(): void {
+		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
 		$this->setup();
 		if ( null !== $this->get_cache_setting() ) {
 			$this->show_status_notices();

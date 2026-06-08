@@ -112,7 +112,6 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		Localization::add_admin( 'stripeWebhookUrl', self::get_webhook_url() );
 		Stripe::setEnableTelemetry( false );
 		Stripe::setLogger( $this->get_logger() );
-		add_action( 'kudos_stripe_handle_status_change', [ $this, 'handle_status_change' ] );
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
 		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 2 );
