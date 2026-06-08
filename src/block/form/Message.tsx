@@ -43,6 +43,10 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 	};
 
 	useEffect(() => {
+		if (isLoading) {
+			return;
+		}
+
 		let attempts = 1;
 
 		// Check transaction status.
