@@ -5,6 +5,8 @@
  * @link https://github.com/mikey242/kudos-donations
  *
  * @copyright 2026 Iseard Media
+ *
+ * @phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */
 
 declare( strict_types=1 );
@@ -218,11 +220,18 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$cache          = (array) get_option( self::SETTING_CACHE, [] );
 		$cache[ $mode ] = [
 			'methods'   => $this->get_payment_methods(),
-			'recurring' => false,
+			'recurring' => $this->can_use_recurring(),
 		];
 		update_option( self::SETTING_CACHE, $cache );
 
 		return true;
+	}
+
+	/**
+	 * Stripe subscriptions are available to all accounts — return true if the client is configured.
+	 */
+	private function can_use_recurring(): bool {
+		return null !== $this->get_client();
 	}
 
 	/**
