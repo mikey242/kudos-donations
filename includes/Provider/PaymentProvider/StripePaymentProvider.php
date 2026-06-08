@@ -521,15 +521,24 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			$session           = $client->checkout->sessions->retrieve( $transaction->vendor_payment_id );
-			$payment_intent_id = $session->payment_intent;
-
-			if ( ! $payment_intent_id ) {
-				$this->get_logger()->error( 'No payment_intent on Stripe session', [ 'session_id' => $transaction->vendor_payment_id ] );
-				return false;
+			if ( str_starts_with( $transaction->vendor_payment_id, 'in_' ) ) {
+				$invoice   = $client->invoices->retrieve( $transaction->vendor_payment_id );
+				$charge_id = $invoice->charge ?? null;
+				if ( ! $charge_id ) {
+					$this->get_logger()->error( 'No charge on Stripe invoice', [ 'invoice_id' => $transaction->vendor_payment_id ] );
+					return false;
+				}
+				$refund = $client->refunds->create( [ 'charge' => $charge_id ] );
+			} else {
+				$session           = $client->checkout->sessions->retrieve( $transaction->vendor_payment_id );
+				$payment_intent_id = $session->payment_intent;
+				if ( ! $payment_intent_id ) {
+					$this->get_logger()->error( 'No payment_intent on Stripe session', [ 'session_id' => $transaction->vendor_payment_id ] );
+					return false;
+				}
+				$refund = $client->refunds->create( [ 'payment_intent' => $payment_intent_id ] );
 			}
 
-			$refund = $client->refunds->create( [ 'payment_intent' => $payment_intent_id ] );
 			$this->get_logger()->info(
 				'Stripe refund created.',
 				[
