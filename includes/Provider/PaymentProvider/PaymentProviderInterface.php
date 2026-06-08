@@ -51,7 +51,7 @@ interface PaymentProviderInterface extends ProviderInterface {
 	/**
 	 * Creates a payment and returns it as an object.
 	 *
-	 * @param array             $payment_args Parameters to pass to mollie to create a payment.
+	 * @param array             $payment_args Parameters to pass to the provider to create a payment.
 	 * @param TransactionEntity $transaction The transaction entity array.
 	 * @param ?string           $vendor_customer_id The vendors customer id.
 	 * @return string|false
