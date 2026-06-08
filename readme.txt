@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.2.13 =
+ * Fix incorrect message showing on return pop-up if campaign not yet loaded
+
 = 4.2.12 =
 * Fix duplicate campaign button not working
 * Fix some notices not showing correctly in the admin
