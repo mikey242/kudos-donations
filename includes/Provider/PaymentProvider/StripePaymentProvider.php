@@ -393,7 +393,23 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
-		return false;
+		if ( null === $subscription->vendor_subscription_id ) {
+			return false;
+		}
+
+		$client = $this->get_client();
+		if ( null === $client ) {
+			return false;
+		}
+
+		try {
+			$result = $client->subscriptions->cancel( $subscription->vendor_subscription_id );
+			$this->get_logger()->info( 'Stripe subscription cancelled.', [ 'vendor_subscription_id' => $subscription->vendor_subscription_id ] );
+			return Subscription::STATUS_CANCELED === $result->status;
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->error( 'Error cancelling Stripe subscription.', [ 'error' => $e->getMessage() ] );
+			return false;
+		}
 	}
 
 	/**
