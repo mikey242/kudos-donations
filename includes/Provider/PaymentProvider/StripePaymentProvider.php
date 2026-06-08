@@ -15,6 +15,7 @@ namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
@@ -71,14 +72,17 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	];
 
 	private ?StripeClient $stripe = null;
+	private SubscriptionRepository $subscription_repository;
 
 	/**
 	 * StripePaymentProvider constructor.
 	 *
-	 * @param TransactionRepository $transaction_repository The transaction repository.
+	 * @param TransactionRepository  $transaction_repository The transaction repository.
+	 * @param SubscriptionRepository $subscription_repository The subscription repository.
 	 */
-	public function __construct( TransactionRepository $transaction_repository ) {
-		$this->transaction_repository = $transaction_repository;
+	public function __construct( TransactionRepository $transaction_repository, SubscriptionRepository $subscription_repository ) {
+		$this->transaction_repository  = $transaction_repository;
+		$this->subscription_repository = $subscription_repository;
 	}
 
 	/**
@@ -235,6 +239,65 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
+	 * Converts a frequency string (e.g. '1 month', '3 months', '12 months')
+	 * into a Stripe recurring interval array.
+	 *
+	 * @param string $frequency The frequency string.
+	 * @return array{interval: string, interval_count: int}
+	 */
+	private function parse_frequency( string $frequency ): array {
+		$parts = explode( ' ', trim( $frequency ) );
+		return [
+			'interval'       => rtrim( $parts[1], 's' ),
+			'interval_count' => (int) ( $parts[0] ),
+		];
+	}
+
+	/**
+	 * Creates a local subscription entity linked to the given Stripe subscription ID.
+	 *
+	 * @param TransactionEntity $transaction The initial transaction.
+	 * @param string            $stripe_subscription_id The Stripe subscription ID.
+	 * @param string            $frequency The frequency string (e.g. '1 month').
+	 * @param int               $years How many years the subscription should run (0 = indefinite).
+	 * @return int|false The new subscription entity ID, or false on failure.
+	 */
+	private function create_subscription( TransactionEntity $transaction, string $stripe_subscription_id, string $frequency, int $years ) {
+		$subscription_entity = $this->subscription_repository->new_entity(
+			[
+				'frequency'              => $frequency,
+				'years'                  => $years ? $years : null,
+				'value'                  => $transaction->value,
+				'currency'               => $transaction->currency,
+				'transaction_id'         => $transaction->id,
+				'donor_id'               => $transaction->donor_id,
+				'campaign_id'            => $transaction->campaign_id,
+				'vendor'                 => self::get_slug(),
+				'status'                 => 'active',
+				'vendor_subscription_id' => $stripe_subscription_id,
+				'vendor_customer_id'     => $transaction->vendor_customer_id,
+			]
+		);
+
+		$subscription_id = $this->subscription_repository->insert( $subscription_entity );
+
+		if ( false === $subscription_id ) {
+			$this->get_logger()->error( 'Failed to insert Stripe subscription entity.', [ 'transaction_id' => $transaction->id ] );
+			return false;
+		}
+
+		$this->get_logger()->info(
+			'Stripe subscription entity created.',
+			[
+				'subscription_id'        => $subscription_id,
+				'stripe_subscription_id' => $stripe_subscription_id,
+			]
+		);
+
+		return $subscription_id;
+	}
+
+	/**
 	 * Fetches payment method capabilities from the Stripe account.
 	 *
 	 * @return array<int, array{id: string, description: string, status: string}>
@@ -363,27 +426,36 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$value  = number_format( \floatval( $payment_args['value'] ), 2, '.', '' );
 		$amount = (int) round( \floatval( $value ) * 100 ); // Stripe expects smallest currency unit.
 
+		$price_data   = [
+			'currency'     => strtolower( (string) $payment_args['currency'] ),
+			'unit_amount'  => $amount,
+			'product_data' => [
+				'name' => $transaction->title,
+			],
+		];
+
+        $is_recurring = 'true' === ( $payment_args['recurring'] ?? '' );
+		if ( $is_recurring ) {
+			$price_data['recurring'] = $this->parse_frequency( (string) ( $payment_args['recurring_frequency'] ?? '1 month' ) );
+		}
+
 		$session_args = [
-			'mode'        => 'payment',
+			'mode'        => $is_recurring ? 'subscription' : 'payment',
 			'line_items'  => [
 				[
-					'price_data' => [
-						'currency'     => strtolower( (string) $payment_args['currency'] ),
-						'unit_amount'  => $amount,
-						'product_data' => [
-							'name' => $transaction->title,
-						],
-					],
+					'price_data' => $price_data,
 					'quantity'   => 1,
 				],
 			],
 			'success_url' => (string) $payment_args['return_url'],
 			'cancel_url'  => (string) $payment_args['return_url'],
 			'metadata'    => [
-				'transaction_id' => (string) $transaction->id,
-				'campaign_id'    => (string) $payment_args['campaign_id'],
-				'email'          => (string) $payment_args['email'],
-				'name'           => (string) $payment_args['name'],
+				'transaction_id'      => (string) $transaction->id,
+				'campaign_id'         => (string) $payment_args['campaign_id'],
+				'email'               => (string) $payment_args['email'],
+				'name'                => (string) $payment_args['name'],
+				'recurring_frequency' => (string) ( $payment_args['recurring_frequency'] ?? '' ),
+				'recurring_length'    => (string) ( $payment_args['recurring_length'] ?? '0' ),
 			],
 		];
 
@@ -496,10 +568,9 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		$this->get_logger()->info( 'Stripe webhook received.', [ 'type' => $event->type ] );
 
-		$handled_events = [ 'checkout.session.completed', 'checkout.session.expired' ];
+		$handled_events = [ 'checkout.session.completed', 'checkout.session.expired', 'invoice.payment_succeeded' ];
 		if ( \in_array( $event->type, $handled_events, true ) ) {
-			$session = $event->data->object;
-			$this->enqueue_status_change_action( $session->id );
+			$this->enqueue_status_change_action( $event->data->object->id );
 		}
 
 		return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -509,6 +580,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function handle_status_change( string $vendor_payment_id ): void {
+		if ( str_starts_with( $vendor_payment_id, 'in_' ) ) {
+			$this->handle_invoice_payment( $vendor_payment_id );
+			return;
+		}
+
 		$client = $this->get_client();
 		if ( null === $client ) {
 			return;
@@ -563,6 +639,18 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			$transaction->status            = PaymentStatus::PAID;
 			$transaction->vendor_payment_id = $session->id;
 			$transaction->mode              = $session->livemode ? 'live' : 'test';
+
+			$stripe_subscription_id = $session->subscription ?? null;
+			if ( $stripe_subscription_id && 'first' === $transaction->sequence_type ) {
+				$frequency = (string) ( $session->metadata->recurring_frequency ?? '1 month' );
+				$years     = (int) ( $session->metadata->recurring_length ?? 0 );
+
+				$subscription_id = $this->create_subscription( $transaction, $stripe_subscription_id, $frequency, $years );
+				if ( false !== $subscription_id ) {
+					$transaction->subscription_id = $subscription_id;
+				}
+			}
+
 			$this->transaction_repository->update( $transaction );
 			$this->on_transaction_status_changed( $transaction );
 		} elseif ( 'expired' === $session->status ) {
@@ -570,6 +658,81 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			$this->transaction_repository->update( $transaction );
 			$this->on_transaction_status_changed( $transaction );
 		}
+	}
+
+	/**
+	 * Handles a Stripe invoice.payment_succeeded event for recurring subscription charges.
+	 *
+	 * @param string $invoice_id The Stripe invoice ID.
+	 */
+	public function handle_invoice_payment( string $invoice_id ): void {
+		$client = $this->get_client();
+		if ( null === $client ) {
+			return;
+		}
+
+		try {
+			$invoice = $client->invoices->retrieve( $invoice_id );
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->error(
+				'Error retrieving Stripe invoice.',
+				[
+					'error'      => $e->getMessage(),
+					'invoice_id' => $invoice_id,
+				]
+			);
+			return;
+		}
+
+		// The initial subscription payment is already handled by checkout.session.completed.
+		if ( 'subscription_cycle' !== $invoice->billing_reason ) {
+			return;
+		}
+
+		$stripe_subscription_id = $invoice->parent->subscription_details->subscription ?? null;
+		if ( ! $stripe_subscription_id ) {
+			$this->get_logger()->warning( 'No subscription on Stripe invoice.', [ 'invoice_id' => $invoice_id ] );
+			return;
+		}
+
+		/** @var SubscriptionEntity|null $subscription */
+		$subscription = $this->subscription_repository->find_one_by( [ 'vendor_subscription_id' => $stripe_subscription_id ] );
+		if ( null === $subscription ) {
+			$this->get_logger()->warning( 'No local subscription found for Stripe subscription.', [ 'stripe_subscription_id' => $stripe_subscription_id ] );
+			return;
+		}
+
+		$transaction = $this->transaction_repository->new_entity(
+			[
+				'donor_id'           => $subscription->donor_id,
+				'campaign_id'        => $subscription->campaign_id,
+				'subscription_id'    => $subscription->id,
+				'vendor_customer_id' => $invoice->customer,
+				'vendor_payment_id'  => $invoice->id,
+				'vendor'             => self::get_slug(),
+				'status'             => PaymentStatus::PAID,
+				'value'              => round( $invoice->amount_paid / 100, 2 ),
+				'currency'           => strtoupper( $invoice->currency ),
+				'sequence_type'      => 'recurring',
+				'mode'               => $invoice->livemode ? 'live' : 'test',
+			]
+		);
+
+		$transaction_id = $this->transaction_repository->insert( $transaction );
+		if ( false === $transaction_id ) {
+			$this->get_logger()->error( 'Failed to insert recurring Stripe transaction.', [ 'invoice_id' => $invoice_id ] );
+			return;
+		}
+
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		$this->get_logger()->info(
+			'Recurring Stripe payment recorded.',
+			[
+				'transaction_id' => $transaction_id,
+				'invoice_id'     => $invoice_id,
+			]
+		);
+		$this->on_transaction_status_changed( $transaction );
 	}
 
 	/**
