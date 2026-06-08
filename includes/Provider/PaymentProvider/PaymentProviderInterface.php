@@ -68,9 +68,8 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 * Vendor webhook action.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 * @return WP_Error|WP_REST_Response
 	 */
-	public function rest_webhook( WP_REST_Request $request );
+	public function rest_webhook( WP_REST_Request $request ): WP_REST_Response;
 
 	/**
 	 * Method for handling a status change, generally called by webhook.
