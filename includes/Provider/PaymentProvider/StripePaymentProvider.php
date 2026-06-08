@@ -22,11 +22,15 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\ThirdParty\Stripe\Capability;
+use IseardMedia\Kudos\ThirdParty\Stripe\Checkout\Session;
+use IseardMedia\Kudos\ThirdParty\Stripe\Event;
 use IseardMedia\Kudos\ThirdParty\Stripe\Exception\ApiErrorException;
 use IseardMedia\Kudos\ThirdParty\Stripe\Exception\SignatureVerificationException;
 use IseardMedia\Kudos\ThirdParty\Stripe\Exception\UnexpectedValueException;
+use IseardMedia\Kudos\ThirdParty\Stripe\Invoice;
 use IseardMedia\Kudos\ThirdParty\Stripe\Stripe;
 use IseardMedia\Kudos\ThirdParty\Stripe\StripeClient;
+use IseardMedia\Kudos\ThirdParty\Stripe\Subscription;
 use IseardMedia\Kudos\ThirdParty\Stripe\Webhook;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -273,7 +277,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				'donor_id'               => $transaction->donor_id,
 				'campaign_id'            => $transaction->campaign_id,
 				'vendor'                 => self::get_slug(),
-				'status'                 => 'active',
+				'status'                 => Subscription::STATUS_ACTIVE,
 				'vendor_subscription_id' => $stripe_subscription_id,
 				'vendor_customer_id'     => $transaction->vendor_customer_id,
 			]
@@ -426,7 +430,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$value  = number_format( \floatval( $payment_args['value'] ), 2, '.', '' );
 		$amount = (int) round( \floatval( $value ) * 100 ); // Stripe expects smallest currency unit.
 
-		$price_data   = [
+		$price_data = [
 			'currency'     => strtolower( (string) $payment_args['currency'] ),
 			'unit_amount'  => $amount,
 			'product_data' => [
@@ -434,13 +438,13 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			],
 		];
 
-        $is_recurring = 'true' === ( $payment_args['recurring'] ?? '' );
+		$is_recurring = 'true' === ( $payment_args['recurring'] ?? '' );
 		if ( $is_recurring ) {
 			$price_data['recurring'] = $this->parse_frequency( (string) ( $payment_args['recurring_frequency'] ?? '1 month' ) );
 		}
 
 		$session_args = [
-			'mode'        => $is_recurring ? 'subscription' : 'payment',
+			'mode'        => $is_recurring ? Session::MODE_SUBSCRIPTION : Session::MODE_PAYMENT,
 			'line_items'  => [
 				[
 					'price_data' => $price_data,
@@ -568,7 +572,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		$this->get_logger()->info( 'Stripe webhook received.', [ 'type' => $event->type ] );
 
-		$handled_events = [ 'checkout.session.completed', 'checkout.session.expired', 'invoice.payment_succeeded' ];
+		$handled_events = [ Event::CHECKOUT_SESSION_COMPLETED, Event::CHECKOUT_SESSION_EXPIRED, Event::INVOICE_PAYMENT_SUCCEEDED ];
 		if ( \in_array( $event->type, $handled_events, true ) ) {
 			$this->enqueue_status_change_action( $event->data->object->id );
 		}
@@ -635,7 +639,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		if ( 'complete' === $session->status && 'paid' === $session->payment_status ) {
+		if ( Session::STATUS_COMPLETE === $session->status && Session::PAYMENT_STATUS_PAID === $session->payment_status ) {
 			$transaction->status            = PaymentStatus::PAID;
 			$transaction->vendor_payment_id = $session->id;
 			$transaction->mode              = $session->livemode ? 'live' : 'test';
@@ -653,7 +657,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 			$this->transaction_repository->update( $transaction );
 			$this->on_transaction_status_changed( $transaction );
-		} elseif ( 'expired' === $session->status ) {
+		} elseif ( Session::STATUS_EXPIRED === $session->status ) {
 			$transaction->status = PaymentStatus::EXPIRED;
 			$this->transaction_repository->update( $transaction );
 			$this->on_transaction_status_changed( $transaction );
@@ -685,7 +689,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		// The initial subscription payment is already handled by checkout.session.completed.
-		if ( 'subscription_cycle' !== $invoice->billing_reason ) {
+		if ( Invoice::BILLING_REASON_SUBSCRIPTION_CYCLE !== $invoice->billing_reason ) {
 			return;
 		}
 
