@@ -76,8 +76,8 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$this->set_user_agent();
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 3 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_TEST, [ $this, 'handle_key_updated' ], 10, 3 );
+		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 2 );
+		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_TEST, [ $this, 'handle_key_updated' ], 10, 2 );
 	}
 
 	/**
