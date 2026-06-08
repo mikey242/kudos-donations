@@ -292,6 +292,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 					'enabled_events' => [
 						'checkout.session.completed',
 						'checkout.session.expired',
+						'invoice.payment_succeeded',
 					],
 				]
 			);
