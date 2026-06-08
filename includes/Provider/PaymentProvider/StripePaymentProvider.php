@@ -543,7 +543,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				'Stripe refund created.',
 				[
 					'status'     => $refund->status,
-					'session_id' => $transaction->vendor_payment_id,
+					'payment_id' => $transaction->vendor_payment_id,
 				]
 			);
 			return \in_array( $refund->status, [ 'succeeded', 'pending' ], true );
@@ -754,6 +754,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		$transaction = $this->transaction_repository->get( $transaction_id );
+		if ( null === $transaction ) {
+			$this->get_logger()->error( 'Failed to re-fetch inserted recurring transaction.', [ 'transaction_id' => $transaction_id ] );
+			return;
+		}
 		$this->get_logger()->info(
 			'Recurring Stripe payment recorded.',
 			[
