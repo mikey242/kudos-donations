@@ -64,6 +64,19 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
+	 * Triggers a refresh after the encrypted key option is successfully saved.
+	 *
+	 * @param string $_old_value Previous option value.
+	 * @param string $new_value  New option value (empty when key was cleared).
+	 */
+	public function handle_key_updated( string $_old_value, string $new_value ): void {
+		if ( ! $new_value ) {
+			return;
+		}
+		$this->refresh();
+	}
+
+	/**
 	 * Returns the decrypted API key for the current mode.
 	 */
 	protected function get_api_key(): string {

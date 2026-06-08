@@ -203,24 +203,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Triggers a refresh after the encrypted key option is saved.
-	 *
-	 * @param string $old_value Previous encrypted value.
-	 * @param string $new_value New encrypted value (empty when key was cleared).
-	 * @param string $option    Encrypted option name.
-	 */
-	public function handle_key_updated( string $old_value, string $new_value, string $option ): void {
-		if ( ! $new_value ) {
-			return;
-		}
-		$mode = ( self::SETTING_API_KEY_ENCRYPTED_LIVE === $option ) ? 'live' : 'test';
-		if ( ! apply_filters( "kudos_mollie_{$mode}_key_validation", false ) ) {
-			$this->refresh();
-		}
-	}
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function refresh(): bool {

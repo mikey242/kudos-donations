@@ -199,19 +199,6 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Triggers a refresh after a key option is successfully saved.
-	 *
-	 * @param string $old_value Previous option value.
-	 * @param string $new_value New option value (starred or empty).
-	 */
-	public function handle_key_updated( string $old_value, string $new_value ): void {
-		if ( ! $new_value ) {
-			return;
-		}
-		$this->refresh();
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function refresh(): bool {
