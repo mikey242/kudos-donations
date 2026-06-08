@@ -5,6 +5,7 @@ import { TextControl, ToggleControl } from '../../../controls';
 import { Panel } from '../../../components';
 import { LogModal } from '../../LogModal';
 import React from 'react';
+import { useSettingsContext } from '../../../contexts';
 
 const ShareTheLovePanel = () => (
 	<Panel header={__('Share the love', 'kudos-donations')} spacing={2}>
@@ -28,46 +29,57 @@ const ShareTheLovePanel = () => (
 	</Panel>
 );
 
-const AboutPanel = () => (
-	<Panel
-		header={__('About', 'kudos-donations')}
-		spacing={2}
-		headerExtra={
-			<>
-				<span>
-					<strong>Plugin Version: </strong>
-					{window.kudos.version?.base}
-				</span>
-			</>
-		}
-	>
-		<p>
-			Kudos Donations developed by Michael Iseard /{' '}
-			<a href="https://iseard.media">Iseard Media</a>
-		</p>
-		<Flex justify="flex-start">
-			<Button
-				variant="secondary"
-				icon="groups"
-				href="https://wordpress.org/support/plugin/kudos-donations/"
-				target="_blank"
-				rel="noreferrer"
-			>
-				{__('Support forums', 'kudos-donations')}
-			</Button>
-			<Button
-				variant="secondary"
-				icon="editor-help"
-				href="https://docs.kudosdonations.com/"
-				target="_blank"
-				rel="noreferrer"
-			>
-				{__('Visit our Documentation', 'kudos-donations')}
-			</Button>
-			<LogModal />
-		</Flex>
-	</Panel>
-);
+const AboutPanel = () => {
+	const { updateSetting } = useSettingsContext();
+
+	return (
+		<Panel
+			header={__('About', 'kudos-donations')}
+			spacing={2}
+			headerExtra={
+				<>
+					<span>
+						<strong>Plugin Version: </strong>
+						{window.kudos.version?.base}
+					</span>
+				</>
+			}
+		>
+			<p>
+				Kudos Donations developed by Michael Iseard /{' '}
+				<a href="https://iseard.media">Iseard Media</a>
+			</p>
+			<Flex justify="flex-start">
+				<Button
+					variant="secondary"
+					icon="groups"
+					href="https://wordpress.org/support/plugin/kudos-donations/"
+					target="_blank"
+					rel="noreferrer"
+				>
+					{__('Support forums', 'kudos-donations')}
+				</Button>
+				<Button
+					variant="secondary"
+					icon="editor-help"
+					href="https://docs.kudosdonations.com/"
+					target="_blank"
+					rel="noreferrer"
+				>
+					{__('Visit our Documentation', 'kudos-donations')}
+				</Button>
+				<Button
+					variant="secondary"
+					icon="info"
+					onClick={() => updateSetting('_kudos_show_intro', true)}
+				>
+					{__('Show welcome guide', 'kudos-donations')}
+				</Button>
+				<LogModal />
+			</Flex>
+		</Panel>
+	);
+};
 
 const AdvancedPanel = () => (
 	<Panel header={__('Advanced', 'kudos-donations')}>
