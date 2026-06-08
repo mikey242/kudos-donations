@@ -120,7 +120,7 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 		}, intervalTime);
 
 		return () => clearInterval(interval);
-	}, [transactionId, campaign]);
+	}, [transactionId, campaign, isLoading]);
 
 	if (isLoading) {
 		return;
