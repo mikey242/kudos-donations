@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.12
+Stable tag: 4.2.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
  = 4.2.13 =
  * Fix incorrect message showing on return pop-up if campaign not yet loaded
+ * Fix fatal error caused by stale admin notices left over from the notice system refactor
+ * Update dependency mollie/mollie-api-php to v3.13.1
+ * Update dependency react-hook-form to v7.78.0
 
 = 4.2.12 =
 * Fix duplicate campaign button not working

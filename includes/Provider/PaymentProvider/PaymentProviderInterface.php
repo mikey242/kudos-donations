@@ -12,7 +12,6 @@ namespace IseardMedia\Kudos\Provider\PaymentProvider;
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Provider\ProviderInterface;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -51,7 +50,7 @@ interface PaymentProviderInterface extends ProviderInterface {
 	/**
 	 * Creates a payment and returns it as an object.
 	 *
-	 * @param array             $payment_args Parameters to pass to mollie to create a payment.
+	 * @param array             $payment_args Parameters to pass to the provider to create a payment.
 	 * @param TransactionEntity $transaction The transaction entity array.
 	 * @param ?string           $vendor_customer_id The vendors customer id.
 	 * @return string|false
@@ -69,9 +68,8 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 * Vendor webhook action.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 * @return WP_Error|WP_REST_Response
 	 */
-	public function rest_webhook( WP_REST_Request $request );
+	public function rest_webhook( WP_REST_Request $request ): WP_REST_Response;
 
 	/**
 	 * Method for handling a status change, generally called by webhook.
