@@ -78,6 +78,7 @@ export const SecretControl = ({
 		<InputControl
 			label={label}
 			type="text"
+			className={isSet ? 'kudos-secret-control--set' : undefined}
 			value={
 				isSet
 					? `${label} ${__('saved', 'kudos-donations')}`.toUpperCase()
