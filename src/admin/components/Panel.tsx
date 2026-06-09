@@ -51,6 +51,7 @@ export const Panel = ({
 }: PanelProps) => {
 	const {
 		params: { panel },
+		updateParams,
 	} = useAdminQueryParams();
 	const contextName = useContext(PanelNameContext);
 	const resolvedName = name ?? contextName;
@@ -73,9 +74,12 @@ export const Panel = ({
 		}
 		ref.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
 		setSelected(true);
-		const t = setTimeout(() => setSelected(false), 2000);
+		const t = setTimeout(() => {
+			setSelected(false);
+			void updateParams({ panel: null });
+		}, 2000);
 		return () => clearTimeout(t);
-	}, [isHighlighted]);
+	}, [isHighlighted, updateParams]);
 
 	return (
 		<Card
