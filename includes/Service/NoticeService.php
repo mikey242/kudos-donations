@@ -38,7 +38,15 @@ class NoticeService implements HasSettingsInterface {
 		$stored = get_option( self::SETTING_ADMIN_NOTICES, [] );
 		if ( \is_array( $stored ) ) {
 			foreach ( $stored as $key => $data ) {
-				self::$notices[ $key ] = $data;
+				if ( \is_array( $data ) && isset( $data['message'], $data['level'] ) ) {
+					self::$notices[ $key ] = [
+						'message'     => (string) $data['message'],
+						'level'       => (string) $data['level'],
+						'dismissible' => ! empty( $data['dismissible'] ),
+						'logo'        => ! isset( $data['logo'] ) || ! empty( $data['logo'] ),
+						'kudos_only'  => ! empty( $data['kudos_only'] ),
+					];
+				}
 			}
 		}
 		add_action( 'admin_notices', [ self::class, 'render_all' ] );
