@@ -13,7 +13,6 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Flex, Spinner } from '@wordpress/components';
-import { IntroGuide } from '../pages';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 import { dirtyValues } from '../../utils';
@@ -180,10 +179,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 			}}
 		>
 			{settingsReady ? (
-				<>
-					<IntroGuide />
-					{children}
-				</>
+				children
 			) : (
 				<Flex justify="center">
 					<Spinner />

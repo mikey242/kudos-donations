@@ -8,7 +8,6 @@ export * from './AdminMenu';
 export * from './AdminRouter';
 export * from './AdminTabPanel';
 export * from './EntityPage';
-export * from './IntroGuide';
 export * from './LogModal';
 export * from './MigrationModal';
 export * from './Notices';

@@ -5,7 +5,6 @@ import { TextControl, ToggleControl } from '../../../controls';
 import { Panel } from '../../../components';
 import { LogModal } from '../../LogModal';
 import React from 'react';
-import { useSettingsContext } from '../../../contexts';
 
 const ShareTheLovePanel = () => (
 	<Panel header={__('Share the love', 'kudos-donations')} spacing={2}>
@@ -30,8 +29,6 @@ const ShareTheLovePanel = () => (
 );
 
 const AboutPanel = () => {
-	const { updateSetting } = useSettingsContext();
-
 	return (
 		<Panel
 			header={__('About', 'kudos-donations')}
@@ -67,13 +64,6 @@ const AboutPanel = () => {
 					rel="noreferrer"
 				>
 					{__('Visit our Documentation', 'kudos-donations')}
-				</Button>
-				<Button
-					variant="secondary"
-					icon="info"
-					onClick={() => updateSetting('_kudos_show_intro', true)}
-				>
-					{__('Show welcome guide', 'kudos-donations')}
 				</Button>
 				<LogModal />
 			</Flex>

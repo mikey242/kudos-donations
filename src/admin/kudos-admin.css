@@ -27,31 +27,6 @@ body.admin-color-modern {
 	transform: translateY(-50%);
 }
 
-.components-modal__frame.components-guide.kudos-intro-guide {
-	width: 500px;
-	max-height: 580px;
-
-	.kudos-intro-guide-text,
-	.kudos-intro-guide-header {
-		padding: 0 32px;
-		line-height: 1.4;
-	}
-
-	.kudos-intro-guide-text {
-		font-size: 13px;
-		margin: 0 0 24px;
-	}
-
-	.kudos-intro-guide-header {
-		font-size: 24px;
-		margin: 16px 0;
-	}
-
-	img {
-		margin: 0 0 16px;
-	}
-}
-
 .kudos-secret-control--set .components-input-control__input {
 	font-style: italic;
 }

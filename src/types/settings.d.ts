@@ -23,7 +23,6 @@ export interface BaseSettings {
 	_kudos_migration_status: string[];
 	_kudos_payment_vendor: 'mollie' | 'stripe' | 'demo' | string;
 	_kudos_payment_vendor_status: VendorStatus;
-	_kudos_show_intro: boolean | null;
 	_kudos_debug_mode: boolean;
 	_kudos_base_font_size: string; // e.g., '1.2rem'
 	_kudos_maximum_donation: number;
