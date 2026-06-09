@@ -68,6 +68,7 @@ export const Panel = ({
 
 	useLayoutEffect(() => {
 		if (!isHighlighted || !ref.current) {
+			setSelected(false);
 			return;
 		}
 		ref.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
