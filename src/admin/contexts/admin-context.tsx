@@ -1,8 +1,10 @@
 import React, { ReactNode } from 'react';
 import { Flex, SlotFillProvider } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../pages';
+import { OnboardingBanner } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { createContext, useContext, useState } from '@wordpress/element';
+import { SettingsProvider } from './settings-context';
 
 interface AdminContextValue {
 	setPageTitle: (title: string | null) => void;
@@ -36,12 +38,15 @@ export const InnerAdminProvider = ({ children }) => {
 			<SlotFillProvider>
 				<AdminHeader />
 				<Notices />
-				{pageTitle && (
-					<Flex justify="center">
-						<h2>{pageTitle}</h2>
-					</Flex>
-				)}
-				<>{children}</>
+				<SettingsProvider>
+					<OnboardingBanner />
+					{pageTitle && (
+						<Flex justify="center">
+							<h2>{pageTitle}</h2>
+						</Flex>
+					)}
+					<>{children}</>
+				</SettingsProvider>
 			</SlotFillProvider>
 		</AdminContext.Provider>
 	);
