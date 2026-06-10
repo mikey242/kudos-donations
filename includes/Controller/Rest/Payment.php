@@ -412,9 +412,8 @@ class Payment extends BaseRestController {
 	 * Webhook handler. Passes request to rest_webhook method of current vendor.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 * @return WP_ERROR | WP_REST_Response
 	 */
-	public function handle_webhook( WP_REST_Request $request ) {
+	public function handle_webhook( WP_REST_Request $request ): WP_REST_Response {
 		do_action( 'kudos_' . $this->vendor::get_slug() . '_webhook_requested', $request );
 
 		return $this->vendor->rest_webhook( $request );
