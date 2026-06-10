@@ -35,6 +35,7 @@ interface StepsBannerProps {
 	counterLabel?: string;
 	steps: StepsBannerStep[];
 	className?: string;
+	completedMessage?: React.ReactNode;
 	onClose?: () => void;
 }
 
@@ -43,10 +44,10 @@ export const StepsBanner = ({
 	counterLabel,
 	steps,
 	className,
+	completedMessage,
 	onClose,
 }: StepsBannerProps) => {
 	const visibleSteps = steps.filter((s) => !s.hidden);
-
 	const resolvedSteps = visibleSteps.map((step, i) => {
 		const locked = visibleSteps.slice(0, i).some((s) => !s.done);
 		let state: StepState = 'active';
@@ -64,6 +65,8 @@ export const StepsBanner = ({
 	});
 
 	const doneCount = visibleSteps.filter((s) => s.done).length;
+	const showCompleted =
+		!!completedMessage && visibleSteps.every((s) => s.done);
 
 	return (
 		<Card
@@ -101,74 +104,84 @@ export const StepsBanner = ({
 				/>
 			)}
 			<CardBody>
-				<h2 style={{ textAlign: 'center', marginTop: 0 }}>{title}</h2>
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'space-between',
-					}}
-				>
-					{counterLabel && (
-						<strong style={{ whiteSpace: 'nowrap' }}>
-							{counterLabel} ({doneCount}/{resolvedSteps.length})
-						</strong>
-					)}
-					<div
-						style={{
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-evenly',
-							flex: 1,
-						}}
-					>
-						{resolvedSteps.map((step) => (
-							<Button
-								key={step.id}
+				{!showCompleted ? (
+					<>
+						<h2 style={{ textAlign: 'center', marginTop: 0 }}>
+							{title}
+						</h2>
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+							}}
+						>
+							{counterLabel && (
+								<strong style={{ whiteSpace: 'nowrap' }}>
+									{counterLabel} ({doneCount}/
+									{resolvedSteps.length})
+								</strong>
+							)}
+							<div
 								style={{
-									background: step.styles.background,
-									border: step.styles.border,
-									borderRadius: '20px',
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'space-evenly',
+									flex: 1,
 								}}
-								onClick={step.onClick}
-								disabled={step.done || step.locked}
-								icon={
-									step.done ? (
-										<Icon
-											icon="yes-alt"
-											style={{
-												color: 'var(--kudos-colour-success)',
-												flexShrink: 0,
-											}}
-										/>
-									) : (
-										<span
-											style={{
-												display: 'inline-flex',
-												alignItems: 'center',
-												justifyContent: 'center',
-												width: '20px',
-												height: '20px',
-												borderRadius: '50%',
-												background:
-													step.styles
-														.circleBackground,
-												color: 'white',
-												fontSize: '11px',
-												fontWeight: 600,
-												flexShrink: 0,
-											}}
-										>
-											{step.number}
-										</span>
-									)
-								}
 							>
-								{step.label}
-							</Button>
-						))}
-					</div>
-				</div>
+								{resolvedSteps.map((step) => (
+									<Button
+										key={step.id}
+										style={{
+											background: step.styles.background,
+											border: step.styles.border,
+											borderRadius: '20px',
+										}}
+										onClick={step.onClick}
+										disabled={step.done || step.locked}
+										icon={
+											step.done ? (
+												<Icon
+													icon="yes-alt"
+													style={{
+														color: 'var(--kudos-colour-success)',
+														flexShrink: 0,
+													}}
+												/>
+											) : (
+												<span
+													style={{
+														display: 'inline-flex',
+														alignItems: 'center',
+														justifyContent:
+															'center',
+														width: '20px',
+														height: '20px',
+														borderRadius: '50%',
+														background:
+															step.styles
+																.circleBackground,
+														color: 'white',
+														fontSize: '11px',
+														fontWeight: 600,
+														flexShrink: 0,
+													}}
+												>
+													{step.number}
+												</span>
+											)
+										}
+									>
+										{step.label}
+									</Button>
+								))}
+							</div>
+						</div>
+					</>
+				) : (
+					completedMessage
+				)}
 			</CardBody>
 		</Card>
 	);
