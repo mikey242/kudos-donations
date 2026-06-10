@@ -65,7 +65,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	/**
 	 * Returns the current vendor's status derived from stored settings.
 	 *
-	 * @return array{ready: bool, recurring: bool}
+	 * @return array{ready: bool, recurring: bool, methods?: array, account?: string}
 	 */
 	public function get_vendor_status(): array {
 		$provider = $this->payment_provider_factory->get_provider();
@@ -211,7 +211,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			self::SETTING_VENDOR        => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
-				'default'      => 'mollie',
+				'default'      => '',
 			],
 			self::SETTING_VENDOR_STATUS => [
 				'type'         => FieldType::OBJECT,
