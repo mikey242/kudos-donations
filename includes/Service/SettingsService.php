@@ -15,10 +15,11 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
 class SettingsService implements HasSettingsInterface {
-	public const SETTING_DEBUG_MODE       = '_kudos_debug_mode';
-	public const SETTING_BASE_FONT_SIZE   = '_kudos_base_font_size';
-	public const SETTING_MAXIMUM_DONATION = '_kudos_maximum_donation';
-	public const SETTING_ALLOW_METRICS    = '_kudos_allow_metrics';
+	public const SETTING_DEBUG_MODE           = '_kudos_debug_mode';
+	public const SETTING_BASE_FONT_SIZE       = '_kudos_base_font_size';
+	public const SETTING_MAXIMUM_DONATION     = '_kudos_maximum_donation';
+	public const SETTING_ALLOW_METRICS        = '_kudos_allow_metrics';
+	public const SETTING_ONBOARDING_DISMISSED = '_kudos_onboarding_dismissed';
 
 	/**
 	 * Returns the value for a given setting.
@@ -97,27 +98,33 @@ class SettingsService implements HasSettingsInterface {
 	 */
 	public static function get_settings(): array {
 		return [
-			self::SETTING_DEBUG_MODE       => [
+			self::SETTING_DEBUG_MODE           => [
 				'type'              => FieldType::BOOLEAN,
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			self::SETTING_BASE_FONT_SIZE   => [
+			self::SETTING_BASE_FONT_SIZE       => [
 				'type'              => FieldType::STRING,
 				'show_in_rest'      => true,
 				'default'           => '1.2rem',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::SETTING_MAXIMUM_DONATION => [
+			self::SETTING_MAXIMUM_DONATION     => [
 				'type'         => FieldType::INTEGER,
 				'show_in_rest' => true,
 				'default'      => 5000,
 			],
-			self::SETTING_ALLOW_METRICS    => [
+			self::SETTING_ALLOW_METRICS        => [
 				'type'         => FieldType::BOOLEAN,
 				'show_in_rest' => true,
 				'default'      => false,
+			],
+			self::SETTING_ONBOARDING_DISMISSED => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 		];
 	}
