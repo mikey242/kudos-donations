@@ -43,27 +43,35 @@ export const ProviderSelector = ({
 
 	return (
 		<>
-			<div
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					gap: '0.5em',
-				}}
+			{selectedVendor && (
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: '0.5em',
+					}}
+				>
+					{selectedVendor.icon && (
+						<img
+							width={35}
+							height={35}
+							alt=""
+							src={`data:image/svg+xml;utf8,${encodeURIComponent(selectedVendor.icon)}`}
+						/>
+					)}
+					<strong style={{ marginRight: '0.5em' }}>
+						{selectedVendor.label}
+					</strong>
+				</div>
+			)}
+			<Button
+				variant={selectedVendor ? 'tertiary' : 'secondary'}
+				isDestructive={!!selectedVendor}
+				onClick={() => setModalOpen(true)}
 			>
-				{selectedVendor?.icon && (
-					<img
-						width={35}
-						height={35}
-						alt=""
-						src={`data:image/svg+xml;utf8,${encodeURIComponent(selectedVendor.icon)}`}
-					/>
-				)}
-				<strong style={{ marginRight: '0.5em' }}>
-					{selectedVendor?.label ?? currentVendor}
-				</strong>
-			</div>
-			<Button isDestructive onClick={() => setModalOpen(true)}>
-				{__('Switch', 'kudos-donations-plus')}
+				{selectedVendor
+					? __('Switch', 'kudos-donations')
+					: __('Choose a payment provider', 'kudos-donations')}
 				<OtherVendors
 					vendors={vendors}
 					currentSlug={selectedVendor?.slug ?? ''}
@@ -96,7 +104,7 @@ const OtherVendors = ({
 }) => {
 	const total = vendors.length;
 	return (
-		<div
+		<span
 			style={{
 				display: 'flex',
 				gap: '0.2em',
@@ -109,17 +117,19 @@ const OtherVendors = ({
 				.map((vendor, i) => {
 					const size = total === 1 ? 20 : 20 - (10 * i) / (total - 1);
 					return (
-						<img
-							style={{ opacity: '0.6' }}
-							key={vendor.slug}
-							width={size}
-							height={size}
-							alt=""
-							src={`data:image/svg+xml;utf8,${encodeURIComponent(vendor.icon)}`}
-						/>
+						vendor.icon && (
+							<img
+								style={{ opacity: '0.6' }}
+								key={vendor.slug}
+								width={size}
+								height={size}
+								alt=""
+								src={`data:image/svg+xml;utf8,${encodeURIComponent(vendor.icon)}`}
+							/>
+						)
 					);
 				})}
-		</div>
+		</span>
 	);
 };
 
