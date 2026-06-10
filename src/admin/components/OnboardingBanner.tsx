@@ -1,7 +1,12 @@
 import React from 'react';
-import { useEffect, useState } from '@wordpress/element';
+import {
+	useEffect,
+	useState,
+	createInterpolateElement,
+} from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
+import { Button, ExternalLink } from '@wordpress/components';
 import { EntityRestResponse, useSettingsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { AllSettings } from '../../types/all-settings';
@@ -21,7 +26,7 @@ function useHasCampaign(params: object): boolean | null {
 }
 
 export const OnboardingBanner = () => {
-	const { settings } = useSettingsContext<AllSettings>();
+	const { settings, updateSetting } = useSettingsContext<AllSettings>();
 	const { params, setParams } = useAdminQueryParams();
 	const hasCampaign = useHasCampaign(params);
 
@@ -35,9 +40,11 @@ export const OnboardingBanner = () => {
 	};
 	const apiMode = vendorApiModes[vendor];
 
-	if (hasCampaign === null) {
+	if (hasCampaign === null || settings._kudos_onboarding_dismissed) {
 		return null;
 	}
+
+	const dismiss = () => updateSetting('_kudos_onboarding_dismissed', true);
 
 	const steps = [
 		{
@@ -92,6 +99,44 @@ export const OnboardingBanner = () => {
 				counterLabel={__('Setup', 'kudos-donations')}
 				steps={steps}
 				className="kudos-onboarding-banner"
+				onClose={dismiss}
+				completedMessage={
+					<div style={{ textAlign: 'center' }}>
+						<h2 style={{ margin: 0 }}>
+							{__("You're all set!", 'kudos-donations')}
+						</h2>
+						<p>
+							{createInterpolateElement(
+								__(
+									/* translators: 1: support forums link, 2: documentation link */
+									"Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums/> or <docs/>.",
+									'kudos-donations'
+								),
+								{
+									forums: (
+										<ExternalLink href="https://wordpress.org/support/plugin/kudos-donations/">
+											{__(
+												'support forums',
+												'kudos-donations'
+											)}
+										</ExternalLink>
+									),
+									docs: (
+										<ExternalLink href="https://docs.kudosdonations.com/">
+											{__(
+												'documentation',
+												'kudos-donations'
+											)}
+										</ExternalLink>
+									),
+								}
+							)}
+						</p>
+						<Button variant="primary" onClick={dismiss}>
+							{__('Dismiss', 'kudos-donations')}
+						</Button>
+					</div>
+				}
 			/>
 		</div>
 	);
