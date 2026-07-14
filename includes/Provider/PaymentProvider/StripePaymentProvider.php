@@ -379,7 +379,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
-		if ( null === $subscription->vendor_subscription_id ) {
+		if ( empty( $subscription->vendor_subscription_id ) ) {
 			return false;
 		}
 
