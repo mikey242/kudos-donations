@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Card, CardBody, Icon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 type StepState = 'done' | 'locked' | 'active';
 
@@ -84,7 +85,7 @@ export const StepsBanner = ({
 				<div
 					style={{
 						height: '100%',
-						width: `${(doneCount / resolvedSteps.length) * 100}%`,
+						width: `${resolvedSteps.length ? (doneCount / resolvedSteps.length) * 100 : 0}%`,
 						background: 'var(--kudos-colour-success)',
 						borderRadius: '2px 2px 0 0',
 						transition: 'width 0.3s ease',
@@ -94,6 +95,7 @@ export const StepsBanner = ({
 			{onClose && (
 				<Button
 					icon="no"
+					label={__('Dismiss', 'kudos-donations')}
 					onClick={onClose}
 					style={{
 						position: 'absolute',
