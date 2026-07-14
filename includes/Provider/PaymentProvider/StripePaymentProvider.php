@@ -749,6 +749,31 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * Stripe cannot confirm payments without a webhook, so it adds a step for the cases
+	 * where auto-registration failed and the secret has to be pasted in by hand.
+	 */
+	public function get_onboarding_steps(): array {
+		$steps = parent::get_onboarding_steps();
+
+		$needs_webhook = 'live' === $this->get_api_mode()
+			&& '' !== $this->get_api_key()
+			&& '' === $this->get_webhook_secret();
+
+		if ( $needs_webhook ) {
+			$steps[] = [
+				'id'    => 'webhook',
+				'label' => __( 'Set up webhook', 'kudos-donations' ),
+				'done'  => false,
+				'panel' => 'webhook',
+			];
+		}
+
+		return $steps;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public static function get_settings(): array {
 		return [
