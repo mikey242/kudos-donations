@@ -142,13 +142,6 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function is_enabled(): bool {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function get_cache_setting(): string {
 		return self::SETTING_CACHE;
 	}
