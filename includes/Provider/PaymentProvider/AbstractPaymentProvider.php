@@ -50,9 +50,40 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	final public function init(): void {
 		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
 		$this->setup();
-		if ( null !== $this->get_cache_setting() && ! SettingsService::is_onboarding_active() ) {
-			$this->show_status_notices();
+
+		if ( null === $this->get_cache_setting() ) {
+			return;
 		}
+
+		// While onboarding is unfinished the banner is the single source of guidance.
+		if ( SettingsService::is_onboarding_active() ) {
+			$this->show_onboarding_notice();
+			return;
+		}
+
+		$this->show_status_notices();
+	}
+
+	/**
+	 * Points the user at the settings page, where the onboarding banner walks them through setup.
+	 *
+	 * Suppressed on Kudos admin pages, where the banner is already on screen.
+	 */
+	final protected function show_onboarding_notice(): void {
+		if ( Utils::is_kudos_admin() ) {
+			return;
+		}
+
+		NoticeService::notice(
+			\sprintf(
+			// translators: %s: URL to the Kudos Donations settings page.
+				__( 'Kudos Donations is not ready to receive donations yet. <a href="%s">Complete the setup</a> to get started.', 'kudos-donations' ),
+				admin_url( 'admin.php?page=kudos-settings' )
+			),
+			NoticeService::WARNING,
+			false,
+			'kudos-onboarding-incomplete'
+		);
 	}
 
 	/**
