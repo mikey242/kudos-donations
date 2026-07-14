@@ -3,10 +3,19 @@ export interface VendorPaymentMethod {
 	label: string;
 }
 
+// Setup steps declared by the active payment provider, rendered by the onboarding banner.
+export interface VendorOnboardingStep {
+	id: string;
+	label: string;
+	done: boolean;
+	panel: string;
+}
+
 export interface VendorStatus {
 	ready: boolean;
 	recurring: boolean;
 	account?: string;
+	steps?: VendorOnboardingStep[];
 	methods?: VendorPaymentMethod[];
 }
 
@@ -23,7 +32,6 @@ export interface BaseSettings {
 	_kudos_migration_status: string[];
 	_kudos_payment_vendor: 'mollie' | 'stripe' | 'demo' | string;
 	_kudos_payment_vendor_status: VendorStatus;
-	_kudos_show_intro: boolean | null;
 	_kudos_debug_mode: boolean;
 	_kudos_base_font_size: string; // e.g., '1.2rem'
 	_kudos_maximum_donation: number;
@@ -32,4 +40,5 @@ export interface BaseSettings {
 	_kudos_custom_smtp: string | null;
 	_kudos_smtp_password: string;
 	_kudos_smtp_enable: boolean;
+	_kudos_onboarding_dismissed: boolean;
 }

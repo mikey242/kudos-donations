@@ -212,7 +212,26 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 		return [
 			'ready'     => true,
 			'recurring' => false,
+			'steps'     => $this->get_onboarding_steps(),
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * The demo provider makes no real API calls, so there is nothing to set up.
+	 */
+	public function get_onboarding_steps(): array {
+		return [];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * The demo provider makes no real API calls, so it has no keys to configure.
+	 */
+	public function has_live_key(): bool {
+		return false;
 	}
 
 	/**

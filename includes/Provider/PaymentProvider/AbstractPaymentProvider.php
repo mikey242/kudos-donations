@@ -19,6 +19,7 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Service\SettingsService;
 
 /**
  * Base class for all payment providers.
@@ -49,7 +50,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	final public function init(): void {
 		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
 		$this->setup();
-		if ( null !== $this->get_cache_setting() ) {
+		if ( null !== $this->get_cache_setting() && ! SettingsService::is_onboarding_active() ) {
 			$this->show_status_notices();
 		}
 	}
@@ -86,16 +87,30 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the cached data stored for the current API mode.
 	 */
-	public function get_status(): array {
+	private function get_mode_data(): array {
 		$setting = $this->get_cache_setting();
 		$cache   = $setting ? (array) get_option( $setting, [] ) : [];
 		$mode    = $this->get_api_mode();
-		$key     = $this->get_api_key();
-		$data    = isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
+		return isset( $cache[ $mode ] ) ? (array) $cache[ $mode ] : [];
+	}
+
+	/**
+	 * Whether the provider has a usable key and payment methods for the current mode.
+	 */
+	private function is_ready(): bool {
+		$stored = (array) ( $this->get_mode_data()['methods'] ?? [] );
+		return ! empty( $this->get_api_key() ) && ! empty( $stored );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_status(): array {
+		$data    = $this->get_mode_data();
 		$stored  = isset( $data['methods'] ) ? (array) $data['methods'] : [];
-		$ready   = ! empty( $key ) && ! empty( $stored );
+		$ready   = $this->is_ready();
 		$methods = array_map(
 			fn( $m ) => [
 				'id'    => $m['id'],
@@ -108,6 +123,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 				'ready'     => $ready,
 				'recurring' => $ready && ! empty( $data['recurring'] ),
 				'methods'   => $methods,
+				'steps'     => $this->get_onboarding_steps(),
 			],
 			$this->get_status_extra( $data )
 		);
@@ -115,9 +131,43 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * The default flow for a key-based provider: add a live key, then go live. Providers with
+	 * extra setup (a webhook secret, say) can append to these.
+	 */
+	public function get_onboarding_steps(): array {
+		return [
+			[
+				'id'    => 'apikeys',
+				'label' => __( 'Enter live API key', 'kudos-donations' ),
+				'done'  => $this->has_live_key(),
+				'panel' => 'apikeys',
+			],
+			[
+				'id'    => 'livemode',
+				'label' => __( 'Switch to live mode', 'kudos-donations' ),
+				'done'  => $this->is_ready() && 'live' === $this->get_api_mode(),
+				'panel' => 'apimode',
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function has_live_key(): bool {
+		$constant = static::class . '::SETTING_API_KEY_ENCRYPTED_LIVE';
+		if ( ! \defined( $constant ) ) {
+			return false;
+		}
+		return '' !== (string) get_option( \constant( $constant ), '' );
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public function is_vendor_ready(): bool {
-		return $this->get_status()['ready'];
+		return $this->is_ready();
 	}
 
 	/**
