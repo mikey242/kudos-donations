@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.13
+Stable tag: 4.2.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,9 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+ = 4.2.14 =
+ * Fix fatal error when viewing campaigns with no maximum donation set
 
  = 4.2.13 =
  * Fix incorrect message showing on return pop-up if campaign not yet loaded
