@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-
 class NoticeService implements HasSettingsInterface {
 	public const SETTING_ADMIN_NOTICES = '_kudos_admin_notices';
 	public const SUCCESS               = 'notice-success';
@@ -50,7 +49,6 @@ class NoticeService implements HasSettingsInterface {
 				}
 			}
 		}
-
 		add_action( 'admin_notices', [ self::class, 'render_all' ] );
 	}
 
