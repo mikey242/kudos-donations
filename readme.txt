@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.3.0 =
+ * Added Stripe payment provider
+
  = 4.2.14 =
  * Fix fatal error when viewing campaigns with no maximum donation set
  * Minor admin panel fixes
