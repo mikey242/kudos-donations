@@ -146,7 +146,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 			[
 				'id'    => 'livemode',
 				'label' => __( 'Switch to live mode', 'kudos-donations' ),
-				'done'  => $this->is_ready() && 'live' === $this->get_api_mode(),
+				'done'  => 'live' === $this->get_api_mode(),
 				'panel' => 'apimode',
 			],
 		];
