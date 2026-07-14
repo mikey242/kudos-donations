@@ -13,38 +13,52 @@ import type { AllSettings } from '../../types/all-settings';
 import { Campaign } from '../../types/entity';
 import { StepsBanner } from './StepsBanner';
 
-function useHasCampaign(params: object): boolean | null {
+function useHasCampaign(params: object, enabled: boolean): boolean | null {
 	const [hasCampaign, setHasCampaign] = useState<boolean | null>(null);
 	useEffect(() => {
+		if (!enabled) {
+			return;
+		}
 		apiFetch<EntityRestResponse<Campaign>[]>({
 			path: 'kudos/v1/campaign?per_page=1',
 		})
 			.then((res) => setHasCampaign(res.length > 0))
 			.catch(() => setHasCampaign(false));
-	}, [params]);
+	}, [enabled, params]);
 	return hasCampaign;
 }
 
 export const OnboardingBanner = () => {
 	const { settings, updateSetting } = useSettingsContext<AllSettings>();
 	const { params, setParams } = useAdminQueryParams();
-	const hasCampaign = useHasCampaign(params);
+	const dismissed = !!settings._kudos_onboarding_dismissed;
+	const hasCampaign = useHasCampaign(params, !dismissed);
 
 	const vendors = window.kudos?.admin?.payment_vendors ?? [];
 	const vendor = settings._kudos_payment_vendor ?? '';
-	const liveKey = settings[`_kudos_vendor_${vendor}_api_key_live`];
-	const vendorReady = settings._kudos_payment_vendor_status?.ready === true;
-	const vendorApiModes: Record<string, 'test' | 'live'> = {
-		mollie: settings._kudos_vendor_mollie_api_mode,
-		stripe: settings._kudos_vendor_stripe_api_mode,
-	};
-	const apiMode = vendorApiModes[vendor];
+	const status = settings._kudos_payment_vendor_status;
 
-	if (hasCampaign === null || settings._kudos_onboarding_dismissed) {
+	if (dismissed || hasCampaign === null) {
 		return null;
 	}
 
 	const dismiss = () => updateSetting('_kudos_onboarding_dismissed', true);
+
+	// The active provider declares its own setup steps; we only supply the ones that are
+	// not vendor-specific. A provider with nothing to configure returns none.
+	const vendorSteps = (status?.steps ?? []).map(
+		(step: { id: any; label: any; done: any; panel: any }) => ({
+			id: step.id,
+			label: step.label,
+			done: step.done,
+			onClick: () =>
+				setParams({
+					page: 'kudos-settings',
+					tab: 'payment',
+					panel: step.panel,
+				}),
+		})
+	);
 
 	const steps = [
 		{
@@ -59,28 +73,7 @@ export const OnboardingBanner = () => {
 					panel: 'vendor-selector',
 				}),
 		},
-		{
-			id: 'apikeys',
-			label: __('Enter live API key', 'kudos-donations'),
-			done: !!liveKey,
-			onClick: () =>
-				setParams({
-					page: 'kudos-settings',
-					tab: 'payment',
-					panel: 'apikeys',
-				}),
-		},
-		{
-			id: 'livemode',
-			label: __('Switch to live mode', 'kudos-donations'),
-			done: vendorReady && apiMode === 'live',
-			onClick: () =>
-				setParams({
-					page: 'kudos-settings',
-					tab: 'payment',
-					panel: 'apimode',
-				}),
-		},
+		...vendorSteps,
 		{
 			id: 'campaign',
 			label: __('Create a campaign', 'kudos-donations'),

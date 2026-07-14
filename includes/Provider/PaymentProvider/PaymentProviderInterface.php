@@ -92,11 +92,26 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public function is_vendor_ready(): bool;
 
 	/**
+	 * Returns true if a live-mode API key has been saved for this provider.
+	 */
+	public function has_live_key(): bool;
+
+	/**
+	 * Returns the setup steps this provider needs before it can take live payments.
+	 *
+	 * Rendered by the onboarding banner. Each step deep-links to a settings panel via its
+	 * panel key. Providers with nothing to configure (e.g. demo) return an empty array.
+	 *
+	 * @return array<int, array{id: string, label: string, done: bool, panel: string}>
+	 */
+	public function get_onboarding_steps(): array;
+
+	/**
 	 * Returns the current vendor status derived from stored settings.
 	 *
 	 * Providers may add: methods (array), account (string), and other vendor-specific fields.
 	 *
-	 * @return array{ready: bool, recurring: bool, methods?: array, account?: string}
+	 * @return array{ready: bool, recurring: bool, steps?: array, methods?: array, account?: string}
 	 */
 	public function get_status(): array;
 

@@ -3,10 +3,19 @@ export interface VendorPaymentMethod {
 	label: string;
 }
 
+// Setup steps declared by the active payment provider, rendered by the onboarding banner.
+export interface VendorOnboardingStep {
+	id: string;
+	label: string;
+	done: boolean;
+	panel: string;
+}
+
 export interface VendorStatus {
 	ready: boolean;
 	recurring: boolean;
 	account?: string;
+	steps?: VendorOnboardingStep[];
 	methods?: VendorPaymentMethod[];
 }
 
