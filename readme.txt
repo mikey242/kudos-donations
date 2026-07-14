@@ -115,6 +115,8 @@ For general information on how to use shortcodes, please visit [this page](https
 
  = 4.2.14 =
  * Fix fatal error when viewing campaigns with no maximum donation set
+ * Minor admin panel fixes
+ * Update dev dependencies
 
  = 4.2.13 =
  * Fix incorrect message showing on return pop-up if campaign not yet loaded
