@@ -89,7 +89,6 @@ export const OnboardingBanner = () => {
 					'Complete the following steps to get started',
 					'kudos-donations'
 				)}
-				counterLabel={__('Setup', 'kudos-donations')}
 				steps={steps}
 				className="kudos-onboarding-banner"
 				onClose={dismiss}
