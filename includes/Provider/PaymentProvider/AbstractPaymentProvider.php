@@ -49,7 +49,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 */
 	final public function init(): void {
 		$this->setup();
-		if ( null !== $this->get_cache_setting() && get_option( SettingsService::SETTING_ONBOARDING_DISMISSED, false ) ) {
+		if ( null !== $this->get_cache_setting() && ! SettingsService::is_onboarding_active() ) {
 			$this->show_status_notices();
 		}
 	}
