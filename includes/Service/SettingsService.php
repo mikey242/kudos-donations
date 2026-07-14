@@ -22,6 +22,13 @@ class SettingsService implements HasSettingsInterface {
 	public const SETTING_ONBOARDING_DISMISSED = '_kudos_onboarding_dismissed';
 
 	/**
+	 * Whether the onboarding banner is still walking the user through setup.
+	 */
+	public static function is_onboarding_active(): bool {
+		return ! get_option( self::SETTING_ONBOARDING_DISMISSED, false );
+	}
+
+	/**
 	 * Returns the value for a given setting.
 	 *
 	 * @param string $key     Setting key.
