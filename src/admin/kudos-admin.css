@@ -52,6 +52,10 @@ body.admin-color-modern {
 	}
 }
 
+.kudos-secret-control--set .components-input-control__input {
+	font-style: italic;
+}
+
 .kudos-button-group {
 
 	.components-button.is-pressed {
