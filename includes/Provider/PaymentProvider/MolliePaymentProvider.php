@@ -680,23 +680,23 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			// Get post id if $campaign_id is slug from pre 4.0.0 version.
 			$campaign_id = $subscription->metadata->campaign_id ?? null;
 			$campaigns   = $this->campaign_repository;
-			/** @var CampaignEntity $campaign */
+			/** @var CampaignEntity|null $campaign */
 			$campaign    = $campaigns
 							->find_one_by( [ 'id' => $campaign_id ] ) ??
 							$campaigns
 							->find_one_by( [ 'wp_post_slug' => $campaign_id ] ) ?? null;
-			$campaign_id = $campaign->id;
+			$campaign_id = $campaign->id ?? null;
 
 			// Subscription id.
 			$subscription_id = $subscription->metadata->subscription_id ?? null;
 			if ( null === $subscription_id ) {
-				/** @var SubscriptionEntity $subscription_entity */
+				/** @var SubscriptionEntity|null $subscription_entity */
 				$subscription_entity = $this->subscription_repository->find_one_by(
 					[
 						'vendor_subscription_id' => $subscription->id,
 					]
 				);
-				$subscription_id     = $subscription_entity->id;
+				$subscription_id     = $subscription_entity->id ?? null;
 			}
 
 			// Get Donor ID. If subscription from pre 4.0.0, use customerId to get new donor ID.
