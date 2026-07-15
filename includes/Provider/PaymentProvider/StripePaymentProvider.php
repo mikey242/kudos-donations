@@ -505,6 +505,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		$session_args = [
 			'mode'        => $is_recurring ? Session::MODE_SUBSCRIPTION : Session::MODE_PAYMENT,
+			'submit_type' => Session::SUBMIT_TYPE_DONATE,
 			'line_items'  => [
 				[
 					'price_data' => $price_data,
