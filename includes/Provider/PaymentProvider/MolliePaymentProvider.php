@@ -228,7 +228,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$this->get_logger()->debug( 'Mollie payment methods', $payment_methods );
 
 		if ( empty( $payment_methods ) ) {
-			$this->logger->info( 'No payment methods found for Mollie' );
+			$this->get_logger()->info( 'No payment methods found for Mollie' );
 			return true;
 		}
 
