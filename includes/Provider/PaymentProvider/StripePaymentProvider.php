@@ -236,9 +236,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 */
 	private function parse_frequency( string $frequency ): array {
 		$parts = explode( ' ', trim( $frequency ) );
+		$count = (int) $parts[0];
 		return [
-			'interval'       => rtrim( $parts[1], 's' ),
-			'interval_count' => (int) ( $parts[0] ),
+			'interval'       => isset( $parts[1] ) ? rtrim( $parts[1], 's' ) : 'month',
+			'interval_count' => $count > 0 ? $count : 1,
 		];
 	}
 
