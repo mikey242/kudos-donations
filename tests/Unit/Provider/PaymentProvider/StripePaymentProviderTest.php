@@ -182,6 +182,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 				]
 			)
 		);
+		$this->http_client->set_response( 'subscriptions', [ 'id' => 'sub_test_abc123', 'object' => 'subscription' ] );
 
 		$this->provider->handle_status_change( 'cs_test_abc123' );
 
@@ -191,6 +192,52 @@ class StripePaymentProviderTest extends BaseTestCase {
 
 		$this->assertNotNull( $subscription );
 		$this->assertSame( '1 month', $subscription->frequency );
+
+		// A one-year fixed term should be capped on the vendor side, one year past session creation.
+		$update = null;
+		foreach ( $this->http_client->get_requests() as $request ) {
+			if ( str_contains( $request['absUrl'], 'subscriptions/sub_test_abc123' ) ) {
+				$update = $request;
+			}
+		}
+		$this->assertNotNull( $update, 'Expected a Stripe subscription update to set the cancellation date.' );
+		$this->assertArrayHasKey( 'cancel_at', $update['params'] );
+		$this->assertSame( strtotime( '+1 year', 1700000000 ), $update['params']['cancel_at'] );
+	}
+
+	public function test_handle_status_change_does_not_cap_open_ended_subscription(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'         => 'Test',
+					'sequence_type' => 'first',
+				]
+			)
+		);
+
+		$this->http_client->set_response(
+			'checkout/sessions',
+			$this->session_fixture(
+				[
+					'status'         => Session::STATUS_COMPLETE,
+					'payment_status' => Session::PAYMENT_STATUS_PAID,
+					'subscription'   => 'sub_test_abc123',
+					'metadata'       => [
+						'transaction_id'      => (string) $transaction_id,
+						'recurring_frequency' => '1 month',
+						'recurring_length'    => '0',
+					],
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'cs_test_abc123' );
+
+		foreach ( $this->http_client->get_requests() as $request ) {
+			$this->assertStringNotContainsString( 'subscriptions/sub_test_abc123', $request['absUrl'], 'Open-ended subscription should not be capped.' );
+		}
 	}
 
 	public function test_handle_status_change_skips_already_processed_transaction(): void {
@@ -270,6 +317,43 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'recurring', $new->sequence_type );
 		$this->assertSame( 'EUR', $new->currency );
 		$this->assertSame( 10.0, $new->value );
+	}
+
+	public function test_handle_invoice_payment_skips_already_recorded_invoice(): void {
+		/** @var SubscriptionRepository $subscriptions */
+		$subscriptions = $this->get_from_container( SubscriptionRepository::class );
+		$subscriptions->insert(
+			$subscriptions->new_entity(
+				[
+					'vendor_subscription_id' => 'sub_test_abc123',
+					'vendor'                 => 'stripe',
+					'status'                 => 'active',
+					'value'                  => 10.00,
+					'currency'               => 'EUR',
+				]
+			)
+		);
+
+		// A transaction for this invoice already exists, mimicking a webhook redelivery.
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_from_container( TransactionRepository::class );
+		$transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Existing',
+					'vendor_payment_id' => 'in_test_abc123',
+					'vendor'            => 'stripe',
+					'status'            => PaymentStatus::PAID,
+				]
+			)
+		);
+		$count_before = count( $transactions->all() );
+
+		$this->http_client->set_response( 'invoices', $this->invoice_fixture() );
+
+		$this->provider->handle_status_change( 'in_test_abc123' );
+
+		$this->assertSame( $count_before, count( $transactions->all() ), 'A redelivered invoice must not create a duplicate transaction.' );
 	}
 
 	public function test_cancel_subscription_returns_true_when_stripe_confirms_canceled(): void {
@@ -363,6 +447,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 			[
 				'id'             => 'cs_test_abc123',
 				'object'         => 'checkout.session',
+				'created'        => 1700000000,
 				'url'            => 'https://checkout.stripe.com/pay/cs_test_abc123',
 				'status'         => 'open',
 				'payment_status' => 'unpaid',

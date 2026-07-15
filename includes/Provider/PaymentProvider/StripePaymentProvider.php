@@ -287,6 +287,46 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
+	 * Caps a fixed-term subscription so Stripe stops billing after the requested number of years.
+	 *
+	 * @param string $subscription_id The Stripe subscription ID.
+	 * @param int    $years           How many years the subscription should run (0 = indefinite).
+	 * @param int    $start           The subscription start timestamp (Unix seconds).
+	 */
+	private function cap_subscription_duration( string $subscription_id, int $years, int $start ): void {
+		if ( $years <= 0 ) {
+			return;
+		}
+
+		$client = $this->get_client();
+		if ( null === $client ) {
+			return;
+		}
+
+		try {
+			$client->subscriptions->update(
+				$subscription_id,
+				[ 'cancel_at' => strtotime( "+{$years} year", $start ) ]
+			);
+			$this->get_logger()->info(
+				'Stripe subscription capped.',
+				[
+					'stripe_subscription_id' => $subscription_id,
+					'years'                  => $years,
+				]
+			);
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->error(
+				'Could not set cancellation date on Stripe subscription.',
+				[
+					'error'                  => $e->getMessage(),
+					'stripe_subscription_id' => $subscription_id,
+				]
+			);
+		}
+	}
+
+	/**
 	 * Fetches payment method capabilities from the Stripe account.
 	 *
 	 * @return array<int, array{id: string, description: string, status: string}>
@@ -681,6 +721,8 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				if ( false !== $subscription_id ) {
 					$transaction->subscription_id = $subscription_id;
 				}
+
+				$this->cap_subscription_duration( $stripe_subscription_id, $years, $session->created ?? time() );
 			}
 
 			$this->transaction_repository->update( $transaction );
@@ -718,6 +760,12 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		// The initial subscription payment is already handled by checkout.session.completed.
 		if ( Invoice::BILLING_REASON_SUBSCRIPTION_CYCLE !== $invoice->billing_reason ) {
+			return;
+		}
+
+		// Stripe delivers webhooks at least once, so skip invoices we have already recorded.
+		if ( null !== $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $invoice->id ] ) ) {
+			$this->get_logger()->debug( 'Duplicate Stripe invoice webhook. Skipping.', [ 'invoice_id' => $invoice_id ] );
 			return;
 		}
 
