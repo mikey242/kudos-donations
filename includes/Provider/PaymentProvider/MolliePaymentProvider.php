@@ -375,8 +375,9 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$transaction_id = $transaction->id;
 
 		// Set payment frequency.
-		$payment_args['payment_frequency'] = 'true' === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::ONEOFF;
-		$sequence_type                     = 'true' === $payment_args['recurring'] ? SequenceType::FIRST : SequenceType::ONEOFF;
+		$is_recurring                      = 'true' === ( $payment_args['recurring'] ?? '' );
+		$payment_args['payment_frequency'] = $is_recurring ? $payment_args['recurring_frequency'] : SequenceType::ONEOFF;
+		$sequence_type                     = $is_recurring ? SequenceType::FIRST : SequenceType::ONEOFF;
 		$payment_args['value']             = number_format( \floatval( $payment_args['value'] ), 2, '.', '' );
 		$redirect_url                      = $payment_args['return_url'];
 
