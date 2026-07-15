@@ -155,31 +155,52 @@ const WebhookPanel = () => {
 		_kudos_vendor_stripe_api_key_live: liveKey,
 		_kudos_vendor_stripe_api_key_test: testKey,
 	} = settings;
+	const mode: ApiMode = settings._kudos_vendor_stripe_api_mode ?? 'test';
+	const currentKey = mode === 'live' ? liveKey : testKey;
 
-	// Only show when a key is saved but auto-registration hasn't succeeded yet.
-	if (webhook?.secret || (!liveKey && !testKey)) {
+	// Endpoints are per mode, so only the current mode's secret counts. Show this only when
+	// that mode has a key saved but auto-registration hasn't succeeded for it.
+	if (webhook?.[mode]?.secret || !currentKey) {
 		return null;
 	}
 
 	const webhookUrl = (window.kudos?.admin?.stripeWebhookUrl as string) ?? '';
 
 	return (
-		<Panel header={__('Webhook', 'kudos-donations')}>
+		<Panel
+			header={
+				'live' === mode
+					? __('Webhook (live mode)', 'kudos-donations')
+					: __('Webhook (test mode)', 'kudos-donations')
+			}
+		>
 			<p>
-				{__(
-					'Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard, then paste the signing secret.',
-					'kudos-donations'
-				)}
+				{'live' === mode
+					? __(
+							'Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard while it is in live mode, then paste that endpoint’s signing secret below.',
+							'kudos-donations'
+						)
+					: __(
+							'Stripe webhook could not be registered automatically. Add the URL below as an endpoint in the sandbox or test mode you are using in your Stripe Dashboard, then paste that endpoint’s signing secret below.',
+							'kudos-donations'
+						)}
 			</p>
 			<code style={{ wordBreak: 'break-all' }}>{webhookUrl}</code>
 			<TextControl
-				name="_kudos_vendor_stripe_webhook.secret"
+				name={`_kudos_vendor_stripe_webhook.${mode}.secret`}
 				label={__('Signing secret', 'kudos-donations')}
 				prefix={<Icon icon="shield" />}
-				help={__(
-					'Found in the webhook endpoint details in your Stripe Dashboard.',
-					'kudos-donations'
-				)}
+				help={
+					'live' === mode
+						? __(
+								'Found in the endpoint details in your Stripe Dashboard. It must be the live endpoint — a test secret will not verify live payments.',
+								'kudos-donations'
+							)
+						: __(
+								'Found in the endpoint details in your Stripe Dashboard. It must be the endpoint for the sandbox or test mode you are using — a live secret will not verify test payments.',
+								'kudos-donations'
+							)
+				}
 			/>
 			<Panel.Footer>
 				<ExternalLink href="https://dashboard.stripe.com/webhooks">

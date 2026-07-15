@@ -166,22 +166,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		if ( ! $value ) {
 			update_option( $encrypted_option, '' );
-			$cache          = (array) get_option( self::SETTING_CACHE, [] );
-			$cache[ $mode ] = [];
-			update_option( self::SETTING_CACHE, $cache );
-			update_option( self::SETTING_WEBHOOK, [] );
+			$this->clear_mode_data( $mode );
 			return $value;
 		}
 
-		$valid_prefixes = [ 'rk_' . $mode . '_', 'sk_' . $mode . '_' ];
-		$is_valid       = false;
-		foreach ( $valid_prefixes as $prefix ) {
-			if ( strpos( $value, $prefix ) === 0 ) {
-				$is_valid = true;
-				break;
-			}
-		}
-		if ( ! $is_valid ) {
+		if ( ! preg_match( '/^[rs]k_' . $mode . '_/', $value ) ) {
 			$this->get_logger()->error( 'Invalid Stripe API key: must start with "rk_' . $mode . '_" or "sk_' . $mode . '_".' );
 			return $_old_value;
 		}
@@ -212,6 +201,23 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		update_option( self::SETTING_CACHE, $cache );
 
 		return true;
+	}
+
+	/**
+	 * Clears the cached payment methods and webhook registration for the given mode.
+	 *
+	 * The counterpart to refresh(): call this when a mode's key is removed.
+	 *
+	 * @param string $mode The API mode ('test' or 'live').
+	 */
+	private function clear_mode_data( string $mode ): void {
+		$cache          = (array) get_option( self::SETTING_CACHE, [] );
+		$cache[ $mode ] = [];
+		update_option( self::SETTING_CACHE, $cache );
+
+		$webhook = (array) get_option( self::SETTING_WEBHOOK, [] );
+		unset( $webhook[ $mode ] );
+		update_option( self::SETTING_WEBHOOK, $webhook );
 	}
 
 	/**
@@ -314,13 +320,27 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
+	 * Returns the webhook signing secret for the given (or current) API mode.
+	 *
+	 * Endpoints are registered per mode: a test endpoint cannot verify live events.
+	 *
+	 * @param string|null $mode The API mode, or null for the current one.
+	 */
+	public function get_webhook_secret( ?string $mode = null ): string {
+		$mode    = $mode ?? $this->get_api_mode();
+		$webhook = (array) get_option( self::SETTING_WEBHOOK, [] );
+		$stored  = isset( $webhook[ $mode ] ) ? (array) $webhook[ $mode ] : [];
+		return (string) ( $stored['secret'] ?? '' );
+	}
+
+	/**
 	 * Attempts to auto-register a Stripe webhook endpoint and store the signing secret.
 	 * If registration fails (e.g. insufficient key permissions), stores an admin notice
 	 * directing the user to configure it manually.
 	 */
 	private function register_webhook(): void {
-		$webhook = (array) get_option( self::SETTING_WEBHOOK, [] );
-		if ( ! empty( $webhook['secret'] ) ) {
+		$mode = $this->get_api_mode();
+		if ( '' !== $this->get_webhook_secret( $mode ) ) {
 			return;
 		}
 
@@ -343,15 +363,20 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				]
 			);
 
-			update_option(
-				self::SETTING_WEBHOOK,
+			$webhook          = (array) get_option( self::SETTING_WEBHOOK, [] );
+			$webhook[ $mode ] = [
+				'secret'      => $endpoint->secret,
+				'endpoint_id' => $endpoint->id,
+			];
+			update_option( self::SETTING_WEBHOOK, $webhook );
+
+			$this->get_logger()->info(
+				'Stripe webhook endpoint registered.',
 				[
-					'secret'      => $endpoint->secret,
 					'endpoint_id' => $endpoint->id,
+					'mode'        => $mode,
 				]
 			);
-
-			$this->get_logger()->info( 'Stripe webhook endpoint registered.', [ 'endpoint_id' => $endpoint->id ] );
 		} catch ( ApiErrorException $e ) {
 			$this->get_logger()->warning( 'Could not auto-register Stripe webhook endpoint.', [ 'error' => $e->getMessage() ] );
 			NoticeService::add_notice(
@@ -538,11 +563,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	public function rest_webhook( WP_REST_Request $request ): WP_REST_Response {
 		$payload    = $request->get_body();
 		$sig_header = $request->get_header( 'stripe_signature' );
-		$webhook    = (array) get_option( self::SETTING_WEBHOOK, [] );
-		$secret     = (string) ( $webhook['secret'] ?? '' );
+		$secret     = $this->get_webhook_secret();
 
 		if ( ! $secret ) {
-			$this->get_logger()->error( 'Stripe webhook secret not configured.' );
+			$this->get_logger()->error( 'Stripe webhook secret not configured.', [ 'mode' => $this->get_api_mode() ] );
 			return new WP_REST_Response(
 				[
 					'success' => false,
@@ -748,6 +772,19 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
+	 * Returns the REST schema for a single mode's stored webhook endpoint.
+	 */
+	private static function get_webhook_schema(): array {
+		return [
+			'type'       => FieldType::OBJECT,
+			'properties' => [
+				'secret'      => [ 'type' => FieldType::STRING ],
+				'endpoint_id' => [ 'type' => FieldType::STRING ],
+			],
+		];
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * Stripe cannot confirm payments without a webhook, so it adds a step for the cases
@@ -757,7 +794,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$steps = parent::get_onboarding_steps();
 
 		$needs_webhook = 'live' === $this->get_api_mode()
-			&& '' !== $this->get_api_key()
+			&& $this->has_live_key()
 			&& '' === $this->get_webhook_secret();
 
 		if ( $needs_webhook ) {
@@ -809,9 +846,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				'type'         => FieldType::OBJECT,
 				'show_in_rest' => [
 					'schema' => [
+						'type'       => FieldType::OBJECT,
 						'properties' => [
-							'secret'      => [ 'type' => FieldType::STRING ],
-							'endpoint_id' => [ 'type' => FieldType::STRING ],
+							'test' => self::get_webhook_schema(),
+							'live' => self::get_webhook_schema(),
 						],
 					],
 				],
