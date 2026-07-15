@@ -662,6 +662,12 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 				]
 			);
 
+			// Mollie delivers webhooks at least once, so skip payments we have already recorded.
+			if ( null !== $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $vendor_payment_id ] ) ) {
+				$this->get_logger()->debug( 'Duplicate recurring payment webhook. Skipping.', [ 'payment_id' => $vendor_payment_id ] );
+				return;
+			}
+
 			// Bail if required properties not set.
 			if ( null === $payment->customerId || null === $payment->subscriptionId ) {
 				return;
