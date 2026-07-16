@@ -34,7 +34,7 @@ trait EncryptionAwareTrait {
 	 */
 	protected function get_encryption(): EncryptionService {
 		if ( ! isset( $this->encryption ) ) {
-			throw new \LogicException( 'Encryption service was not set' );
+			throw new \LogicException( 'Encryption service was not set in: ' . static::class );
 		}
 		return $this->encryption;
 	}
