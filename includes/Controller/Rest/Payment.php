@@ -197,7 +197,7 @@ class Payment extends BaseRestController {
 	}
 
 	/**
-	 * Check the status for the supplied transaction post id.
+	 * Check the status for the supplied transaction id.
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_REST_Response | WP_Error Response object.
