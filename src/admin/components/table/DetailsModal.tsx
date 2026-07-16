@@ -9,6 +9,7 @@ interface DetailsModalProps {
 	title?: string;
 	modalSize?: 'small' | 'fill' | 'large' | 'medium';
 	icon?: IconType;
+	label?: string;
 }
 
 export const DetailsModal = ({
@@ -16,6 +17,7 @@ export const DetailsModal = ({
 	title,
 	modalSize = 'small',
 	icon = 'info-outline',
+	label = __('View details', 'kudos-donations'),
 }: DetailsModalProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
@@ -23,7 +25,7 @@ export const DetailsModal = ({
 			<Button
 				icon={icon}
 				size="compact"
-				label={__('View details', 'kudos-donations')}
+				label={label}
 				onClick={() => setIsOpen((prev) => !prev)}
 				isPressed={isOpen}
 			/>
