@@ -7,7 +7,7 @@ import { Panel } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 import { molliePanels } from './MolliePanels';
 import { stripePanels } from './StripePanels';
-import { Flex, Notice } from '@wordpress/components';
+import { Notice } from '@wordpress/components';
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
 import { ProviderSelector } from '../../../controls';
@@ -44,21 +44,31 @@ const VendorSelectorPanel = () => {
 	return (
 		<>
 			<Panel header={__('Payment Provider', 'kudos-donations')}>
-				<Flex justify="space-between" align="center">
+				<div
+					style={{ display: 'flex', justifyContent: 'space-between' }}
+				>
 					<ProviderSelector
 						vendors={vendors}
 						currentVendor={savedVendor}
 						onSave={handleSave}
 						isSaving={isSaving}
 					>
-						<Notice status="warning" isDismissible={false}>
-							{__(
-								'Switching payment providers will not migrate existing subscriptions or donor records.',
-								'kudos-donations'
-							)}
-						</Notice>
+						<div style={{ paddingBottom: '10px' }}>
+							<h3>
+								{__(
+									'Select the active payment provider for new transactions.',
+									'kudos-donations'
+								)}
+							</h3>
+							<Notice status="info" isDismissible={false}>
+								{__(
+									'Previously created transactions and subscriptions will remain with their original provider.',
+									'kudos-donations'
+								)}
+							</Notice>
+						</div>
 					</ProviderSelector>
-				</Flex>
+				</div>
 			</Panel>
 		</>
 	);
