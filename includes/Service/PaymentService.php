@@ -186,7 +186,15 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param int $transaction_id Transaction post id.
 	 */
 	public function check_payment_status( int $transaction_id ): void {
-		$this->payment_provider_factory->get_provider()->sync_transaction_status( $transaction_id );
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		if ( null === $transaction ) {
+			return;
+		}
+		$provider = $this->payment_provider_factory->get_provider( $transaction->vendor );
+		if ( null === $provider ) {
+			return;
+		}
+		$provider->sync_transaction_status( $transaction_id );
 	}
 
 	/**

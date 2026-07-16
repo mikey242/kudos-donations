@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
-use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\SanitizeTrait;
@@ -41,6 +40,7 @@ class Payment extends BaseRestController {
 	public const ROUTE_TEST    = '/test';
 	public const ROUTE_STATUS  = '/status';
 
+	private PaymentProviderFactory $factory;
 	private PaymentProviderInterface $vendor;
 	private TransactionRepository $transaction_repository;
 	private DonorRepository $donor_repository;
@@ -49,12 +49,13 @@ class Payment extends BaseRestController {
 	/**
 	 * Payment constructor.
 	 *
-	 * @param PaymentProviderFactory $factory Current vendor.
+	 * @param PaymentProviderFactory $factory Payment provider factory.
 	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 * @param DonorRepository        $donor_repository Donor repository.
 	 * @param CampaignRepository     $campaign_repository Campaign repository.
 	 */
 	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, DonorRepository $donor_repository, CampaignRepository $campaign_repository ) {
+		$this->factory                = $factory;
 		$this->vendor                 = $factory->get_provider();
 		$this->transaction_repository = $transaction_repository;
 		$this->donor_repository       = $donor_repository;
@@ -66,7 +67,7 @@ class Payment extends BaseRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			self::ROUTE_CREATE  => [
+			self::ROUTE_CREATE => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'create_item' ],
 				'permission_callback' => '__return_true',
@@ -149,7 +150,7 @@ class Payment extends BaseRestController {
 				],
 			],
 
-			self::ROUTE_WEBHOOK => [
+			self::ROUTE_WEBHOOK . '(?:/(?P<vendor>[a-z0-9_-]+))?' => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'handle_webhook' ],
 				'args'                => [
@@ -162,7 +163,7 @@ class Payment extends BaseRestController {
 				'permission_callback' => '__return_true',
 			],
 
-			self::ROUTE_REFUND  => [
+			self::ROUTE_REFUND => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'refund' ],
 				'args'                => [
@@ -175,13 +176,13 @@ class Payment extends BaseRestController {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
-			self::ROUTE_TEST    => [
+			self::ROUTE_TEST   => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'test_connection' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
-			self::ROUTE_STATUS  => [
+			self::ROUTE_STATUS => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'status' ],
 				'args'                => [
@@ -210,12 +211,18 @@ class Payment extends BaseRestController {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
-		/** @var ?TransactionEntity $transaction */
-		$transaction = $this->vendor->sync_transaction_status( $entity_id );
-
+		$transaction = $this->transaction_repository->get( $entity_id );
 		if ( null === $transaction ) {
 			return new WP_Error( 'transaction_not_found', 'Transaction not found' );
 		}
+
+		$provider = $this->factory->get_provider( $transaction->vendor );
+		if ( null === $provider ) {
+			return new WP_Error( 'provider_not_found', 'Provider not found' );
+		}
+
+		// Refresh from the vendor; fall back to the stored transaction when there is nothing to sync.
+		$transaction = $provider->sync_transaction_status( $entity_id ) ?? $transaction;
 
 		$data     = [
 			'status'   => $transaction->status,
@@ -409,14 +416,25 @@ class Payment extends BaseRestController {
 	}
 
 	/**
-	 * Webhook handler. Passes request to rest_webhook method of current vendor.
+	 * Webhook handler. Routes the request to the provider named in the URL, so payments from a
+	 * previously active provider keep being processed after the site switches vendor. Requests
+	 * without a vendor slug predate per-vendor URLs and are always Mollie.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function handle_webhook( WP_REST_Request $request ): WP_REST_Response {
-		do_action( 'kudos_' . $this->vendor::get_slug() . '_webhook_requested', $request );
+		$vendor   = $request->get_param( 'vendor' );
+		$slug     = empty( $vendor ) ? 'mollie' : $vendor;
+		$provider = $this->factory->get_provider( $slug );
 
-		return $this->vendor->rest_webhook( $request );
+		if ( null === $provider ) {
+			$this->get_logger()->warning( 'Webhook received for unknown vendor.', [ 'vendor' => $slug ] );
+			return new WP_REST_Response( [ 'success' => false ], 404 );
+		}
+
+		do_action( 'kudos_' . $provider::get_slug() . '_webhook_requested', $request );
+
+		return $provider->rest_webhook( $request );
 	}
 
 	/**
@@ -425,9 +443,11 @@ class Payment extends BaseRestController {
 	 * @param WP_REST_Request $request The request.
 	 */
 	public function refund( WP_REST_Request $request ): WP_REST_Response {
-		$entity_id = $request->get_param( 'id' );
+		$entity_id   = $request->get_param( 'id' );
+		$transaction = $this->transaction_repository->get( $entity_id );
+		$provider    = null !== $transaction ? $this->factory->get_provider( $transaction->vendor ) : null;
 
-		if ( $this->vendor->refund( $entity_id ) ) {
+		if ( null !== $provider && $provider->refund( $entity_id ) ) {
 			return new WP_REST_Response( [ 'message' => __( 'Refund successful.', 'kudos-donations' ) ], 200 );
 		}
 
