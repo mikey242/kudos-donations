@@ -204,8 +204,8 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	/**
 	 * Returns the shared webhook REST URL used by all payment providers.
 	 */
-	public static function get_webhook_url(): string {
-		return get_rest_url( null, 'kudos/v1/payment/webhook' );
+	protected static function get_webhook_url(): string {
+		return get_rest_url( null, 'kudos/v1/payment/webhook/' );
 	}
 
 	/**

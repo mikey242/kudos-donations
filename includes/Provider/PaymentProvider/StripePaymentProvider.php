@@ -109,7 +109,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	protected function setup(): void {
-		Localization::add_admin( 'stripeWebhookUrl', self::get_webhook_url() );
+		Localization::add_admin( 'stripeWebhookUrl', static::get_webhook_url() );
 		Stripe::setEnableTelemetry( false );
 		Stripe::setLogger( $this->get_logger() );
 		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
@@ -390,7 +390,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		$webhook_url = self::get_webhook_url();
+		$webhook_url = static::get_webhook_url();
 
 		try {
 			$endpoint = $client->webhookEndpoints->create(

@@ -388,7 +388,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 				'value'    => $payment_args['value'],
 			],
 			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $this->get_webhook_url(),
+			'webhookUrl'   => static::get_webhook_url(),
 			'sequenceType' => $sequence_type,
 			'description'  => $transaction->title,
 			'metadata'     => [
@@ -512,7 +512,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 						'value'    => $value,
 						'currency' => $currency,
 					],
-					'webhookUrl'  => $this->get_webhook_url(),
+					'webhookUrl'  => static::get_webhook_url(),
 					'mandateId'   => $mandate_id,
 					'interval'    => $interval,
 					'startDate'   => $start_date,
