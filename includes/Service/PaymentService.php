@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 
@@ -188,6 +189,10 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	public function check_payment_status( int $transaction_id ): void {
 		$transaction = $this->transaction_repository->get( $transaction_id );
 		if ( null === $transaction ) {
+			return;
+		}
+		// Already resolved by the webhook or an on-demand status check — nothing to sync.
+		if ( ! empty( $transaction->status ) && PaymentStatus::OPEN !== $transaction->status ) {
 			return;
 		}
 		$provider = $this->payment_provider_factory->get_provider( $transaction->vendor );
