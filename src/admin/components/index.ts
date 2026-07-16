@@ -3,6 +3,7 @@ export * from './OnboardingBanner';
 export * from './StepsBanner';
 export * from './Panel';
 export * from './PaymentIcon';
+export * from './PaymentVendorIcon';
 export * from './PaymentMethodsList';
 export * from './Spacer';
 export * from './table';

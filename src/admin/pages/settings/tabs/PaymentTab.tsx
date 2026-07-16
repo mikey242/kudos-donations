@@ -11,6 +11,7 @@ import { Notice } from '@wordpress/components';
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
 import { ProviderSelector } from '../../../controls';
+import { getPaymentVendors } from '../../../../utils/payment-vendor';
 
 const vendorPanels: Record<string, AdminPanel[]> = {
 	mollie: molliePanels,
@@ -20,7 +21,7 @@ const vendorPanels: Record<string, AdminPanel[]> = {
 
 const VendorSelectorPanel = () => {
 	const { settings, updateSetting } = useSettingsContext<AllSettings>();
-	const vendors = window.kudos?.admin?.payment_vendors ?? [];
+	const paymentVendors = getPaymentVendors();
 	const { createErrorNotice } = useDispatch(noticesStore);
 
 	const [isSaving, setIsSaving] = useState(false);
@@ -37,7 +38,7 @@ const VendorSelectorPanel = () => {
 		}
 	};
 
-	if (vendors.length <= 1) {
+	if (paymentVendors.length <= 1) {
 		return null;
 	}
 
@@ -48,7 +49,7 @@ const VendorSelectorPanel = () => {
 					style={{ display: 'flex', justifyContent: 'space-between' }}
 				>
 					<ProviderSelector
-						vendors={vendors}
+						vendors={paymentVendors}
 						currentVendor={savedVendor}
 						onSave={handleSave}
 						isSaving={isSaving}
@@ -81,10 +82,10 @@ const vendorSelectorPanel: AdminPanel = {
 
 export const usePaymentTab = (): AdminTab => {
 	const { settings } = useSettingsContext<AllSettings>();
-	const vendors = window.kudos?.admin?.payment_vendors ?? [];
+	const paymentVendors = getPaymentVendors();
 	const savedVendor = settings._kudos_payment_vendor;
-	const isValid = vendors.some(({ slug }) => slug === savedVendor);
-	const resolvedVendor = isValid ? savedVendor : vendors[0]?.slug;
+	const isValid = paymentVendors.some(({ slug }) => slug === savedVendor);
+	const resolvedVendor = isValid ? savedVendor : paymentVendors[0]?.slug;
 	const panels =
 		(resolvedVendor && vendorPanels[resolvedVendor]) ?? molliePanels;
 

@@ -3,6 +3,7 @@ import { Button, Modal, RadioControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { AllSettings } from '../../types/all-settings';
+import { PaymentVendorIcon } from '../components';
 
 export type Provider = {
 	slug: string;
@@ -51,14 +52,7 @@ export const ProviderSelector = ({
 						gap: '0.5em',
 					}}
 				>
-					{selectedVendor.icon && (
-						<img
-							width={35}
-							height={35}
-							alt=""
-							src={`data:image/svg+xml;utf8,${encodeURIComponent(selectedVendor.icon)}`}
-						/>
-					)}
+					<PaymentVendorIcon icon={selectedVendor.icon} size={35} />
 					<strong style={{ marginRight: '0.5em' }}>
 						{selectedVendor.label}
 					</strong>
@@ -117,16 +111,12 @@ const OtherVendors = ({
 				.map((vendor, i) => {
 					const size = total === 1 ? 20 : 20 - (10 * i) / (total - 1);
 					return (
-						vendor.icon && (
-							<img
-								style={{ opacity: '0.6' }}
-								key={vendor.slug}
-								width={size}
-								height={size}
-								alt=""
-								src={`data:image/svg+xml;utf8,${encodeURIComponent(vendor.icon)}`}
-							/>
-						)
+						<PaymentVendorIcon
+							key={vendor.slug}
+							icon={vendor.icon}
+							size={size}
+							style={{ opacity: '0.6' }}
+						/>
 					);
 				})}
 		</span>

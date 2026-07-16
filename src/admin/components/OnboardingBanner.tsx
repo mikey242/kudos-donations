@@ -12,6 +12,7 @@ import { useAdminQueryParams } from '../hooks';
 import type { AllSettings } from '../../types/all-settings';
 import { Campaign } from '../../types/entity';
 import { StepsBanner } from './StepsBanner';
+import { getPaymentVendors } from '../../utils/payment-vendor';
 
 function useHasCampaign(params: object, enabled: boolean): boolean | null {
 	const [hasCampaign, setHasCampaign] = useState<boolean | null>(null);
@@ -34,7 +35,6 @@ export const OnboardingBanner = () => {
 	const dismissed = !!settings._kudos_onboarding_dismissed;
 	const hasCampaign = useHasCampaign(params, !dismissed);
 
-	const vendors = window.kudos?.admin?.payment_vendors ?? [];
 	const vendor = settings._kudos_payment_vendor ?? '';
 	const status = settings._kudos_payment_vendor_status;
 
@@ -42,6 +42,7 @@ export const OnboardingBanner = () => {
 		return null;
 	}
 
+	const paymentVendors = getPaymentVendors();
 	const dismiss = () => updateSetting('_kudos_onboarding_dismissed', true);
 
 	// The active provider declares its own setup steps; we only supply the ones that are
@@ -65,7 +66,7 @@ export const OnboardingBanner = () => {
 			id: 'provider',
 			label: __('Choose a payment provider', 'kudos-donations'),
 			done: !!vendor,
-			hidden: vendors.length <= 1,
+			hidden: paymentVendors.length <= 1,
 			onClick: () =>
 				setParams({
 					page: 'kudos-settings',

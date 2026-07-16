@@ -5,12 +5,19 @@ import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { confirmDelete } from '../../../utils';
+import { getPaymentVendor } from '../../../utils/payment-vendor';
 import type { Campaign, Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
 } from '@heroicons/react/24/outline';
-import { DetailsModal, HeaderItem, StatusIcon, Table } from '../../components';
+import {
+	DetailsModal,
+	HeaderItem,
+	PaymentVendorIcon,
+	StatusIcon,
+	Table,
+} from '../../components';
 import type { StatusConfig } from '../../components';
 import { getCurrencySymbol } from '../../../utils/currency';
 
@@ -102,18 +109,12 @@ export const TransactionsTable = (): React.ReactNode => {
 				post.campaign?.title ?? '',
 		},
 		{
-			key: 'message',
-			title: __('Message', 'kudos-donations'),
-			align: 'center',
-			valueCallback: (post: Transaction): React.ReactNode =>
-				post.message && (
-					<DetailsModal
-						title={__('Message', 'kudos-donations')}
-						content={
-							<p style={{ fontSize: '16px' }}>{post.message}</p>
-						}
-					/>
-				),
+			key: 'provider',
+			title: __('Provider', 'kudos-donations'),
+			align: 'left',
+			valueCallback: (post: Transaction): React.ReactNode => (
+				<PaymentVendorIcon icon={getPaymentVendor(post.vendor)?.icon} />
+			),
 		},
 		{
 			key: 'date',
@@ -144,6 +145,18 @@ export const TransactionsTable = (): React.ReactNode => {
 								icon="edit"
 								onClick={() => handleEdit(post.id)}
 								title={__('View more', 'kudos-donations')}
+							/>
+						)}
+						{post.message && (
+							<DetailsModal
+								title={__('Message', 'kudos-donations')}
+								label={__('View message', 'kudos-donations')}
+								icon={'text'}
+								content={
+									<p style={{ fontSize: '16px' }}>
+										{post.message}
+									</p>
+								}
 							/>
 						)}
 						<Button
