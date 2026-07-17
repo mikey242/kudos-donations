@@ -26,7 +26,7 @@
     "monolog/monolog": "^2",
     "psr/log": "^1.1",
     "sabberworm/php-css-parser": "^8.9",
-    "stripe/stripe-php": "^20.2",
+    "stripe/stripe-php": "^21.0",
     "symfony/config": "^5.4",
     "symfony/dependency-injection": "^5.4",
     "symfony/dotenv": "^5.4",
