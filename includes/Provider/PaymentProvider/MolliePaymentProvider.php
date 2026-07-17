@@ -52,6 +52,13 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	private SubscriptionRepository $subscription_repository;
 
 	/**
+	 * Whether the client's user-agent strings have been applied yet.
+	 *
+	 * @var bool
+	 */
+	private bool $user_agent_set = false;
+
+	/**
 	 * Mollie constructor.
 	 *
 	 * @param MollieApiClient        $api_client Used to communicate with Mollie.
@@ -66,18 +73,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$this->transaction_repository  = $transaction_repository;
 		$this->donor_repository        = $donor_repository;
 		$this->subscription_repository = $subscription_repository;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function setup(): void {
-		$this->config_client();
-		$this->set_user_agent();
-		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
-		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 2 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_TEST, [ $this, 'handle_key_updated' ], 10, 2 );
 	}
 
 	/**
@@ -123,9 +118,28 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Change the API client to the key for the specified mode.
+	 * Returns the Mollie client, configured with the current mode's key on first use.
+	 *
+	 * Configuration is deferred until a call actually needs the client, so nothing is decrypted
+	 * at construction or registration time. Callers that need a guaranteed-authenticated client
+	 * (i.e. that a key was set) should check the return value of configure_client() first.
 	 */
-	protected function config_client(): bool {
+	private function client(): MollieApiClient {
+		$this->configure_client();
+		return $this->api_client;
+	}
+
+	/**
+	 * Applies the user agent (once) and the current mode's API key to the client.
+	 *
+	 * @return bool True when a usable key was set, false otherwise.
+	 */
+	protected function configure_client(): bool {
+		if ( ! $this->user_agent_set ) {
+			$this->set_user_agent();
+			$this->user_agent_set = true;
+		}
+
 		// Gets the key associated with the specified mode.
 		$key = $this->get_api_key();
 
@@ -208,7 +222,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	public function refresh(): bool {
 
 		// Bail if unable to set api key with Mollie.
-		if ( ! $this->config_client() ) {
+		if ( ! $this->configure_client() ) {
 			$this->get_logger()->error( 'Failed to set API key with Mollie' );
 			return false;
 		}
@@ -274,7 +288,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	public function get_active_payment_methods( array $options = [] ) {
 		try {
-			return $this->api_client->methods->allEnabled( $options );
+			return $this->client()->methods->allEnabled( $options );
 		} catch ( RequestException $e ) {
 			$this->get_logger()->critical( $e->getMessage() );
 
@@ -334,7 +348,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 */
 	public function get_customer( string $vendor_customer_id ): ?Customer {
 		try {
-			return $this->api_client->customers->get( $vendor_customer_id );
+			return $this->client()->customers->get( $vendor_customer_id );
 		} catch ( RequestException $e ) {
 			$this->get_logger()->critical( $e->getMessage() );
 
@@ -359,7 +373,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			return $this->api_client->customers->create( $args );
+			return $this->client()->customers->create( $args );
 		} catch ( RequestException $e ) {
 			$this->get_logger()->critical( $e->getMessage() );
 
@@ -407,7 +421,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			$payment = $this->api_client->payments->create( $payment_array );
+			$payment = $this->client()->payments->create( $payment_array );
 
 			$this->get_logger()->info(
 				'New ' . $this->get_name() . ' payment created.',
@@ -623,7 +637,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	public function handle_status_change( string $vendor_payment_id ): void {
 
 		// Mollie API.
-		$mollie = $this->api_client;
+		$mollie = $this->client();
 
 		/**
 		 * Get the payment object from Mollie.
@@ -865,7 +879,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			$amount['value']    = Utils::format_value_for_use( $transaction->value );
 			$amount['currency'] = $transaction->currency;
 			try {
-				$payment  = $this->api_client->payments->get( $payment_id );
+				$payment  = $this->client()->payments->get( $payment_id );
 				$response = $payment->refund( [ 'amount' => $amount ] );
 				$this->get_logger()->info(
 					\sprintf( 'Refunding transaction "%s"', $payment_id ),

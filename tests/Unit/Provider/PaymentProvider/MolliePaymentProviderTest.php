@@ -18,6 +18,7 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\Service\EncryptionService;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -182,6 +183,10 @@ class MolliePaymentProviderTest extends BaseTestCase {
 			$this->get_from_container(SubscriptionRepository::class)
 		);
 		$vendor->setLogger($logger);
+		// The lazy client reads (and would decrypt) the stored key on first use, so wire
+		// encryption just as the container does. No key is stored, so the injected fake client
+		// is used as-is.
+		$vendor->set_encryption($this->get_from_container(EncryptionService::class));
 
 		return $vendor;
 	}

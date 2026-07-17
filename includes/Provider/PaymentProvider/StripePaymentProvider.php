@@ -107,15 +107,15 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * Adds the SDK-level configuration on top of the shared hook registration. The API client
+	 * itself is built lazily in get_client(), so nothing here reads a key or connects.
 	 */
-	protected function setup(): void {
+	public function init(): void {
+		parent::init();
 		Localization::add_admin( 'stripeWebhookUrl', static::get_webhook_url() );
 		Stripe::setEnableTelemetry( false );
 		Stripe::setLogger( $this->get_logger() );
-		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
-		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_LIVE, [ $this, 'handle_key_updated' ], 10, 2 );
-		add_action( 'update_option_' . self::SETTING_API_KEY_ENCRYPTED_TEST, [ $this, 'handle_key_updated' ], 10, 2 );
 	}
 
 	/**

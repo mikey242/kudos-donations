@@ -22,6 +22,19 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function register_providers(): void {
+		foreach ( $this->get_enabled_providers() as $provider ) {
+			$provider->init();
+		}
+
+		if ( is_admin() ) {
+			$this->get_provider()->show_notices();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function get_type_slug(): string {
 		return 'payment_vendors';
 	}
@@ -37,7 +50,11 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		// Always return DemoPaymentProvider in demo mode.
+		/**
+		 * Always return DemoPaymentProvider in demo mode.
+		 *
+		 * @phpstan-ignore if.alwaysFalse
+		 */
 		if ( KUDOS_DEMO_MODE ) {
 			return DemoPaymentProvider::get_slug();
 		}

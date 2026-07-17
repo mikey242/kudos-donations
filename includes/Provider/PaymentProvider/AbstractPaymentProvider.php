@@ -39,18 +39,47 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	abstract protected function get_cache_setting(): ?string;
 
 	/**
-	 * Provider-specific setup: register hooks, configure the API client, etc.
-	 * Called automatically by init() before notices are shown.
-	 */
-	abstract protected function setup(): void;
-
-	/**
 	 * {@inheritDoc}
 	 */
-	final public function init(): void {
+	public function init(): void {
 		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
-		$this->setup();
+		$this->register_key_hooks();
+	}
 
+	/**
+	 * Wires the API-key option hooks: validate/encrypt on save, then refresh the cached vendor
+	 * data once the encrypted key lands. Providers that expose no API keys (e.g. demo) define
+	 * none of these constants and are simply skipped.
+	 */
+	private function register_key_hooks(): void {
+		foreach ( [ 'LIVE', 'TEST' ] as $mode ) {
+			$plain_key     = static::class . '::SETTING_API_KEY_' . $mode;
+			$encrypted_key = static::class . '::SETTING_API_KEY_ENCRYPTED_' . $mode;
+			if ( \defined( $plain_key ) ) {
+				add_filter( 'pre_update_option_' . \constant( $plain_key ), [ $this, 'handle_key_update' ], 10, 3 );
+			}
+			if ( \defined( $encrypted_key ) ) {
+				add_action( 'update_option_' . \constant( $encrypted_key ), [ $this, 'handle_key_updated' ], 10, 2 );
+			}
+		}
+	}
+
+	/**
+	 * Validates and persists an updated API key. Overridden by key-based providers; the base
+	 * implementation is a no-op passthrough for providers that expose no keys.
+	 *
+	 * @param string $value      The new (plain) value being saved.
+	 * @param string $_old_value The previous value.
+	 * @param string $_option    The option name being updated.
+	 */
+	public function handle_key_update( string $value, string $_old_value, string $_option ): string {
+		return $value;
+	}
+
+	/**
+	 * Shows the provider's admin notices. Called only for the active provider.
+	 */
+	public function show_notices(): void {
 		if ( null === $this->get_cache_setting() ) {
 			return;
 		}

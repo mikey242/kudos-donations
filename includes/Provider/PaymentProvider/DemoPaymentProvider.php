@@ -74,9 +74,10 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	/**
 	 * {@inheritDoc}
 	 *
-	 * Registers the demo checkout and confirm REST routes.
+	 * The demo provider has no API keys or webhooks; it only needs its local checkout REST routes.
 	 */
-	protected function setup(): void {
+	public function init(): void {
+		parent::init();
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 

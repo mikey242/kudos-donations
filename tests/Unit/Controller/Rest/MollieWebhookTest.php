@@ -8,6 +8,7 @@ use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\EndpointCollection\PaymentEndpointCollection;
 use IseardMedia\Kudos\Tests\Stubs\TestableMollieApiClient;
@@ -46,6 +47,9 @@ class MollieWebhookTest extends BaseTestCase {
 			$subscription_repository
 		);
 		$this->provider->setLogger($logger);
+		// The lazy client reads (and would decrypt) the stored key on first use, so wire
+		// encryption just as the container does. No key is stored, so the mock client is used as-is.
+		$this->provider->set_encryption($this->get_from_container(EncryptionService::class));
 	}
 
 	/**

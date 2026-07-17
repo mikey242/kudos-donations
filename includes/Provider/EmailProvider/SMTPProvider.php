@@ -39,8 +39,6 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	 */
 	public function __construct( TwigService $twig ) {
 		$this->twig = $twig;
-		// Add filters for encrypting passwords.
-		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
@@ -75,6 +73,9 @@ class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 	 * {@inheritDoc}
 	 */
 	public function init(): void {
+		// Encrypt the SMTP password whenever it is saved.
+		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
+
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = (string) get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = (array) get_option( self::SETTING_CUSTOM_SMTP, [] );

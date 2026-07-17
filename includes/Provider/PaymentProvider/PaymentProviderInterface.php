@@ -32,6 +32,11 @@ interface PaymentProviderInterface extends ProviderInterface {
 	public function refresh(): bool;
 
 	/**
+	 * Shows the provider's admin notices.
+	 */
+	public function show_notices(): void;
+
+	/**
 	 * Cancel the specified subscription.
 	 *
 	 * @param SubscriptionEntity $subscription subscription row.

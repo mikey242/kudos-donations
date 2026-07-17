@@ -25,6 +25,20 @@ class EncryptionService extends AbstractRegistrable {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$this->init_keys();
+	}
+
+	/**
+	 * Resolves the key and salt from wp-config constants, once per instance.
+	 *
+	 * Also called from encrypt()/decrypt() so the service works the moment it is constructed —
+	 * a consumer that needs it before the `init` hook (e.g. a provider configured during
+	 * container bootstrap) would otherwise hit an uninitialised typed property.
+	 */
+	private function init_keys(): void {
+		if ( isset( $this->key ) ) {
+			return;
+		}
 		$this->key  = $this->get_key();
 		$this->salt = $this->get_salt();
 	}
@@ -95,6 +109,7 @@ class EncryptionService extends AbstractRegistrable {
 	 * @return string|false
 	 */
 	public function encrypt( string $password ) {
+		$this->init_keys();
 		if ( ! \extension_loaded( 'openssl' ) ) {
 			$this->logger->error( 'Tried to encrypt password before openssl was loaded.' );
 			return $password;
@@ -122,6 +137,7 @@ class EncryptionService extends AbstractRegistrable {
 	 * @return string|array|false Returns string if parameter is string and array if parameter is array.
 	 */
 	public function decrypt( $raw_value ) {
+		$this->init_keys();
 		// No raw value.
 		if ( ! $raw_value ) {
 			return '';

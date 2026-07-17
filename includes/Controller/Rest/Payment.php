@@ -56,10 +56,23 @@ class Payment extends BaseRestController {
 	 */
 	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, DonorRepository $donor_repository, CampaignRepository $campaign_repository ) {
 		$this->factory                = $factory;
-		$this->vendor                 = $factory->get_provider();
 		$this->transaction_repository = $transaction_repository;
 		$this->donor_repository       = $donor_repository;
 		$this->campaign_repository    = $campaign_repository;
+	}
+
+	/**
+	 * Resolves the active payment provider on first use.
+	 *
+	 * Deliberately lazy: resolving the provider eagerly (e.g. in the constructor) runs its
+	 * setup() during container bootstrap — before `init` — which decrypts API keys and loads
+	 * translations too early. Route callbacks run on rest_api_init, well after setup is safe.
+	 */
+	private function get_vendor(): PaymentProviderInterface {
+		if ( ! isset( $this->vendor ) ) {
+			$this->vendor = $this->factory->get_provider();
+		}
+		return $this->vendor;
 	}
 
 	/**
@@ -280,6 +293,8 @@ class Payment extends BaseRestController {
 
 		$args = wp_parse_args( $values, $defaults );
 
+		$vendor = $this->get_vendor();
+
 		// Add submit action and pass args.
 		do_action( 'kudos_submit_payment', $args );
 
@@ -289,8 +304,8 @@ class Payment extends BaseRestController {
 		if ( $args['email'] ) {
 
 			$donor_args = [
-				'mode'          => $this->vendor->get_api_mode(),
-				'vendor'        => $this->vendor::get_slug(),
+				'mode'          => $vendor->get_api_mode(),
+				'vendor'        => $vendor::get_slug(),
 				'email'         => $args['email'],
 				'name'          => $args['name'],
 				'business_name' => $args['business_name'],
@@ -305,14 +320,14 @@ class Payment extends BaseRestController {
 			$donor = $this->donor_repository->find_one_by(
 				[
 					'email'  => $args['email'],
-					'mode'   => $this->vendor->get_api_mode(),
-					'vendor' => $this->vendor::get_slug(),
+					'mode'   => $vendor->get_api_mode(),
+					'vendor' => $vendor::get_slug(),
 				]
 			);
 
 			if ( empty( $donor ) ) {
 				// Create new customer with vendor if none found.
-				$customer = $this->vendor->create_customer( $args['email'], $args['name'] );
+				$customer = $vendor->create_customer( $args['email'], $args['name'] );
 				if ( false !== $customer ) {
 					$donor_args['vendor_customer_id'] = $customer->id;
 				}
@@ -334,11 +349,11 @@ class Payment extends BaseRestController {
 				'value'         => $args['value'],
 				'currency'      => $args['currency'],
 				'status'        => PaymentStatus::OPEN,
-				'mode'          => $this->vendor->get_api_mode(),
+				'mode'          => $vendor->get_api_mode(),
 				'sequence_type' => 'true' === $args['recurring'] ? 'first' : 'oneoff',
 				'campaign_id'   => $args['campaign_id'],
 				'message'       => $args['message'],
-				'vendor'        => $this->vendor::get_slug(),
+				'vendor'        => $vendor::get_slug(),
 			]
 		);
 
@@ -359,7 +374,7 @@ class Payment extends BaseRestController {
 		}
 
 		// Create payment with vendor.
-		$url = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
+		$url = $vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {
@@ -393,7 +408,7 @@ class Payment extends BaseRestController {
 	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 */
 	public function test_connection(): WP_REST_Response {
-		$result = $this->vendor->refresh();
+		$result = $this->get_vendor()->refresh();
 		if ( $result ) {
 			return new WP_REST_Response(
 				[

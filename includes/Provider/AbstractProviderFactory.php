@@ -25,6 +25,14 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	private ServiceLocator $provider_locator;
 
 	/**
+	 * Memoised map of enabled providers (slug => class-string). The enabled set is fixed for the
+	 * request, so it is computed once on first access.
+	 *
+	 * @var array<string, class-string<ProviderInterface>>|null
+	 */
+	private ?array $enabled_slug_map = null;
+
+	/**
 	 * @param ServiceLocator $provider_locator Used to get class from container.
 	 */
 	public function __construct( ServiceLocator $provider_locator ) {
@@ -35,7 +43,16 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		Localization::add_admin( static::get_type_slug(), $this->get_providers() );
+		Localization::add_admin( static::get_type_slug(), $this->get_provider_metadata() );
+		$this->register_providers();
+	}
+
+	/**
+	 * Initialises the providers this factory manages. By default, only the active provider is
+	 * initialised; subclasses whose providers own request-scoped hooks (e.g. per-vendor webhooks)
+	 * override this to initialise every enabled provider.
+	 */
+	protected function register_providers(): void {
 		$provider = $this->get_provider();
 		if ( null !== $provider ) {
 			$provider->init();
@@ -96,11 +113,28 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	}
 
 	/**
-	 * Returns the list of available providers for this factory type.
+	 * Resolves every enabled provider. Building a provider is cheap — its heavy dependencies
+	 * (API clients) are lazy container proxies, so nothing connects or decrypts here.
 	 *
-	 * @return array<int, array{slug: string, label: string}>
+	 * @return array<string, T>
 	 */
-	private function get_providers(): array {
+	protected function get_enabled_providers(): array {
+		$providers = [];
+		foreach ( array_keys( $this->get_enabled_slug_map() ) as $slug ) {
+			$provider = $this->get_provider( $slug );
+			if ( null !== $provider ) {
+				$providers[ $slug ] = $provider;
+			}
+		}
+		return $providers;
+	}
+
+	/**
+	 * Returns admin-UI metadata for each enabled provider (not the providers themselves).
+	 *
+	 * @return array<int, array{slug: string, label: string, icon: string}>
+	 */
+	private function get_provider_metadata(): array {
 		$providers = [];
 		foreach ( $this->get_enabled_slug_map() as $slug => $class ) {
 			$providers[] = [
@@ -113,11 +147,15 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	}
 
 	/**
-	 * Returns a slug map of enabled providers.
+	 * Returns a slug map of enabled providers, computed once per request.
 	 *
 	 * @return array<string, class-string<ProviderInterface>>
 	 */
 	private function get_enabled_slug_map(): array {
+		if ( null !== $this->enabled_slug_map ) {
+			return $this->enabled_slug_map;
+		}
+
 		$slug_map = [];
 		/** @var class-string<ProviderInterface> $class */
 		foreach ( array_keys( $this->provider_locator->getProvidedServices() ) as $class ) {
@@ -125,6 +163,8 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 				$slug_map[ $class::get_slug() ] = $class;
 			}
 		}
+
+		$this->enabled_slug_map = $slug_map;
 		return $slug_map;
 	}
 }
