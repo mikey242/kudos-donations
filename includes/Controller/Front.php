@@ -36,6 +36,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		self::SCRIPT_HANDLE_VIEW,
 		self::SCRIPT_HANDLE_EDITOR,
 	];
+	private PaymentProviderFactory $factory;
 	private PaymentProviderInterface $vendor;
 	private TransactionRepository $transaction_repository;
 
@@ -46,8 +47,19 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 */
 	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository ) {
+		$this->factory                = $factory;
 		$this->transaction_repository = $transaction_repository;
-		$this->vendor                 = $factory->get_provider();
+	}
+
+	/**
+	 * Resolves the active payment provider on first use. Deferred out of the constructor so
+	 * nothing is decrypted or option-read while the container instantiates this controller.
+	 */
+	private function get_payment_vendor(): PaymentProviderInterface {
+		if ( ! isset( $this->vendor ) ) {
+			$this->vendor = $this->factory->get_provider();
+		}
+		return $this->vendor;
 	}
 
 	/**
@@ -182,12 +194,13 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		}
 
 		// Check if the current vendor is connected.
-		if ( ! $this->vendor->is_vendor_ready() ) {
+		$vendor = $this->get_payment_vendor();
+		if ( ! $vendor->is_vendor_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$message = 'Kudos Donations: ' . \sprintf(
 				/* translators: %s: Payment vendor (e.g. Mollie). */
 					__( '%s not connected.', 'kudos-donations' ),
-					$this->vendor::get_name()
+					$vendor::get_name()
 				);
 
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';

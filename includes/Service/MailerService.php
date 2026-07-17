@@ -27,19 +27,20 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public const SETTING_EMAIL_VENDOR         = '_kudos_email_vendor';
 	public const SETTING_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
 	public const SETTING_EMAIL_SHOW_CAMPAIGN  = '_kudos_email_show_campaign_name';
-	private ?EmailProviderInterface $vendor;
+	private EmailProviderFactory $factory;
+	private ?EmailProviderInterface $vendor = null;
 	private TransactionRepository $transaction_repository;
 	private SubscriptionRepository $subscription_repository;
 
 	/**
 	 * MailerService constructor.
 	 *
-	 * @param EmailProviderFactory   $vendor The currently configured email vendor.
+	 * @param EmailProviderFactory   $factory The email vendor factory.
 	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 * @param SubscriptionRepository $subscription_repository Subscription repository.
 	 */
-	public function __construct( EmailProviderFactory $vendor, TransactionRepository $transaction_repository, SubscriptionRepository $subscription_repository ) {
-		$this->vendor                  = $vendor->get_provider();
+	public function __construct( EmailProviderFactory $factory, TransactionRepository $transaction_repository, SubscriptionRepository $subscription_repository ) {
+		$this->factory                 = $factory;
 		$this->transaction_repository  = $transaction_repository;
 		$this->subscription_repository = $subscription_repository;
 	}
@@ -50,6 +51,17 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public function register(): void {}
 
 	/**
+	 * Resolves the active email provider on first use. Deferred out of the constructor so the
+	 * container can build this service without reading options; the null result is memoised too.
+	 */
+	private function get_vendor(): ?EmailProviderInterface {
+		if ( ! $this->vendor ) {
+			$this->vendor = $this->factory->get_provider();
+		}
+		return $this->vendor;
+	}
+
+	/**
 	 * Sends a message.
 	 *
 	 * @param string $email Email address.
@@ -57,10 +69,11 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * @param string $message Message body.
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
-		if ( ! $this->vendor ) {
+		$vendor = $this->get_vendor();
+		if ( ! $vendor ) {
 			return false;
 		}
-		return $this->vendor->send_message( $email, $header, $message );
+		return $vendor->send_message( $email, $header, $message );
 	}
 
 	/**
@@ -69,7 +82,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * @param int $transaction_id Transaction id.
 	 */
 	public function send_receipt( int $transaction_id ): bool {
-		if ( ! $this->vendor ) {
+		$vendor = $this->get_vendor();
+		if ( ! $vendor ) {
 			return false;
 		}
 
@@ -163,7 +177,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			)
 		);
 
-		$result = $this->vendor->send_receipt( $email, $args );
+		$result = $vendor->send_receipt( $email, $args );
 		restore_previous_locale();
 		return $result;
 	}
