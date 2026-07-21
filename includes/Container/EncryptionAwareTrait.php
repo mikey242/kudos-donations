@@ -11,8 +11,9 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Container;
 
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Service\EncryptionService;
-use IseardMedia\Kudos\Service\NoticeService;
 
 trait EncryptionAwareTrait {
 
@@ -92,7 +93,7 @@ trait EncryptionAwareTrait {
 					__( 'Error decrypting "%s". Please reset it and add it again.', 'kudos-donations' ),
 					$encrypted_option
 				);
-			NoticeService::add_notice( $message, NoticeService::ERROR, true, $encrypted_option );
+			NoticeManager::add_notice( new Notice( $encrypted_option, $message, Notice::ERROR, true ) );
 			return '';
 		}
 

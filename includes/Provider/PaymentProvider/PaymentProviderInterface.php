@@ -11,6 +11,7 @@ namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Notice\Notice;
 use IseardMedia\Kudos\Provider\ProviderInterface;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -30,11 +31,6 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 * Refresh the local vendor settings.
 	 */
 	public function refresh(): bool;
-
-	/**
-	 * Shows the provider's admin notices.
-	 */
-	public function show_notices(): void;
 
 	/**
 	 * Cancel the specified subscription.

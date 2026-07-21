@@ -20,7 +20,8 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Localization;
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\ThirdParty\Stripe\Capability;
 use IseardMedia\Kudos\ThirdParty\Stripe\Checkout\Session;
 use IseardMedia\Kudos\ThirdParty\Stripe\Event;
@@ -111,8 +112,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * Adds the SDK-level configuration on top of the shared hook registration. The API client
 	 * itself is built lazily in get_client(), so nothing here reads a key or connects.
 	 */
-	public function init(): void {
-		parent::init();
+	protected function on_init(): void {
 		Localization::add_admin( 'stripeWebhookUrl', static::get_webhook_url() );
 		Stripe::setEnableTelemetry( false );
 		Stripe::setLogger( $this->get_logger() );
@@ -144,13 +144,6 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 */
 	protected function get_cache_setting(): string {
 		return self::SETTING_CACHE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get_api_mode(): string {
-		return get_option( self::SETTING_API_MODE, 'test' );
 	}
 
 	/**
@@ -367,7 +360,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 *
 	 * @param string|null $mode The API mode, or null for the current one.
 	 */
-	public function get_webhook_secret( ?string $mode = null ): string {
+	private function get_webhook_secret( ?string $mode = null ): string {
 		$mode    = $mode ?? $this->get_api_mode();
 		$webhook = (array) get_option( self::SETTING_WEBHOOK, [] );
 		$stored  = isset( $webhook[ $mode ] ) ? (array) $webhook[ $mode ] : [];
@@ -420,16 +413,18 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			);
 		} catch ( ApiErrorException $e ) {
 			$this->get_logger()->warning( 'Could not auto-register Stripe webhook endpoint.', [ 'error' => $e->getMessage() ] );
-			NoticeService::add_notice(
-				\sprintf(
-					// translators: %1$s is the webhook URL. %2$s is the admin URL.
-					__( 'Stripe webhook could not be registered automatically. Add <code>%1$s</code> as a webhook endpoint in your <a href="https://dashboard.stripe.com/webhooks">Stripe Dashboard</a>, then paste the signing secret into the <a href="%2$s">Stripe settings</a>.', 'kudos-donations' ),
-					esc_url( $webhook_url ),
-					esc_url( admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=webhook' ) ),
-				),
-				NoticeService::WARNING,
-				true,
-				'stripe-webhook-registration-failed'
+			NoticeManager::add_notice(
+				new Notice(
+					'stripe-webhook-registration-failed',
+					\sprintf(
+						// translators: %1$s is the webhook URL. %2$s is the admin URL.
+						__( 'Stripe webhook could not be registered automatically. Add <code>%1$s</code> as a webhook endpoint in your <a href="https://dashboard.stripe.com/webhooks">Stripe Dashboard</a>, then paste the signing secret into the <a href="%2$s">Stripe settings</a>.', 'kudos-donations' ),
+						esc_url( $webhook_url ),
+						esc_url( admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=webhook' ) ),
+					),
+					Notice::WARNING,
+					true
+				)
 			);
 		}
 	}

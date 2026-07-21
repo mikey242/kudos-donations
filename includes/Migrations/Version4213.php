@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\NoticeManager;
 
 class Version4213 extends BaseMigration {
 
@@ -42,7 +42,7 @@ class Version4213 extends BaseMigration {
 	 * such stale entries; current notices are regenerated on the next request.
 	 */
 	public function clear_admin_notices(): void {
-		delete_option( NoticeService::SETTING_ADMIN_NOTICES );
+		delete_option( NoticeManager::SETTING_ADMIN_NOTICES );
 		$this->logger->info( 'Cleared stale admin notices option.' );
 	}
 }

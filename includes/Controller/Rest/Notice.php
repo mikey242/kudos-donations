@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -51,7 +51,7 @@ class Notice extends BaseRestController {
 	 * Returns all current notices formatted for the frontend.
 	 */
 	public function get_notices(): WP_REST_Response {
-		return new WP_REST_Response( NoticeService::get_formatted_notices(), 200 );
+		return new WP_REST_Response( NoticeManager::get_formatted_notices(), 200 );
 	}
 
 	/**
@@ -60,8 +60,7 @@ class Notice extends BaseRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function dismiss_notice( WP_REST_Request $request ): WP_REST_Response {
-		$key = $request->get_param( 'id' );
-		NoticeService::dismiss_notice( $key );
+		NoticeManager::dismiss_notice( $request->get_param( 'id' ) );
 		return new WP_REST_Response( [ 'message' => __( 'Notice dismissed.', 'kudos-donations' ) ], 200 );
 	}
 }

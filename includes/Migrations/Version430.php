@@ -55,7 +55,7 @@ class Version430 extends BaseMigration {
 	 * hand. A site with a live API key is by definition past onboarding, so mark it done.
 	 */
 	public function skip_onboarding_if_configured(): void {
-		$provider = $this->payment_provider_factory->get_provider();
+		$provider = $this->payment_provider_factory->get_active_provider();
 
 		if ( ! $provider instanceof PaymentProviderInterface || ! $provider->has_live_key() ) {
 			$this->logger->info( 'Onboarding left active: no payment provider configured with a live API key.' );

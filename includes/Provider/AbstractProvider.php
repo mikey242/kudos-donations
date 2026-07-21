@@ -25,4 +25,9 @@ abstract class AbstractProvider implements ProviderInterface, HasSettingsInterfa
 	public static function is_enabled(): bool {
 		return true;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function on_active_init(): void {}
 }

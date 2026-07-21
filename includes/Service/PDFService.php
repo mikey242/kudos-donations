@@ -13,6 +13,8 @@ namespace IseardMedia\Kudos\Service;
 
 use Exception;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Dompdf\Options;
 use Psr\Log\LoggerAwareInterface;
@@ -77,9 +79,13 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 			echo $body;
 			exit;
 		} catch ( Exception $e ) {
-			NoticeService::add_notice(
-				__( 'Error fetching invoice. Please check log for details.', 'kudos-donations' ),
-				NoticeService::ERROR
+			NoticeManager::add_notice(
+				new Notice(
+					'pdf-fetch-error',
+					__( 'Error fetching invoice. Please check log for details.', 'kudos-donations' ),
+					Notice::ERROR,
+					true
+				)
 			);
 			$this->logger->warning( $e->getMessage(), [ 'file' => $file ] );
 		}
@@ -124,7 +130,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 
 		// Check if target folder is writeable.
 		if ( ! wp_is_writable( $target_dir ) ) {
-			NoticeService::add_notice( __( 'Cannot generate PDF. Directory not writeable', 'kudos-donations' ) . ': ' . $target_dir, NoticeService::ERROR );
+			NoticeManager::add_notice( new Notice( 'pdf-dir-not-writable', __( 'Cannot generate PDF. Directory not writeable', 'kudos-donations' ) . ': ' . $target_dir, Notice::ERROR, true ) );
 			return null;
 		}
 

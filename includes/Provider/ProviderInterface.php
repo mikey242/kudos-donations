@@ -26,6 +26,11 @@ interface ProviderInterface {
 	public function init(): void;
 
 	/**
+	 * Runs on active providers only.
+	 */
+	public function on_active_init(): void;
+
+	/**
 	 * Return true if provider is enabled.
 	 */
 	public static function is_enabled(): bool;

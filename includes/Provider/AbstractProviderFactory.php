@@ -48,12 +48,10 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	}
 
 	/**
-	 * Initialises the providers this factory manages. By default, only the active provider is
-	 * initialised; subclasses whose providers own request-scoped hooks (e.g. per-vendor webhooks)
-	 * override this to initialise every enabled provider.
+	 * Initialises the active provider this factory manages.
 	 */
 	protected function register_providers(): void {
-		$provider = $this->get_provider();
+		$provider = $this->get_active_provider();
 		if ( null !== $provider ) {
 			$provider->init();
 		}
@@ -82,21 +80,14 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	abstract protected function get_interface_class(): string;
 
 	/**
-	 * Returns a provider instance.
+	 * Returns a provider instance for the given provider slug.
 	 *
-	 * When $slug is null, resolves the currently active provider from settings,
-	 * falling back to the default vendor if the saved slug is not registered.
-	 *
-	 * @param string|null $slug Optional provider slug to look up directly.
+	 * @param string $slug Provider slug to look up directly.
 	 * @return T|null
 	 */
-	public function get_provider( ?string $slug = null ): ?ProviderInterface {
-		$resolved = $slug ?? (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
+	public function get_provider( string $slug ): ?ProviderInterface {
 		$slug_map = $this->get_enabled_slug_map();
-
-		$class = null === $slug
-			? ( $slug_map[ $resolved ] ?? $slug_map[ $this->get_default_vendor() ] ?? null )
-			: ( $slug_map[ $resolved ] ?? null );
+		$class    = ( $slug_map[ $slug ] ?? null );
 
 		if ( null === $class ) {
 			return null;
@@ -110,6 +101,16 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 			$this->get_logger()->error( $e->getMessage() );
 			return null;
 		}
+	}
+
+	/**
+	 * Gets the currently active provider or the fallback default if none set.
+	 *
+	 * @return T|null
+	 */
+	public function get_active_provider(): ?ProviderInterface {
+		$resolved = get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
+		return $resolved ? $this->get_provider( $resolved ) : null;
 	}
 
 	/**

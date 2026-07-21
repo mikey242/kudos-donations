@@ -17,8 +17,9 @@ use Exception;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Provider\AbstractProvider;
-use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\Service\SettingsService;
 
 /**
@@ -44,6 +45,23 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	public function init(): void {
 		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
 		$this->register_key_hooks();
+		$this->on_init();
+	}
+
+	/**
+	 * Use to run custom init code.
+	 */
+	protected function on_init(): void {}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Reads the provider's own `SETTING_API_MODE` option, defaulting to test. Providers that
+	 * expose no mode setting (e.g. demo) fall through to 'test'.
+	 */
+	public function get_api_mode(): string {
+		$const = static::class . '::SETTING_API_MODE';
+		return \defined( $const ) ? (string) get_option( \constant( $const ), 'test' ) : 'test';
 	}
 
 	/**
@@ -77,42 +95,46 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
-	 * Shows the provider's admin notices. Called only for the active provider.
+	 * Displays any vendor-specific notices depending on current state.
 	 */
-	public function show_notices(): void {
+	public function on_active_init(): void {
 		if ( null === $this->get_cache_setting() ) {
 			return;
 		}
 
-		// While onboarding is unfinished the banner is the single source of guidance.
 		if ( SettingsService::is_onboarding_active() ) {
-			$this->show_onboarding_notice();
 			return;
 		}
 
-		$this->show_status_notices();
-	}
-
-	/**
-	 * Points the user at the settings page, where the onboarding banner walks them through setup.
-	 *
-	 * Suppressed on Kudos admin pages, where the banner is already on screen.
-	 */
-	final protected function show_onboarding_notice(): void {
-		if ( Utils::is_kudos_admin() ) {
-			return;
+		if ( 'test' === $this->get_api_mode() ) {
+			NoticeManager::notice(
+				new Notice(
+					'test-mode',
+					\sprintf(
+					// translators: 1: payment provider name, 2: URL to provider settings page.
+						__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
+						static::get_name(),
+						admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
+					),
+					Notice::WARNING,
+				)
+			);
 		}
 
-		NoticeService::notice(
-			\sprintf(
-			// translators: %s: URL to the Kudos Donations settings page.
-				__( 'Kudos Donations is not ready to receive donations yet. <a href="%s">Complete the setup</a> to get started.', 'kudos-donations' ),
-				admin_url( 'admin.php?page=kudos-settings' )
-			),
-			NoticeService::WARNING,
-			false,
-			'kudos-onboarding-incomplete'
-		);
+		if ( ! $this->is_vendor_ready() ) {
+			NoticeManager::notice(
+				new Notice(
+					'vendor-ready',
+					\sprintf(
+					// translators: 1: payment provider name, 2: URL to provider settings page.
+						__( '%1$s API keys not set or no payment methods found. Please <a href="%2$s">check your settings</a>.', 'kudos-donations' ),
+						static::get_name(),
+						admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' )
+					),
+					Notice::WARNING
+				)
+			);
+		}
 	}
 
 	/**
@@ -248,38 +270,6 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 			[ 'payment_id' => $payment_id ],
 			'kudos-donations'
 		);
-	}
-
-	/**
-	 * Displays important status notices.
-	 */
-	final protected function show_status_notices(): void {
-		if ( 'test' === $this->get_api_mode() ) {
-			NoticeService::notice(
-				\sprintf(
-				// translators: 1: payment provider name, 2: URL to provider settings page.
-					__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
-					static::get_name(),
-					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
-				),
-				NoticeService::WARNING,
-				false,
-				static::get_slug() . '-test-mode'
-			);
-		}
-		if ( ! $this->is_vendor_ready() ) {
-			NoticeService::notice(
-				\sprintf(
-				// translators: 1: payment provider name, 2: URL to provider settings page.
-					__( '%1$s API keys not set or no payment methods found. Please <a href="%2$s">check your settings</a>.', 'kudos-donations' ),
-					static::get_name(),
-					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' )
-				),
-				NoticeService::WARNING,
-				false,
-				static::get_slug() . '-not-ready'
-			);
-		}
 	}
 
 	/**

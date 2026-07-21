@@ -140,7 +140,7 @@ class Subscription extends BaseRepositoryRestController {
 		// Resolve the provider that owns this subscription, falling back to the active provider.
 		$provider = $subscription && $subscription->vendor
 			? $this->factory->get_provider( $subscription->vendor )
-			: $this->factory->get_provider();
+			: $this->factory->get_active_provider();
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $provider && $provider->cancel_subscription( $subscription );

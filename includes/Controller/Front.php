@@ -57,7 +57,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 */
 	private function get_payment_vendor(): PaymentProviderInterface {
 		if ( ! isset( $this->vendor ) ) {
-			$this->vendor = $this->factory->get_provider();
+			$this->vendor = $this->factory->get_active_provider();
 		}
 		return $this->vendor;
 	}

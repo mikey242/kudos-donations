@@ -8,7 +8,7 @@ namespace IseardMedia\Kudos\Tests\Migrations;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
 /**
@@ -19,7 +19,7 @@ class MigrationHandlerTest extends BaseTestCase {
 	protected function tearDown(): void {
 		parent::tearDown();
 		Localization::reset();
-		NoticeService::reset();
+		NoticeManager::reset();
 	}
 
 	/**
@@ -152,7 +152,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
 		$handler->register();
 
-		$this->assertNotEmpty( NoticeService::get_formatted_notices(), 'A notice should have been queued.' );
+		$this->assertNotEmpty( NoticeManager::get_formatted_notices(), 'A notice should have been queued.' );
 	}
 
 	/**
@@ -168,7 +168,7 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		unset( $_GET['page'] );
 
-		$this->assertEmpty( NoticeService::get_formatted_notices(), 'No notice should be queued on a Kudos admin page.' );
+		$this->assertEmpty( NoticeManager::get_formatted_notices(), 'No notice should be queued on a Kudos admin page.' );
 	}
 
 	/**

@@ -9,23 +9,19 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Service;
+namespace IseardMedia\Kudos\Notice;
 
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-class NoticeService implements HasSettingsInterface {
+class NoticeManager implements HasSettingsInterface {
 	public const SETTING_ADMIN_NOTICES = '_kudos_admin_notices';
-	public const SUCCESS               = 'notice-success';
-	public const ERROR                 = 'notice-error';
-	public const INFO                  = 'notice-info';
-	public const WARNING               = 'notice-warning';
 
 	/**
 	 * Unified in-memory notice store for this request.
 	 *
-	 * @var array<string, array{message: string, level: string, dismissible: bool, logo: bool, kudos_only: bool}>
+	 * @var Notice[]
 	 */
 	private static array $notices = [];
 
@@ -37,39 +33,26 @@ class NoticeService implements HasSettingsInterface {
 	public static function init(): void {
 		$stored = get_option( self::SETTING_ADMIN_NOTICES, [] );
 		if ( \is_array( $stored ) ) {
-			foreach ( $stored as $key => $data ) {
-				if ( \is_array( $data ) && isset( $data['message'], $data['level'] ) ) {
-					self::$notices[ $key ] = [
-						'message'     => (string) $data['message'],
-						'level'       => (string) $data['level'],
-						'dismissible' => ! empty( $data['dismissible'] ),
-						'logo'        => ! isset( $data['logo'] ) || ! empty( $data['logo'] ),
-						'kudos_only'  => ! empty( $data['kudos_only'] ),
-					];
+			foreach ( $stored as $data ) {
+				if ( $data instanceof Notice ) {
+					self::$notices[ $data->id ] = $data;
 				}
 			}
 		}
+
 		add_action( 'admin_notices', [ self::class, 'render_all' ] );
 	}
 
 	/**
 	 * Add a runtime notice (current request only, not persisted).
 	 *
-	 * Use when the condition is always true while it exists — e.g. test mode active,
-	 * API keys missing, migration needed. The notice is regenerated every request.
-	 *
-	 * @param string  $message     The notice message.
-	 * @param string  $level       The level (info, success, warning, error).
-	 * @param bool    $dismissible Whether the notice can be dismissed.
-	 * @param ?string $key         Optional key to identify the notice (allows overwriting).
-	 * @param bool    $logo        Whether to include the Kudos logo.
-	 * @param bool    $kudos_only  Whether to only show on Kudos Donations pages.
+	 * @param Notice $notice The notice object.
 	 */
-	public static function notice( string $message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true, bool $kudos_only = false ): void {
-		if ( \is_null( $key ) ) {
-			$key = wp_generate_uuid4();
+	public static function notice( Notice $notice ): void {
+		if ( ! $notice->id ) {
+			$notice->id = wp_generate_uuid4();
 		}
-		self::$notices[ $key ] = compact( 'message', 'level', 'dismissible', 'logo', 'kudos_only' );
+		self::$notices[] = $notice;
 	}
 
 	/**
@@ -78,22 +61,17 @@ class NoticeService implements HasSettingsInterface {
 	 * Use when the notice is triggered by a one-off event — e.g. a webhook registration
 	 * failure, a decryption error — where the condition won't recur on every request.
 	 *
-	 * @param string $message     The notice message.
-	 * @param string $level       The level (info, success, warning, error).
-	 * @param bool   $dismissible Whether the notice can be dismissed.
-	 * @param string $key         Optional key to identify the notice (allows overwriting).
-	 * @param bool   $logo        Whether to include the Kudos logo.
-	 * @param bool   $kudos_only  Whether to only show on Kudos Donations pages.
+	 * @param Notice $notice The notice object.
 	 */
-	public static function add_notice( string $message, string $level = self::INFO, bool $dismissible = true, string $key = '', bool $logo = true, bool $kudos_only = false ): void {
-		if ( ! $key ) {
-			$key = wp_generate_uuid4();
+	public static function add_notice( Notice $notice ): void {
+		if ( ! $notice->id ) {
+			$notice->id = wp_generate_uuid4();
 		}
-		$data                  = compact( 'message', 'level', 'dismissible', 'logo', 'kudos_only' );
-		self::$notices[ $key ] = $data;
 
-		$stored         = get_option( self::SETTING_ADMIN_NOTICES, [] );
-		$stored[ $key ] = $data;
+		self::$notices[ $notice->id ] = $notice;
+
+		$stored                = get_option( self::SETTING_ADMIN_NOTICES, [] );
+		$stored[ $notice->id ] = $notice;
 		update_option( self::SETTING_ADMIN_NOTICES, $stored );
 	}
 
@@ -113,18 +91,32 @@ class NoticeService implements HasSettingsInterface {
 	}
 
 	/**
+	 * Returns the in-memory notices addressable to the given channel — those whose context is
+	 * Notice::BOTH, plus those matching the channel exactly.
+	 *
+	 * @param string $context The target channel: Notice::APP (REST) or Notice::ADMIN (native).
+	 * @return Notice[]
+	 */
+	private static function get_notices( string $context ): array {
+		return array_filter(
+			self::$notices,
+			static fn( Notice $notice ) => Notice::BOTH === $notice->context || $context === $notice->context
+		);
+	}
+
+	/**
 	 * Returns all current notices formatted for the REST API / frontend.
 	 *
 	 * @return list<array{id: string, status: string, content: string, isDismissible: bool, type: string}>
 	 */
 	public static function get_formatted_notices(): array {
 		$formatted = [];
-		foreach ( self::$notices as $key => $notice ) {
+		foreach ( self::get_notices( Notice::APP ) as $notice ) {
 			$formatted[] = [
-				'id'            => $key,
-				'status'        => substr( $notice['level'], strpos( $notice['level'], '-' ) + 1 ),
-				'content'       => $notice['message'],
-				'isDismissible' => $notice['dismissible'],
+				'id'            => $notice->id,
+				'status'        => substr( $notice->level, strpos( $notice->level, '-' ) + 1 ),
+				'content'       => $notice->message,
+				'isDismissible' => $notice->dismissible,
 				'type'          => 'default',
 			];
 		}
@@ -135,10 +127,7 @@ class NoticeService implements HasSettingsInterface {
 	 * Renders all non-kudos-only notices via the admin_notices hook.
 	 */
 	public static function render_all(): void {
-		$renderable = array_filter(
-			self::$notices,
-			static fn( $n ) => ! $n['kudos_only']
-		);
+		$renderable = self::get_notices( Notice::ADMIN );
 
 		if ( ! $renderable ) {
 			return;
@@ -146,12 +135,12 @@ class NoticeService implements HasSettingsInterface {
 
 		self::enqueue_dismiss_script();
 
-		foreach ( $renderable as $key => $notice ) {
-			$message = $notice['logo']
-				? "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $notice['message'] . '</div>'
-				: $notice['message'];
+		foreach ( $renderable as $notice ) {
+			$message = $notice->logo
+				? "<div class='logo' style='width: 40px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $notice->message . '</div>'
+				: $notice->message;
 
-			self::render( $key, $notice['level'], $message, $notice['dismissible'] );
+			self::render( $notice->id, $notice->level, $message, $notice->dismissible );
 		}
 	}
 

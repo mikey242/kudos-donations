@@ -46,7 +46,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	public const SETTING_API_KEY_TEST           = '_kudos_vendor_mollie_api_key_test';
 	public const SETTING_API_KEY_ENCRYPTED_LIVE = '_kudos_vendor_mollie_api_key_encrypted_live';
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_mollie_api_key_encrypted_test';
-	public MollieApiClient $api_client;
+	private MollieApiClient $api_client;
 	private CampaignRepository $campaign_repository;
 	private DonorRepository $donor_repository;
 	private SubscriptionRepository $subscription_repository;
@@ -111,13 +111,6 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Returns the api mode.
-	 */
-	public function get_api_mode(): string {
-		return get_option( self::SETTING_API_MODE, 'test' );
-	}
-
-	/**
 	 * Returns the Mollie client, configured with the current mode's key on first use.
 	 *
 	 * Configuration is deferred until a call actually needs the client, so nothing is decrypted
@@ -134,7 +127,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 *
 	 * @return bool True when a usable key was set, false otherwise.
 	 */
-	protected function configure_client(): bool {
+	private function configure_client(): bool {
 		if ( ! $this->user_agent_set ) {
 			$this->set_user_agent();
 			$this->user_agent_set = true;
@@ -286,7 +279,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 * @param array $options See https://docs.mollie.com/reference/v2/methods-api/list-methods.
 	 * @return BaseCollection|MethodCollection|null
 	 */
-	public function get_active_payment_methods( array $options = [] ) {
+	private function get_active_payment_methods( array $options = [] ) {
 		try {
 			return $this->client()->methods->allEnabled( $options );
 		} catch ( RequestException $e ) {

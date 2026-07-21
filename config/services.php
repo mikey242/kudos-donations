@@ -100,7 +100,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity,Provider/PaymentProvider/DemoPaymentProvider.php}' );
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{Autoloader.php,ContainerFactory.php,Domain/Entity,Notice/Notice.php,Provider/PaymentProvider/DemoPaymentProvider.php}' );
 
 	// Only create DemoPaymentProver in demo mode.
 	if ( KUDOS_DEMO_MODE || KUDOS_ENV_IS_DEVELOPMENT ) {

@@ -56,7 +56,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 */
 	private function get_vendor(): ?EmailProviderInterface {
 		if ( ! $this->vendor ) {
-			$this->vendor = $this->factory->get_provider();
+			$this->vendor = $this->factory->get_active_provider();
 		}
 		return $this->vendor;
 	}

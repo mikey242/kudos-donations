@@ -17,7 +17,8 @@ use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 
 class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
 
@@ -229,8 +230,11 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 		$form .= '</a>';
 		$form .= '</div>';
 
-		NoticeService::notice(
-			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
+		NoticeManager::notice(
+			new Notice(
+				'migration-needed',
+				'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
+			)
 		);
 	}
 

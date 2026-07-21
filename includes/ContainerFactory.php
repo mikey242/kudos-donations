@@ -12,8 +12,9 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos;
 
 use Exception;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Service\CacheService;
-use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\ThirdParty\Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\Config\FileLocator;
 use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -181,9 +182,12 @@ class ContainerFactory {
 
 		if ( null !== $this->file_system ) {
 			if ( ! $this->file_system->put_contents( $path, $dump ) ) {
-				NoticeService::notice(
-					'Failed to write the container to the cache file. Please ensure that the "wp-content/cache" directory is writable.',
-					NoticeService::ERROR,
+				NoticeManager::notice(
+					new Notice(
+						'container-build',
+						'Failed to write the container to the cache file. Please ensure that the "wp-content/cache" directory is writable.',
+						Notice::ERROR,
+					)
 				);
 			}
 		}

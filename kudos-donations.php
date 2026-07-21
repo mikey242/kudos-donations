@@ -21,9 +21,10 @@
 
 namespace IseardMedia\Kudos;
 
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\CompatibilityService;
-use IseardMedia\Kudos\Service\NoticeService;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.
@@ -127,7 +128,7 @@ function activate(): void {
 	} catch ( \Throwable $e ) {
         // phpcs:disable WordPress.PHP.DevelopmentFunctions
 		error_log( $e->getMessage() );
-		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+		NoticeManager::notice( new Notice( 'activation-failed', $e->getMessage(), Notice::ERROR ) );
 	}
 	/**
 	 * Fires when the plugin is activated.
@@ -156,13 +157,16 @@ function bootstrap_plugin(): void {
 	$last_error = get_option( '_kudos_fatal_error' );
 
 	if ( $last_error ) {
-		NoticeService::notice(
-			\sprintf(
+		NoticeManager::notice(
+			new Notice(
+				'bootstrap-failed',
+				\sprintf(
 				/* translators: %s: error message */
-				__( 'Kudos Donations has been disabled due to a fatal error: %s. Deactivate and reactivate the plugin to retry.', 'kudos-donations' ),
-				(string) $last_error
-			),
-			NoticeService::ERROR
+					__( 'Kudos Donations has been disabled due to a fatal error: %s. Deactivate and reactivate the plugin to retry.', 'kudos-donations' ),
+					(string) $last_error
+				),
+				Notice::ERROR
+			)
 		);
 		return;
 	}
@@ -170,10 +174,10 @@ function bootstrap_plugin(): void {
 	try {
 		ContainerFactory::create()->get( Plugin::class )->register();
 	} catch ( \Throwable $e ) {
-		NoticeService::notice( $e->getMessage() . '. ' . $e->getFile() . ':' . $e->getLine(), NoticeService::ERROR );
+		NoticeManager::notice( new Notice( 'bootstrap-failed', $e->getMessage() . '. ' . $e->getFile() . ':' . $e->getLine(), Notice::ERROR ) );
 		CacheService::recursively_clear_cache();
 	}
 }
 
-add_action( 'plugins_loaded', [ NoticeService::class, 'init' ], 5 );
+add_action( 'plugins_loaded', [ NoticeManager::class, 'init' ], 5 );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\bootstrap_plugin' );

@@ -34,7 +34,7 @@ class Version4211 extends BaseMigration {
 	public function __construct( DonorsTable $donors_table, SubscriptionsTable $subscriptions_table, PaymentProviderFactory $provider ) {
 		$this->donors_table        = $donors_table;
 		$this->subscriptions_table = $subscriptions_table;
-		$this->provider            = $provider->get_provider();
+		$this->provider            = $provider->get_active_provider();
 	}
 
 	/**

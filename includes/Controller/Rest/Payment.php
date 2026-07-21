@@ -70,7 +70,7 @@ class Payment extends BaseRestController {
 	 */
 	private function get_vendor(): PaymentProviderInterface {
 		if ( ! isset( $this->vendor ) ) {
-			$this->vendor = $this->factory->get_provider();
+			$this->vendor = $this->factory->get_active_provider();
 		}
 		return $this->vendor;
 	}

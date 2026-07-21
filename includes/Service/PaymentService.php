@@ -69,7 +69,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @return array{ready: bool, recurring: bool, steps?: array, methods?: array, account?: string}
 	 */
 	public function get_vendor_status(): array {
-		$provider = $this->payment_provider_factory->get_provider();
+		$provider = $this->payment_provider_factory->get_active_provider();
 		if ( null === $provider ) {
 			return [
 				'ready'     => false,

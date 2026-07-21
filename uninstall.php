@@ -11,7 +11,6 @@ declare( strict_types=1 );
 
 use IseardMedia\Kudos\ContainerFactory;
 use IseardMedia\Kudos\Plugin;
-use IseardMedia\Kudos\Service\NoticeService;
 
 // If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -29,7 +28,6 @@ function kudos_donations_uninstall(): void {
 	} catch ( Throwable $e ) {
 		// phpcs:disable WordPress.PHP.DevelopmentFunctions
 		error_log( $e->getMessage() );
-		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 	}
 }
 add_action( 'shutdown', 'kudos_donations_uninstall' );

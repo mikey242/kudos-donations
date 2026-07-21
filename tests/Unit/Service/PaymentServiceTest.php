@@ -47,7 +47,7 @@ class PaymentServiceTest extends BaseTestCase {
 			new TransactionEntity( [ 'title' => 'Paid', 'status' => PaymentStatus::PAID, 'vendor' => 'mollie' ] )
 		);
 
-		$this->provider_factory->expects( $this->never() )->method( 'get_provider' );
+		$this->provider_factory->expects( $this->never() )->method( 'get_active_provider' );
 
 		$this->service->check_payment_status( $id );
 	}
@@ -78,7 +78,7 @@ class PaymentServiceTest extends BaseTestCase {
 
 		$provider = $this->createMock( PaymentProviderInterface::class );
 		$provider->expects( $this->once() )->method( 'sync_transaction_status' )->with( $id );
-		$this->provider_factory->expects( $this->once() )->method( 'get_provider' )->willReturn( $provider );
+		$this->provider_factory->expects( $this->once() )->method( 'get_provider' )->with( 'mollie' )->willReturn( $provider );
 
 		$this->service->check_payment_status( $id );
 	}

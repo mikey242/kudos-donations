@@ -17,7 +17,8 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\Notice\Notice;
+use IseardMedia\Kudos\Notice\NoticeManager;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -39,7 +40,7 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 */
 	public function on_plugin_activation(): void {
 		if ( KUDOS_DEMO_MODE ) {
-			NoticeService::add_notice( __( 'Thanks for trying out Kudos Donations! Some settings can not be changed in demo mode.', 'kudos-donations' ), NoticeService::INFO, true, 'demo_mode', true, true );
+			NoticeManager::add_notice( new Notice( 'demo_mode', __( 'Thanks for trying out Kudos Donations! Some settings can not be changed in demo mode.', 'kudos-donations' ), Notice::INFO, true ) );
 		}
 	}
 
@@ -76,8 +77,7 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 *
 	 * The demo provider has no API keys or webhooks; it only needs its local checkout REST routes.
 	 */
-	public function init(): void {
-		parent::init();
+	protected function on_init(): void {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
@@ -233,13 +233,6 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 */
 	public function has_live_key(): bool {
 		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get_api_mode(): string {
-		return 'test';
 	}
 
 	/**

@@ -43,7 +43,7 @@ class FrontTest extends WP_UnitTestCase {
 		$mollie_mock = $this->createMock(MolliePaymentProvider::class);
 		$mollie_mock->method( 'is_vendor_ready' )->willReturn(true);
 		$vendor_factory = $this->createMock( PaymentProviderFactory::class );
-		$vendor_factory->method( 'get_provider' )->willReturn($mollie_mock);
+		$vendor_factory->method( 'get_active_provider' )->willReturn($mollie_mock);
 
 		$front          = new Front( $vendor_factory, new TransactionRepository(new WpDb(), new TransactionSchema()) );
 		$args           = [
