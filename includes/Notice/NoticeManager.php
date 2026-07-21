@@ -52,7 +52,7 @@ class NoticeManager implements HasSettingsInterface {
 		if ( ! $notice->id ) {
 			$notice->id = wp_generate_uuid4();
 		}
-		self::$notices[] = $notice;
+		self::$notices[ $notice->id ] = $notice;
 	}
 
 	/**
