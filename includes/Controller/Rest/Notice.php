@@ -51,7 +51,7 @@ class Notice extends BaseRestController {
 	 * Returns all current notices formatted for the frontend.
 	 */
 	public function get_notices(): WP_REST_Response {
-		return new WP_REST_Response( NoticeManager::get_formatted_notices(), 200 );
+		return new WP_REST_Response( NoticeManager::get_notices_for_rest(), 200 );
 	}
 
 	/**

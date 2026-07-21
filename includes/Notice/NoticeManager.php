@@ -40,7 +40,7 @@ class NoticeManager implements HasSettingsInterface {
 			}
 		}
 
-		add_action( 'admin_notices', [ self::class, 'render_all' ] );
+		add_action( 'admin_notices', [ self::class, 'render_admin_notices' ] );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class NoticeManager implements HasSettingsInterface {
 	 *
 	 * @return list<array{id: string, status: string, content: string, isDismissible: bool, type: string}>
 	 */
-	public static function get_formatted_notices(): array {
+	public static function get_notices_for_rest(): array {
 		$formatted = [];
 		foreach ( self::get_notices( Notice::APP ) as $notice ) {
 			$formatted[] = [
@@ -126,7 +126,7 @@ class NoticeManager implements HasSettingsInterface {
 	/**
 	 * Renders all non-kudos-only notices via the admin_notices hook.
 	 */
-	public static function render_all(): void {
+	public static function render_admin_notices(): void {
 		$renderable = self::get_notices( Notice::ADMIN );
 
 		if ( ! $renderable ) {
