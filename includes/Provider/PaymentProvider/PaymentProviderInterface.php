@@ -11,7 +11,6 @@ namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Notice\Notice;
 use IseardMedia\Kudos\Provider\ProviderInterface;
 use WP_REST_Request;
 use WP_REST_Response;
