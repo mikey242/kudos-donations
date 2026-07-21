@@ -116,11 +116,14 @@ For general information on how to use shortcodes, please visit [this page](https
  = 4.3.0 =
  * Added Stripe payment provider
  * Added onboarding flow for new installations
+ * Update dompdf/dompdf to v3.1.6
+ * Update react-hook-form to v7.82.0
+ * Update woocommerce/action-scheduler to v4
+ * Update nuqs to v2.9.1
 
  = 4.2.14 =
  * Fix fatal error when viewing campaigns with no maximum donation set
  * Minor admin panel fixes
- * Update dev dependencies
 
  = 4.2.13 =
  * Fix incorrect message showing on return pop-up if campaign not yet loaded
