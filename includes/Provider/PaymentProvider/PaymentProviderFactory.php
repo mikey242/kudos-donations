@@ -51,8 +51,13 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 			$notices[ $notice->id ] = $notice;
 		}
 
-		// The site-wide "complete your setup" notice while onboarding is unfinished.
-		if ( SettingsService::is_onboarding_active() && ! empty( $active->get_onboarding_steps() ) ) {
+		// The site-wide "complete your setup" notice, shown only while steps are still outstanding.
+		$pending = array_filter(
+			$active->get_onboarding_steps(),
+			static fn( array $step ) => empty( $step['done'] )
+		);
+
+		if ( SettingsService::is_onboarding_active() && $pending ) {
 			$notices['onboarding-steps'] = new Notice(
 				'onboarding-steps',
 				\sprintf(
