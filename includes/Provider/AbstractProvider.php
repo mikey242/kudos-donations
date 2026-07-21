@@ -29,5 +29,7 @@ abstract class AbstractProvider implements ProviderInterface, HasSettingsInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function on_active_init(): void {}
+	public function get_status_notices(): array {
+		return [];
+	}
 }

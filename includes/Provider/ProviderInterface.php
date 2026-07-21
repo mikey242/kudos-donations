@@ -9,6 +9,8 @@
 
 namespace IseardMedia\Kudos\Provider;
 
+use IseardMedia\Kudos\Notice\Notice;
+
 interface ProviderInterface {
 	/**
 	 * Returns the provider name.
@@ -26,9 +28,12 @@ interface ProviderInterface {
 	public function init(): void;
 
 	/**
-	 * Runs on active providers only.
+	 * Returns the provider's state-derived notices. Called for the active provider only, at
+	 * notice-collection time.
+	 *
+	 * @return Notice[]
 	 */
-	public function on_active_init(): void;
+	public function get_status_notices(): array;
 
 	/**
 	 * Return true if provider is enabled.

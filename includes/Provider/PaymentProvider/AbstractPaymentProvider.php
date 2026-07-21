@@ -18,7 +18,6 @@ use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Notice\Notice;
-use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\SettingsService;
 
@@ -95,46 +94,45 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
-	 * Displays any vendor-specific notices depending on current state.
+	 * {@inheritDoc}
+	 *
+	 * Returns test-mode and not-ready warnings for the active vendor. Empty during onboarding or
+	 * for providers with no cache setting (e.g. demo).
 	 */
-	public function on_active_init(): void {
-		if ( null === $this->get_cache_setting() ) {
-			return;
+	public function get_status_notices(): array {
+		if ( null === $this->get_cache_setting() || SettingsService::is_onboarding_active() ) {
+			return [];
 		}
 
-		if ( SettingsService::is_onboarding_active() ) {
-			return;
-		}
+		$notices = [];
 
 		if ( 'test' === $this->get_api_mode() ) {
-			NoticeManager::notice(
-				new Notice(
-					'test-mode',
-					\sprintf(
-					// translators: 1: payment provider name, 2: URL to provider settings page.
-						__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
-						static::get_name(),
-						admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
-					),
-					Notice::WARNING,
-				)
+			$notices[] = new Notice(
+				'test-mode',
+				\sprintf(
+				// translators: 1: payment provider name, 2: URL to provider settings page.
+					__( '%1$s is currently in test mode, please <a href="%2$s">switch to live</a> before going to production.', 'kudos-donations' ),
+					static::get_name(),
+					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apimode' )
+				),
+				Notice::WARNING
 			);
 		}
 
 		if ( ! $this->is_vendor_ready() ) {
-			NoticeManager::notice(
-				new Notice(
-					'vendor-ready',
-					\sprintf(
-					// translators: 1: payment provider name, 2: URL to provider settings page.
-						__( '%1$s API keys not set or no payment methods found. Please <a href="%2$s">check your settings</a>.', 'kudos-donations' ),
-						static::get_name(),
-						admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' )
-					),
-					Notice::WARNING
-				)
+			$notices[] = new Notice(
+				'vendor-ready',
+				\sprintf(
+				// translators: 1: payment provider name, 2: URL to provider settings page.
+					__( '%1$s API keys not set or no payment methods found. Please <a href="%2$s">check your settings</a>.', 'kudos-donations' ),
+					static::get_name(),
+					admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' )
+				),
+				Notice::WARNING
 			);
 		}
+
+		return $notices;
 	}
 
 	/**

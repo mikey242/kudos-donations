@@ -19,6 +19,12 @@ class NoticeManager implements HasSettingsInterface {
 	public const SETTING_ADMIN_NOTICES = '_kudos_admin_notices';
 
 	/**
+	 * Filter applied to the notice list whenever notices are consumed (an admin render or the REST
+	 * endpoint).
+	 */
+	public const FILTER_NOTICES = 'kudos_notices';
+
+	/**
 	 * Unified in-memory notice store for this request.
 	 *
 	 * @var Notice[]
@@ -98,8 +104,9 @@ class NoticeManager implements HasSettingsInterface {
 	 * @return Notice[]
 	 */
 	private static function get_notices( string $context ): array {
+		$notices = apply_filters( self::FILTER_NOTICES, self::$notices );
 		return array_filter(
-			self::$notices,
+			$notices,
 			static fn( Notice $notice ) => Notice::BOTH === $notice->context || $context === $notice->context
 		);
 	}

@@ -33,6 +33,19 @@ class MigrationHandlerTest extends BaseTestCase {
 	}
 
 	/**
+	 * Whether a notice with the given id is currently queued. Checks the specific notice rather
+	 * than overall emptiness, since get_notices_for_rest() aggregates every registered producer.
+	 */
+	private function has_notice( string $id ): bool {
+		foreach ( NoticeManager::get_notices_for_rest() as $notice ) {
+			if ( $id === $notice['id'] ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Test that migrations are sorted by version.
 	 */
 	public function test_migrations_are_sorted_by_version(): void {
@@ -152,7 +165,7 @@ class MigrationHandlerTest extends BaseTestCase {
 		$handler = new MigrationHandler( [ $this->create_mock_migration( '4.2.0' ) ] );
 		$handler->register();
 
-		$this->assertNotEmpty( NoticeManager::get_notices_for_rest(), 'A notice should have been queued.' );
+		$this->assertTrue( $this->has_notice( 'migration-needed' ), 'The migration notice should have been queued.' );
 	}
 
 	/**
@@ -168,7 +181,7 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		unset( $_GET['page'] );
 
-		$this->assertEmpty( NoticeManager::get_notices_for_rest(), 'No notice should be queued on a Kudos admin page.' );
+		$this->assertFalse( $this->has_notice( 'migration-needed' ), 'No migration notice should be queued on a Kudos admin page.' );
 	}
 
 	/**

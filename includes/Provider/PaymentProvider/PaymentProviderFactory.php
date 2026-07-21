@@ -31,26 +31,29 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 		foreach ( $this->get_enabled_providers() as $provider ) {
 			$provider->init();
 		}
-		$this->onboarding_notice();
-
-		// Runs a special method only for the active provider (if one resolves).
-		$active = $this->get_active_provider();
-		if ( null !== $active ) {
-			$active->on_active_init();
-		}
+		add_filter( NoticeManager::FILTER_NOTICES, [ $this, 'add_active_notices' ] );
 	}
 
 	/**
-	 * Builds the site-wide "complete your setup" notice while onboarding is unfinished.
+	 * Adds the active provider's derived notices (onboarding + status). Hooked to the notice
+	 * filter, so it runs only at notice-consumption time.
+	 *
+	 * @param Notice[] $notices The notices collected so far.
+	 * @return Notice[]
 	 */
-	private function onboarding_notice(): void {
+	public function add_active_notices( array $notices ): array {
 		$active = $this->get_active_provider();
-		if ( null === $active || ! SettingsService::is_onboarding_active() || empty( $active->get_onboarding_steps() ) ) {
-			return;
+		if ( null === $active ) {
+			return $notices;
 		}
 
-		NoticeManager::notice(
-			new Notice(
+		foreach ( $active->get_status_notices() as $notice ) {
+			$notices[ $notice->id ] = $notice;
+		}
+
+		// The site-wide "complete your setup" notice while onboarding is unfinished.
+		if ( SettingsService::is_onboarding_active() && ! empty( $active->get_onboarding_steps() ) ) {
+			$notices['onboarding-steps'] = new Notice(
 				'onboarding-steps',
 				\sprintf(
 				// translators: %s: URL to the Kudos Donations settings page.
@@ -58,8 +61,10 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 					admin_url( 'admin.php?page=kudos-settings' )
 				),
 				Notice::WARNING,
-			)
-		);
+			);
+		}
+
+		return $notices;
 	}
 
 	/**
