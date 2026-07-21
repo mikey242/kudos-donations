@@ -192,7 +192,10 @@ const LicenceKeyPanel = () => {
 				</Flex>
 			)}
 			<Flex justify="space-between">
-				<ExternalLink href="https://docs.kudosdonations.com/docs/plus">
+				<ExternalLink
+					href="https://docs.kudosdonations.com/docs/plus"
+					rel="external noreferrer noopener"
+				>
 					{__('Visit documentation', 'kudos-donations')}
 				</ExternalLink>
 				{isSet ? (

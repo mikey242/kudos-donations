@@ -115,13 +115,17 @@ const ButtonEdit = (props: ButtonEditProps) => {
 						{campaign?.id ? (
 							<ExternalLink
 								href={`admin.php?page=kudos-campaigns&post=${campaign.id}`}
+								rel="external noreferrer noopener"
 							>
 								{__('Edit', 'kudos-donations') +
 									' ' +
 									campaign?.title}
 							</ExternalLink>
 						) : (
-							<ExternalLink href="admin.php?page=kudos-campaigns">
+							<ExternalLink
+								href="admin.php?page=kudos-campaigns"
+								rel="external noreferrer noopener"
+							>
 								{__('Create a campaign', 'kudos-donations')}
 							</ExternalLink>
 						)}

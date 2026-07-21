@@ -107,7 +107,10 @@ export const OnboardingBanner = () => {
 								),
 								{
 									forums: (
-										<ExternalLink href="https://wordpress.org/support/plugin/kudos-donations/">
+										<ExternalLink
+											href="https://wordpress.org/support/plugin/kudos-donations/"
+											rel="external noreferrer noopener"
+										>
 											{__(
 												'support forums',
 												'kudos-donations'
@@ -115,7 +118,10 @@ export const OnboardingBanner = () => {
 										</ExternalLink>
 									),
 									docs: (
-										<ExternalLink href="https://docs.kudosdonations.com/">
+										<ExternalLink
+											href="https://docs.kudosdonations.com/"
+											rel="external noreferrer noopener"
+										>
 											{__(
 												'documentation',
 												'kudos-donations'

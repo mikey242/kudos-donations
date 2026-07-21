@@ -96,7 +96,10 @@ const PaymentMethodsPanel = () => {
 				)}
 			</p>
 			<Panel.Footer>
-				<ExternalLink href="https://dashboard.stripe.com/settings/payment_methods">
+				<ExternalLink
+					href="https://dashboard.stripe.com/settings/payment_methods"
+					rel="external noreferrer noopener"
+				>
 					{__(
 						'Manage payment methods in Stripe Dashboard',
 						'kudos-donations'
@@ -141,7 +144,10 @@ const ApiKeysPanel = () => (
 			/>
 		))}
 		<Panel.Footer>
-			<ExternalLink href="https://dashboard.stripe.com/apikeys">
+			<ExternalLink
+				href="https://dashboard.stripe.com/apikeys"
+				rel="external noreferrer noopener"
+			>
 				{__('Visit Stripe dashboard', 'kudos-donations')}.
 			</ExternalLink>
 		</Panel.Footer>
@@ -203,7 +209,10 @@ const WebhookPanel = () => {
 				}
 			/>
 			<Panel.Footer>
-				<ExternalLink href="https://dashboard.stripe.com/webhooks">
+				<ExternalLink
+					href="https://dashboard.stripe.com/webhooks"
+					rel="external noreferrer noopener"
+				>
 					{__('Open Stripe Dashboard', 'kudos-donations')}
 				</ExternalLink>
 			</Panel.Footer>

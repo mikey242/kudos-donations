@@ -92,7 +92,10 @@ const PaymentMethodsPanel = () => {
 				)}
 			</p>
 			<Panel.Footer>
-				<ExternalLink href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring">
+				<ExternalLink
+					href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring"
+					rel="external noreferrer noopener"
+				>
 					{__(
 						'Read more about Mollie recurring payments',
 						'kudos-donations'
@@ -131,7 +134,10 @@ const ApiKeysPanel = () => (
 			/>
 		))}
 		<Panel.Footer>
-			<ExternalLink href="https://my.mollie.com/dashboard/developers/api-keys">
+			<ExternalLink
+				href="https://my.mollie.com/dashboard/developers/api-keys"
+				rel="external noreferrer noopener"
+			>
 				{__('Visit Mollie dashboard', 'kudos-donations')}.
 			</ExternalLink>
 		</Panel.Footer>
