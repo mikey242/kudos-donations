@@ -31,25 +31,29 @@ export const SelectControl = ({
 			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
-			render={({ onChange, onBlur, value, description }) => (
-				<WPSelectControl
-					label={label}
-					onChange={onChange}
-					onBlur={onBlur}
-					disabled={isDisabled}
-					help={description}
-					value={value !== undefined && value !== null ? value : ''}
-					prefix={
-						prefix && (
-							<InputControlPrefixWrapper>
-								{prefix}
-							</InputControlPrefixWrapper>
-						)
-					}
-					options={options}
-					__next40pxDefaultSize
-				/>
-			)}
+			render={({ onChange, onBlur, value, description }) => {
+				const isValid = options.some(
+					(option) => option.value === value
+				);
+				return (
+					<WPSelectControl
+						label={label}
+						onChange={onChange}
+						onBlur={onBlur}
+						disabled={isDisabled}
+						help={description}
+						value={isValid ? value : ''}
+						prefix={
+							prefix && (
+								<InputControlPrefixWrapper>
+									{prefix}
+								</InputControlPrefixWrapper>
+							)
+						}
+						options={options}
+					/>
+				);
+			}}
 		/>
 	);
 };
