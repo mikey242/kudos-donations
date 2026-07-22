@@ -47,9 +47,15 @@ jobs:
 
             - name: Create zip archive
               run: |
-                  curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+                  # TEMPORARY: wp-cli stable (2.12.0) bundles Composer 2.2.25, which rejects
+                  # GitHub's new hyphenated Actions token format (ghs_<id>_<base64url-JWT>) and
+                  # fails with "Failed to get composer instance". The nightly bundles Composer
+                  # 2.10.2, which accepts it. Roll back to the stable phar — and to
+                  # dist-archive-command 3.1.0, which is what wp-cli 2.12 supports — once a
+                  # patched wp-cli stable ships.
+                  curl -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli-nightly.phar
                   chmod +x wp-cli.phar
-                  php wp-cli.phar package install wp-cli/dist-archive-command:3.1.0 --allow-root
+                  php wp-cli.phar package install wp-cli/dist-archive-command:3.2.2 --allow-root
                   composer run make-zip
 
             - name: Upload artifact
