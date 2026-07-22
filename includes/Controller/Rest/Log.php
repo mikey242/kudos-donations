@@ -17,25 +17,13 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-// Ensure WordPress filesystem classes loaded.
-require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-
 class Log extends BaseRestController {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
 
-	protected string $rest_base = 'log';
-	private WP_Filesystem_Direct $file_system;
-	private array $log_files;
-
-	/**
-	 * Log route constructor.
-	 */
-	public function __construct() {
-		$this->file_system = new WP_Filesystem_Direct( true );
-		$this->log_files   = $this->get_logs( $_ENV['KUDOS_APP_ENV'] ?? null );
-	}
+	protected string $rest_base                = 'log';
+	private ?WP_Filesystem_Direct $file_system = null;
+	private ?array $log_files                  = null;
 
 	/**
 	 * Mail service routes.
@@ -76,6 +64,18 @@ class Log extends BaseRestController {
 	}
 
 	/**
+	 * Resolves the filesystem on first use.
+	 */
+	private function get_file_system(): WP_Filesystem_Direct {
+		if ( null === $this->file_system ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+			$this->file_system = new WP_Filesystem_Direct( true );
+		}
+		return $this->file_system;
+	}
+
+	/**
 	 * Sends a test email using send_message.
 	 *
 	 * @param WP_REST_Request $request Request array.
@@ -86,7 +86,7 @@ class Log extends BaseRestController {
 		$result = $this->get_log_content( $file, $level );
 		return new WP_REST_Response(
 			[
-				'log_files'    => $this->log_files,
+				'log_files'    => $this->get_log_files(),
 				'current_file' => $result['current_file'],
 				'log_entries'  => $result['log_entries'],
 			],
@@ -100,11 +100,12 @@ class Log extends BaseRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function download_log( WP_REST_Request $request ): void {
-		$filename = $request->get_param( 'file' );
-		$log_path = self::LOG_DIR . $filename;
+		$filename    = $request->get_param( 'file' );
+		$log_path    = self::LOG_DIR . $filename;
+		$file_system = $this->get_file_system();
 
 		if (
-			! $this->file_system->exists( $log_path ) ||
+			! $file_system->exists( $log_path ) ||
 			realpath( $log_path ) !== realpath( self::LOG_DIR ) . DIRECTORY_SEPARATOR . $filename
 		) {
 			wp_die( esc_html__( 'File not found.', 'kudos-donations' ), 404 );
@@ -112,24 +113,28 @@ class Log extends BaseRestController {
 
 		header( 'Content-Type: text/plain' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Length: ' . $this->file_system->size( $log_path ) );
+		header( 'Content-Length: ' . $file_system->size( $log_path ) );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 		readfile( $log_path );
 		exit;
 	}
 
 	/**
-	 * Gets an array of the log file paths.
-	 *
-	 * @param ?string $env The environment to fetch logs for. If not specified return all.
+	 * Gets an array of the log file names for the current environment, scanned on first use.
 	 */
-	private function get_logs( ?string $env = null ): array {
+	private function get_log_files(): array {
+		if ( null !== $this->log_files ) {
+			return $this->log_files;
+		}
+
 		$paths = glob( self::LOG_DIR . '*.log' );
-		$files = $paths ? array_map( 'basename', $paths ) : $paths;
+		$files = $paths ? array_map( 'basename', $paths ) : [];
+		$env   = $_ENV['KUDOS_APP_ENV'] ?? null;
 		if ( $env ) {
 			$files = array_values( array_filter( $files, fn( $file ) => substr( $file, 0, \strlen( $env ) ) === $env ) );
 		}
 
+		$this->log_files = $files;
 		return $files;
 	}
 
@@ -139,11 +144,13 @@ class Log extends BaseRestController {
 	 * @param string|null $log_file The requested log file name.
 	 */
 	private function resolve_log_file( ?string $log_file ): ?string {
-		if ( $log_file && $this->file_system->exists( self::LOG_DIR . $log_file ) ) {
+		$file_system = $this->get_file_system();
+		if ( $log_file && $file_system->exists( self::LOG_DIR . $log_file ) ) {
 			return $log_file;
 		}
-		$latest = $this->log_files ? $this->log_files[ \count( $this->log_files ) - 1 ] : null;
-		return $latest && $this->file_system->exists( self::LOG_DIR . $latest ) ? $latest : null;
+		$log_files = $this->get_log_files();
+		$latest    = $log_files ? $log_files[ \count( $log_files ) - 1 ] : null;
+		return $latest && $file_system->exists( self::LOG_DIR . $latest ) ? $latest : null;
 	}
 
 	/**
@@ -162,7 +169,7 @@ class Log extends BaseRestController {
 			];
 		}
 
-		$lines  = array_filter( explode( "\n", $this->file_system->get_contents( self::LOG_DIR . $current_file ) ) );
+		$lines  = array_filter( explode( "\n", $this->get_file_system()->get_contents( self::LOG_DIR . $current_file ) ) );
 		$levels = 'ALL' !== $level ? explode( '|', $level ) : [];
 
 		$log_array = [];
