@@ -78,8 +78,8 @@
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
     "remove-from-vendor": [
-      "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
-      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
+      "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/stripe vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
+      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
     ],
     "post-install-cmd": [
       "@clean-unused-files",
