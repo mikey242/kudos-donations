@@ -15,4 +15,5 @@ includes/Dependencies
 /.phpunit.result.cache
 /wordpress/
 /third-party/
-/.cloudflared
+/.wp-env.override.json
+cloudflared.dev.yml
