@@ -21,7 +21,6 @@ use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
-use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use WP_Error;
 use WP_REST_Request;
@@ -41,7 +40,6 @@ class Payment extends BaseRestController {
 	public const ROUTE_STATUS  = '/status';
 
 	private PaymentProviderFactory $factory;
-	private PaymentProviderInterface $vendor;
 	private TransactionRepository $transaction_repository;
 	private DonorRepository $donor_repository;
 	private CampaignRepository $campaign_repository;
@@ -59,20 +57,6 @@ class Payment extends BaseRestController {
 		$this->transaction_repository = $transaction_repository;
 		$this->donor_repository       = $donor_repository;
 		$this->campaign_repository    = $campaign_repository;
-	}
-
-	/**
-	 * Resolves the active payment provider on first use.
-	 *
-	 * Deliberately lazy: resolving the provider eagerly (e.g. in the constructor) runs its
-	 * setup() during container bootstrap — before `init` — which decrypts API keys and loads
-	 * translations too early. Route callbacks run on rest_api_init, well after setup is safe.
-	 */
-	private function get_vendor(): PaymentProviderInterface {
-		if ( ! isset( $this->vendor ) ) {
-			$this->vendor = $this->factory->get_active_provider();
-		}
-		return $this->vendor;
 	}
 
 	/**
@@ -293,7 +277,16 @@ class Payment extends BaseRestController {
 
 		$args = wp_parse_args( $values, $defaults );
 
-		$vendor = $this->get_vendor();
+		$vendor = $this->factory->get_active_provider();
+		if ( null === $vendor ) {
+			return new WP_REST_Response(
+				[
+					'success' => false,
+					'message' => __( 'No payment vendor configured.', 'kudos-donations' ),
+				],
+				500
+			);
+		}
 
 		// Add submit action and pass args.
 		do_action( 'kudos_submit_payment', $args );
@@ -408,8 +401,8 @@ class Payment extends BaseRestController {
 	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 */
 	public function test_connection(): WP_REST_Response {
-		$result = $this->get_vendor()->refresh();
-		if ( $result ) {
+		$vendor = $this->factory->get_active_provider();
+		if ( null !== $vendor && $vendor->refresh() ) {
 			return new WP_REST_Response(
 				[
 					'success' => true,

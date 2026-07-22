@@ -20,7 +20,6 @@ use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Localization;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
-use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Service\SettingsService;
 use WP_REST_Request;
@@ -37,7 +36,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		self::SCRIPT_HANDLE_EDITOR,
 	];
 	private PaymentProviderFactory $factory;
-	private PaymentProviderInterface $vendor;
 	private TransactionRepository $transaction_repository;
 
 	/**
@@ -49,17 +47,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository ) {
 		$this->factory                = $factory;
 		$this->transaction_repository = $transaction_repository;
-	}
-
-	/**
-	 * Resolves the active payment provider on first use. Deferred out of the constructor so
-	 * nothing is decrypted or option-read while the container instantiates this controller.
-	 */
-	private function get_payment_vendor(): PaymentProviderInterface {
-		if ( ! isset( $this->vendor ) ) {
-			$this->vendor = $this->factory->get_active_provider();
-		}
-		return $this->vendor;
 	}
 
 	/**
@@ -194,14 +181,16 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		}
 
 		// Check if the current vendor is connected.
-		$vendor = $this->get_payment_vendor();
-		if ( ! $vendor->is_vendor_ready() ) {
+		$vendor = $this->factory->get_active_provider();
+		if ( null === $vendor || ! $vendor->is_vendor_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
-				$message = 'Kudos Donations: ' . \sprintf(
-				/* translators: %s: Payment vendor (e.g. Mollie). */
-					__( '%s not connected.', 'kudos-donations' ),
-					$vendor::get_name()
-				);
+				$message = null === $vendor
+					? 'Kudos Donations: ' . __( 'No payment vendor configured.', 'kudos-donations' )
+					: 'Kudos Donations: ' . \sprintf(
+						/* translators: %s: Payment vendor (e.g. Mollie). */
+						__( '%s not connected.', 'kudos-donations' ),
+						$vendor::get_name()
+					);
 
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
