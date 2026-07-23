@@ -3,12 +3,13 @@ import { useState } from '@wordpress/element';
 import {
 	Button,
 	Icon,
+	Modal,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControlPrefixWrapper as InputControlPrefixWrapper,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useSettingsContext } from '../contexts';
 
 interface SecretControlProps {
@@ -17,6 +18,7 @@ interface SecretControlProps {
 	help?: string;
 	validate?: (value: string) => true | string;
 	resetWith?: Record<string, unknown>;
+	confirmMessage?: string;
 }
 
 export const SecretControl = ({
@@ -25,6 +27,7 @@ export const SecretControl = ({
 	help,
 	validate,
 	resetWith,
+	confirmMessage,
 }: SecretControlProps) => {
 	const { settings, updateSetting, updateSettings } =
 		useSettingsContext<any>();
@@ -74,79 +77,100 @@ export const SecretControl = ({
 		}
 	};
 
+	const defaultConfirmMessage = sprintf(
+		// translators: %s is the field label, e.g. "API key".
+		__(
+			'This will remove the saved %s. You will need to enter it again to continue.',
+			'kudos-donations'
+		),
+		label
+	);
+
 	return (
-		<InputControl
-			label={label}
-			type="text"
-			className={isSet ? 'kudos-secret-control--set' : undefined}
-			value={
-				isSet
-					? `${label} ${__('saved', 'kudos-donations')}`.toUpperCase()
-					: inputValue
-			}
-			disabled={isSet || isSaving}
-			onChange={(value) => {
-				setInputValue(value ?? '');
-				if (error) {
-					setError(null);
+		<>
+			<InputControl
+				label={label}
+				type="text"
+				className={isSet ? 'kudos-secret-control--set' : undefined}
+				value={
+					isSet
+						? `${label} ${__('saved', 'kudos-donations')}`.toUpperCase()
+						: inputValue
 				}
-			}}
-			onKeyDown={handleKeyDown}
-			help={error ?? help}
-			prefix={
-				<InputControlPrefixWrapper>
-					<Icon icon="shield" />
-				</InputControlPrefixWrapper>
-			}
-			suffix={
-				<>
-					{!isSet && (
-						<Button
-							variant="secondary"
-							onClick={() => void handleApply()}
-							isBusy={isSaving}
-							disabled={isSaving || !inputValue}
-							__next40pxDefaultSize
-						>
-							{__('Apply', 'kudos-donations')}
-						</Button>
-					)}
-					{isSet && !confirming && (
-						<Button
-							variant="secondary"
-							isDestructive
-							onClick={() => setConfirming(true)}
-							disabled={isSaving}
-							__next40pxDefaultSize
-						>
-							{__('Reset', 'kudos-donations')}
-						</Button>
-					)}
-					{isSet && confirming && (
-						<>
-							<Button
-								variant="primary"
-								isDestructive
-								onClick={() => void handleReset()}
-								isBusy={isSaving}
-								disabled={isSaving}
-								__next40pxDefaultSize
-							>
-								{__('Confirm reset', 'kudos-donations')}
-							</Button>
+				disabled={isSet || isSaving}
+				onChange={(value) => {
+					setInputValue(value ?? '');
+					if (error) {
+						setError(null);
+					}
+				}}
+				onKeyDown={handleKeyDown}
+				help={error ?? help}
+				prefix={
+					<InputControlPrefixWrapper>
+						<Icon icon="shield" />
+					</InputControlPrefixWrapper>
+				}
+				suffix={
+					<>
+						{!isSet && (
 							<Button
 								variant="secondary"
-								onClick={() => setConfirming(false)}
+								onClick={() => void handleApply()}
+								isBusy={isSaving}
+								disabled={isSaving || !inputValue}
+								__next40pxDefaultSize
+							>
+								{__('Apply', 'kudos-donations')}
+							</Button>
+						)}
+						{isSet && (
+							<Button
+								variant="secondary"
+								isDestructive
+								onClick={() => setConfirming(true)}
 								disabled={isSaving}
 								__next40pxDefaultSize
 							>
-								{__('Cancel', 'kudos-donations')}
+								{__('Reset', 'kudos-donations')}
 							</Button>
-						</>
-					)}
-				</>
-			}
-			__next40pxDefaultSize
-		/>
+						)}
+					</>
+				}
+				__next40pxDefaultSize
+			/>
+			{confirming && (
+				<Modal
+					title={__('Confirm reset', 'kudos-donations')}
+					onRequestClose={() => setConfirming(false)}
+				>
+					<p>{confirmMessage ?? defaultConfirmMessage}</p>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'flex-end',
+							gap: '0.5em',
+						}}
+					>
+						<Button
+							variant="tertiary"
+							onClick={() => setConfirming(false)}
+							disabled={isSaving}
+						>
+							{__('Cancel', 'kudos-donations')}
+						</Button>
+						<Button
+							variant="primary"
+							isDestructive
+							onClick={() => void handleReset()}
+							isBusy={isSaving}
+							disabled={isSaving}
+						>
+							{__('Confirm reset', 'kudos-donations')}
+						</Button>
+					</div>
+				</Modal>
+			)}
+		</>
 	);
 };
