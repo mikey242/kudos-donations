@@ -1,8 +1,9 @@
-import { SnackbarList } from '@wordpress/components';
+import { Fill, SnackbarList } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { NoticesButton } from '../components';
 import { useAdminNotices } from '../hooks/use-admin-notices';
+import { SLOT_HEADER_NOTICES } from '../slot-names';
 import type { ReactNode } from 'react';
 
 export const Notices = (): ReactNode => {
@@ -20,7 +21,9 @@ export const Notices = (): ReactNode => {
 	return (
 		<>
 			<SnackbarList notices={snackbarNotices} onRemove={removeNotice} />
-			<NoticesButton notices={adminNotices} onRemove={handleRemove} />
+			<Fill name={SLOT_HEADER_NOTICES}>
+				<NoticesButton notices={adminNotices} onRemove={handleRemove} />
+			</Fill>
 		</>
 	);
 };

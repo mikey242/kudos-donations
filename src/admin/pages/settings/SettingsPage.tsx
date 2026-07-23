@@ -1,38 +1,18 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { usePaymentTab, EmailTab, ReceiptTab, PlusTab, HelpTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import type { AdminTab } from '../AdminTabPanel';
-import { Button, Fill, Flex, FlexItem } from '@wordpress/components';
-import { Spacer } from '../../components';
+import { Fill, FlexItem } from '@wordpress/components';
+import { StickySaveBar } from '../../components';
 import { useSettingsContext } from '../../contexts';
 import { usePageTitle } from '../../hooks';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { applyFilters } from '@wordpress/hooks';
 import type { AllSettings } from '../../../types/all-settings';
-
-interface SaveButtonProps {
-	isSaving: boolean;
-	onClick: () => void;
-}
-
-export const SaveButton = ({
-	isSaving,
-	onClick,
-}: SaveButtonProps): React.ReactNode => (
-	<Button
-		variant="primary"
-		type="submit"
-		isBusy={isSaving}
-		disabled={isSaving}
-		onClick={onClick}
-	>
-		{__('Save', 'kudos-donations')}
-	</Button>
-);
 
 export const SettingsPage = (): React.ReactNode => {
 	const {
@@ -46,13 +26,8 @@ export const SettingsPage = (): React.ReactNode => {
 		defaultValues: settings,
 	});
 	const { formState } = formMethods;
-	const formRef = useRef<HTMLFormElement | null>(null);
 
 	usePageTitle(__('Settings', 'kudos-donations'));
-
-	const handleSave = () => {
-		formRef.current?.requestSubmit();
-	};
 
 	const PaymentTab = usePaymentTab();
 	const tabs = applyFilters('kudosSettingsTabs', [
@@ -93,26 +68,16 @@ export const SettingsPage = (): React.ReactNode => {
 								)}
 							></span>
 						</FlexItem>
-						<FlexItem>
-							<SaveButton
-								isSaving={settingsSaving}
-								onClick={handleSave}
-							/>
-						</FlexItem>
 					</Fill>
 					<form
 						id="settings-form"
-						ref={formRef}
 						onSubmit={formMethods.handleSubmit(save)}
 					>
 						<AdminTabPanel tabs={tabs} />
-						<Spacer size={5} />
-						<Flex justify="flex-start">
-							<SaveButton
-								isSaving={settingsSaving}
-								onClick={handleSave}
-							/>
-						</Flex>
+						<StickySaveBar
+							formId="settings-form"
+							isSaving={settingsSaving}
+						/>
 					</form>
 				</FormProvider>
 			)}

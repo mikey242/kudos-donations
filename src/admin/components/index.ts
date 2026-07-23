@@ -6,4 +6,5 @@ export * from './PaymentIcon';
 export * from './PaymentVendorIcon';
 export * from './PaymentMethodsList';
 export * from './Spacer';
+export * from './StickySaveBar';
 export * from './table';

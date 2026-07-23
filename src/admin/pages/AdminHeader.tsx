@@ -10,7 +10,11 @@ import {
 } from '@wordpress/components';
 import { AdminMenu } from './AdminMenu';
 import { useAdminQueryParams } from '../hooks';
-import { SLOT_HEADER_ACTIONS, SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
+import {
+	SLOT_HEADER_ACTIONS,
+	SLOT_HEADER_ACTIONS_EXTRA,
+	SLOT_HEADER_NOTICES,
+} from '../slot-names';
 import type { ReactNode } from 'react';
 
 export const AdminHeader = (): ReactNode => {
@@ -68,6 +72,15 @@ export const AdminHeader = (): ReactNode => {
 										display: 'flex',
 										alignItems: 'center',
 										gap: '8px',
+									}}
+								/>
+								<Slot
+									name={SLOT_HEADER_NOTICES}
+									bubblesVirtually
+									fillProps={{ page, tab, entity }}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
 									}}
 								/>
 								<Slot

@@ -20,6 +20,7 @@ import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { Button, Fill } from '@wordpress/components';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
+import { StickySaveBar } from '../../components';
 import GenerateShortcode from './GenerateShortcode';
 
 const NavigationButtons = ({ campaign, onBack }): ReactNode => (
@@ -33,9 +34,6 @@ const NavigationButtons = ({ campaign, onBack }): ReactNode => (
 			{__('Back', 'kudos-donations')}
 		</Button>
 		<GenerateShortcode campaign={campaign} />
-		<Button variant="primary" type="submit" form="campaign-form">
-			{__('Save', 'kudos-donations')}
-		</Button>
 	</>
 );
 
@@ -76,9 +74,8 @@ const CampaignEdit = (): ReactNode => {
 		}
 	}, [createWarningNotice, formState]);
 
-	const onSubmit = (data: any): void => {
-		void handleUpdate(data);
-	};
+	// Return the promise so react-hook-form tracks isSubmitting for the save bar's busy state.
+	const onSubmit = (data: any): Promise<any> => handleUpdate(data);
 
 	const tabs = applyFilters('kudosCampaignTabs', [
 		GeneralTab,
@@ -105,6 +102,7 @@ const CampaignEdit = (): ReactNode => {
 			<FormProvider {...methods}>
 				<form id="campaign-form" onSubmit={handleSubmit(onSubmit)}>
 					<AdminTabPanel tabs={tabs} />
+					<StickySaveBar formId="campaign-form" />
 				</form>
 			</FormProvider>
 		</>

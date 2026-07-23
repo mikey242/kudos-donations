@@ -22,32 +22,17 @@ export const NoticesButton = ({
 	}
 
 	return (
-		<div
-			ref={setAnchor}
-			style={{
-				position: 'fixed',
-				bottom: '2em',
-				right: '2em',
-				zIndex: 9999,
-			}}
-		>
-			<div
+		<div ref={setAnchor} style={{ position: 'relative', lineHeight: 0 }}>
+			<Button
+				icon={bell}
 				style={{
-					position: 'relative',
-					borderRadius: '50%',
-					overflow: 'hidden',
+					color: 'var(--wp-admin-theme-color)',
 					border: '1px solid var(--wp-admin-theme-color)',
-					boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-					background: '#fff',
+					borderRadius: '50%',
 				}}
-			>
-				<Button
-					icon={bell}
-					variant="tertiary"
-					label={`${count} notification${count !== 1 ? 's' : ''}`}
-					onClick={() => setIsOpen((o) => !o)}
-				/>
-			</div>
+				label={`${count} notification${count !== 1 ? 's' : ''}`}
+				onClick={() => setIsOpen((o) => !o)}
+			/>
 			<span
 				style={{
 					position: 'absolute',
@@ -72,7 +57,7 @@ export const NoticesButton = ({
 			{isOpen && (
 				<Popover
 					anchor={anchor}
-					placement="top-end"
+					placement="bottom-end"
 					onClose={() => setIsOpen(false)}
 					focusOnMount={true}
 					onFocusOutside={() => setIsOpen(false)}

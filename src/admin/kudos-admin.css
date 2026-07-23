@@ -218,3 +218,29 @@ body.admin-color-modern {
 		}
 	}
 }
+
+.kudos-sticky-save-bar {
+	position: fixed;
+	bottom: 2em;
+	right: 50%;
+	transform: translateX(50%);
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem 0.5rem 0.5rem 1rem;
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: var(--kudos-rounded);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+	@media (min-width: 768px) {
+		right: 2em;
+		transform: translateX(0)
+	}
+}
+
+.kudos-sticky-save-bar__label {
+	color: #757575;
+	font-style: italic;
+}
