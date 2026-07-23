@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -12,10 +12,11 @@ export const StickySaveBar = ({
 	formId,
 	isSaving,
 }: StickySaveBarProps): React.ReactNode => {
-	const { formState, reset } = useFormContext();
-	const saving = isSaving ?? formState.isSubmitting;
+	const { control, reset } = useFormContext();
+	const { isDirty, isSubmitting } = useFormState({ control });
+	const saving = isSaving ?? isSubmitting;
 
-	if (!formState.isDirty) {
+	if (!isDirty) {
 		return null;
 	}
 
