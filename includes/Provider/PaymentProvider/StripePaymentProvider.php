@@ -385,6 +385,8 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		$webhook_url = static::get_webhook_url();
 
+		$this->delete_endpoints_for_url( $webhook_url );
+
 		try {
 			$endpoint = $client->webhookEndpoints->create(
 				[
@@ -427,6 +429,39 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 					true
 				)
 			);
+		}
+	}
+
+	/**
+	 * Deletes any webhook endpoints registered for the given URL.
+	 *
+	 * @param string $webhook_url The endpoint URL to match.
+	 */
+	private function delete_endpoints_for_url( string $webhook_url ): void {
+		$client = $this->get_client();
+		try {
+			$endpoints = $client->webhookEndpoints->all( [ 'limit' => 100 ] );
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->warning( 'Could not list Stripe webhook endpoints.', [ 'error' => $e->getMessage() ] );
+			return;
+		}
+
+		foreach ( $endpoints->data as $endpoint ) {
+			if ( $webhook_url !== $endpoint->url ) {
+				continue;
+			}
+			try {
+				$client->webhookEndpoints->delete( $endpoint->id );
+				$this->get_logger()->info( 'Deleted stale Stripe webhook endpoint.', [ 'endpoint_id' => $endpoint->id ] );
+			} catch ( ApiErrorException $e ) {
+				$this->get_logger()->warning(
+					'Could not delete Stripe webhook endpoint.',
+					[
+						'error'       => $e->getMessage(),
+						'endpoint_id' => $endpoint->id,
+					]
+				);
+			}
 		}
 	}
 

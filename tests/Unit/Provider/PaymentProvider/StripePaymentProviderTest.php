@@ -17,6 +17,7 @@ use IseardMedia\Kudos\ThirdParty\Stripe\ApiRequestor;
 use IseardMedia\Kudos\ThirdParty\Stripe\Checkout\Session;
 use IseardMedia\Kudos\ThirdParty\Stripe\StripeClient;
 use Psr\Log\LoggerInterface;
+use ReflectionMethod;
 use ReflectionProperty;
 use WP_REST_Request;
 
@@ -482,6 +483,40 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->provider->handle_key_update( 'sk_test_examplekey', '', StripePaymentProvider::SETTING_API_KEY_TEST );
 
 		$this->assertSame( 'live', get_option( StripePaymentProvider::SETTING_API_MODE ) );
+	}
+
+	public function test_delete_endpoints_for_url_removes_only_matching_endpoints(): void {
+		$webhook_url = get_rest_url( null, 'kudos/v1/payment/webhook/stripe' );
+
+		// The delete path (webhook_endpoints/{id}) must be matched before the bare list path.
+		$this->http_client->set_response( 'webhook_endpoints/', [ 'id' => 'we_match', 'object' => 'webhook_endpoint', 'deleted' => true ] );
+		$this->http_client->set_response(
+			'webhook_endpoints',
+			[
+				'object'   => 'list',
+				'has_more' => false,
+				'data'     => [
+					[ 'id' => 'we_match', 'object' => 'webhook_endpoint', 'url' => $webhook_url ],
+					[ 'id' => 'we_other', 'object' => 'webhook_endpoint', 'url' => 'https://example.com/other' ],
+				],
+			]
+		);
+
+		$client_ref = new ReflectionProperty( StripePaymentProvider::class, 'stripe' );
+		$client_ref->setAccessible( true );
+		$client = $client_ref->getValue( $this->provider );
+
+		$method = new ReflectionMethod( StripePaymentProvider::class, 'delete_endpoints_for_url' );
+		$method->setAccessible( true );
+		$method->invoke( $this->provider, $client, $webhook_url );
+
+		$requests = $this->http_client->get_requests();
+		$deleted  = array_filter( $requests, static fn( $r ) => str_contains( $r['absUrl'], 'webhook_endpoints/we_match' ) );
+		$this->assertCount( 1, $deleted, 'The endpoint matching our URL should be deleted.' );
+		$this->assertEmpty(
+			array_filter( $requests, static fn( $r ) => str_contains( $r['absUrl'], 'we_other' ) ),
+			'Endpoints for other URLs must not be touched.'
+		);
 	}
 
 	// -------------------------------------------------------------------------
