@@ -104,6 +104,14 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'cus_test_abc123', $last['params']['customer'] );
 	}
 
+	public function test_create_payment_stores_customer_id_on_transaction(): void {
+		$this->http_client->set_response( 'checkout/sessions', $this->session_fixture() );
+
+		$result = $this->create_payment_fixture( [], 'cus_test_abc123' );
+
+		$this->assertSame( 'cus_test_abc123', $result['transaction']->vendor_customer_id );
+	}
+
 	public function test_create_payment_returns_false_on_api_error(): void {
 		$this->http_client->set_response( 'checkout/sessions', [ 'error' => [ 'type' => 'api_error', 'message' => 'fail' ] ], 500 );
 
@@ -123,6 +131,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 				[
 					'status'         => Session::STATUS_COMPLETE,
 					'payment_status' => Session::PAYMENT_STATUS_PAID,
+					'payment_intent' => 'pi_oneoff_abc123',
 					'metadata'       => [ 'transaction_id' => (string) $transaction_id ],
 				]
 			)
@@ -132,6 +141,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 
 		$updated = $transactions->get( $transaction_id );
 		$this->assertSame( PaymentStatus::PAID, $updated->status );
+		$this->assertSame( 'pi_oneoff_abc123', $updated->vendor_payment_id );
 	}
 
 	public function test_handle_status_change_marks_transaction_expired(): void {
@@ -317,6 +327,8 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'recurring', $new->sequence_type );
 		$this->assertSame( 'EUR', $new->currency );
 		$this->assertSame( 10.0, $new->value );
+		// Stored (and de-duplicated) by the PaymentIntent, not the invoice id.
+		$this->assertSame( 'pi_test_abc123', $new->vendor_payment_id );
 	}
 
 	public function test_handle_invoice_payment_skips_already_recorded_invoice(): void {
@@ -334,14 +346,15 @@ class StripePaymentProviderTest extends BaseTestCase {
 			)
 		);
 
-		// A transaction for this invoice already exists, mimicking a webhook redelivery.
+		// A transaction for this payment already exists, mimicking a webhook redelivery. It is keyed
+		// by the PaymentIntent — the same id the redelivered invoice will resolve to.
 		/** @var TransactionRepository $transactions */
 		$transactions = $this->get_from_container( TransactionRepository::class );
 		$transactions->insert(
 			new TransactionEntity(
 				[
 					'title'             => 'Existing',
-					'vendor_payment_id' => 'in_test_abc123',
+					'vendor_payment_id' => 'pi_test_abc123',
 					'vendor'            => 'stripe',
 					'status'            => PaymentStatus::PAID,
 				]
@@ -375,6 +388,80 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$result = $this->provider->cancel_subscription( $subscription );
 
 		$this->assertFalse( $result );
+	}
+
+	public function test_handle_status_change_reconciles_subscription_first_payment_to_payment_intent(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'         => 'Test',
+					'sequence_type' => 'first',
+				]
+			)
+		);
+
+		// A subscription session carries no session-level PaymentIntent; it lives on the first
+		// invoice, expanded onto the session via `invoice.payments`.
+		$this->http_client->set_response(
+			'checkout/sessions',
+			$this->session_fixture(
+				[
+					'status'         => Session::STATUS_COMPLETE,
+					'payment_status' => Session::PAYMENT_STATUS_PAID,
+					'subscription'   => 'sub_test_abc123',
+					'payment_intent' => null,
+					'invoice'        => [
+						'id'       => 'in_sub_first',
+						'object'   => 'invoice',
+						'payments' => $this->payments_list( 'pi_sub_first' ),
+					],
+					'metadata'       => [
+						'transaction_id'      => (string) $transaction_id,
+						'recurring_frequency' => '1 month',
+						'recurring_length'    => '0',
+					],
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'cs_test_abc123' );
+
+		$updated = $transactions->get( $transaction_id );
+		$this->assertSame( 'pi_sub_first', $updated->vendor_payment_id );
+	}
+
+	public function test_refund_creates_refund_against_stored_payment_intent(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Test',
+					'vendor'            => 'stripe',
+					'vendor_payment_id' => 'pi_test_abc123',
+					'status'            => PaymentStatus::PAID,
+				]
+			)
+		);
+
+		$this->http_client->set_response( 'refunds', [ 'id' => 're_test_abc123', 'object' => 'refund', 'status' => 'succeeded' ] );
+
+		$result = $this->provider->refund( $transaction_id );
+
+		$this->assertTrue( $result );
+		$last = $this->http_client->get_last_request();
+		$this->assertStringContainsString( '/refunds', $last['absUrl'] );
+		$this->assertSame( 'pi_test_abc123', $last['params']['payment_intent'] );
+	}
+
+	public function test_refund_returns_false_without_vendor_payment_id(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert( new TransactionEntity( [ 'title' => 'Test', 'vendor' => 'stripe' ] ) );
+
+		$this->assertFalse( $this->provider->refund( $transaction_id ) );
 	}
 
 	// -------------------------------------------------------------------------
@@ -476,7 +563,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 				'amount_paid'    => 1000,
 				'livemode'       => false,
 				'customer'       => 'cus_test_abc123',
-				'charge'         => 'ch_test_abc123',
+				'payments'       => $this->payments_list(),
 				'parent'         => [
 					'type'                 => 'subscription_details',
 					'subscription_details' => [
@@ -486,5 +573,29 @@ class StripePaymentProviderTest extends BaseTestCase {
 			],
 			$overrides
 		);
+	}
+
+	/**
+	 * Returns an expanded invoice `payments` list object exposing a PaymentIntent, as the SDK
+	 * would deserialize it from a retrieve with `expand: ['payments']`.
+	 *
+	 * @param string $payment_intent The PaymentIntent id the payment resolves to.
+	 */
+	private function payments_list( string $payment_intent = 'pi_test_abc123' ): array {
+		return [
+			'object'   => 'list',
+			'has_more' => false,
+			'data'     => [
+				[
+					'id'      => 'inpay_test_abc123',
+					'object'  => 'invoice_payment',
+					'status'  => 'paid',
+					'payment' => [
+						'type'           => 'payment_intent',
+						'payment_intent' => $payment_intent,
+					],
+				],
+			],
+		];
 	}
 }

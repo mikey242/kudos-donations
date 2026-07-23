@@ -563,29 +563,13 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			if ( str_starts_with( $transaction->vendor_payment_id, 'in_' ) ) {
-				$invoice   = $client->invoices->retrieve( $transaction->vendor_payment_id );
-				$charge_id = $invoice->charge ?? null;
-				if ( ! $charge_id ) {
-					$this->get_logger()->error( 'No charge on Stripe invoice', [ 'invoice_id' => $transaction->vendor_payment_id ] );
-					return false;
-				}
-				$refund = $client->refunds->create( [ 'charge' => $charge_id ] );
-			} else {
-				$session           = $client->checkout->sessions->retrieve( $transaction->vendor_payment_id );
-				$payment_intent_id = $session->payment_intent;
-				if ( ! $payment_intent_id ) {
-					$this->get_logger()->error( 'No payment_intent on Stripe session', [ 'session_id' => $transaction->vendor_payment_id ] );
-					return false;
-				}
-				$refund = $client->refunds->create( [ 'payment_intent' => $payment_intent_id ] );
-			}
+			$refund = $client->refunds->create( [ 'payment_intent' => $transaction->vendor_payment_id ] );
 
 			$this->get_logger()->info(
 				'Stripe refund created.',
 				[
-					'status'     => $refund->status,
-					'payment_id' => $transaction->vendor_payment_id,
+					'status'         => $refund->status,
+					'payment_intent' => $transaction->vendor_payment_id,
 				]
 			);
 			return \in_array( $refund->status, [ 'succeeded', 'pending' ], true );
@@ -655,13 +639,22 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
+		// Already reconciled to its PaymentIntent by a prior run — nothing left to sync.
+		if ( str_starts_with( $vendor_payment_id, 'pi_' ) ) {
+			return;
+		}
+
 		$client = $this->get_client();
 		if ( null === $client ) {
 			return;
 		}
 
 		try {
-			$session = $client->checkout->sessions->retrieve( $vendor_payment_id );
+			// Expand the invoice payments so subscription sessions expose their PaymentIntent.
+			$session = $client->checkout->sessions->retrieve(
+				$vendor_payment_id,
+				[ 'expand' => [ 'invoice.payments' ] ]
+			);
 		} catch ( ApiErrorException $e ) {
 			$this->get_logger()->error(
 				'Error retrieving Stripe Checkout Session',
@@ -706,9 +699,12 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		if ( Session::STATUS_COMPLETE === $session->status && Session::PAYMENT_STATUS_PAID === $session->payment_status ) {
-			$transaction->status            = PaymentStatus::PAID;
-			$transaction->vendor_payment_id = $session->id;
-			$transaction->mode              = $session->livemode ? 'live' : 'test';
+			$transaction->status = PaymentStatus::PAID;
+			$transaction->mode   = $session->livemode ? 'live' : 'test';
+
+			// Store the PaymentIntent so the id matches the Stripe dashboard and can be refunded
+			// directly, falling back to the session id if it cannot be resolved.
+			$transaction->vendor_payment_id = $this->get_session_payment_intent( $session ) ?? $session->id;
 
 			$stripe_subscription_id = $session->subscription ?? null;
 			if ( $stripe_subscription_id && 'first' === $transaction->sequence_type ) {
@@ -744,7 +740,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			$invoice = $client->invoices->retrieve( $invoice_id );
+			$invoice = $client->invoices->retrieve( $invoice_id, [ 'expand' => [ 'payments' ] ] );
 		} catch ( ApiErrorException $e ) {
 			$this->get_logger()->error(
 				'Error retrieving Stripe invoice.',
@@ -761,8 +757,14 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		// Stripe delivers webhooks at least once, so skip invoices we have already recorded.
-		if ( null !== $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $invoice->id ] ) ) {
+		$payment_intent_id = $this->extract_invoice_payment_intent( $invoice );
+		if ( null === $payment_intent_id ) {
+			$this->get_logger()->warning( 'No payment intent on Stripe invoice.', [ 'invoice_id' => $invoice_id ] );
+			return;
+		}
+
+		// Stripe delivers webhooks at least once, so skip payments we have already recorded.
+		if ( null !== $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $payment_intent_id ] ) ) {
 			$this->get_logger()->debug( 'Duplicate Stripe invoice webhook. Skipping.', [ 'invoice_id' => $invoice_id ] );
 			return;
 		}
@@ -786,7 +788,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				'campaign_id'        => $subscription->campaign_id,
 				'subscription_id'    => $subscription->id,
 				'vendor_customer_id' => $invoice->customer,
-				'vendor_payment_id'  => $invoice->id,
+				'vendor_payment_id'  => $payment_intent_id,
 				'vendor'             => self::get_slug(),
 				'status'             => PaymentStatus::PAID,
 				'value'              => round( $invoice->amount_paid / 100, 2 ),
@@ -815,6 +817,49 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			]
 		);
 		$this->on_transaction_status_changed( $transaction );
+	}
+
+	/**
+	 * Resolves the PaymentIntent id for a completed Checkout Session.
+	 *
+	 * One-off (payment mode) sessions expose it directly on `payment_intent`. Subscription sessions
+	 * have no session-level PaymentIntent — it lives on the first invoice, which the caller expands
+	 * onto the session via `invoice.payments`.
+	 *
+	 * @param Session $session The completed Checkout Session.
+	 * @return string|null The PaymentIntent id, or null if none could be resolved.
+	 */
+	private function get_session_payment_intent( Session $session ): ?string {
+		if ( ! empty( $session->payment_intent ) ) {
+			return (string) $session->payment_intent;
+		}
+
+		if ( isset( $session->invoice ) && $session->invoice instanceof Invoice ) {
+			return $this->extract_invoice_payment_intent( $session->invoice );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Extracts the PaymentIntent id from an already-fetched invoice's payments.
+	 *
+	 * @param Invoice $invoice The invoice, retrieved with `payments` expanded.
+	 * @return string|null The PaymentIntent id, or null if none is present.
+	 */
+	private function extract_invoice_payment_intent( Invoice $invoice ): ?string {
+		if ( ! isset( $invoice->payments ) ) {
+			return null;
+		}
+
+		foreach ( $invoice->payments->data as $invoice_payment ) {
+			$payment = $invoice_payment->payment ?? null;
+			if ( null !== $payment && ! empty( $payment->payment_intent ) ) {
+				return (string) $payment->payment_intent;
+			}
+		}
+
+		return null;
 	}
 
 	/**
