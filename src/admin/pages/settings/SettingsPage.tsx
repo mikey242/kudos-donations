@@ -25,7 +25,9 @@ export const SettingsPage = (): React.ReactNode => {
 	const formMethods = useForm({
 		defaultValues: settings,
 	});
-	const { formState } = formMethods;
+	const {
+		formState: { dirtyFields },
+	} = formMethods;
 
 	usePageTitle(__('Settings', 'kudos-donations'));
 
@@ -45,7 +47,7 @@ export const SettingsPage = (): React.ReactNode => {
 	}, [formMethods, settings]);
 
 	const save = (data: AllSettings): Promise<void> => {
-		return updateSettings(data, formState.dirtyFields);
+		return updateSettings(data, dirtyFields);
 	};
 
 	return (
