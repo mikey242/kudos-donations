@@ -6,7 +6,6 @@
 namespace IseardMedia\Kudos\Tests\Migrations;
 
 use IseardMedia\Kudos\Migrations\Version430;
-use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
@@ -21,12 +20,10 @@ class Version430Test extends BaseTestCase {
 		parent::set_up();
 		$this->migration = $this->get_from_container( Version430::class );
 		delete_option( SettingsService::SETTING_ONBOARDING_DISMISSED );
-		delete_option( MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE );
 	}
 
 	public function tear_down(): void {
 		delete_option( SettingsService::SETTING_ONBOARDING_DISMISSED );
-		delete_option( MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE );
 		parent::tear_down();
 	}
 
@@ -40,25 +37,15 @@ class Version430Test extends BaseTestCase {
 	}
 
 	/**
-	 * A site with a live API key predates onboarding, so the banner must not appear
-	 * and payment status notices must keep working.
+	 * Any install upgrading to 4.3.0 has already been set up, so onboarding is dismissed
+	 * regardless of provider state — the banner is only for fresh installs.
 	 */
-	public function test_configured_site_skips_onboarding(): void {
-		update_option( MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'encrypted-live-key' );
-
-		$this->migration->skip_onboarding_if_configured();
-
-		$this->assertTrue( SettingsService::is_onboarding_active() === false );
-		$this->assertTrue( (bool) get_option( SettingsService::SETTING_ONBOARDING_DISMISSED ) );
-	}
-
-	/**
-	 * A site without a live API key has not finished setup, so onboarding stays active.
-	 */
-	public function test_unconfigured_site_keeps_onboarding_active(): void {
-		$this->migration->skip_onboarding_if_configured();
-
+	public function test_dismisses_onboarding_for_existing_install(): void {
 		$this->assertTrue( SettingsService::is_onboarding_active() );
-		$this->assertFalse( (bool) get_option( SettingsService::SETTING_ONBOARDING_DISMISSED, false ) );
+
+		$this->migration->dismiss_onboarding_for_existing_install();
+
+		$this->assertFalse( SettingsService::is_onboarding_active() );
+		$this->assertTrue( (bool) get_option( SettingsService::SETTING_ONBOARDING_DISMISSED ) );
 	}
 }
