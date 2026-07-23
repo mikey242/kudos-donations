@@ -527,8 +527,9 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		try {
 			$session = $client->checkout->sessions->create( $session_args );
 
-			$transaction->checkout_url      = $session->url;
-			$transaction->vendor_payment_id = $session->id;
+			$transaction->checkout_url       = $session->url;
+			$transaction->vendor_payment_id  = $session->id;
+			$transaction->vendor_customer_id = $vendor_customer_id;
 			$this->transaction_repository->update( $transaction );
 
 			$this->get_logger()->info(
