@@ -186,7 +186,7 @@ class NoticeManager implements HasSettingsInterface {
 	 */
 	private static function render( string $key, string $level, string $message, bool $dismissible = true ): void {
 		printf(
-			'<div class="kudos-notice notice %s %s" data-notice-key="%s" style="display: flex; padding: 10px; align-items: center">%s</div>',
+			'<div class="kudos-notice notice notice-%s %s" data-notice-key="%s" style="display: flex; padding: 10px; align-items: center">%s</div>',
 			esc_attr( $level ),
 			esc_attr( $dismissible ? 'is-dismissible' : '' ),
 			esc_attr( $key ),
