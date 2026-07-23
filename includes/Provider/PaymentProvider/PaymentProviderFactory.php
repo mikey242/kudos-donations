@@ -66,6 +66,8 @@ class PaymentProviderFactory extends AbstractProviderFactory {
 					admin_url( 'admin.php?page=kudos-settings' )
 				),
 				Notice::WARNING,
+				false,
+				Notice::ADMIN
 			);
 		}
 
