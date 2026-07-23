@@ -203,8 +203,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			return $_old_value;
 		}
 
-		// Auto-set the mode to match the key being updated.
-		update_option( self::SETTING_API_MODE, $mode );
+		$this->maybe_activate_mode( $mode );
 
 		return $this->save_encrypted_key( $value, $encrypted_option );
 	}

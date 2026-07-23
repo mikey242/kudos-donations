@@ -236,11 +236,36 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 * {@inheritDoc}
 	 */
 	public function has_live_key(): bool {
-		$constant = static::class . '::SETTING_API_KEY_ENCRYPTED_LIVE';
+		return $this->mode_has_key( 'live' );
+	}
+
+	/**
+	 * Whether the given mode has a stored (encrypted) API key.
+	 *
+	 * @param string $mode The API mode ('test' or 'live').
+	 */
+	protected function mode_has_key( string $mode ): bool {
+		$constant = static::class . '::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode );
 		if ( ! \defined( $constant ) ) {
 			return false;
 		}
 		return '' !== (string) get_option( \constant( $constant ), '' );
+	}
+
+	/**
+	 * Activates the given mode, but only when the current mode has no key configured.
+	 *
+	 * @param string $mode The mode the key being saved belongs to.
+	 */
+	protected function maybe_activate_mode( string $mode ): void {
+		$constant = static::class . '::SETTING_API_MODE';
+		if ( ! \defined( $constant ) ) {
+			return;
+		}
+		if ( $this->mode_has_key( $this->get_api_mode() ) ) {
+			return;
+		}
+		update_option( \constant( $constant ), $mode );
 	}
 
 	/**

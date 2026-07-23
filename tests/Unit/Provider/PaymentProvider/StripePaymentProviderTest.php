@@ -10,6 +10,7 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Provider\PaymentProvider\StripePaymentProvider;
+use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\Tests\Stubs\FakeStripeHttpClient;
 use IseardMedia\Kudos\ThirdParty\Stripe\ApiRequestor;
@@ -464,6 +465,25 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertFalse( $this->provider->refund( $transaction_id ) );
 	}
 
+	public function test_saving_key_activates_mode_when_current_mode_has_no_key(): void {
+		// Fresh setup: default test mode with no keys. Saving a live key should activate live mode.
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+
+		$this->provider->handle_key_update( 'sk_live_examplekey', '', StripePaymentProvider::SETTING_API_KEY_LIVE );
+
+		$this->assertSame( 'live', get_option( StripePaymentProvider::SETTING_API_MODE ) );
+	}
+
+	public function test_saving_key_does_not_demote_a_configured_mode(): void {
+		// Live site with a live key already stored: re-saving a test key must leave it in live mode.
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'live' );
+		update_option( StripePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'existing-encrypted-live-key' );
+
+		$this->provider->handle_key_update( 'sk_test_examplekey', '', StripePaymentProvider::SETTING_API_KEY_TEST );
+
+		$this->assertSame( 'live', get_option( StripePaymentProvider::SETTING_API_MODE ) );
+	}
+
 	// -------------------------------------------------------------------------
 	// Helpers
 	// -------------------------------------------------------------------------
@@ -474,6 +494,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 			$this->get_from_container( SubscriptionRepository::class )
 		);
 		$provider->setLogger( $this->createMock( LoggerInterface::class ) );
+		$provider->set_encryption( $this->get_from_container( EncryptionService::class ) );
 
 		// Inject a real StripeClient wired to our fake HTTP client.
 		$ref = new ReflectionProperty( StripePaymentProvider::class, 'stripe' );
