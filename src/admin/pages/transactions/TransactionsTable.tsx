@@ -113,7 +113,10 @@ export const TransactionsTable = (): React.ReactNode => {
 			title: __('Provider', 'kudos-donations'),
 			align: 'left',
 			valueCallback: (post: Transaction): React.ReactNode => (
-				<PaymentVendorIcon icon={getPaymentVendor(post.vendor)?.icon} />
+				<PaymentVendorIcon
+					title={post.vendor}
+					icon={getPaymentVendor(post.vendor)?.icon}
+				/>
 			),
 		},
 		{
