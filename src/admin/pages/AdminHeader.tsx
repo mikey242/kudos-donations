@@ -75,15 +75,6 @@ export const AdminHeader = (): ReactNode => {
 									}}
 								/>
 								<Slot
-									name={SLOT_HEADER_NOTICES}
-									bubblesVirtually
-									fillProps={{ page, tab, entity }}
-									style={{
-										display: 'flex',
-										alignItems: 'center',
-									}}
-								/>
-								<Slot
 									name={SLOT_HEADER_ACTIONS_EXTRA}
 									bubblesVirtually
 									fillProps={{ page, tab, entity }}
@@ -91,6 +82,15 @@ export const AdminHeader = (): ReactNode => {
 										display: 'flex',
 										alignItems: 'center',
 										gap: '8px',
+									}}
+								/>
+								<Slot
+									name={SLOT_HEADER_NOTICES}
+									bubblesVirtually
+									fillProps={{ page, tab, entity }}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
 									}}
 								/>
 							</Flex>
