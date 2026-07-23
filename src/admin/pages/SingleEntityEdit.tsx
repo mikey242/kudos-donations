@@ -13,7 +13,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
-import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
+import { SLOT_HEADER_ACTIONS } from '../slot-names';
 
 interface PostEditProps {
 	fields: Field[];
@@ -144,7 +144,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 
 	return (
 		<>
-			<Fill name={SLOT_HEADER_ACTIONS_EXTRA}>
+			<Fill name={SLOT_HEADER_ACTIONS}>
 				<NavigationButtons onBack={onBack} onSave={onSave} />
 			</Fill>
 			<Panel
