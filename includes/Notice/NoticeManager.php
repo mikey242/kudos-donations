@@ -121,7 +121,7 @@ class NoticeManager implements HasSettingsInterface {
 		foreach ( self::get_notices( Notice::APP ) as $notice ) {
 			$formatted[] = [
 				'id'            => $notice->id,
-				'status'        => substr( $notice->level, strpos( $notice->level, '-' ) + 1 ),
+				'status'        => $notice->level,
 				'content'       => $notice->message,
 				'isDismissible' => $notice->dismissible,
 				'type'          => 'default',
