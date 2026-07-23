@@ -392,6 +392,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 					'enabled_events' => [
 						'checkout.session.completed',
 						'checkout.session.expired',
+						'checkout.session.async_payment_succeeded',
 						'invoice.payment_succeeded',
 					],
 				]
@@ -622,7 +623,12 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		$this->get_logger()->info( 'Stripe webhook received.', [ 'type' => $event->type ] );
 
-		$handled_events = [ Event::CHECKOUT_SESSION_COMPLETED, Event::CHECKOUT_SESSION_EXPIRED, Event::INVOICE_PAYMENT_SUCCEEDED ];
+		$handled_events = [
+			Event::CHECKOUT_SESSION_COMPLETED,
+			Event::CHECKOUT_SESSION_EXPIRED,
+			Event::CHECKOUT_SESSION_ASYNC_PAYMENT_SUCCEEDED,
+			Event::INVOICE_PAYMENT_SUCCEEDED,
+		];
 		if ( \in_array( $event->type, $handled_events, true ) ) {
 			$this->enqueue_status_change_action( $event->data->object->id );
 		}
