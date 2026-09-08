@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
@@ -148,11 +149,20 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		try {
 			if ( 'oneoff' !== $transaction->sequence_type ) {
 				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ 'transaction_id' => $transaction->id ] );
-				$subscription = $this->subscription_repository->find_one_by(
-					[
-						'transaction_id' => $transaction->id,
-					]
-				);
+				/**
+				 * Renewal transactions link forwards via subscription_id; only the initial
+				 * transaction is referenced by the subscription's own transaction_id, so fall
+				 * back to that lookup for rows created before the forward link was stored.
+				 *
+				 * @var ?SubscriptionEntity $subscription
+				 */
+				$subscription = $transaction->subscription_id
+					? $this->subscription_repository->get( $transaction->subscription_id )
+					: $this->subscription_repository->find_one_by(
+						[
+							'transaction_id' => $transaction->id,
+						]
+					);
 				if ( $subscription ) {
 					$this->logger->debug( 'Found subscription', [ 'subscription' => $subscription ] );
 					$args['cancel_url'] = add_query_arg(
@@ -162,6 +172,14 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 							'id'           => $subscription->id,
 						],
 						apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
+					);
+				} else {
+					$this->logger->warning(
+						'No subscription found for recurring payment, receipt will not include a cancel button.',
+						[
+							'transaction_id'  => $transaction->id,
+							'subscription_id' => $transaction->subscription_id,
+						]
 					);
 				}
 			}
