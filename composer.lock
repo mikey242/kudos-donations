@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c22bc6d84399d717fb2c7c924c64ebd",
+    "content-hash": "9c3e17aa037cd242974a940298c33fa1",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -2321,35 +2321,32 @@
         },
         {
             "name": "johnbillion/wp-compat",
-            "version": "1.5.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnbillion/wp-compat.git",
-                "reference": "2ccebedbbbc6b6eec3fba4a568cff0a4ec05bf6e"
+                "reference": "b2e32bd91716a98bc6fc527c525b979652a4a567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnbillion/wp-compat/zipball/2ccebedbbbc6b6eec3fba4a568cff0a4ec05bf6e",
-                "reference": "2ccebedbbbc6b6eec3fba4a568cff0a4ec05bf6e",
+                "url": "https://api.github.com/repos/johnbillion/wp-compat/zipball/b2e32bd91716a98bc6fc527c525b979652a4a567",
+                "reference": "b2e32bd91716a98bc6fc527c525b979652a4a567",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 7.4",
-                "phpstan/phpstan": "^2.0",
-                "wp-hooks/wordpress-core": "^1.12"
+                "php": ">= 7.2.24",
+                "phpstan/phpstan": "^1.12 || ^2.0",
+                "wp-hooks/wordpress-core": "^1.13"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-                "johnbillion/plugin-infrastructure": "dev-trunk",
-                "nikic/php-parser": "^5.1",
-                "php-stubs/wordpress-stubs": "~7.0.0",
-                "phpstan/phpstan-deprecation-rules": "2.0.0",
-                "phpstan/phpstan-phpunit": "2.0.1",
-                "phpstan/phpstan-strict-rules": "2.0.0",
-                "phpunit/phpunit": "^9.0",
-                "roots/wordpress-core-installer": "1.100.0",
-                "roots/wordpress-full": "~7.0.0",
-                "wp-coding-standards/wpcs": "3.1.0"
+                "nikic/php-parser": "^4.18 || ^5.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0 || ^2.0",
+                "phpstan/phpstan-phpunit": "^1.0 || ^2.0",
+                "phpstan/phpstan-strict-rules": "^1.0 || ^2.0",
+                "phpunit/phpunit": "^8.5 || ^9.0",
+                "roots/wordpress": "*",
+                "wp-coding-standards/wpcs": "3.4.1"
             },
             "suggest": {
                 "phpstan/phpstan-deprecation-rules": "PHPStan rules for detecting usage of deprecated symbols",
@@ -2395,7 +2392,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-22T14:13:03+00:00"
+            "time": "2026-08-29T17:12:02+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -5389,16 +5386,16 @@
         },
         {
             "name": "wp-hooks/wordpress-core",
-            "version": "1.12.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-hooks/wordpress-core-hooks.git",
-                "reference": "0ba438bdd4c99b6613eb8459feb0a4f6d2d7082c"
+                "reference": "6bb3f47ccf1b58415ad8fbcd73ef404cae9cb187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-hooks/wordpress-core-hooks/zipball/0ba438bdd4c99b6613eb8459feb0a4f6d2d7082c",
-                "reference": "0ba438bdd4c99b6613eb8459feb0a4f6d2d7082c",
+                "url": "https://api.github.com/repos/wp-hooks/wordpress-core-hooks/zipball/6bb3f47ccf1b58415ad8fbcd73ef404cae9cb187",
+                "reference": "6bb3f47ccf1b58415ad8fbcd73ef404cae9cb187",
                 "shasum": ""
             },
             "replace": {
@@ -5408,7 +5405,7 @@
                 "erusev/parsedown": "1.8.0-beta-7",
                 "oomphinc/composer-installers-extender": "^2",
                 "roots/wordpress-core-installer": "^1.0.0",
-                "roots/wordpress-full": "7.0",
+                "roots/wordpress-full": "7.1",
                 "wp-hooks/generator": "1.0.0"
             },
             "type": "library",
@@ -5460,7 +5457,7 @@
             "description": "All the actions and filters from WordPress core in machine-readable JSON format.",
             "support": {
                 "issues": "https://github.com/wp-hooks/wordpress-core-hooks/issues",
-                "source": "https://github.com/wp-hooks/wordpress-core-hooks/tree/1.12.0"
+                "source": "https://github.com/wp-hooks/wordpress-core-hooks/tree/1.13.0"
             },
             "funding": [
                 {
@@ -5468,7 +5465,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-22T10:28:41+00:00"
+            "time": "2026-08-20T19:54:29+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
