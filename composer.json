@@ -48,7 +48,7 @@
     "phpstan/phpstan-deprecation-rules": "^2.0",
     "phpunit/phpunit": "^9.0",
     "phpunit/phpunit-dom-assertions": "^2.6",
-    "sirbrillig/phpcs-variable-analysis": "v2.13.0",
+    "sirbrillig/phpcs-variable-analysis": "v3.0.0",
     "slevomat/coding-standard": "^8.6",
     "squizlabs/php_codesniffer": "3.13.6",
     "szepeviktor/phpstan-wordpress": "^2.0",
