@@ -79,7 +79,7 @@
     ],
     "remove-from-vendor": [
       "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/stripe vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
-      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
+      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php\\|sabberworm\\/php-css-parser/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
     ],
     "post-install-cmd": [
       "@clean-unused-files",
