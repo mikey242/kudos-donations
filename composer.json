@@ -25,7 +25,7 @@
     "mollie/mollie-api-php": "^v3.12.0",
     "monolog/monolog": "^2",
     "psr/log": "^1.1",
-    "sabberworm/php-css-parser": "^8.9",
+    "sabberworm/php-css-parser": "^9.0",
     "stripe/stripe-php": "^21.0",
     "symfony/config": "^5.4",
     "symfony/dependency-injection": "^5.4",
@@ -79,7 +79,7 @@
     ],
     "remove-from-vendor": [
       "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/stripe vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
-      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
+      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php\\|sabberworm\\/php-css-parser/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
     ],
     "post-install-cmd": [
       "@clean-unused-files",
