@@ -16,6 +16,27 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true,
       "typisttech/imposter-plugin": false
+    },
+    "policy": {
+      "advisories": {
+        "ignore-id": [
+          "PKSA-8zx5-v2nz-58pb",
+          "PKSA-fbvq-z33h-r2np",
+          "PKSA-g9zw-qxh8-pq8w",
+          "PKSA-yd6k-t2gh-1m43",
+          "PKSA-1tmc-rt7x-12w6",
+          "PKSA-xx6c-6d96-db2w",
+          "PKSA-sjvz-tbbr-vwth",
+          "PKSA-h8hf-ytnd-5t9q",
+          "PKSA-wwb1-81rc-pd65",
+          "PKSA-kvv6-36cr-fkzb",
+          "PKSA-n14z-jjjg-g8vd",
+          "PKSA-3mcc-k66d-pydb",
+          "PKSA-gw7n-z4yx-7xjt",
+          "PKSA-dpx1-78wg-1kqs",
+          "PKSA-21g2-dzjv-sky5"
+        ]
+      }
     }
   },
   "require": {
@@ -33,7 +54,7 @@
     "symfony/polyfill-ctype": "^1.31",
     "symfony/polyfill-mbstring": "^1.31",
     "symfony/proxy-manager-bridge": "^5.4",
-    "twig/twig": "^3.11",
+    "twig/twig": "~v3.11.3",
     "woocommerce/action-scheduler": "^4.0"
   },
   "require-dev": {
