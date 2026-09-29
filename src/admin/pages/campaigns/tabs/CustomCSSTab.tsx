@@ -2,13 +2,18 @@ import { __ } from '@wordpress/i18n';
 import type { AdminTab } from '../../AdminTabPanel';
 import { TextAreaControl } from '../../../controls';
 import { useEffect, useRef } from '@wordpress/element';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel } from '../../../components';
-import { CodeEditorSettings } from '../../../../types/window-kudos';
+import type {
+	CodeEditorInstance,
+	CodeEditorSettings,
+} from '../../../../types/window-kudos';
 
 const CustomCSSPanel = () => {
 	const { setValue } = useFormContext();
+	const customStyles = useWatch({ name: 'custom_styles' });
 	const editorRef = useRef<HTMLTextAreaElement | null>(null);
+	const codeEditorRef = useRef<CodeEditorInstance | null>(null);
 	const editorId: string = 'css-editor';
 
 	useEffect(() => {
@@ -17,12 +22,28 @@ const CustomCSSPanel = () => {
 				editorId,
 				window?.kudos?.codeEditor as CodeEditorSettings
 			);
-			editor?.codemirror.on('change', () => {
-				const value = editor.codemirror.getValue();
-				setValue('custom_styles', value, { shouldValidate: true });
+			codeEditorRef.current = editor ?? null;
+			editor?.codemirror.on('change', (codemirror, change) => {
+				// Ignore changes pushed in from the form (e.g. on reset).
+				if (change.origin === 'setValue') {
+					return;
+				}
+				setValue('custom_styles', codemirror.getValue(), {
+					shouldValidate: true,
+					shouldDirty: true,
+				});
 			});
 		}
 	}, [setValue]);
+
+	// Keep the editor in sync when the form value changes externally (discard, save).
+	useEffect(() => {
+		const codemirror = codeEditorRef.current?.codemirror;
+		const value = customStyles ?? '';
+		if (codemirror && codemirror.getValue() !== value) {
+			codemirror.setValue(value);
+		}
+	}, [customStyles]);
 
 	return (
 		<Panel header={__('Custom CSS', 'kudos-donations')}>
