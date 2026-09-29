@@ -26,12 +26,9 @@ export const NoticesButton = ({
 			renderToggle={({ isOpen, onToggle }) => (
 				<>
 					<Button
+						variant="secondary"
 						icon={bell}
-						style={{
-							color: 'var(--wp-admin-theme-color)',
-							border: '1px solid var(--wp-admin-theme-color)',
-							borderRadius: '50%',
-						}}
+						style={{ borderRadius: '50%' }}
 						label={`${count} notification${count !== 1 ? 's' : ''}`}
 						onClick={onToggle}
 						aria-expanded={isOpen}
@@ -41,8 +38,9 @@ export const NoticesButton = ({
 							position: 'absolute',
 							top: '-4px',
 							right: '-4px',
-							background: '#cc1818',
-							color: '#fff',
+							background:
+								'var(--wpds-color-background-interactive-error-strong)',
+							color: 'var(--wpds-color-foreground-interactive-error-strong)',
 							borderRadius: '50%',
 							fontSize: '10px',
 							width: '18px',

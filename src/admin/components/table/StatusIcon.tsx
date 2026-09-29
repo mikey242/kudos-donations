@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dashicon } from '@wordpress/components';
-import type { IconKey } from '@wordpress/components/build-types/dashicon/types';
+
+type IconKey = React.ComponentProps<typeof Dashicon>['icon'];
 
 export interface StatusConfig {
 	title: string;

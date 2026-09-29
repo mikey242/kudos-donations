@@ -33,6 +33,9 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 		// Hide admin notices.
 		$this->discard_admin_notices();
 
+		// Let the ThemeProvider control the admin theme colours.
+		$this->remove_admin_color_scheme_variables();
+
 		// Enqueue the styles.
 		wp_enqueue_style(
 			self::STYLE_HANDLE_ADMIN,
@@ -81,6 +84,17 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 			esc_attr( $this->get_menu_slug() )
 		);
 		echo '</div>';
+	}
+
+	/**
+	 * The wp-base-styles stylesheet only redefines the admin theme colour variables on
+	 * body.admin-color-*, overriding the values our ThemeProvider sets on <html>. Portalled
+	 * UI (modals, popovers) would then use the colour scheme's accent instead of ours.
+	 * The handle is kept registered but empty, as other admin styles depend on it.
+	 */
+	private function remove_admin_color_scheme_variables(): void {
+		wp_deregister_style( 'wp-base-styles' );
+		wp_register_style( 'wp-base-styles', false, [], KUDOS_VERSION );
 	}
 
 	/**

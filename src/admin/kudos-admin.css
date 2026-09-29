@@ -1,15 +1,9 @@
-:root,
-body.admin-color-modern {
-	--kudos-rounded: 0.5rem;
+:root {
 	--kudos-colour-success: #35ac35;
-	--wp-admin-theme-color: #ff9f1c;
-	--wp-admin-theme-color-darker-10: #ff8e1c;
-	--wp-admin-theme-color-darker-20: #ff821c;
-	--wp-admin-theme-secondary-color: #2ec4b6;
 }
 
 .rounded {
-	border-radius: var(--kudos-rounded)
+	border-radius: var(--wpds-border-radius-lg)
 }
 
 .components-notice-list {
@@ -43,11 +37,11 @@ body.admin-color-modern {
 	&.has-error {
 
 		.components-input-control__backdrop {
-			border-color: #f00 !important;
+			border-color: var(--wpds-color-stroke-surface-error-strong) !important;
 		}
 
 		.components-base-control__help {
-			color: #f00;
+			color: var(--wpds-color-foreground-content-error-weak);
 		}
 	}
 }
@@ -67,9 +61,9 @@ body.admin-color-modern {
 		margin-inline: -22px -20px;
 		padding-block: 1em;
 		padding-inline: 22px 20px;
-		background-color: #fff;
+		background-color: var(--wpds-color-background-surface-neutral-strong);
 		border: none;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid var(--wpds-color-stroke-surface-neutral);
 		z-index: 999;
 
 		.kudos-logo {
@@ -114,7 +108,7 @@ body.admin-color-modern {
 	.kudos-admin-menu {
 		margin-inline: -22px -20px;
 		padding: 1em 1em 0 1em;
-		border-top: 1px solid #e0e0e0;
+		border-top: 1px solid var(--wpds-color-stroke-surface-neutral);
 
 		.components-button {
 			border-bottom: 3px solid transparent;
@@ -162,9 +156,9 @@ body.admin-color-modern {
 
 		.components-tab-panel__tabs {
 			margin-bottom: 1rem;
-			background: #fff;
-			border: 1px solid #e0e0e0;
-			border-radius: var(--kudos-rounded);
+			background: var(--wpds-color-background-surface-neutral-strong);
+			border: 1px solid var(--wpds-color-stroke-surface-neutral);
+			border-radius: var(--wpds-border-radius-lg);
 			overflow: hidden;
 			display: block;
 			text-align: center;
@@ -173,7 +167,7 @@ body.admin-color-modern {
 		.components-tab-panel__tab-content {
 
 			.components-panel {
-				border-radius: var(--kudos-rounded);
+				border-radius: var(--wpds-border-radius-lg);
 			}
 		}
 	}
@@ -228,9 +222,9 @@ body.admin-color-modern {
 	align-items: center;
 	gap: 0.75rem;
 	padding: 0.5rem 0.5rem 0.5rem 1rem;
-	background: #fff;
-	border: 1px solid #e0e0e0;
-	border-radius: var(--kudos-rounded);
+	background: var(--wpds-color-background-surface-neutral-strong);
+	border: 1px solid var(--wpds-color-stroke-surface-neutral);
+	border-radius: var(--wpds-border-radius-lg);
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 
 	@media (min-width: 768px) {
@@ -240,6 +234,6 @@ body.admin-color-modern {
 }
 
 .kudos-sticky-save-bar__label {
-	color: #757575;
+	color: var(--wpds-color-foreground-content-neutral-weak);
 	font-style: italic;
 }

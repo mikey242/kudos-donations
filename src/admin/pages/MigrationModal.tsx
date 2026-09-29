@@ -4,6 +4,7 @@ import {
 	CheckboxControl,
 	Flex,
 	Modal,
+	Notice,
 	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -133,14 +134,16 @@ export const MigrationModal = () => {
 			)}
 
 			{error && (
-				<p style={{ color: '#d63638' }}>
+				<Notice status="error" isDismissible={false}>
 					{__('Error:', 'kudos-donations')} {error}
-				</p>
+				</Notice>
 			)}
 
 			{isDone && (
 				<>
-					<p style={{ color: '#00a32a' }}>{status}</p>
+					<Notice status="success" isDismissible={false}>
+						{status}
+					</Notice>
 					<Button onClick={handleReload} variant="primary">
 						{__('Reload page', 'kudos-donations')}
 					</Button>

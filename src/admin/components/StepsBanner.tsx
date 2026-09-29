@@ -6,7 +6,12 @@ type StepState = 'done' | 'locked' | 'active';
 
 const stepStateStyles: Record<
 	StepState,
-	{ background: string; circleBackground: string; border?: string }
+	{
+		background: string;
+		circleBackground: string;
+		circleColor?: string;
+		border?: string;
+	}
 > = {
 	done: {
 		background: 'rgba(53, 172, 53, 0.1)',
@@ -17,8 +22,10 @@ const stepStateStyles: Record<
 		circleBackground: '#bbb',
 	},
 	active: {
-		background: 'rgba(46, 196, 182, 0.1)',
-		circleBackground: 'var(--wp-admin-theme-color)',
+		background: 'var(--wpds-color-background-surface-brand)',
+		circleBackground:
+			'var(--wpds-color-background-interactive-brand-strong)',
+		circleColor: 'var(--wpds-color-foreground-interactive-brand-strong)',
 		border: '1px solid var(--wp-admin-theme-color)',
 	},
 };
@@ -78,7 +85,7 @@ export const StepsBanner = ({
 			<div
 				style={{
 					height: '4px',
-					background: '#e0e0e0',
+					background: 'var(--wpds-color-background-track-neutral)',
 					borderRadius: '2px 2px 0 0',
 				}}
 			>
@@ -164,7 +171,10 @@ export const StepsBanner = ({
 														background:
 															step.styles
 																.circleBackground,
-														color: 'white',
+														color:
+															step.styles
+																.circleColor ??
+															'white',
 														fontSize: '11px',
 														fontWeight: 600,
 														flexShrink: 0,

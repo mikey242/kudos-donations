@@ -1,6 +1,7 @@
 import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
+import { ThemeProvider } from '@wordpress/theme';
 import './kudos-admin.css';
 import { AdminProvider } from './contexts';
 import { AdminRouter } from './pages';
@@ -21,9 +22,11 @@ domReady(() => {
 	if (container) {
 		const root = createRoot(container);
 		root.render(
-			<AdminProvider>
-				<AdminRouter />
-			</AdminProvider>
+			<ThemeProvider color={{ primary: '#ff9f1c' }} isRoot>
+				<AdminProvider>
+					<AdminRouter />
+				</AdminProvider>
+			</ThemeProvider>
 		);
 	}
 });
