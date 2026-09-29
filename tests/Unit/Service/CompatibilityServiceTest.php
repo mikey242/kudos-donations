@@ -26,7 +26,7 @@ class CompatibilityServiceTest extends BaseTestCase {
 	public function test_check_compatibility_returns_true_in_compatible_environment(): void {
 		global $wp_version;
 		$original    = $wp_version;
-		$wp_version  = '6.9';
+		$wp_version  = '7.1';
 
 		$result = $this->service->check_compatibility();
 
@@ -41,7 +41,7 @@ class CompatibilityServiceTest extends BaseTestCase {
 	public function test_check_compatibility_fails_on_old_wordpress(): void {
 		global $wp_version;
 		$original   = $wp_version;
-		$wp_version = '6.8';
+		$wp_version = '7.0';
 
 		$result = $this->service->check_compatibility();
 
@@ -65,6 +65,6 @@ class CompatibilityServiceTest extends BaseTestCase {
 
 		$this->assertWPError( $result );
 		$this->assertStringContainsString( '5.0', $result->get_error_message() );
-		$this->assertStringContainsString( '6.9', $result->get_error_message() );
+		$this->assertStringContainsString( '7.1', $result->get_error_message() );
 	}
 }

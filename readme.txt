@@ -1,8 +1,8 @@
 === Kudos Donations: Easy Donations with Mollie | One-off & Recurring | PDF Receipts | Buttons & Forms ===
 Contributors: iseardmedia
 Tags: donation, fundraising, charity, recurring donations, mollie
-Requires at least: 6.9
-Tested up to: 7.0
+Requires at least: 7.1
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 4.3.0
 License: GPLv2 or later
