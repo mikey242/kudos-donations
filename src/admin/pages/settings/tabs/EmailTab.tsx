@@ -2,11 +2,18 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Button, PanelRow } from '@wordpress/components';
+import {
+	Button,
+	PanelRow,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalInputControl as InputControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalInputControlPrefixWrapper as InputControlPrefixWrapper,
+} from '@wordpress/components';
 import {
 	RadioControl,
 	SecretControl,
@@ -175,13 +182,13 @@ const SmtpSettingsPanel = () => {
 };
 
 const TestEmailPanel = () => {
-	const { getValues } = useFormContext();
+	// Kept out of the settings form, as it isn't a setting.
+	const [address, setAddress] = useState('');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 	const [isEmailBusy, setIsEmailBusy] = useState(false);
 
 	const sendTestEmail = (): void => {
-		const address = getValues('test_email_address');
 		setIsEmailBusy(true);
 		apiFetch({
 			path: 'kudos/v1/email/test',
@@ -207,11 +214,14 @@ const TestEmailPanel = () => {
 
 	return (
 		<Panel header={__('Test email', 'kudos-donations')}>
-			<TextControl
+			<InputControl
 				label={__('Email address', 'kudos-donations')}
-				prefix="@"
+				prefix={
+					<InputControlPrefixWrapper>@</InputControlPrefixWrapper>
+				}
 				type="email"
-				name="test_email_address"
+				value={address}
+				onChange={(value) => setAddress(value ?? '')}
 				help={__(
 					'Address to send the test email to. Please ensure you save changes first.',
 					'kudos-donations'
