@@ -11,6 +11,7 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
@@ -25,7 +26,15 @@ class SettingsService implements HasSettingsInterface {
 	 * Whether the onboarding banner is still walking the user through setup.
 	 */
 	public static function is_onboarding_active(): bool {
-		return ! get_option( self::SETTING_ONBOARDING_DISMISSED, false );
+		return ! get_option( self::SETTING_ONBOARDING_DISMISSED, self::is_pre_onboarding_install() );
+	}
+
+	/**
+	 * Whether this install predates onboarding (4.3.0). Such installs are already set up, so
+	 * onboarding defaults to dismissed until the Version430 migration persists it.
+	 */
+	public static function is_pre_onboarding_install(): bool {
+		return version_compare( (string) get_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION ), '4.3.0', '<' );
 	}
 
 	/**
@@ -130,7 +139,7 @@ class SettingsService implements HasSettingsInterface {
 			self::SETTING_ONBOARDING_DISMISSED => [
 				'type'              => FieldType::BOOLEAN,
 				'show_in_rest'      => true,
-				'default'           => false,
+				'default'           => self::is_pre_onboarding_install(),
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 		];
