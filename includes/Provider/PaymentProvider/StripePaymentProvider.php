@@ -76,7 +76,13 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		'twint_payments'             => 'TWINT',
 	];
 
-	private ?StripeClient $stripe = null;
+	/**
+	 * Clients keyed by API mode, so objects from either mode can be fetched regardless of the
+	 * site's current mode.
+	 *
+	 * @var array<string, StripeClient>
+	 */
+	private array $clients = [];
 	private SubscriptionRepository $subscription_repository;
 
 	/**
@@ -91,19 +97,24 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
-	 * Returns a StripeClient initialised with the current mode's decrypted key,
-	 * or null if no key is stored yet. Memorised for the lifetime of the request.
+	 * Returns a StripeClient initialised with the given mode's decrypted key, or null if no key
+	 * is stored for that mode. Memorised per mode for the lifetime of the request.
+	 *
+	 * @param string|null $mode The API mode, or null for the current one.
 	 */
-	private function get_client(): ?StripeClient {
-		if ( null !== $this->stripe ) {
-			return $this->stripe;
+	private function get_client( ?string $mode = null ): ?StripeClient {
+		if ( ! \in_array( $mode, [ 'test', 'live' ], true ) ) {
+			$mode = $this->get_api_mode();
 		}
-		$key = $this->get_api_key();
+		if ( isset( $this->clients[ $mode ] ) ) {
+			return $this->clients[ $mode ];
+		}
+		$key = $this->get_api_key( $mode );
 		if ( ! $key ) {
 			return null;
 		}
-		$this->stripe = new StripeClient( $key );
-		return $this->stripe;
+		$this->clients[ $mode ] = new StripeClient( $key );
+		return $this->clients[ $mode ];
 	}
 
 	/**
@@ -286,13 +297,14 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * @param string $subscription_id The Stripe subscription ID.
 	 * @param int    $years           How many years the subscription should run (0 = indefinite).
 	 * @param int    $start           The subscription start timestamp (Unix seconds).
+	 * @param string $mode            The API mode the subscription belongs to.
 	 */
-	private function cap_subscription_duration( string $subscription_id, int $years, int $start ): void {
+	private function cap_subscription_duration( string $subscription_id, int $years, int $start, string $mode ): void {
 		if ( $years <= 0 ) {
 			return;
 		}
 
-		$client = $this->get_client();
+		$client = $this->get_client( $mode );
 		if ( null === $client ) {
 			return;
 		}
@@ -473,7 +485,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return false;
 		}
 
-		$client = $this->get_client();
+		// Subscriptions carry no mode of their own; it is inherited from the first payment.
+		$first_id = $subscription->transaction_id ?? null;
+		$first    = null !== $first_id ? $this->transaction_repository->get( $first_id ) : null;
+		$client   = $this->get_client( $first->mode ?? null );
 		if ( null === $client ) {
 			return false;
 		}
@@ -587,14 +602,14 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function refund( int $entity_id ): bool {
-		$client = $this->get_client();
-		if ( null === $client ) {
-			return false;
-		}
-
 		/** @var TransactionEntity|null $transaction */
 		$transaction = $this->transaction_repository->get( $entity_id );
 		if ( null === $transaction || null === $transaction->vendor_payment_id ) {
+			return false;
+		}
+
+		$client = $this->get_client( $transaction->mode );
+		if ( null === $client ) {
 			return false;
 		}
 
@@ -619,12 +634,15 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * {@inheritDoc}
 	 */
 	public function rest_webhook( WP_REST_Request $request ): WP_REST_Response {
-		$payload    = $request->get_body();
+		$payload    = (string) $request->get_body();
 		$sig_header = $request->get_header( 'stripe_signature' );
-		$secret     = $this->get_webhook_secret();
+
+		$data   = json_decode( $payload, true );
+		$mode   = \is_array( $data ) && ! empty( $data['livemode'] ) ? 'live' : 'test';
+		$secret = $this->get_webhook_secret( $mode );
 
 		if ( ! $secret ) {
-			$this->get_logger()->error( 'Stripe webhook secret not configured.', [ 'mode' => $this->get_api_mode() ] );
+			$this->get_logger()->error( 'Stripe webhook secret not configured.', [ 'mode' => $mode ] );
 			return new WP_REST_Response(
 				[
 					'success' => false,
@@ -656,7 +674,13 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			);
 		}
 
-		$this->get_logger()->info( 'Stripe webhook received.', [ 'type' => $event->type ] );
+		$this->get_logger()->info(
+			'Stripe webhook received.',
+			[
+				'type' => $event->type,
+				'mode' => $mode,
+			]
+		);
 
 		$handled_events = [
 			Event::CHECKOUT_SESSION_COMPLETED,
@@ -665,7 +689,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			Event::INVOICE_PAYMENT_SUCCEEDED,
 		];
 		if ( \in_array( $event->type, $handled_events, true ) ) {
-			$this->enqueue_status_change_action( $event->data->object->id );
+			$this->enqueue_status_change_action( $event->data->object->id, $mode );
 		}
 
 		return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -674,9 +698,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle_status_change( string $vendor_payment_id ): void {
+	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void {
+		$mode = $mode ?? $this->get_api_mode();
+
 		if ( str_starts_with( $vendor_payment_id, 'in_' ) ) {
-			$this->handle_invoice_payment( $vendor_payment_id );
+			$this->handle_invoice_payment( $vendor_payment_id, $mode );
 			return;
 		}
 
@@ -685,7 +711,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		$client = $this->get_client();
+		$client = $this->get_client( $mode );
 		if ( null === $client ) {
 			return;
 		}
@@ -757,7 +783,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 					$transaction->subscription_id = $subscription_id;
 				}
 
-				$this->cap_subscription_duration( $stripe_subscription_id, $years, $session->created ?? time() );
+				$this->cap_subscription_duration( $stripe_subscription_id, $years, $session->created ?? time(), $mode );
 			}
 
 			$this->transaction_repository->update( $transaction );
@@ -773,9 +799,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * Handles a Stripe invoice.payment_succeeded event for recurring subscription charges.
 	 *
 	 * @param string $invoice_id The Stripe invoice ID.
+	 * @param string $mode       The API mode the invoice belongs to.
 	 */
-	private function handle_invoice_payment( string $invoice_id ): void {
-		$client = $this->get_client();
+	private function handle_invoice_payment( string $invoice_id, string $mode ): void {
+		$client = $this->get_client( $mode );
 		if ( null === $client ) {
 			return;
 		}

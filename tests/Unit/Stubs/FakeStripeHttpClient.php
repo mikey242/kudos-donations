@@ -41,6 +41,7 @@ class FakeStripeHttpClient implements ClientInterface {
 		$this->requests[] = [
 			'method'  => $method,
 			'absUrl'  => $absUrl,
+			'headers' => $headers,
 			'params'  => $params,
 		];
 
@@ -67,7 +68,7 @@ class FakeStripeHttpClient implements ClientInterface {
 	/**
 	 * Returns all recorded requests, oldest first.
 	 *
-	 * @return list<array{method: string, absUrl: string, params: mixed}>
+	 * @return list<array{method: string, absUrl: string, headers: array, params: mixed}>
 	 */
 	public function get_requests(): array {
 		return $this->requests;
@@ -76,7 +77,7 @@ class FakeStripeHttpClient implements ClientInterface {
 	/**
 	 * Returns the most recently recorded request, or null if none.
 	 *
-	 * @return array{method: string, absUrl: string, params: mixed}|null
+	 * @return array{method: string, absUrl: string, headers: array, params: mixed}|null
 	 */
 	public function get_last_request(): ?array {
 		return $this->requests ? end( $this->requests ) : null;

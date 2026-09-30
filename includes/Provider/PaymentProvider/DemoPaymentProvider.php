@@ -297,8 +297,8 @@ class DemoPaymentProvider extends AbstractPaymentProvider implements ActivationA
 	 *
 	 * Not used in demo mode; completion is handled by the demo-confirm endpoint.
 	 */
-	public function handle_status_change( string $vendor_payment_id ): void {
-		$this->logger->debug( 'Handle status change: ' . $vendor_payment_id );
+	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void {
+		$this->logger->debug( 'Handle status change: ' . $vendor_payment_id, [ 'mode' => $mode ] );
 	}
 
 	/**

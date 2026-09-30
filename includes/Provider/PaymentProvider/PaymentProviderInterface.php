@@ -74,9 +74,10 @@ interface PaymentProviderInterface extends ProviderInterface {
 	/**
 	 * Method for handling a status change, generally called by webhook.
 	 *
-	 * @param string $vendor_payment_id The vendor's payment id.
+	 * @param string      $vendor_payment_id The vendor's payment id.
+	 * @param string|null $mode              The API mode the payment belongs to, or null for the current one.
 	 */
-	public function handle_status_change( string $vendor_payment_id ): void;
+	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void;
 
 	/**
 	 * Fetch the latest status from the vendor for the given local transaction, update it, and return it.

@@ -624,9 +624,11 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 	 *
 	 * @throws RequestException If error communicating with Mollie.
 	 *
-	 * @param string $vendor_payment_id The Mollie payment id.
+	 * @param string      $vendor_payment_id The Mollie payment id.
+	 * @param string|null $mode              The payment's mode, when known. Logged only: Mollie is
+	 *                                       always queried with the current mode's key.
 	 */
-	public function handle_status_change( string $vendor_payment_id ): void {
+	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void {
 
 		// Mollie API.
 		$mollie = $this->client();
@@ -647,6 +649,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			'Payment retrieved from Mollie.',
 			[
 				'vendor_id'     => $vendor_payment_id,
+				'mode'          => $mode,
 				'status'        => $payment->status,
 				'sequence_type' => $payment->sequenceType,
 				'has_refunds'   => $payment->hasRefunds(),

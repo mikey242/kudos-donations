@@ -42,7 +42,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 * {@inheritDoc}
 	 */
 	public function init(): void {
-		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ] );
+		add_action( 'kudos_' . static::get_slug() . '_handle_status_change', [ $this, 'handle_status_change' ], 10, 2 );
 		$this->register_key_hooks();
 		$this->on_init();
 	}
@@ -158,10 +158,12 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
-	 * Returns the decrypted API key for the current mode.
+	 * Returns the decrypted API key for the given mode.
+	 *
+	 * @param string|null $mode The API mode, or null for the current one.
 	 */
-	protected function get_api_key(): string {
-		$mode   = $this->get_api_mode();
+	protected function get_api_key( ?string $mode = null ): string {
+		$mode   = $mode ?? $this->get_api_mode();
 		$option = \constant( static::class . '::SETTING_API_KEY_ENCRYPTED_' . strtoupper( $mode ) );
 		return $this->get_decrypted_key( $option, admin_url( 'admin.php?page=kudos-settings&tab=payment&panel=apikeys' ) );
 	}
@@ -285,12 +287,18 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	/**
 	 * Enqueues an async action to process a payment status change for this provider.
 	 *
-	 * @param string $payment_id The vendor payment or session ID.
+	 * @param string      $payment_id The vendor payment or session ID.
+	 * @param string|null $mode       The API mode the payment belongs to. Omitted from the action args
+	 *                                when null, so the handler falls back to the current mode.
 	 */
-	final protected function enqueue_status_change_action( string $payment_id ): void {
+	final protected function enqueue_status_change_action( string $payment_id, ?string $mode = null ): void {
+		$args = [ 'payment_id' => $payment_id ];
+		if ( null !== $mode ) {
+			$args['mode'] = $mode;
+		}
 		Utils::enqueue_async_action(
 			'kudos_' . static::get_slug() . '_handle_status_change',
-			[ 'payment_id' => $payment_id ],
+			$args,
 			'kudos-donations'
 		);
 	}
@@ -305,7 +313,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 			return null;
 		}
 		try {
-			$this->handle_status_change( $transaction->vendor_payment_id );
+			$this->handle_status_change( $transaction->vendor_payment_id, $transaction->mode );
 		} catch ( Exception $e ) {
 			$this->get_logger()->error( $e->getMessage(), [ 'transaction_id' => $transaction_id ] );
 		}

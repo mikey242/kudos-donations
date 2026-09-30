@@ -26,6 +26,11 @@ use WP_REST_Request;
  */
 class StripePaymentProviderTest extends BaseTestCase {
 
+	private const TEST_KEY    = 'sk_test_fakekeyfortesting';
+	private const LIVE_KEY    = 'sk_live_fakekeyfortesting';
+	private const TEST_SECRET = 'whsec_test_fakesecret';
+	private const LIVE_SECRET = 'whsec_live_fakesecret';
+
 	private StripePaymentProvider $provider;
 	private FakeStripeHttpClient $http_client;
 
@@ -485,6 +490,139 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'live', get_option( StripePaymentProvider::SETTING_API_MODE ) );
 	}
 
+	// -------------------------------------------------------------------------
+	// Mode handling: events and existing objects use their own mode, not the site's
+	// -------------------------------------------------------------------------
+
+	public function test_rest_webhook_verifies_live_event_with_live_secret_while_in_test_mode(): void {
+		$this->configure_webhooks( 'test' );
+
+		$response = $this->provider->rest_webhook( $this->signed_webhook_request( true, self::LIVE_SECRET ) );
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotFalse(
+			as_next_scheduled_action(
+				'kudos_stripe_handle_status_change',
+				[
+					'payment_id' => 'cs_abc123',
+					'mode'       => 'live',
+				],
+				'kudos-donations'
+			),
+			'The status change must be queued with the event\'s mode.'
+		);
+	}
+
+	public function test_rest_webhook_verifies_test_event_with_test_secret_while_in_live_mode(): void {
+		$this->configure_webhooks( 'live' );
+
+		$response = $this->provider->rest_webhook( $this->signed_webhook_request( false, self::TEST_SECRET ) );
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotFalse(
+			as_next_scheduled_action(
+				'kudos_stripe_handle_status_change',
+				[
+					'payment_id' => 'cs_abc123',
+					'mode'       => 'test',
+				],
+				'kudos-donations'
+			)
+		);
+	}
+
+	public function test_rest_webhook_rejects_event_whose_livemode_does_not_match_its_signature(): void {
+		$this->configure_webhooks( 'test' );
+
+		// Claims to be live but is signed with the test secret, so it is checked against the live one.
+		$response = $this->provider->rest_webhook( $this->signed_webhook_request( true, self::TEST_SECRET ) );
+
+		$this->assertSame( 400, $response->get_status() );
+	}
+
+	public function test_handle_status_change_fetches_with_the_given_mode(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		$this->http_client->set_response( 'invoices', $this->invoice_fixture( [ 'billing_reason' => 'subscription_create' ] ) );
+
+		$this->provider->handle_status_change( 'in_live_abc123', 'live' );
+
+		$this->assertSame( self::LIVE_KEY, $this->last_request_key() );
+	}
+
+	public function test_handle_status_change_without_mode_uses_current_mode(): void {
+		// Actions queued before 4.3.0 carry no mode.
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'live' );
+		$this->http_client->set_response( 'invoices', $this->invoice_fixture( [ 'billing_reason' => 'subscription_create' ] ) );
+
+		$this->provider->handle_status_change( 'in_live_abc123' );
+
+		$this->assertSame( self::LIVE_KEY, $this->last_request_key() );
+	}
+
+	public function test_refund_uses_the_transaction_mode(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Live payment',
+					'vendor'            => 'stripe',
+					'vendor_payment_id' => 'pi_live_abc123',
+					'status'            => PaymentStatus::PAID,
+					'mode'              => 'live',
+				]
+			)
+		);
+		$this->http_client->set_response( 'refunds', [ 'id' => 're_live_abc123', 'object' => 'refund', 'status' => 'succeeded' ] );
+
+		$this->assertTrue( $this->provider->refund( $transaction_id ) );
+		$this->assertSame( self::LIVE_KEY, $this->last_request_key() );
+	}
+
+	public function test_refund_without_mode_uses_current_mode(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'No mode',
+					'vendor'            => 'stripe',
+					'vendor_payment_id' => 'pi_test_abc123',
+					'status'            => PaymentStatus::PAID,
+				]
+			)
+		);
+		$this->http_client->set_response( 'refunds', [ 'id' => 're_test_abc123', 'object' => 'refund', 'status' => 'succeeded' ] );
+
+		$this->assertTrue( $this->provider->refund( $transaction_id ) );
+		$this->assertSame( self::TEST_KEY, $this->last_request_key() );
+	}
+
+	public function test_cancel_subscription_uses_the_first_transaction_mode(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'  => 'First live payment',
+					'vendor' => 'stripe',
+					'mode'   => 'live',
+				]
+			)
+		);
+		$this->http_client->set_response( 'subscriptions', [ 'id' => 'sub_live_abc123', 'object' => 'subscription', 'status' => 'canceled' ] );
+
+		$subscription                         = new SubscriptionEntity();
+		$subscription->vendor_subscription_id = 'sub_live_abc123';
+		$subscription->transaction_id         = $transaction_id;
+
+		$this->assertTrue( $this->provider->cancel_subscription( $subscription ) );
+		$this->assertSame( self::LIVE_KEY, $this->last_request_key() );
+	}
+
 	public function test_delete_endpoints_for_url_removes_only_matching_endpoints(): void {
 		$webhook_url = get_rest_url( null, 'kudos/v1/payment/webhook/stripe' );
 
@@ -501,10 +639,6 @@ class StripePaymentProviderTest extends BaseTestCase {
 				],
 			]
 		);
-
-		$client_ref = new ReflectionProperty( StripePaymentProvider::class, 'stripe' );
-		$client_ref->setAccessible( true );
-		$client = $client_ref->getValue( $this->provider );
 
 		$method = new ReflectionMethod( StripePaymentProvider::class, 'delete_endpoints_for_url' );
 		$method->setAccessible( true );
@@ -531,12 +665,78 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$provider->setLogger( $this->createMock( LoggerInterface::class ) );
 		$provider->set_encryption( $this->get_from_container( EncryptionService::class ) );
 
-		// Inject a real StripeClient wired to our fake HTTP client.
-		$ref = new ReflectionProperty( StripePaymentProvider::class, 'stripe' );
+		// Inject a real StripeClient per mode, wired to our fake HTTP client. Distinct keys let tests
+		// assert which mode's client made a request.
+		$ref = new ReflectionProperty( StripePaymentProvider::class, 'clients' );
 		$ref->setAccessible( true );
-		$ref->setValue( $provider, new StripeClient( 'sk_test_fakekeyfortesting' ) );
+		$ref->setValue(
+			$provider,
+			[
+				'test' => new StripeClient( self::TEST_KEY ),
+				'live' => new StripeClient( self::LIVE_KEY ),
+			]
+		);
 
 		return $provider;
+	}
+
+	/**
+	 * Returns the API key the most recent request was authenticated with.
+	 */
+	private function last_request_key(): string {
+		foreach ( $this->http_client->get_last_request()['headers'] ?? [] as $header ) {
+			if ( str_starts_with( $header, 'Authorization: Bearer ' ) ) {
+				return substr( $header, \strlen( 'Authorization: Bearer ' ) );
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * Builds a webhook request carrying a signed Stripe event.
+	 *
+	 * @param bool   $livemode The event's livemode flag.
+	 * @param string $secret   The secret to sign the payload with.
+	 */
+	private function signed_webhook_request( bool $livemode, string $secret ): WP_REST_Request {
+		$payload   = (string) wp_json_encode(
+			[
+				'id'       => 'evt_abc123',
+				'object'   => 'event',
+				'type'     => 'checkout.session.completed',
+				'livemode' => $livemode,
+				'data'     => [
+					'object' => [
+						'id'     => 'cs_abc123',
+						'object' => 'checkout.session',
+					],
+				],
+			]
+		);
+		$timestamp = time();
+		$signature = hash_hmac( 'sha256', "{$timestamp}.{$payload}", $secret );
+
+		$request = new WP_REST_Request( 'POST', '/kudos/v1/payment/webhook/stripe' );
+		$request->set_body( $payload );
+		$request->set_header( 'stripe_signature', "t={$timestamp},v1={$signature}" );
+
+		return $request;
+	}
+
+	/**
+	 * Stores webhook secrets for both modes and sets the site's current mode.
+	 *
+	 * @param string $current_mode The site's current API mode.
+	 */
+	private function configure_webhooks( string $current_mode ): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, $current_mode );
+		update_option(
+			StripePaymentProvider::SETTING_WEBHOOK,
+			[
+				'test' => [ 'secret' => self::TEST_SECRET ],
+				'live' => [ 'secret' => self::LIVE_SECRET ],
+			]
+		);
 	}
 
 	/**
