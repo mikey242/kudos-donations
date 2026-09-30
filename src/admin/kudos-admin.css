@@ -6,6 +6,21 @@
 	border-radius: var(--wpds-border-radius-lg)
 }
 
+/* Show focus rings for keyboard navigation only, not after mouse clicks. */
+.components-button:focus:not(:focus-visible),
+.components-external-link:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* Match link buttons to ExternalLink, which uses the readable brand text colour. */
+.components-button.is-link {
+	color: var(--wpds-color-foreground-interactive-brand);
+
+	&:hover:not(:disabled, [aria-disabled="true"]) {
+		color: var(--wpds-color-foreground-interactive-brand-active);
+	}
+}
+
 .components-notice-list {
 	margin: 1em 0;
 }
@@ -112,9 +127,19 @@
 
 		.components-button {
 			border-bottom: 3px solid transparent;
+			color: var(--wpds-color-foreground-content-neutral);
+
+			.dashicon {
+				color: var(--wp-admin-theme-color);
+			}
+
+			&:hover:not(:disabled, .is-active) {
+				color: var(--wpds-color-foreground-content-neutral);
+				border-bottom-color: var(--wpds-color-stroke-surface-neutral);
+			}
 
 			&.is-active {
-				border-bottom: 3px solid currentcolor;
+				border-bottom-color: var(--wp-admin-theme-color);
 				font-weight: 600;
 			}
 		}
