@@ -642,7 +642,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 
 		$method = new ReflectionMethod( StripePaymentProvider::class, 'delete_endpoints_for_url' );
 		$method->setAccessible( true );
-		$method->invoke( $this->provider, $webhook_url );
+		$method->invoke( $this->provider, new StripeClient( self::TEST_KEY ), $webhook_url );
 
 		$requests = $this->http_client->get_requests();
 		$deleted  = array_filter( $requests, static fn( $r ) => str_contains( $r['absUrl'], 'webhook_endpoints/we_match' ) );

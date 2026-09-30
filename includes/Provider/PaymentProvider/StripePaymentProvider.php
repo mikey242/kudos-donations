@@ -200,7 +200,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$cache          = (array) get_option( self::SETTING_CACHE, [] );
 		$cache[ $mode ] = [
 			'methods'   => $this->get_payment_methods(),
-			'recurring' => $this->can_use_recurring(),
+			'recurring' => true, // Stripe subscriptions are available to all accounts.
 		];
 		update_option( self::SETTING_CACHE, $cache );
 
@@ -222,13 +222,6 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		$webhook = (array) get_option( self::SETTING_WEBHOOK, [] );
 		unset( $webhook[ $mode ] );
 		update_option( self::SETTING_WEBHOOK, $webhook );
-	}
-
-	/**
-	 * Stripe subscriptions are available to all accounts — return true if the client is configured.
-	 */
-	private function can_use_recurring(): bool {
-		return null !== $this->get_client();
 	}
 
 	/**
@@ -294,12 +287,12 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * Caps a fixed-term subscription so Stripe stops billing after the requested number of years.
 	 *
-	 * @param string $subscription_id The Stripe subscription ID.
-	 * @param int    $years           How many years the subscription should run (0 = indefinite).
-	 * @param int    $start           The subscription start timestamp (Unix seconds).
-	 * @param string $mode            The API mode the subscription belongs to.
+	 * @param string      $subscription_id The Stripe subscription ID.
+	 * @param int         $years           How many years the subscription should run (0 = indefinite).
+	 * @param int         $start           The subscription start timestamp (Unix seconds).
+	 * @param string|null $mode            The API mode the subscription belongs to, or null for the current one.
 	 */
-	private function cap_subscription_duration( string $subscription_id, int $years, int $start, string $mode ): void {
+	private function cap_subscription_duration( string $subscription_id, int $years, int $start, ?string $mode ): void {
 		if ( $years <= 0 ) {
 			return;
 		}
@@ -390,14 +383,14 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		$client = $this->get_client();
+		$client = $this->get_client( $mode );
 		if ( null === $client ) {
 			return;
 		}
 
 		$webhook_url = static::get_webhook_url();
 
-		$this->delete_endpoints_for_url( $webhook_url );
+		$this->delete_endpoints_for_url( $client, $webhook_url );
 
 		try {
 			$endpoint = $client->webhookEndpoints->create(
@@ -447,10 +440,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * Deletes any webhook endpoints registered for the given URL.
 	 *
-	 * @param string $webhook_url The endpoint URL to match.
+	 * @param StripeClient $client      The client for the mode whose endpoints are being replaced.
+	 * @param string       $webhook_url The endpoint URL to match.
 	 */
-	private function delete_endpoints_for_url( string $webhook_url ): void {
-		$client = $this->get_client();
+	private function delete_endpoints_for_url( StripeClient $client, string $webhook_url ): void {
 		try {
 			$endpoints = $client->webhookEndpoints->all( [ 'limit' => 100 ] );
 		} catch ( ApiErrorException $e ) {
@@ -643,35 +636,21 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 
 		if ( ! $secret ) {
 			$this->get_logger()->error( 'Stripe webhook secret not configured.', [ 'mode' => $mode ] );
-			return new WP_REST_Response(
-				[
-					'success' => false,
-					'message' => 'Webhook secret not configured.',
-				],
-				400
-			);
+			return $this->webhook_error( 'Webhook secret not configured.' );
 		}
 
 		try {
 			$event = Webhook::constructEvent( $payload, $sig_header, $secret );
-		} catch ( SignatureVerificationException $e ) {
-			$this->get_logger()->warning( 'Stripe webhook signature verification failed', [ 'error' => $e->getMessage() ] );
-			return new WP_REST_Response(
+		} catch ( SignatureVerificationException | UnexpectedValueException $e ) {
+			// Stripe's message distinguishes a bad signature from a malformed payload.
+			$this->get_logger()->warning(
+				'Stripe webhook rejected.',
 				[
-					'success' => false,
-					'message' => 'Signature verification failed.',
-				],
-				400
+					'error' => $e->getMessage(),
+					'mode'  => $mode,
+				]
 			);
-		} catch ( UnexpectedValueException $e ) {
-			$this->get_logger()->warning( 'Stripe webhook invalid payload', [ 'error' => $e->getMessage() ] );
-			return new WP_REST_Response(
-				[
-					'success' => false,
-					'message' => 'Invalid payload.',
-				],
-				400
-			);
+			return $this->webhook_error( 'Webhook could not be verified.' );
 		}
 
 		$this->get_logger()->info(
@@ -696,11 +675,24 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	}
 
 	/**
+	 * Builds the 400 response for a webhook request that cannot be processed.
+	 *
+	 * @param string $message The reason, returned to Stripe.
+	 */
+	private function webhook_error( string $message ): WP_REST_Response {
+		return new WP_REST_Response(
+			[
+				'success' => false,
+				'message' => $message,
+			],
+			400
+		);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void {
-		$mode = $mode ?? $this->get_api_mode();
-
 		if ( str_starts_with( $vendor_payment_id, 'in_' ) ) {
 			$this->handle_invoice_payment( $vendor_payment_id, $mode );
 			return;
@@ -798,10 +790,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * Handles a Stripe invoice.payment_succeeded event for recurring subscription charges.
 	 *
-	 * @param string $invoice_id The Stripe invoice ID.
-	 * @param string $mode       The API mode the invoice belongs to.
+	 * @param string      $invoice_id The Stripe invoice ID.
+	 * @param string|null $mode       The API mode the invoice belongs to, or null for the current one.
 	 */
-	private function handle_invoice_payment( string $invoice_id, string $mode ): void {
+	private function handle_invoice_payment( string $invoice_id, ?string $mode ): void {
 		$client = $this->get_client( $mode );
 		if ( null === $client ) {
 			return;
