@@ -1,13 +1,13 @@
 <?php
 /**
- * Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
+ * Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
  *
  * @link              https://www.linkedin.com/in/michael-iseard/
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://github.com/mikey242/kudos-donations
- * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
+ * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
  * Version:           4.3.0
  * Author:            Iseard Media
  * Author URI:        https://iseard.media

@@ -1,7 +1,7 @@
 <div align="center">
     <img alt="Kudos logo" src="assets/plugin/icon-128x128.png" width="128">
     <h1>Kudos Donations</h1>
-    Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
+    Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
     <br>
     <br>
     <img src="assets/plugin/demo-1.webp" alt="Kudos Donations">
@@ -38,6 +38,7 @@ This software uses the following open source packages:
   designed to integrate beautifully with Tailwind CSS.
 - [Heroicons](https://heroicons.com/) - Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS.
 - [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
+- [Stripe PHP](https://github.com/stripe/stripe-php) - Stripe API client for PHP.
 - [React Hook Form](https://github.com/react-hook-form/react-hook-form) - Performant, flexible and extensible forms.
   with easy-to-use validation.
 - [Symfony-DI](https://symfony.com/components/DependencyInjection) - Dependency injection component from Symfony.

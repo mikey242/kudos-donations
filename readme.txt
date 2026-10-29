@@ -1,6 +1,6 @@
-=== Kudos Donations: Easy Donations with Mollie | One-off & Recurring | PDF Receipts | Buttons & Forms ===
+=== Kudos Donations: Easy Donations with Mollie & Stripe | One-off & Recurring | PDF Receipts | Buttons & Forms ===
 Contributors: iseardmedia
-Tags: donation, fundraising, charity, recurring donations, mollie
+Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -8,17 +8,18 @@ Stable tag: 4.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
+Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
 
 == Description ==
 
 = A modern and easy to use donation plugin =
 
-*Kudos Donations* is a powerful, easy-to-use WordPress plugin that lets you accept donations effortlessly. Whether you're running a charity, nonprofit, or a personal project, this plugin provides everything you need to create and manage effective donation campaigns. Fully integrated with Mollie, it supports a wide range of payment methods, allowing your donors to contribute through their preferred option.
+*Kudos Donations* is a powerful, easy-to-use WordPress plugin that lets you accept donations effortlessly. Whether you're running a charity, nonprofit, or a personal project, this plugin provides everything you need to create and manage effective donation campaigns. Fully integrated with Mollie and Stripe, it supports a wide range of payment methods, allowing your donors to contribute through their preferred option.
 
 = Key Features =
 
-* Easy Mollie Integration: Accept payments via credit card, PayPal, iDEAL, and more, using the Mollie payment gateway.
+* Mollie & Stripe Integration: Accept payments via credit card, PayPal, iDEAL, SEPA Direct Debit and more, using the Mollie or Stripe payment gateway.
+* Guided Setup: A step-by-step onboarding flow walks you through connecting your payment provider and going live.
 * Shortcode & Block Support: Choose between a shortcode or Gutenberg block to easily place donation forms anywhere on your site.
 * Campaign Management: Set up and manage multiple donation campaigns with flexible options, including one-off and subscription-based donations.
 * Customizable Donation Forms: Personalize the look of your donation forms by adjusting colors, text, and even applying custom CSS for each campaign.
@@ -37,11 +38,11 @@ The Git repository for this plugin can be found [here](https://github.com/mikey2
 
 == Installation ==
 
-Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
+You will need a [Mollie](https://www.mollie.com/) or [Stripe](https://stripe.com/) account to accept donations.
 
 1. Install using the WordPress plugin control panel or manually download the plugin and upload the *kudos-donations* folder to the /wp-content/plugins/ directory
 1. Activate the plugin through the *Plugins* menu in WordPress.
-1. Go to the 'Kudos Settings' menu in the dashboard and follow the instructions to get started.
+1. Go to the 'Kudos Settings' menu in the dashboard and follow the setup steps to choose your payment provider, add your API key and go live.
 
 == Frequently Asked Questions ==
 
@@ -53,29 +54,39 @@ Yes, Kudos Donations is a free open-source plugin.
 
 No, we do not touch your donations.
 
+= Which payment providers are supported? =
+
+Kudos Donations works with Mollie and Stripe. You can choose your provider in the 'Kudos Settings' menu and switch at any time. Donations and subscriptions made with a previous provider continue to be processed, as long as its API key stays configured.
+
 = Which payment methods are supported? =
 
-This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, credit card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
+This depends on your payment provider and the methods enabled on your account. Mollie supports a wide range of payment methods such as iDEAL, credit card and PayPal, see [Mollie's payment methods](https://www.mollie.com/en/payments). Stripe supports cards, wallets such as Apple Pay and Google Pay, and many local payment methods, see [Stripe's payment methods](https://stripe.com/payments/payment-methods).
 
 = How can I use recurring payments?
 
-In order to use recurring payments Mollie requires that you have either SEPA Direct Debit OR credit card payment methods enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
+With Mollie, recurring payments require either SEPA Direct Debit OR credit card payment methods to be enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
+
+With Stripe, recurring payments are available on all accounts.
 
 = I've enabled the required recurring payment methods, but I still cannot use recurring.
 
 If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" button.
 
-= How much does Mollie cost? =
+= Do I need to set up a webhook for Stripe? =
 
-Mollie registration is free, and you only pay a small fee per transaction. See [here](https://www.mollie.com/pricing) for details.
+Normally not. Kudos Donations registers a webhook with Stripe automatically when you save your API key. If your key does not have permission to do so (for example a restricted key), you will see a notice explaining how to add the webhook in your Stripe Dashboard and paste its signing secret into the Stripe settings.
 
-= Can anyone use Mollie? =
+= How much does it cost? =
 
-Mollie is available to anyone with a registered company.
+Kudos Donations is free. Mollie and Stripe registration is free, and you only pay a small fee per transaction. See [Mollie pricing](https://www.mollie.com/pricing) and [Stripe pricing](https://stripe.com/pricing) for details.
+
+= Can anyone use Mollie or Stripe? =
+
+Mollie is available to anyone with a registered company. Stripe is also available to individuals and sole traders in supported countries.
 
 = Can I use Kudos Donations in my country? =
 
-You can use this plugin in any country that is supported by Mollie. For a complete list please see [here](https://help.mollie.com/hc/articles/115002116105-Can-I-use-Mollies-services-in-my-country-)
+You can use this plugin in any country that is supported by your payment provider. See the lists of countries supported by [Mollie](https://help.mollie.com/hc/articles/115002116105-Can-I-use-Mollies-services-in-my-country-) and [Stripe](https://stripe.com/global).
 
 = How do I use the shortcode? =
 
@@ -114,8 +125,17 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
  = 4.3.0 =
- * Added Stripe payment provider
- * Added onboarding flow for new installations
+ * Added Stripe payment provider, supporting one-off and recurring donations, fixed-term subscriptions and refunds
+ * Added onboarding flow for new installations, replacing the intro guide
+ * Added payment vendor column to the transactions table
+ * Added floating save bar when there are unsaved settings changes
+ * Moved admin notices into the Kudos header
+ * Changed: saving an API key now only switches the API mode when the current mode has no key configured
+ * Changed: minimum required WordPress version is now 7.1
+ * Fix Mollie refunds not being recorded on the transaction
+ * Fix duplicate transactions when Mollie resends a webhook for a recurring payment
+ * Fix receipts for recurring payments after the first not including the subscription cancel link
+ * Fix select fields showing an invalid state when the saved option is no longer available
  * Update dompdf/dompdf to v3.1.6
  * Update react-hook-form to v7.82.0
  * Update woocommerce/action-scheduler to v4
