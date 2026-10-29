@@ -24,7 +24,7 @@ class Version4211 extends BaseMigration {
 	private DonorsTable $donors_table;
 	private SubscriptionsTable $subscriptions_table;
 
-	private PaymentProviderInterface $provider;
+	private ?PaymentProviderInterface $provider;
 
 	/**
 	 * @param DonorsTable            $donors_table        The donors table class.
@@ -100,6 +100,10 @@ class Version4211 extends BaseMigration {
 	 * Refresh the current payment provider's cache.
 	 */
 	public function refresh_payment_provider(): void {
+		if ( null === $this->provider ) {
+			$this->logger->warning( 'No payment provider available, skipping cache refresh.' );
+			return;
+		}
 		$this->provider->refresh();
 	}
 

@@ -343,4 +343,40 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	final protected function on_transaction_refunded( TransactionEntity $transaction ): void {
 		do_action( 'kudos_transaction_refunded', $transaction->id, static::get_slug() );
 	}
+
+	/**
+	 * Records a (partial or full) refund on a transaction and fires the refund hook.
+	 *
+	 * The transaction stays paid; the refunded and remaining amounts are stored alongside it.
+	 * Vendors deliver webhooks at least once, so an amount that is already recorded is ignored.
+	 *
+	 * @param TransactionEntity $transaction The refunded transaction.
+	 * @param float             $refunded    The total amount refunded so far.
+	 * @param float             $remaining   The amount still refundable.
+	 */
+	final protected function record_refund( TransactionEntity $transaction, float $refunded, float $remaining ): void {
+		$recorded = json_decode( (string) $transaction->refunds, true );
+		if ( \is_array( $recorded ) && (float) ( $recorded['refunded'] ?? 0 ) === $refunded ) {
+			$this->get_logger()->debug( 'Duplicate refund webhook. Skipping.', [ 'transaction_id' => $transaction->id ] );
+			return;
+		}
+
+		$transaction->refunds = wp_json_encode(
+			[
+				'refunded'  => $refunded,
+				'remaining' => $remaining,
+			]
+		);
+		$this->transaction_repository->update( $transaction );
+
+		$this->get_logger()->info(
+			'Payment refunded.',
+			[
+				'transaction_id' => $transaction->id,
+				'refunded'       => $refunded,
+				'remaining'      => $remaining,
+			]
+		);
+		$this->on_transaction_refunded( $transaction );
+	}
 }

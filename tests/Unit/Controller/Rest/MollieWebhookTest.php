@@ -147,7 +147,8 @@ class MollieWebhookTest extends BaseTestCase {
 	}
 
 	/**
-	 * Test handle_status_change with refunded payment.
+	 * Test handle_status_change with refunded payment. A refund always arrives for a transaction
+	 * that is already paid, which must not be mistaken for a duplicate webhook.
 	 */
 	public function test_handle_status_change_refunded_payment(): void {
 		// Create test transaction
@@ -157,38 +158,82 @@ class MollieWebhookTest extends BaseTestCase {
 		$transaction = new TransactionEntity([
 			'title' => 'Test Transaction',
 			'campaign_id' => $campaign_id,
-			'status' => 'open'
+			'status' => 'paid'
 		]);
 		$transaction_id = $this->transaction_repository->insert($transaction);
 
-		// Mock payment object with refunds
-		$payment_mock = $this->createMock(Payment::class);
-		$payment_mock->method('isPaid')->willReturn(true);
-		$payment_mock->method('hasRefunds')->willReturn(true);
-		$payment_mock->method('hasChargebacks')->willReturn(false);
-		$payment_mock->method('getAmountRefunded')->willReturn(5.00);
-		$payment_mock->method('getAmountRemaining')->willReturn(5.00);
-
-		$payment_mock->status = 'paid';
-
-		// Mock metadata
-		$metadata_mock = new \stdClass();
-		$metadata_mock->transaction_id = $transaction_id;
-		$payment_mock->metadata = $metadata_mock;
-
-		// Mock payments endpoint
-		$payments_mock = $this->createMock(PaymentEndpointCollection::class);
-		$payments_mock->method('get')->willReturn($payment_mock);
-		$this->api_mock->payments = $payments_mock;
+		$this->mock_refunded_payment('tr_test123', 5.00, 5.00, $transaction_id);
 
 		$this->provider->handle_status_change('tr_test123');
 
 		// Verify transaction refunds field was updated
 		$updated_transaction = $this->transaction_repository->get($transaction_id);
 		$this->assertEquals('paid', $updated_transaction->status);
-		$this->assertNotNull($updated_transaction->refunds);
+		$this->assertEquals(['refunded' => 5.0, 'remaining' => 5.0], json_decode((string) $updated_transaction->refunds, true));
         // Verify that the refund action was triggered
 		$this->assertSame(1, did_action('kudos_transaction_refunded'));
+		// The payment was already paid, so the paid hook (and its receipt) must not fire again.
+		$this->assertSame(0, did_action('kudos_transaction_paid'));
+	}
+
+	/**
+	 * A refunded recurring payment is matched by its own payment id, never by the subscription
+	 * metadata, whose transaction_id belongs to the first payment.
+	 */
+	public function test_handle_status_change_refunded_recurring_payment(): void {
+		$first_id     = $this->transaction_repository->insert(new TransactionEntity(['title' => 'First', 'status' => 'paid', 'vendor_payment_id' => 'tr_first']));
+		$recurring_id = $this->transaction_repository->insert(new TransactionEntity(['title' => 'Recurring', 'status' => 'paid', 'vendor_payment_id' => 'tr_recurring']));
+
+		$this->mock_refunded_payment('tr_recurring', 10.00, 0.00, $first_id, true);
+
+		$this->provider->handle_status_change('tr_recurring');
+
+		$this->assertNotEmpty($this->transaction_repository->get($recurring_id)->refunds);
+		$this->assertEmpty($this->transaction_repository->get($first_id)->refunds);
+	}
+
+	/**
+	 * A redelivered refund webhook must not record or announce the refund twice.
+	 */
+	public function test_handle_status_change_refund_is_recorded_once(): void {
+		$transaction_id = $this->transaction_repository->insert(new TransactionEntity(['title' => 'Test', 'status' => 'paid', 'vendor_payment_id' => 'tr_test123']));
+
+		$this->mock_refunded_payment('tr_test123', 5.00, 5.00, $transaction_id);
+
+		$this->provider->handle_status_change('tr_test123');
+		$this->provider->handle_status_change('tr_test123');
+
+		$this->assertSame(1, did_action('kudos_transaction_refunded'));
+	}
+
+	/**
+	 * Configures the mocked Mollie client to return a refunded payment.
+	 *
+	 * @param string $payment_id     The Mollie payment id.
+	 * @param float  $refunded       The amount refunded.
+	 * @param float  $remaining      The amount remaining.
+	 * @param int    $transaction_id The transaction id in the payment metadata.
+	 * @param bool   $recurring      Whether the payment is a recurring one.
+	 */
+	private function mock_refunded_payment(string $payment_id, float $refunded, float $remaining, int $transaction_id, bool $recurring = false): void {
+		$payment_mock = $this->createMock(Payment::class);
+		$payment_mock->method('isPaid')->willReturn(true);
+		$payment_mock->method('hasRefunds')->willReturn(true);
+		$payment_mock->method('hasChargebacks')->willReturn(false);
+		$payment_mock->method('hasSequenceTypeRecurring')->willReturn($recurring);
+		$payment_mock->method('getAmountRefunded')->willReturn($refunded);
+		$payment_mock->method('getAmountRemaining')->willReturn($remaining);
+
+		$payment_mock->id     = $payment_id;
+		$payment_mock->status = 'paid';
+
+		$metadata_mock                 = new \stdClass();
+		$metadata_mock->transaction_id = $transaction_id;
+		$payment_mock->metadata        = $metadata_mock;
+
+		$payments_mock = $this->createMock(PaymentEndpointCollection::class);
+		$payments_mock->method('get')->willReturn($payment_mock);
+		$this->api_mock->payments = $payments_mock;
 	}
 
 	/**

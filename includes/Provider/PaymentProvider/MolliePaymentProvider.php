@@ -30,6 +30,7 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\BaseCollection;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Method;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\MethodCollection;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethod;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethodStatus;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentStatus;
@@ -660,6 +661,15 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		// Get the transactions' repository.
 		$transactions = $this->transaction_repository;
 
+		/*
+		 * Refunds arrive for payments that are already recorded as paid, so handle them before the
+		 * new-payment flow below, which skips anything already processed.
+		 */
+		if ( $payment->hasRefunds() ) {
+			$this->handle_refund( $payment );
+			return;
+		}
+
 		/**
 		 * Create new transaction if this is a recurring payment.
 		 * e.g. New recurring payment.
@@ -770,7 +780,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			return;
 		}
 
-		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
+		if ( $payment->isPaid() && ! $payment->hasChargebacks() ) {
 			// Update transaction.
 			$transaction->status             = $payment->status;
 			$transaction->vendor_payment_id  = $payment->id;
@@ -808,34 +818,32 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 				$transaction->subscription_id = $subscription_id;
 				$transactions->update( $transaction );
 			}
-		} elseif ( $payment->hasRefunds() ) {
-			/*
-			 * The payment has been (partially/fully) refunded.
-			 * The status of the payment is still "paid".
-			 */
-			$this->on_transaction_refunded( $transaction );
-
-			// Update transaction.
-			$transaction->status  = $payment->status;
-			$transaction->refunds = wp_json_encode(
-				[
-					'refunded'  => $payment->getAmountRefunded(),
-					'remaining' => $payment->getAmountRemaining(),
-				]
-			);
-			$transactions->update( $transaction );
-
-			$this->get_logger()->info(
-				'Payment refunded.',
-				[
-					'transaction' => $transaction,
-					'refunded'    => $payment->getAmountRefunded(),
-					'remaining'   => $payment->getAmountRemaining(),
-				]
-			);
 		}
 
 		$this->on_transaction_status_changed( $transaction );
+	}
+
+	/**
+	 * Records a (partial or full) refund against the transaction for the given payment.
+	 *
+	 * @param Payment $payment The refunded Mollie payment. Its status remains "paid".
+	 */
+	private function handle_refund( Payment $payment ): void {
+		/** @var TransactionEntity|null $transaction */
+		$transaction = $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $payment->id ] );
+
+		// A recurring payment's metadata is the subscription's, so its transaction_id points at the
+		// first payment; only one-off and first payments can fall back to it.
+		if ( null === $transaction && ! $payment->hasSequenceTypeRecurring() && isset( $payment->metadata->transaction_id ) ) {
+			$transaction = $this->transaction_repository->get( (int) $payment->metadata->transaction_id );
+		}
+
+		if ( null === $transaction ) {
+			$this->get_logger()->warning( 'Refund received for unknown transaction.', [ 'payment_id' => $payment->id ] );
+			return;
+		}
+
+		$this->record_refund( $transaction, $payment->getAmountRefunded(), $payment->getAmountRemaining() );
 	}
 
 	/**

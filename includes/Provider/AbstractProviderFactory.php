@@ -104,13 +104,15 @@ abstract class AbstractProviderFactory extends AbstractRegistrable {
 	}
 
 	/**
-	 * Gets the currently active provider or the fallback default if none set.
+	 * Gets the currently active provider, falling back to the default when none is set or the
+	 * saved one is no longer enabled (e.g. its add-on was deactivated).
 	 *
 	 * @return T|null
 	 */
 	public function get_active_provider(): ?ProviderInterface {
-		$resolved = get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
-		return $resolved ? $this->get_provider( $resolved ) : $this->get_provider( $this->get_default_vendor() );
+		$resolved = (string) get_option( $this->get_provider_settings_key(), $this->get_default_vendor() );
+		$provider = '' !== $resolved ? $this->get_provider( $resolved ) : null;
+		return $provider ?? $this->get_provider( $this->get_default_vendor() );
 	}
 
 	/**

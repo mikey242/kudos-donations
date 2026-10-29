@@ -6,9 +6,34 @@ use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
 /**
- * @covers \IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory::register
+ * @covers \IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory
  */
 class PaymentProviderFactoryTest extends BaseTestCase {
+
+	/**
+	 * @dataProvider active_provider_provider
+	 *
+	 * @param string $saved    The saved vendor slug.
+	 * @param string $expected The slug of the provider that should be active.
+	 */
+	public function test_get_active_provider_resolves_saved_vendor_or_default( string $saved, string $expected ): void {
+		update_option( PaymentService::SETTING_VENDOR, $saved );
+
+		/** @var PaymentProviderFactory $provider_factory */
+		$provider_factory = $this->get_from_container( PaymentProviderFactory::class );
+		$active           = $provider_factory->get_active_provider();
+
+		$this->assertNotNull( $active );
+		$this->assertSame( $expected, $active::get_slug() );
+	}
+
+	public function active_provider_provider(): array {
+		return [
+			'saved vendor'                => [ 'stripe', 'stripe' ],
+			'nothing saved'               => [ '', 'mollie' ],
+			'saved vendor is not enabled' => [ 'no-longer-installed', 'mollie' ],
+		];
+	}
 
 	/**
 	 * With Stripe active, the other enabled vendors must still have their webhook status-change

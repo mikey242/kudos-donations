@@ -1107,31 +1107,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		$currency = (string) $charge->currency;
-		$refunds  = [
-			'refunded'  => $this->from_stripe_amount( (int) $charge->amount_refunded, $currency ),
-			'remaining' => $this->from_stripe_amount( (int) $charge->amount - (int) $charge->amount_refunded, $currency ),
-		];
-
-		// Stripe delivers webhooks at least once, so skip refunds we have already recorded.
-		$recorded = json_decode( (string) $transaction->refunds, true );
-		if ( \is_array( $recorded ) && (float) ( $recorded['refunded'] ?? 0 ) === $refunds['refunded'] ) {
-			$this->get_logger()->debug( 'Duplicate Stripe refund webhook. Skipping.', [ 'charge_id' => $charge_id ] );
-			return;
-		}
-
-		// As with Mollie, the transaction stays paid and the refund is recorded alongside it.
-		$transaction->refunds = wp_json_encode( $refunds );
-		$this->transaction_repository->update( $transaction );
-
-		$this->get_logger()->info(
-			'Stripe payment refunded.',
-			[
-				'transaction_id' => $transaction->id,
-				'refunded'       => $refunds['refunded'],
-				'remaining'      => $refunds['remaining'],
-			]
+		$this->record_refund(
+			$transaction,
+			$this->from_stripe_amount( (int) $charge->amount_refunded, $currency ),
+			$this->from_stripe_amount( (int) $charge->amount - (int) $charge->amount_refunded, $currency )
 		);
-		$this->on_transaction_refunded( $transaction );
 	}
 
 	/**
