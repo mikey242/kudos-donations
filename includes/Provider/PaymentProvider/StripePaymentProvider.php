@@ -339,12 +339,18 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	/**
 	 * Caps a fixed-term subscription so Stripe stops billing after the requested number of years.
 	 *
+	 * The cancellation date is placed exactly on a billing period boundary, counted from the
+	 * subscription's own billing cycle anchor. A date that falls mid-period makes Stripe shorten
+	 * the final period and bill a prorated amount for it, which cannot be disabled when the date
+	 * is more than one period away.
+	 *
+	 * @link https://docs.stripe.com/billing/subscriptions/cancel#custom-cancel-date
+	 *
 	 * @param string      $subscription_id The Stripe subscription ID.
 	 * @param int         $years           How many years the subscription should run (0 = indefinite).
-	 * @param int         $start           The subscription start timestamp (Unix seconds).
 	 * @param string|null $mode            The API mode the subscription belongs to, or null for the current one.
 	 */
-	private function cap_subscription_duration( string $subscription_id, int $years, int $start, ?string $mode ): void {
+	private function cap_subscription_duration( string $subscription_id, int $years, ?string $mode ): void {
 		if ( $years <= 0 ) {
 			return;
 		}
@@ -355,15 +361,21 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		}
 
 		try {
-			$client->subscriptions->update(
-				$subscription_id,
-				[ 'cancel_at' => strtotime( "+{$years} year", $start ) ]
-			);
+			$subscription = $client->subscriptions->retrieve( $subscription_id );
+			$anchor       = (int) ( $subscription->billing_cycle_anchor ?? 0 );
+			if ( $anchor <= 0 ) {
+				$this->get_logger()->error( 'Stripe subscription has no billing cycle anchor, cannot cap its duration.', [ 'stripe_subscription_id' => $subscription_id ] );
+				return;
+			}
+			$cancel_at = self::add_years_to_anchor( $anchor, $years );
+
+			$client->subscriptions->update( $subscription_id, [ 'cancel_at' => $cancel_at ] );
 			$this->get_logger()->info(
 				'Stripe subscription capped.',
 				[
 					'stripe_subscription_id' => $subscription_id,
 					'years'                  => $years,
+					'cancel_at'              => $cancel_at,
 				]
 			);
 		} catch ( ApiErrorException $e ) {
@@ -375,6 +387,26 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Adds whole years to a billing cycle anchor the way Stripe advances billing periods: in UTC,
+	 * keeping the time of day, and clamping to the end of the month when the anchor day does not
+	 * exist in the target month (a 29 February anchor lands on 28 February).
+	 *
+	 * Every frequency Kudos offers (1, 3 and 12 months) divides a year evenly, so the result is
+	 * always the end of a billing period.
+	 *
+	 * @param int $anchor The billing cycle anchor (Unix seconds).
+	 * @param int $years  The number of years to add.
+	 */
+	private static function add_years_to_anchor( int $anchor, int $years ): int {
+		[ $year, $month, $day, $hour, $minute, $second ] = array_map( 'intval', explode( ' ', gmdate( 'Y n j G i s', $anchor ) ) );
+
+		$year         += $years;
+		$days_in_month =(int) gmdate( 't', gmmktime( 0, 0, 0, $month, 1, $year ) );
+
+		return gmmktime( $hour, $minute, $second, $month, min( $day, $days_in_month ), $year );
 	}
 
 	/**
@@ -855,7 +887,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 					$transaction->subscription_id = $subscription_id;
 				}
 
-				$this->cap_subscription_duration( $stripe_subscription_id, $years, $session->created ?? time(), $mode );
+				$this->cap_subscription_duration( $stripe_subscription_id, $years, $mode );
 			}
 
 			$this->transaction_repository->update( $transaction );

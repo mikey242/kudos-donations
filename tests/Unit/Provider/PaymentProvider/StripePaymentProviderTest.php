@@ -199,7 +199,15 @@ class StripePaymentProviderTest extends BaseTestCase {
 				]
 			)
 		);
-		$this->http_client->set_response( 'subscriptions', [ 'id' => 'sub_test_abc123', 'object' => 'subscription' ] );
+		// The subscription starts when checkout completes, after the session was created (1700000000).
+		$this->http_client->set_response(
+			'subscriptions',
+			[
+				'id'                   => 'sub_test_abc123',
+				'object'               => 'subscription',
+				'billing_cycle_anchor' => gmmktime( 23, 13, 20, 11, 14, 2023 ),
+			]
+		);
 
 		$this->provider->handle_status_change( 'cs_test_abc123' );
 
@@ -210,16 +218,52 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertNotNull( $subscription );
 		$this->assertSame( '1 month', $subscription->frequency );
 
-		// A one-year fixed term should be capped on the vendor side, one year past session creation.
+		// A one-year fixed term is capped exactly one year past the billing anchor, so the final
+		// period ends on its natural boundary and is not shortened (and prorated) by Stripe.
 		$update = null;
 		foreach ( $this->http_client->get_requests() as $request ) {
-			if ( str_contains( $request['absUrl'], 'subscriptions/sub_test_abc123' ) ) {
+			if ( 'post' === strtolower( $request['method'] ) && str_contains( $request['absUrl'], 'subscriptions/sub_test_abc123' ) ) {
 				$update = $request;
 			}
 		}
 		$this->assertNotNull( $update, 'Expected a Stripe subscription update to set the cancellation date.' );
-		$this->assertArrayHasKey( 'cancel_at', $update['params'] );
-		$this->assertSame( strtotime( '+1 year', 1700000000 ), $update['params']['cancel_at'] );
+		$this->assertSame( gmmktime( 23, 13, 20, 11, 14, 2024 ), $update['params']['cancel_at'] );
+	}
+
+	public function test_cap_subscription_duration_skips_subscription_without_anchor(): void {
+		$this->http_client->set_response( 'subscriptions', [ 'id' => 'sub_test_abc123', 'object' => 'subscription' ] );
+
+		$method = new ReflectionMethod( StripePaymentProvider::class, 'cap_subscription_duration' );
+		$method->setAccessible( true );
+		$method->invoke( $this->provider, 'sub_test_abc123', 1, 'test' );
+
+		foreach ( $this->http_client->get_requests() as $request ) {
+			$this->assertNotSame( 'post', strtolower( $request['method'] ), 'No cancellation date should be set without an anchor.' );
+		}
+	}
+
+	/**
+	 * @dataProvider anchor_provider
+	 *
+	 * @param int $anchor   The billing cycle anchor.
+	 * @param int $years    Years to add.
+	 * @param int $expected The expected period boundary.
+	 */
+	public function test_add_years_to_anchor_lands_on_billing_period_boundary( int $anchor, int $years, int $expected ): void {
+		$method = new ReflectionMethod( StripePaymentProvider::class, 'add_years_to_anchor' );
+		$method->setAccessible( true );
+
+		$this->assertSame( $expected, $method->invoke( null, $anchor, $years ) );
+	}
+
+	public function anchor_provider(): array {
+		return [
+			'keeps time of day'             => [ gmmktime( 9, 15, 30, 6, 10, 2026 ), 1, gmmktime( 9, 15, 30, 6, 10, 2027 ) ],
+			'multiple years'                => [ gmmktime( 9, 15, 30, 6, 10, 2026 ), 3, gmmktime( 9, 15, 30, 6, 10, 2029 ) ],
+			'month-end anchor'              => [ gmmktime( 23, 59, 59, 1, 31, 2026 ), 1, gmmktime( 23, 59, 59, 1, 31, 2027 ) ],
+			'leap day clamps to 28 Feb'     => [ gmmktime( 9, 0, 0, 2, 29, 2028 ), 1, gmmktime( 9, 0, 0, 2, 28, 2029 ) ],
+			'leap day to another leap year' => [ gmmktime( 9, 0, 0, 2, 29, 2028 ), 4, gmmktime( 9, 0, 0, 2, 29, 2032 ) ],
+		];
 	}
 
 	public function test_handle_status_change_does_not_cap_open_ended_subscription(): void {
