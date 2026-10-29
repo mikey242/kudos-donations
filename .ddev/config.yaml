@@ -1,0 +1,18 @@
+name: kudos-donations
+type: wordpress
+# WordPress core lives in ./wordpress (gitignored) and is installed by the post-start hook.
+# The plugin itself is mounted into it by docker-compose.plugin.yaml.
+docroot: wordpress
+php_version: "8.4"
+database:
+  type: mariadb
+  version: "11.8"
+web_environment:
+  - WP_ENVIRONMENT_TYPE=local
+hooks:
+  pre-start:
+    # Create the plugin mount points as the host user. Otherwise the container runtime creates
+    # them as root (or an unmapped user under rootless Podman), and WordPress can't be installed.
+    - exec-host: mkdir -p wordpress/wp-content/plugins/kudos-donations wordpress/wp-content/test-plugins/kudos-donations
+  post-start:
+    - exec: /var/www/html/.ddev/scripts/setup-wordpress.sh

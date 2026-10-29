@@ -1,0 +1,8 @@
+services:
+  web:
+    volumes:
+      # The plugin, as WordPress sees it during development.
+      - ../:/var/www/html/wordpress/wp-content/plugins/kudos-donations
+      # A second plugin directory holding only this plugin, used as WP_PLUGIN_DIR by the
+      # PHPUnit tests so that development plugins such as Query Monitor are not loaded.
+      - ../:/var/www/html/wordpress/wp-content/test-plugins/kudos-donations

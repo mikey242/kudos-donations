@@ -44,7 +44,6 @@
 		"@wordpress/dependency-extraction-webpack-plugin": "^7.0.0",
 		"@wordpress/dom-ready": "^5.0.0",
 		"@wordpress/element": "^10.0.0",
-		"@wordpress/env": "^12.0.0",
 		"@wordpress/eslint-plugin": "^28.0.0",
 		"@wordpress/hooks": "^5.0.0",
 		"@wordpress/i18n": "^7.0.0",
@@ -76,30 +75,22 @@
 		"check-engines": "wp-scripts check-engines",
 		"start:admin": "wp-scripts start --hot --config src/admin/webpack.config.admin.js --webpack-src-dir=src/admin --output-path=build/admin",
 		"start:front": "wp-scripts start --hot --config src/block/webpack.config.front.js --output-path=build/front",
-		"wp-env": "wp-env",
-		"wp-env:debug": "wp-env start --xdebug",
-		"wp-env:tests": "wp-env --config .wp-env.test.json start",
 		"make-pot": "wp i18n make-pot . --exclude='src, wordpress, config, assets, tests' --debug",
 		"make-json": "wp i18n make-json languages/ --no-purge",
 		"start:tunnel": "cloudflared tunnel --config cloudflared.dev.yml run",
-		"log:follow": "wp-env run cli tail -f wp-content/debug.log",
-		"log:clear": "wp-env run cli truncate -s 0 wp-content/debug.log",
-		"test:unit": "wp-env --config .wp-env.test.json run --env-cwd=wp-content/plugins/kudos-donations cli ./vendor/bin/phpunit --testsuite unit",
-		"test:integration": "wp-env --config .wp-env.test.json run --env-cwd=wp-content/plugins/kudos-donations cli ./vendor/bin/phpunit --testsuite integration",
+		"log:follow": "ddev exec tail -f /var/www/html/wordpress/wp-content/debug.log",
+		"log:clear": "ddev exec truncate -s 0 /var/www/html/wordpress/wp-content/debug.log",
+		"test:unit": "ddev phpunit --testsuite unit",
+		"test:integration": "ddev phpunit --testsuite integration",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
 		"lint:js": "wp-scripts lint-js ./src",
 		"packages-update": "wp-scripts packages-update",
-		"fixtures": "wp-env run cli wp kudos:fixtures:all --delete --force --count-campaign=20 --count-donor=50 --count-transaction=200 --count-subscription=10",
+		"fixtures": "ddev wp kudos:fixtures:all --delete --force --count-campaign=20 --count-donor=50 --count-transaction=200 --count-subscription=10",
 		"make-zip": "rm -f kudos-donations.zip && php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 	},
 	"overrides": {
 		"@types/react": "$@types/react",
 		"@types/react-dom": "$@types/react-dom"
 	},
-	"wp-env": {
-		"plugin-dir": "kudos-donations",
-		"plugin-name": "Kudos Donations",
-		"welcome-build-command": "npm run production"
-	}
 }

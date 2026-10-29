@@ -9,6 +9,8 @@
 .zed
 
 # Folders
+/.ddev
+/wordpress
 __static__
 /assets
 bin
@@ -39,7 +41,6 @@ bin
 .stylelintrc
 .stylelintrc.json
 .test_artifacts
-.wp-env.json
 babel.config.cjs
 composer.json
 composer.lock

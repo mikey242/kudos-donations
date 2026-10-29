@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+## Description: Run the plugin's PHPUnit tests against the WordPress test library
+## Usage: phpunit [phpunit options]
+## Example: "ddev phpunit --testsuite unit"
+
+set -euo pipefail
+
+/var/www/html/.ddev/scripts/setup-tests.sh
+
+cd /var/www/html/wordpress/wp-content/test-plugins/kudos-donations
+WP_TESTS_DIR=/var/www/html/wordpress/wp-tests-lib ./vendor/bin/phpunit "$@"
