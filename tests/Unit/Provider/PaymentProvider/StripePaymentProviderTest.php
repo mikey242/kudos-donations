@@ -654,8 +654,414 @@ class StripePaymentProviderTest extends BaseTestCase {
 	}
 
 	// -------------------------------------------------------------------------
+	// Currency amounts
+	// -------------------------------------------------------------------------
+
+	/**
+	 * @dataProvider stripe_amount_provider
+	 *
+	 * @param float  $value    The donation value.
+	 * @param string $currency The currency code.
+	 * @param int    $expected The unit_amount Stripe should receive.
+	 */
+	public function test_create_payment_converts_amount_for_currency( float $value, string $currency, int $expected ): void {
+		$this->http_client->set_response( 'checkout/sessions', $this->session_fixture() );
+
+		$this->create_payment_fixture(
+			[
+				'value'    => $value,
+				'currency' => $currency,
+			]
+		);
+
+		$last = $this->http_client->get_last_request();
+		$this->assertSame( $expected, $last['params']['line_items'][0]['price_data']['unit_amount'] );
+	}
+
+	public function stripe_amount_provider(): array {
+		return [
+			'two-decimal'                   => [ 10.5, 'EUR', 1050 ],
+			'two-decimal rounding'          => [ 19.99, 'GBP', 1999 ],
+			'zero-decimal'                  => [ 1000, 'JPY', 1000 ],
+			'zero-decimal rounds fractions' => [ 1000.6, 'JPY', 1001 ],
+			'whole-unit two-decimal'        => [ 1000, 'ISK', 100000 ],
+			'whole-unit drops fractions'    => [ 1000.4, 'ISK', 100000 ],
+		];
+	}
+
+	public function test_handle_status_change_records_charged_amount_for_zero_decimal_currency(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'    => 'Test',
+					'value'    => 1000.6,
+					'currency' => 'JPY',
+				]
+			)
+		);
+
+		$this->http_client->set_response(
+			'checkout/sessions',
+			$this->session_fixture(
+				[
+					'status'         => Session::STATUS_COMPLETE,
+					'payment_status' => Session::PAYMENT_STATUS_PAID,
+					'payment_intent' => 'pi_jpy_abc123',
+					'amount_total'   => 1001,
+					'currency'       => 'jpy',
+					'metadata'       => [ 'transaction_id' => (string) $transaction_id ],
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'cs_test_abc123' );
+
+		$this->assertSame( 1001.0, $transactions->get( $transaction_id )->value );
+	}
+
+	public function test_handle_invoice_payment_records_zero_decimal_amount(): void {
+		/** @var SubscriptionRepository $subscriptions */
+		$subscriptions = $this->get_from_container( SubscriptionRepository::class );
+		$subscriptions->insert(
+			$subscriptions->new_entity(
+				[
+					'vendor_subscription_id' => 'sub_test_abc123',
+					'vendor'                 => 'stripe',
+					'status'                 => 'active',
+					'value'                  => 1000,
+					'currency'               => 'JPY',
+				]
+			)
+		);
+
+		$this->http_client->set_response(
+			'invoices',
+			$this->invoice_fixture(
+				[
+					'currency'    => 'jpy',
+					'amount_paid' => 1000,
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'in_test_abc123' );
+
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_from_container( TransactionRepository::class );
+		$recorded     = $transactions->find_one_by( [ 'vendor_payment_id' => 'pi_test_abc123' ] );
+		$this->assertSame( 1000.0, $recorded->value );
+		$this->assertSame( 'JPY', $recorded->currency );
+	}
+
+	// -------------------------------------------------------------------------
+	// Failed delayed payments, ended subscriptions and refunds
+	// -------------------------------------------------------------------------
+
+	public function test_rest_webhook_queues_async_payment_failure_separately(): void {
+		$this->configure_webhooks( 'test' );
+
+		$response = $this->provider->rest_webhook(
+			$this->signed_webhook_request( false, self::TEST_SECRET, 'checkout.session.async_payment_failed' )
+		);
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotFalse(
+			as_next_scheduled_action( StripePaymentProvider::HOOK_PAYMENT_FAILED, [ 'session_id' => 'cs_abc123' ], 'kudos-donations' )
+		);
+		$this->assertFalse(
+			as_next_scheduled_action( 'kudos_stripe_handle_status_change', null, 'kudos-donations' ),
+			'A failed session must not go through the status sync, which would read it as still pending.'
+		);
+	}
+
+	/**
+	 * @dataProvider status_change_event_provider
+	 *
+	 * @param string $type        The event type.
+	 * @param string $object_id   The event's data object id.
+	 * @param string $object_type The event's data object type.
+	 */
+	public function test_rest_webhook_queues_status_change_for_lifecycle_events( string $type, string $object_id, string $object_type ): void {
+		$this->configure_webhooks( 'test' );
+
+		$response = $this->provider->rest_webhook(
+			$this->signed_webhook_request( false, self::TEST_SECRET, $type, $object_id, $object_type )
+		);
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotFalse(
+			as_next_scheduled_action(
+				'kudos_stripe_handle_status_change',
+				[
+					'payment_id' => $object_id,
+					'mode'       => 'test',
+				],
+				'kudos-donations'
+			)
+		);
+	}
+
+	public function status_change_event_provider(): array {
+		return [
+			'subscription deleted' => [ 'customer.subscription.deleted', 'sub_abc123', 'subscription' ],
+			'charge refunded'      => [ 'charge.refunded', 'ch_abc123', 'charge' ],
+		];
+	}
+
+	public function test_handle_payment_failed_marks_open_transaction_failed(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Test',
+					'status'            => PaymentStatus::OPEN,
+					'vendor_payment_id' => 'cs_test_failed',
+				]
+			)
+		);
+
+		$this->provider->handle_payment_failed( 'cs_test_failed' );
+
+		$this->assertSame( PaymentStatus::FAILED, $transactions->get( $transaction_id )->status );
+	}
+
+	public function test_handle_payment_failed_leaves_resolved_transaction_alone(): void {
+		/** @var TransactionRepository $transactions */
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Test',
+					'status'            => PaymentStatus::EXPIRED,
+					'vendor_payment_id' => 'cs_test_failed',
+				]
+			)
+		);
+
+		$this->provider->handle_payment_failed( 'cs_test_failed' );
+
+		$this->assertSame( PaymentStatus::EXPIRED, $transactions->get( $transaction_id )->status );
+	}
+
+	public function test_handle_subscription_ended_marks_dashboard_cancellation_cancelled(): void {
+		$subscription_id = $this->insert_active_subscription();
+		$this->http_client->set_response(
+			'subscriptions',
+			$this->stripe_subscription_fixture(
+				[
+					'cancel_at' => null,
+					'ended_at'  => 1700000000,
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'sub_test_abc123' );
+
+		$this->assertSame( 'cancelled', $this->get_from_container( SubscriptionRepository::class )->get( $subscription_id )->status );
+	}
+
+	public function test_handle_subscription_ended_marks_fixed_term_subscription_completed(): void {
+		$subscription_id = $this->insert_active_subscription();
+		$this->http_client->set_response(
+			'subscriptions',
+			$this->stripe_subscription_fixture(
+				[
+					'cancel_at' => 1700000000,
+					'ended_at'  => 1700000000,
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'sub_test_abc123' );
+
+		$this->assertSame( 'completed', $this->get_from_container( SubscriptionRepository::class )->get( $subscription_id )->status );
+	}
+
+	public function test_handle_subscription_ended_marks_early_cancellation_of_fixed_term_cancelled(): void {
+		$subscription_id = $this->insert_active_subscription();
+		$this->http_client->set_response(
+			'subscriptions',
+			$this->stripe_subscription_fixture(
+				[
+					'cancel_at' => 1800000000,
+					'ended_at'  => 1700000000,
+				]
+			)
+		);
+
+		$this->provider->handle_status_change( 'sub_test_abc123' );
+
+		$this->assertSame( 'cancelled', $this->get_from_container( SubscriptionRepository::class )->get( $subscription_id )->status );
+	}
+
+	public function test_handle_subscription_ended_skips_subscription_already_ended_locally(): void {
+		$subscription_id = $this->insert_active_subscription( 'cancelled' );
+
+		$this->provider->handle_status_change( 'sub_test_abc123' );
+
+		$this->assertSame( 'cancelled', $this->get_from_container( SubscriptionRepository::class )->get( $subscription_id )->status );
+		$this->assertNull( $this->http_client->get_last_request(), 'No API call is needed once the subscription has ended locally.' );
+	}
+
+	public function test_handle_subscription_ended_ignores_still_active_subscription(): void {
+		$subscription_id = $this->insert_active_subscription();
+		$this->http_client->set_response( 'subscriptions', $this->stripe_subscription_fixture( [ 'status' => 'active' ] ) );
+
+		$this->provider->handle_status_change( 'sub_test_abc123' );
+
+		$this->assertSame( 'active', $this->get_from_container( SubscriptionRepository::class )->get( $subscription_id )->status );
+	}
+
+	public function test_handle_charge_refunded_records_partial_refund(): void {
+		$transaction_id = $this->insert_paid_transaction();
+		$this->http_client->set_response( 'charges', $this->charge_fixture( [ 'amount_refunded' => 400 ] ) );
+
+		$this->provider->handle_status_change( 'ch_test_abc123' );
+
+		$updated = $this->get_from_container( TransactionRepository::class )->get( $transaction_id );
+		$this->assertSame( PaymentStatus::PAID, $updated->status );
+		$this->assertEquals(
+			[
+				'refunded'  => 4.0,
+				'remaining' => 6.0,
+			],
+			json_decode( (string) $updated->refunds, true )
+		);
+	}
+
+	public function test_handle_charge_refunded_fires_refund_hook_once_per_refund(): void {
+		$this->insert_paid_transaction();
+		$this->http_client->set_response( 'charges', $this->charge_fixture( [ 'amount_refunded' => 1000 ] ) );
+
+		$fired = 0;
+		add_action(
+			'kudos_transaction_refunded',
+			static function () use ( &$fired ): void {
+				++$fired;
+			}
+		);
+
+		$this->provider->handle_status_change( 'ch_test_abc123' );
+		$this->provider->handle_status_change( 'ch_test_abc123' );
+
+		$this->assertSame( 1, $fired, 'A redelivered refund webhook must not fire the refund hook again.' );
+	}
+
+	public function test_handle_charge_refunded_ignores_unknown_payment_intent(): void {
+		$transaction_id = $this->insert_paid_transaction();
+		$this->http_client->set_response( 'charges', $this->charge_fixture( [ 'payment_intent' => 'pi_unknown' ] ) );
+
+		$this->provider->handle_status_change( 'ch_test_abc123' );
+
+		$this->assertEmpty( $this->get_from_container( TransactionRepository::class )->get( $transaction_id )->refunds );
+	}
+
+	public function test_register_webhook_subscribes_to_lifecycle_events(): void {
+		delete_option( StripePaymentProvider::SETTING_WEBHOOK );
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		$this->http_client->set_response( 'webhook_endpoints', [ 'object' => 'list', 'data' => [], 'has_more' => false ] );
+
+		$method = new ReflectionMethod( StripePaymentProvider::class, 'register_webhook' );
+		$method->setAccessible( true );
+		$method->invoke( $this->provider );
+
+		$create = array_values(
+			array_filter( $this->http_client->get_requests(), static fn( $r ) => 'post' === strtolower( $r['method'] ) )
+		);
+		$this->assertNotEmpty( $create );
+		$events = $create[0]['params']['enabled_events'];
+		foreach ( [ 'checkout.session.async_payment_failed', 'customer.subscription.deleted', 'charge.refunded' ] as $event ) {
+			$this->assertContains( $event, $events );
+		}
+	}
+
+	// -------------------------------------------------------------------------
 	// Helpers
 	// -------------------------------------------------------------------------
+
+	/**
+	 * Inserts a local Stripe subscription linked to sub_test_abc123, returning its id.
+	 *
+	 * @param string $status The local subscription status.
+	 */
+	private function insert_active_subscription( string $status = 'active' ): int {
+		/** @var SubscriptionRepository $subscriptions */
+		$subscriptions = $this->get_from_container( SubscriptionRepository::class );
+		return (int) $subscriptions->insert(
+			$subscriptions->new_entity(
+				[
+					'vendor_subscription_id' => 'sub_test_abc123',
+					'vendor'                 => 'stripe',
+					'status'                 => $status,
+					'value'                  => 10.00,
+					'currency'               => 'EUR',
+				]
+			)
+		);
+	}
+
+	/**
+	 * Inserts a paid Stripe transaction for pi_test_abc123, returning its id.
+	 */
+	private function insert_paid_transaction(): int {
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_from_container( TransactionRepository::class );
+		return (int) $transactions->insert(
+			new TransactionEntity(
+				[
+					'title'             => 'Test',
+					'vendor'            => 'stripe',
+					'vendor_payment_id' => 'pi_test_abc123',
+					'status'            => PaymentStatus::PAID,
+					'value'             => 10.00,
+					'currency'          => 'EUR',
+				]
+			)
+		);
+	}
+
+	/**
+	 * Returns a minimal ended Subscription response array, mergeable with overrides.
+	 *
+	 * @param array $overrides Fields to override.
+	 */
+	private function stripe_subscription_fixture( array $overrides = [] ): array {
+		return array_merge(
+			[
+				'id'        => 'sub_test_abc123',
+				'object'    => 'subscription',
+				'status'    => 'canceled',
+				'cancel_at' => null,
+				'ended_at'  => 1700000000,
+				'livemode'  => false,
+			],
+			$overrides
+		);
+	}
+
+	/**
+	 * Returns a minimal refunded Charge response array, mergeable with overrides.
+	 *
+	 * @param array $overrides Fields to override.
+	 */
+	private function charge_fixture( array $overrides = [] ): array {
+		return array_merge(
+			[
+				'id'              => 'ch_test_abc123',
+				'object'          => 'charge',
+				'amount'          => 1000,
+				'amount_refunded' => 1000,
+				'currency'        => 'eur',
+				'payment_intent'  => 'pi_test_abc123',
+				'refunded'        => true,
+				'livemode'        => false,
+			],
+			$overrides
+		);
+	}
 
 	private function create_provider(): StripePaymentProvider {
 		$provider = new StripePaymentProvider(
@@ -695,20 +1101,23 @@ class StripePaymentProviderTest extends BaseTestCase {
 	/**
 	 * Builds a webhook request carrying a signed Stripe event.
 	 *
-	 * @param bool   $livemode The event's livemode flag.
-	 * @param string $secret   The secret to sign the payload with.
+	 * @param bool   $livemode    The event's livemode flag.
+	 * @param string $secret      The secret to sign the payload with.
+	 * @param string $type        The event type.
+	 * @param string $object_id   The id of the event's data object.
+	 * @param string $object_type The object type of the event's data object.
 	 */
-	private function signed_webhook_request( bool $livemode, string $secret ): WP_REST_Request {
+	private function signed_webhook_request( bool $livemode, string $secret, string $type = 'checkout.session.completed', string $object_id = 'cs_abc123', string $object_type = 'checkout.session' ): WP_REST_Request {
 		$payload   = (string) wp_json_encode(
 			[
 				'id'       => 'evt_abc123',
 				'object'   => 'event',
-				'type'     => 'checkout.session.completed',
+				'type'     => $type,
 				'livemode' => $livemode,
 				'data'     => [
 					'object' => [
-						'id'     => 'cs_abc123',
-						'object' => 'checkout.session',
+						'id'     => $object_id,
+						'object' => $object_type,
 					],
 				],
 			]

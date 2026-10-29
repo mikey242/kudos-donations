@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Localization;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Notice\Notice;
 use IseardMedia\Kudos\Notice\NoticeManager;
 use IseardMedia\Kudos\ThirdParty\Stripe\Capability;
@@ -44,6 +45,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_stripe_api_key_encrypted_test';
 	public const SETTING_API_KEY_ENCRYPTED_LIVE = '_kudos_vendor_stripe_api_key_encrypted_live';
 	public const SETTING_WEBHOOK                = '_kudos_vendor_stripe_webhook';
+
+	/**
+	 * Action Scheduler hook for checkout.session.async_payment_failed events.
+	 */
+	public const HOOK_PAYMENT_FAILED = 'kudos_stripe_handle_payment_failed';
 
 	private const CAPABILITY_LABELS = [
 		'blik_payments'              => 'BLIK',
@@ -75,6 +81,21 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		'amazon_pay_payments'        => 'Amazon Pay',
 		'twint_payments'             => 'TWINT',
 	];
+
+	/**
+	 * Currencies Stripe expects in whole units rather than the smallest sub-unit.
+	 *
+	 * @link https://docs.stripe.com/currencies#zero-decimal
+	 */
+	private const ZERO_DECIMAL_CURRENCIES = [ 'BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'VND', 'VUV', 'XAF', 'XOF', 'XPF' ];
+
+	/**
+	 * Zero-decimal currencies Stripe still expects as two-decimal amounts for backwards
+	 * compatibility, where the decimal part must always be 00.
+	 *
+	 * @link https://docs.stripe.com/currencies#special-cases
+	 */
+	private const WHOLE_UNIT_TWO_DECIMAL_CURRENCIES = [ 'ISK', 'UGX' ];
 
 	/**
 	 * Clients keyed by API mode, so objects from either mode can be fetched regardless of the
@@ -124,6 +145,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	 * itself is built lazily in get_client(), so nothing here reads a key or connects.
 	 */
 	protected function on_init(): void {
+		add_action( self::HOOK_PAYMENT_FAILED, [ $this, 'handle_payment_failed' ] );
 		Localization::add_admin( 'stripeWebhookUrl', static::get_webhook_url() );
 		Stripe::setEnableTelemetry( false );
 		Stripe::setLogger( $this->get_logger() );
@@ -238,6 +260,36 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			'interval'       => isset( $parts[1] ) ? rtrim( $parts[1], 's' ) : 'month',
 			'interval_count' => $count > 0 ? $count : 1,
 		];
+	}
+
+	/**
+	 * Converts a decimal amount into the integer amount Stripe expects for the given currency.
+	 *
+	 * @param float  $value    The amount in major units (e.g. 10.50).
+	 * @param string $currency The ISO currency code.
+	 */
+	private function to_stripe_amount( float $value, string $currency ): int {
+		$currency = strtoupper( $currency );
+		if ( \in_array( $currency, self::ZERO_DECIMAL_CURRENCIES, true ) ) {
+			return (int) round( $value );
+		}
+		if ( \in_array( $currency, self::WHOLE_UNIT_TWO_DECIMAL_CURRENCIES, true ) ) {
+			return (int) round( $value ) * 100;
+		}
+		return (int) round( $value * 100 );
+	}
+
+	/**
+	 * Converts an integer amount from Stripe back into a decimal amount in major units.
+	 *
+	 * @param int    $amount   The amount as returned by Stripe.
+	 * @param string $currency The ISO currency code.
+	 */
+	private function from_stripe_amount( int $amount, string $currency ): float {
+		if ( \in_array( strtoupper( $currency ), self::ZERO_DECIMAL_CURRENCIES, true ) ) {
+			return (float) $amount;
+		}
+		return round( $amount / 100, 2 );
 	}
 
 	/**
@@ -400,7 +452,10 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 						'checkout.session.completed',
 						'checkout.session.expired',
 						'checkout.session.async_payment_succeeded',
+						'checkout.session.async_payment_failed',
 						'invoice.payment_succeeded',
+						'customer.subscription.deleted',
+						'charge.refunded',
 					],
 				]
 			);
@@ -527,12 +582,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			return false;
 		}
 
-		$value  = number_format( \floatval( $payment_args['value'] ), 2, '.', '' );
-		$amount = (int) round( \floatval( $value ) * 100 ); // Stripe expects smallest currency unit.
+		$currency = (string) $payment_args['currency'];
 
 		$price_data = [
-			'currency'     => strtolower( (string) $payment_args['currency'] ),
-			'unit_amount'  => $amount,
+			'currency'     => strtolower( $currency ),
+			'unit_amount'  => $this->to_stripe_amount( \floatval( $payment_args['value'] ), $currency ),
 			'product_data' => [
 				'name' => $transaction->title,
 			],
@@ -661,14 +715,25 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			]
 		);
 
-		$handled_events = [
+		// These events are re-fetched from Stripe and synced by handle_status_change().
+		$status_change_events = [
 			Event::CHECKOUT_SESSION_COMPLETED,
 			Event::CHECKOUT_SESSION_EXPIRED,
 			Event::CHECKOUT_SESSION_ASYNC_PAYMENT_SUCCEEDED,
 			Event::INVOICE_PAYMENT_SUCCEEDED,
+			Event::CUSTOMER_SUBSCRIPTION_DELETED,
+			Event::CHARGE_REFUNDED,
 		];
-		if ( \in_array( $event->type, $handled_events, true ) ) {
+		if ( \in_array( $event->type, $status_change_events, true ) ) {
 			$this->enqueue_status_change_action( $event->data->object->id, $mode );
+		} elseif ( Event::CHECKOUT_SESSION_ASYNC_PAYMENT_FAILED === $event->type ) {
+			// A failed session looks the same as a pending one when re-fetched, so the (verified)
+			// event type itself is what marks the failure.
+			Utils::enqueue_async_action(
+				self::HOOK_PAYMENT_FAILED,
+				[ 'session_id' => $event->data->object->id ],
+				'kudos-donations'
+			);
 		}
 
 		return new WP_REST_Response( [ 'success' => true ], 200 );
@@ -695,6 +760,16 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 	public function handle_status_change( string $vendor_payment_id, ?string $mode = null ): void {
 		if ( str_starts_with( $vendor_payment_id, 'in_' ) ) {
 			$this->handle_invoice_payment( $vendor_payment_id, $mode );
+			return;
+		}
+
+		if ( str_starts_with( $vendor_payment_id, 'sub_' ) ) {
+			$this->handle_subscription_ended( $vendor_payment_id, $mode );
+			return;
+		}
+
+		if ( str_starts_with( $vendor_payment_id, 'ch_' ) ) {
+			$this->handle_charge_refunded( $vendor_payment_id, $mode );
 			return;
 		}
 
@@ -760,6 +835,11 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		if ( Session::STATUS_COMPLETE === $session->status && Session::PAYMENT_STATUS_PAID === $session->payment_status ) {
 			$transaction->status = PaymentStatus::PAID;
 			$transaction->mode   = $session->livemode ? 'live' : 'test';
+
+			// Record what was actually charged, which can differ from the request after rounding.
+			if ( isset( $session->amount_total, $session->currency ) ) {
+				$transaction->value = $this->from_stripe_amount( (int) $session->amount_total, (string) $session->currency );
+			}
 
 			// Store the PaymentIntent so the id matches the Stripe dashboard and can be refunded
 			// directly, falling back to the session id if it cannot be resolved.
@@ -851,7 +931,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 				'vendor_payment_id'  => $payment_intent_id,
 				'vendor'             => self::get_slug(),
 				'status'             => PaymentStatus::PAID,
-				'value'              => round( $invoice->amount_paid / 100, 2 ),
+				'value'              => $this->from_stripe_amount( (int) $invoice->amount_paid, (string) $invoice->currency ),
 				'currency'           => strtoupper( $invoice->currency ),
 				'sequence_type'      => 'recurring',
 				'mode'               => $invoice->livemode ? 'live' : 'test',
@@ -877,6 +957,181 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			]
 		);
 		$this->on_transaction_status_changed( $transaction );
+	}
+
+	/**
+	 * Marks the transaction for a Checkout Session as failed, after a delayed payment method
+	 * (e.g. SEPA Direct Debit) was declined.
+	 *
+	 * @param string $session_id The Stripe Checkout Session ID.
+	 */
+	public function handle_payment_failed( string $session_id ): void {
+		// Unpaid transactions still carry the session id they were created with.
+		/** @var TransactionEntity|null $transaction */
+		$transaction = $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $session_id ] );
+		if ( null === $transaction ) {
+			$this->get_logger()->warning( 'Transaction not found for failed Stripe session.', [ 'session_id' => $session_id ] );
+			return;
+		}
+
+		if ( PaymentStatus::OPEN !== $transaction->status ) {
+			$this->get_logger()->debug(
+				'Failed Stripe session already processed. Skipping.',
+				[
+					'session_id'     => $session_id,
+					'transaction_id' => $transaction->id,
+					'status'         => $transaction->status,
+				]
+			);
+			return;
+		}
+
+		$transaction->status = PaymentStatus::FAILED;
+		$this->transaction_repository->update( $transaction );
+		$this->get_logger()->info(
+			'Stripe delayed payment failed.',
+			[
+				'session_id'     => $session_id,
+				'transaction_id' => $transaction->id,
+			]
+		);
+		$this->on_transaction_status_changed( $transaction );
+	}
+
+	/**
+	 * Syncs a local subscription after Stripe ends it, whether it reached its fixed term, was
+	 * cancelled from the Stripe dashboard, or lapsed after failed payment retries.
+	 *
+	 * @param string      $stripe_subscription_id The Stripe subscription ID.
+	 * @param string|null $mode                   The API mode the subscription belongs to, or null for the current one.
+	 */
+	private function handle_subscription_ended( string $stripe_subscription_id, ?string $mode ): void {
+		/** @var SubscriptionEntity|null $subscription */
+		$subscription = $this->subscription_repository->find_one_by( [ 'vendor_subscription_id' => $stripe_subscription_id ] );
+		if ( null === $subscription ) {
+			$this->get_logger()->warning( 'No local subscription found for Stripe subscription.', [ 'stripe_subscription_id' => $stripe_subscription_id ] );
+			return;
+		}
+
+		// Already ended locally, e.g. cancelled by the donor through Kudos.
+		if ( Subscription::STATUS_ACTIVE !== $subscription->status ) {
+			return;
+		}
+
+		$client = $this->get_client( $mode );
+		if ( null === $client ) {
+			return;
+		}
+
+		try {
+			$stripe_subscription = $client->subscriptions->retrieve( $stripe_subscription_id );
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->error(
+				'Error retrieving Stripe subscription.',
+				[
+					'error'                  => $e->getMessage(),
+					'stripe_subscription_id' => $stripe_subscription_id,
+				]
+			);
+			return;
+		}
+
+		if ( ! \in_array( $stripe_subscription->status, [ Subscription::STATUS_CANCELED, Subscription::STATUS_INCOMPLETE_EXPIRED ], true ) ) {
+			return;
+		}
+
+		// A subscription that ran until its cap_subscription_duration() date has completed its term.
+		$cancel_at = $stripe_subscription->cancel_at ?? null;
+		$ended_at  = $stripe_subscription->ended_at ?? null;
+		$completed = null !== $cancel_at && null !== $ended_at && $ended_at >= $cancel_at;
+
+		$subscription->status = $completed ? 'completed' : 'cancelled';
+		$this->subscription_repository->update( $subscription );
+
+		$this->get_logger()->info(
+			'Stripe subscription ended.',
+			[
+				'subscription_id'        => $subscription->id,
+				'stripe_subscription_id' => $stripe_subscription_id,
+				'status'                 => $subscription->status,
+			]
+		);
+
+		if ( ! $completed ) {
+			/** This action is documented in includes/Controller/Rest/Subscription.php */
+			do_action( 'kudos_subscription_cancelled', $subscription->id, $subscription->donor_id );
+		}
+	}
+
+	/**
+	 * Records a refund against the transaction for the given charge. Handles refunds made through
+	 * Kudos as well as those issued from the Stripe dashboard, full or partial.
+	 *
+	 * @param string      $charge_id The Stripe charge ID.
+	 * @param string|null $mode      The API mode the charge belongs to, or null for the current one.
+	 */
+	private function handle_charge_refunded( string $charge_id, ?string $mode ): void {
+		$client = $this->get_client( $mode );
+		if ( null === $client ) {
+			return;
+		}
+
+		try {
+			$charge = $client->charges->retrieve( $charge_id );
+		} catch ( ApiErrorException $e ) {
+			$this->get_logger()->error(
+				'Error retrieving Stripe charge.',
+				[
+					'error'     => $e->getMessage(),
+					'charge_id' => $charge_id,
+				]
+			);
+			return;
+		}
+
+		$payment_intent_id = (string) ( $charge->payment_intent ?? '' );
+
+		/** @var TransactionEntity|null $transaction */
+		$transaction = '' !== $payment_intent_id
+			? $this->transaction_repository->find_one_by( [ 'vendor_payment_id' => $payment_intent_id ] )
+			: null;
+		if ( null === $transaction ) {
+			$this->get_logger()->warning(
+				'Transaction not found for refunded Stripe charge.',
+				[
+					'charge_id'      => $charge_id,
+					'payment_intent' => $payment_intent_id,
+				]
+			);
+			return;
+		}
+
+		$currency = (string) $charge->currency;
+		$refunds  = [
+			'refunded'  => $this->from_stripe_amount( (int) $charge->amount_refunded, $currency ),
+			'remaining' => $this->from_stripe_amount( (int) $charge->amount - (int) $charge->amount_refunded, $currency ),
+		];
+
+		// Stripe delivers webhooks at least once, so skip refunds we have already recorded.
+		$recorded = json_decode( (string) $transaction->refunds, true );
+		if ( \is_array( $recorded ) && (float) ( $recorded['refunded'] ?? 0 ) === $refunds['refunded'] ) {
+			$this->get_logger()->debug( 'Duplicate Stripe refund webhook. Skipping.', [ 'charge_id' => $charge_id ] );
+			return;
+		}
+
+		// As with Mollie, the transaction stays paid and the refund is recorded alongside it.
+		$transaction->refunds = wp_json_encode( $refunds );
+		$this->transaction_repository->update( $transaction );
+
+		$this->get_logger()->info(
+			'Stripe payment refunded.',
+			[
+				'transaction_id' => $transaction->id,
+				'refunded'       => $refunds['refunded'],
+				'remaining'      => $refunds['remaining'],
+			]
+		);
+		$this->on_transaction_refunded( $transaction );
 	}
 
 	/**
