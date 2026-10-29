@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85bea1f0ee694cfb9fa4fcd6c5676ccc",
+    "content-hash": "8de2389146ff1c9e3fe439b9b2ea532b",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -2347,16 +2347,16 @@
         },
         {
             "name": "johnbillion/wp-compat",
-            "version": "2.0.1",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnbillion/wp-compat.git",
-                "reference": "b2e32bd91716a98bc6fc527c525b979652a4a567"
+                "reference": "5bc1ad5c9c953f89271de607c7e3a8de8589371c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnbillion/wp-compat/zipball/b2e32bd91716a98bc6fc527c525b979652a4a567",
-                "reference": "b2e32bd91716a98bc6fc527c525b979652a4a567",
+                "url": "https://api.github.com/repos/johnbillion/wp-compat/zipball/5bc1ad5c9c953f89271de607c7e3a8de8589371c",
+                "reference": "5bc1ad5c9c953f89271de607c7e3a8de8589371c",
                 "shasum": ""
             },
             "require": {
@@ -2418,7 +2418,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-29T17:12:02+00:00"
+            "time": "2026-10-21T20:54:48+00:00",
+            "published-time": "2026-10-21T20:54:55+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -5492,7 +5493,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-20T19:54:29+00:00"
+            "time": "2026-08-20T19:54:29+00:00",
+            "published-time": "2026-08-20T19:54:42+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -5571,5 +5573,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
