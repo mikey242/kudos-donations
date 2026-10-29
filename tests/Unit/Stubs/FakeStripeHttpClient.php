@@ -20,6 +20,9 @@ class FakeStripeHttpClient implements ClientInterface {
 	/** @var array<string, array{0: string, 1: int, 2: array}> Keyed by URL fragment. */
 	private array $responses = [];
 
+	/** @var array<string, array<string, array{0: string, 1: int, 2: array}>> Keyed by HTTP method, then URL fragment. */
+	private array $method_responses = [];
+
 	/** @var list<array{method: string, absUrl: string, params: mixed}> */
 	private array $requests = [];
 
@@ -29,9 +32,17 @@ class FakeStripeHttpClient implements ClientInterface {
 	 * @param string $url_fragment Substring to match against the request URL.
 	 * @param array  $body        Response body (will be JSON-encoded).
 	 * @param int    $code        HTTP status code (default 200).
+	 * @param ?string $method     Only match requests with this HTTP method (e.g. 'post'), for
+	 *                            endpoints that list and create on the same URL. Takes precedence
+	 *                            over a response registered without a method.
 	 */
-	public function set_response( string $url_fragment, array $body, int $code = 200 ): void {
-		$this->responses[ $url_fragment ] = [ json_encode( $body ), $code, [] ];
+	public function set_response( string $url_fragment, array $body, int $code = 200, ?string $method = null ): void {
+		$response = [ json_encode( $body ), $code, [] ];
+		if ( null === $method ) {
+			$this->responses[ $url_fragment ] = $response;
+			return;
+		}
+		$this->method_responses[ strtolower( $method ) ][ $url_fragment ] = $response;
 	}
 
 	/**
@@ -44,6 +55,12 @@ class FakeStripeHttpClient implements ClientInterface {
 			'headers' => $headers,
 			'params'  => $params,
 		];
+
+		foreach ( $this->method_responses[ strtolower( $method ) ] ?? [] as $fragment => $response ) {
+			if ( str_contains( $absUrl, $fragment ) ) {
+				return $response;
+			}
+		}
 
 		foreach ( $this->responses as $fragment => $response ) {
 			if ( str_contains( $absUrl, $fragment ) ) {

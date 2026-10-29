@@ -962,7 +962,17 @@ class StripePaymentProviderTest extends BaseTestCase {
 	public function test_register_webhook_subscribes_to_lifecycle_events(): void {
 		delete_option( StripePaymentProvider::SETTING_WEBHOOK );
 		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
-		$this->http_client->set_response( 'webhook_endpoints', [ 'object' => 'list', 'data' => [], 'has_more' => false ] );
+		$this->http_client->set_response( 'webhook_endpoints', [ 'object' => 'list', 'data' => [], 'has_more' => false ], 200, 'get' );
+		$this->http_client->set_response(
+			'webhook_endpoints',
+			[
+				'id'     => 'we_new',
+				'object' => 'webhook_endpoint',
+				'secret' => 'whsec_new',
+			],
+			200,
+			'post'
+		);
 
 		$method = new ReflectionMethod( StripePaymentProvider::class, 'register_webhook' );
 		$method->setAccessible( true );
@@ -976,6 +986,13 @@ class StripePaymentProviderTest extends BaseTestCase {
 		foreach ( [ 'checkout.session.async_payment_failed', 'customer.subscription.deleted', 'charge.refunded' ] as $event ) {
 			$this->assertContains( $event, $events );
 		}
+		$this->assertSame(
+			[
+				'secret'      => 'whsec_new',
+				'endpoint_id' => 'we_new',
+			],
+			get_option( StripePaymentProvider::SETTING_WEBHOOK )['test']
+		);
 	}
 
 	// -------------------------------------------------------------------------
