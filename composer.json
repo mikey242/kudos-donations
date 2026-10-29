@@ -59,7 +59,7 @@
   },
   "require-dev": {
     "fakerphp/faker": "^1.24",
-    "johnbillion/wp-compat": "^2.0",
+    "johnbillion/wp-compat": "^3.0.1",
     "php-stubs/wordpress-tests-stubs": "^7.0",
     "php-stubs/wp-cli-stubs": "^2.12",
     "phpcompatibility/php-compatibility": "^9.3",
