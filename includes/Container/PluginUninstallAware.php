@@ -8,7 +8,7 @@
  * This way, we can just add the simple interface marker and not worry about how
  * to wire up the code to reach that part during the static uninstall hook.
  *
- * @link https://github.com/mikey242/kudos-donations
+ * @link https://code.iseard.media/michael/kudos-donations
  *
  * @copyright 2026 Iseard Media
  */

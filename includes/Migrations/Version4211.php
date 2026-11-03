@@ -2,7 +2,7 @@
 /**
  * Migration to add vendor column to kudos_donors and kudos_subscriptions tables.
  *
- * @link https://github.com/mikey242/kudos-donations/
+ * @link https://code.iseard.media/michael/kudos-donations/
  *
  * @copyright 2026 Iseard Media
  */

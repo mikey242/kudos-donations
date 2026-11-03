@@ -3,7 +3,7 @@
  * Demo payment provider for use in KUDOS_DEMO_MODE (e.g. WordPress Playground).
  * No real API calls are made; a simple local checkout page simulates the payment flow.
  *
- * @link https://github.com/mikey242/kudos-donations
+ * @link https://code.iseard.media/michael/kudos-donations
  *
  * @copyright 2026 Iseard Media
  */

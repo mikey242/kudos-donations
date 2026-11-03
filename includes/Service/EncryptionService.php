@@ -2,7 +2,7 @@
 /**
  * Encryption service.
  *
- * @link https://github.com/mikey242/kudos-donations/
+ * @link https://code.iseard.media/michael/kudos-donations/
  * @see https://permanenttourist.ch/2023/03/storing-credentials-securely-in-wordpress-plugin-settings/
  *
  * @copyright 2026 Iseard Media

@@ -27,6 +27,7 @@ bin
 .distignore
 .git-blame-ignore-revs
 .github
+.forgejo
 .gitignore
 .gitlab-ci.yml
 .imgbotconfig

@@ -10,12 +10,12 @@
 		"wordpress"
 	],
 	"homepage": "https://kudosdonations.com",
-	"repository": "https://github.com/mikey242/kudos-donations",
+	"repository": "https://code.iseard.media/michael/kudos-donations",
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
 	"bugs": {
-		"url": "https://github.com/mikey242/kudos-donations/issues",
+		"url": "https://code.iseard.media/michael/kudos-donations/issues",
 		"email": "michael@iseard.media"
 	},
 	"dependencies": {

@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: https://github.com/actions/checkout@v7
 
       - name: Set up PHP with Composer and PHP-Scoper
-        uses: shivammathur/setup-php@v2
+        uses: https://github.com/shivammathur/setup-php@v2
         with:
           php-version: 8.2
           tools: composer:2.10, php-scoper
@@ -24,7 +24,7 @@ jobs:
         run: composer --no-ansi validate
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: https://github.com/actions/setup-node@v7
         with:
           cache: "npm"
           node-version-file: '.nvmrc'
@@ -34,7 +34,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v6
+        uses: https://github.com/actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -57,7 +57,7 @@ jobs:
         run: npm run build
 
       - name: Upload folders
-        uses: actions/upload-artifact@v7
+        uses: https://code.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: plugin-deps
           path: |
@@ -78,18 +78,15 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
-        ports:
-          - 3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: https://github.com/actions/checkout@v7
 
       - name: Setup WP test environment
-        uses: ./.github/actions/setup-wp-tests
+        uses: ./.forgejo/actions/setup-wp-tests
         with:
           php-version: ${{ matrix.php-version }}
-          mysql-port: ${{ job.services.mysql.ports['3306'] }}
 
       - name: Show PHP version
         run: php -v
@@ -107,21 +104,18 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
-        ports:
-          - 3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: https://github.com/actions/checkout@v7
 
       - name: Setup WP test environment
-        uses: ./.github/actions/setup-wp-tests
+        uses: ./.forgejo/actions/setup-wp-tests
         with:
           php-version: "8.2"
-          mysql-port: ${{ job.services.mysql.ports['3306'] }}
 
       - name: Cache compatibility plugins
-        uses: actions/cache@v6
+        uses: https://github.com/actions/cache@v6
         with:
           path: /tmp/compat-plugins
           key: compat-plugins-woocommerce-9.x-yoast-23.x
@@ -157,18 +151,15 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
-        ports:
-          - 3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: https://github.com/actions/checkout@v7
 
       - name: Setup WP test environment
-        uses: ./.github/actions/setup-wp-tests
+        uses: ./.forgejo/actions/setup-wp-tests
         with:
           php-version: "8.2"
-          mysql-port: ${{ job.services.mysql.ports['3306'] }}
 
       - name: Run integration tests
         run: vendor/bin/phpunit --do-not-cache-result --testsuite integration

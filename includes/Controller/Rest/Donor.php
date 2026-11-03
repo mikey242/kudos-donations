@@ -2,7 +2,7 @@
 /**
  * Donor entity rest route.
  *
- * @link https://github.com/mikey242/kudos-donations/
+ * @link https://code.iseard.media/michael/kudos-donations/
  *
  * @copyright 2026 Iseard Media
  */
