@@ -4,8 +4,9 @@ name: CI image
 # by ci-cd.yml and release.yml.
 #
 # Requirements:
-# - The runner mounts the Docker socket into job containers
-#   (forgejo-runner config.yml: container.docker_host: automount).
+# - Job containers can reach a Docker daemon: a mounted socket, the runner's
+#   docker:dind sidecar via the default gateway on tcp/2375, or the
+#   repository variable DOCKER_HOST.
 # - Repository secret REGISTRY_TOKEN: a Forgejo access token with
 #   package read/write scope for the image owner.
 
@@ -42,6 +43,22 @@ jobs:
           git init -q src
           git -C src fetch -q --depth 1 "${{ github.server_url }}/${{ github.repository }}.git" "${{ github.sha }}"
           git -C src checkout -q FETCH_HEAD
+
+      # The runner uses a docker:dind sidecar listening on tcp/2375, and job
+      # containers run inside it, so the daemon is this container's default
+      # gateway. Set the repository variable DOCKER_HOST to override.
+      - name: Locate Docker daemon
+        run: |
+          if [ -n "${{ vars.DOCKER_HOST }}" ]; then
+            DOCKER_HOST="${{ vars.DOCKER_HOST }}"
+          elif [ -S /var/run/docker.sock ]; then
+            DOCKER_HOST="unix:///var/run/docker.sock"
+          else
+            DOCKER_HOST="tcp://$(ip route | awk '/^default/ { print $3; exit }'):2375"
+          fi
+          echo "Using DOCKER_HOST=$DOCKER_HOST"
+          echo "DOCKER_HOST=$DOCKER_HOST" >> "$GITHUB_ENV"
+          DOCKER_HOST="$DOCKER_HOST" docker version --format 'Docker daemon {{.Server.Version}}'
 
       - name: Log in to registry
         env:
