@@ -44,7 +44,15 @@ jobs:
           git -C src checkout -q FETCH_HEAD
 
       - name: Log in to registry
-        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login code.iseard.media -u "${{ github.repository_owner }}" --password-stdin
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          REGISTRY_USER: ${{ github.repository_owner }}
+        run: |
+          if [ -z "$REGISTRY_TOKEN" ]; then
+            echo "::error::secrets.REGISTRY_TOKEN is empty. Add it under the repository's Settings > Actions > Secrets (secrets are not passed to pull request runs)."
+            exit 1
+          fi
+          printf '%s' "$REGISTRY_TOKEN" | docker login code.iseard.media -u "${REGISTRY_USER:-michael}" --password-stdin
 
       - name: Build image
         run: |
