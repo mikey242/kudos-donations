@@ -52,6 +52,32 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   tag: ${{ github.ref_name }}
                   release-dir: dist
+                  prerelease: ${{ contains(github.ref_name, '-') }}
                   release-notes: |
                       ## What's Changed
                       - Automatically generated release.
+
+    # Publishes stable tags (e.g. v4.3.0, not v4.3.0-beta1) to the WordPress.org
+    # plugin directory. Needs repository secrets SVN_USERNAME and SVN_PASSWORD
+    # (the SVN password from your WordPress.org profile, not your login password).
+    wordpress-org:
+        needs: release
+        if: ${{ !contains(github.ref_name, '-') }}
+        runs-on: ubuntu-latest
+        container:
+            image: code.iseard.media/michael/kudos-ci:php8.2
+        steps:
+            - name: Checkout code
+              uses: https://github.com/actions/checkout@v7
+
+            - name: Download release zip
+              uses: https://code.forgejo.org/forgejo/download-artifact@v4
+              with:
+                  name: release
+                  path: dist
+
+            - name: Deploy to WordPress.org SVN
+              env:
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+              run: bash bin/deploy-wporg.sh dist/kudos-donations.zip "${{ github.ref_name }}"
