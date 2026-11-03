@@ -85,8 +85,7 @@
     ],
     "make-zip": [
       "Composer\\Config::disableProcessTimeout",
-      "rm -f kudos-donations.zip",
-      "php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
+      "bash bin/make-zip.sh"
     ],
     "release": [
       "@build-production",

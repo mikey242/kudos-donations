@@ -19,6 +19,7 @@ bin
 /tests
 /languages
 /.cloudflared
+/cloudflared.dev.yml.sample
 /includes-dev
 
 # Configuration

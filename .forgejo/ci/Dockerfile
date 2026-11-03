@@ -4,7 +4,7 @@
 # pushed to code.iseard.media/michael/kudos-ci:php<version>.
 #
 # Contains PHP + the extensions the plugin and WP test suite need, Composer,
-# php-scoper (PHP >= 8.2 only), Node (from .nvmrc), git, unzip and subversion.
+# php-scoper (PHP >= 8.2 only), Node (from .nvmrc), git, rsync, zip/unzip and subversion.
 
 ARG PHP_VERSION=8.2
 
@@ -27,7 +27,7 @@ RUN if grep -q bullseye /etc/os-release; then \
     fi \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates curl git jq unzip subversion xz-utils \
+      ca-certificates curl git jq rsync unzip subversion xz-utils zip \
  && rm -rf /var/lib/apt/lists/* \
  && git config --system --add safe.directory '*'
 
