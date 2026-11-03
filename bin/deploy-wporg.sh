@@ -45,7 +45,16 @@ stable_tag=$(grep -iE '^[[:space:]]*Stable tag:' "$src/readme.txt" | head -1 | s
 [ "$header_version" = "$version" ] || fail "plugin header has Version: $header_version, but the release is $version."
 [ "$stable_tag" = "$version" ] || fail "readme.txt has Stable tag: $stable_tag, but the release is $version."
 
-svn_args=(--non-interactive --no-auth-cache)
+# Large commits can take the server many minutes to process after the upload;
+# wait up to an hour for its reply instead of svn's default 10 minutes.
+svn_args=(--non-interactive --no-auth-cache --config-option servers:global:http-timeout=3600)
+commit_msg="Update trunk to $version"
+
+# Last commit message on trunk, to detect a commit that landed even though the
+# client timed out waiting for the server's reply.
+last_trunk_msg() {
+	svn log "${svn_args[@]}" -l 1 "$svn_url/trunk" | sed -n '4p'
+}
 
 if svn ls "${svn_args[@]}" "$svn_url/tags/$version" >/dev/null 2>&1; then
 	fail "$svn_url/tags/$version already exists. Tags are never overwritten."
@@ -76,9 +85,18 @@ fi
 
 echo ""
 echo "Committing trunk..."
-printf '%s' "$SVN_PASSWORD" | svn commit "${svn_args[@]}" \
+if ! printf '%s' "$SVN_PASSWORD" | svn commit "${svn_args[@]}" \
 	--username "$SVN_USERNAME" --password-from-stdin \
-	-m "Update trunk to $version"
+	-m "$commit_msg"; then
+	echo "Commit reported an error; checking whether it reached the server anyway..."
+	if [ "$(last_trunk_msg)" != "$commit_msg" ]; then
+		fail "trunk commit failed and did not reach the server. Nothing was changed; it is safe to retry."
+	fi
+	echo "The commit did reach the server."
+fi
+
+trunk_version=$(svn cat "${svn_args[@]}" "$svn_url/trunk/$slug.php" | grep -iE '^[[:space:]*]*Version:' | head -1 | sed -E 's/.*[Vv]ersion:[[:space:]]*//' | tr -d '[:space:]')
+[ "$trunk_version" = "$version" ] || fail "trunk on the server has version $trunk_version, expected $version. Not tagging."
 
 echo "Tagging $version..."
 printf '%s' "$SVN_PASSWORD" | svn copy "${svn_args[@]}" \
