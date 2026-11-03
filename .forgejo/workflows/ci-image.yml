@@ -1,0 +1,64 @@
+name: CI image
+
+# Builds code.iseard.media/michael/kudos-ci:php<version>, the job container used
+# by ci-cd.yml and release.yml.
+#
+# Requirements:
+# - The runner mounts the Docker socket into job containers
+#   (forgejo-runner config.yml: container.docker_host: automount).
+# - Repository secret REGISTRY_TOKEN: a Forgejo access token with
+#   package read/write scope for the image owner.
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".forgejo/ci/**"
+      - ".forgejo/workflows/ci-image.yml"
+      - ".nvmrc"
+  schedule:
+    # Monthly rebuild to pick up PHP patch releases and security updates.
+    - cron: "0 4 1 * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/library/docker:28-cli
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
+    name: Build PHP ${{ matrix.php-version }} image
+    env:
+      IMAGE: code.iseard.media/michael/kudos-ci
+    steps:
+      # Plain git instead of actions/checkout: this Alpine image has no Node
+      # to run JavaScript actions.
+      - name: Checkout code
+        run: |
+          apk add --no-cache git
+          git init -q src
+          git -C src fetch -q --depth 1 "${{ github.server_url }}/${{ github.repository }}.git" "${{ github.sha }}"
+          git -C src checkout -q FETCH_HEAD
+
+      - name: Log in to registry
+        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login code.iseard.media -u "${{ github.repository_owner }}" --password-stdin
+
+      - name: Build image
+        run: |
+          docker build \
+            --pull \
+            --build-arg PHP_VERSION=${{ matrix.php-version }} \
+            --build-arg NODE_VERSION="$(tr -d '[:space:]' < src/.nvmrc)" \
+            --tag "$IMAGE:php${{ matrix.php-version }}" \
+            src/.forgejo/ci
+
+      - name: Smoke test
+        run: |
+          docker run --rm "$IMAGE:php${{ matrix.php-version }}" sh -c \
+            'php -v && php -m | grep -qx mysqli && composer --version && node --version && npm --version && svn --version --quiet'
+
+      - name: Push image
+        run: docker push "$IMAGE:php${{ matrix.php-version }}"

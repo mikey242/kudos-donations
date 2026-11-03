@@ -9,22 +9,11 @@ jobs:
         permissions:
             contents: write
         runs-on: ubuntu-latest
+        container:
+            image: code.iseard.media/michael/kudos-ci:php8.2
         steps:
             - name: Checkout code
               uses: https://github.com/actions/checkout@v7
-
-            - name: Set up PHP with Composer and PHP-Scoper
-              uses: https://github.com/shivammathur/setup-php@v2
-              with:
-                  php-version: 8.2
-                  tools: composer:2.10, php-scoper
-                  coverage: none
-
-            - name: Set up Node.js
-              uses: https://github.com/actions/setup-node@v7
-              with:
-                cache: "npm"
-                node-version-file: '.nvmrc'
 
             - name: Get composer cache directory
               id: composer-cache

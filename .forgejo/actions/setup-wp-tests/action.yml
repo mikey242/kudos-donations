@@ -1,10 +1,7 @@
 name: Setup WP test environment
-description: Sets up PHP, downloads built artifacts, installs subversion, and runs install-wp-tests.sh.
+description: Downloads built artifacts and installs the WordPress test suite. Expects the kudos-ci job container.
 
 inputs:
-  php-version:
-    description: PHP version to set up
-    required: true
   db-host:
     description: Database host (and optional port) of the job's MySQL service
     required: false
@@ -13,30 +10,17 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up PHP
-      uses: https://github.com/shivammathur/setup-php@v2
-      with:
-        php-version: ${{ inputs.php-version }}
-
     - name: Download plugin dependencies
       uses: https://code.forgejo.org/forgejo/download-artifact@v4
       with:
         name: plugin-deps
         path: ./
 
-    - name: Install subversion
-      shell: bash
-      run: |
-        SUDO=$(command -v sudo || true)
-        $SUDO apt-get update -y --allow-releaseinfo-change
-        $SUDO apt-get install -y subversion
-
     - name: Install tests
       shell: bash
       run: |
-        SUDO=$(command -v sudo || true)
-        $SUDO curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /usr/local/bin/install-wp-tests.sh
-        $SUDO chmod +x /usr/local/bin/install-wp-tests.sh
+        curl -fsSL https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /usr/local/bin/install-wp-tests.sh
+        chmod +x /usr/local/bin/install-wp-tests.sh
         bash /usr/local/bin/install-wp-tests.sh wordpress_test root root ${{ inputs.db-host }} latest true
 
     - name: Fix permissions for PHPUnit
