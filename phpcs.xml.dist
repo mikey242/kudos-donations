@@ -229,4 +229,5 @@
     <exclude-pattern>*/dist/*</exclude-pattern>
     <exclude-pattern>*/config/php-scoper/*</exclude-pattern>
     <exclude-pattern>scoper.inc.php</exclude-pattern>
+    <exclude-pattern>*/.ddev/*</exclude-pattern>
 </ruleset>
