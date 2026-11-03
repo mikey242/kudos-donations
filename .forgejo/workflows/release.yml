@@ -11,17 +11,17 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v7
+              uses: https://github.com/actions/checkout@v7
 
             - name: Set up PHP with Composer and PHP-Scoper
-              uses: shivammathur/setup-php@v2
+              uses: https://github.com/shivammathur/setup-php@v2
               with:
                   php-version: 8.2
                   tools: composer:2.10, php-scoper
                   coverage: none
 
             - name: Set up Node.js
-              uses: actions/setup-node@v7
+              uses: https://github.com/actions/setup-node@v7
               with:
                 cache: "npm"
                 node-version-file: '.nvmrc'
@@ -31,7 +31,7 @@ jobs:
               run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache dependencies
-              uses: actions/cache@v6
+              uses: https://github.com/actions/cache@v6
               with:
                 path: ${{ steps.composer-cache.outputs.dir }}
                 key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -48,7 +48,7 @@ jobs:
             - name: Create zip archive
               run: |
                   # TEMPORARY: wp-cli stable (2.12.0) bundles Composer 2.2.25, which rejects
-                  # GitHub's new hyphenated Actions token format (ghs_<id>_<base64url-JWT>) and
+                  # GitHub's hyphenated Actions token format (ghs_<id>_<base64url-JWT>) and
                   # fails with "Failed to get composer instance". The nightly bundles Composer
                   # 2.10.2, which accepts it. Roll back to the stable phar — and to
                   # dist-archive-command 3.1.0, which is what wp-cli 2.12 supports — once a
@@ -57,17 +57,23 @@ jobs:
                   chmod +x wp-cli.phar
                   php wp-cli.phar package install wp-cli/dist-archive-command:3.2.2 --allow-root
                   composer run make-zip
+                  mkdir -p dist && cp kudos-donations.zip dist/
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v7
+              uses: https://code.forgejo.org/forgejo/upload-artifact@v4
               with:
                   name: release
                   path: kudos-donations.zip
 
-            - name: Publish GitHub Release
-              uses: softprops/action-gh-release@v3
+            - name: Publish Forgejo release
+              uses: https://code.forgejo.org/actions/forgejo-release@v2
               with:
-                  body: |
+                  direction: upload
+                  url: ${{ github.server_url }}
+                  repo: ${{ github.repository }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag: ${{ github.ref_name }}
+                  release-dir: dist
+                  release-notes: |
                       ## What's Changed
                       - Automatically generated release.
-                  files: kudos-donations.zip
