@@ -6,8 +6,6 @@ on:
 
 jobs:
     release:
-        permissions:
-            contents: write
         runs-on: ubuntu-latest
         container:
             image: code.iseard.media/michael/kudos-ci:php8.2
