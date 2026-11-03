@@ -7,12 +7,10 @@
 # php-scoper (PHP >= 8.2 only), Node (from .nvmrc), git, unzip and subversion.
 
 ARG PHP_VERSION=8.2
-ARG NODE_VERSION=26.13.0
-
-FROM docker.io/library/node:${NODE_VERSION}-bookworm-slim AS node
 
 FROM docker.io/library/php:${PHP_VERSION}-cli
 
+ARG NODE_VERSION=26.13.0
 ARG PHP_SCOPER_VERSION=0.18.20
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
@@ -46,8 +44,19 @@ RUN if php -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);'; then \
       && chmod +x /usr/local/bin/php-scoper; \
     fi
 
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
- && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
- && node --version && npm --version && composer --version
+# Official Node tarball, checksum-verified. Extracting in one RUN is much
+# faster than COPY --from=node:..., which checksums each of npm's files.
+RUN set -eux; \
+    case "$(dpkg --print-architecture)" in \
+      amd64) arch=x64 ;; arm64) arch=arm64 ;; \
+      *) echo "Unsupported architecture" >&2; exit 1 ;; \
+    esac; \
+    file="node-v${NODE_VERSION}-linux-${arch}.tar.xz"; \
+    cd /tmp; \
+    curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/${file}"; \
+    curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt" | grep " ${file}\$" | sha256sum -c -; \
+    tar -xJf "$file" -C /usr/local --strip-components=1 --no-same-owner \
+      --exclude='*/CHANGELOG.md' --exclude='*/README.md' --exclude='*/LICENSE' \
+      --exclude='*/include' --exclude='*/share'; \
+    rm "$file"; \
+    node --version; npm --version; composer --version

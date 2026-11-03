@@ -29,6 +29,8 @@ jobs:
       image: docker.io/library/docker:28-cli
     strategy:
       fail-fast: false
+      # Builds share one dind daemon on the runner; limit contention.
+      max-parallel: 2
       matrix:
         php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
     name: Build PHP ${{ matrix.php-version }} image
