@@ -19,7 +19,7 @@ runs:
         php-version: ${{ inputs.php-version }}
 
     - name: Download plugin dependencies
-      uses: https://code.forgejo.org/forgejo/download-artifact@v4
+      uses: https://code.forgejo.org/forgejo/download-artifact@v7
       with:
         name: plugin-deps
         path: ./
