@@ -404,7 +404,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 		[ $year, $month, $day, $hour, $minute, $second ] = array_map( 'intval', explode( ' ', gmdate( 'Y n j G i s', $anchor ) ) );
 
 		$year         += $years;
-		$days_in_month =(int) gmdate( 't', gmmktime( 0, 0, 0, $month, 1, $year ) );
+		$days_in_month = (int) gmdate( 't', gmmktime( 0, 0, 0, $month, 1, $year ) );
 
 		return gmmktime( $hour, $minute, $second, $month, min( $day, $days_in_month ), $year );
 	}
