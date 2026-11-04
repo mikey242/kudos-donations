@@ -6,7 +6,7 @@
 	],
 	"minimumReleaseAge": "7 days",
 	"constraints": {
-		"php": "7.4.33"
+		"php": "8.5.12"
 	},
 	"constraintsFiltering": "strict",
 	"composer": {
