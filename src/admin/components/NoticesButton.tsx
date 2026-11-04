@@ -21,7 +21,9 @@ export const NoticesButton = ({
 	return (
 		<Dropdown
 			style={{ position: 'relative', lineHeight: 0 }}
-			focusOnMount={false}
+			// Focus the popover container itself (not its first button): the dropdown only
+			// closes on focus-outside, which never fires if focus never entered the popover.
+			focusOnMount
 			popoverProps={{ placement: 'bottom-end' }}
 			renderToggle={({ isOpen, onToggle }) => (
 				<>

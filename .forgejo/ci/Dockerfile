@@ -35,7 +35,7 @@ COPY --from=ghcr.io/mlocati/php-extension-installer:2 /usr/bin/install-php-exten
 RUN install-php-extensions mysqli gd zip intl bcmath \
  && echo 'memory_limit=-1' > /usr/local/etc/php/conf.d/zz-ci.ini
 
-COPY --from=docker.io/library/composer:2.10 /usr/bin/composer /usr/local/bin/composer
+COPY --from=docker.io/library/composer:2.11 /usr/bin/composer /usr/local/bin/composer
 
 # php-scoper 0.18 requires PHP 8.2+; only the build/release jobs need it.
 RUN if php -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);'; then \

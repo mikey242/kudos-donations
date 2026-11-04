@@ -89,6 +89,14 @@ const AdvancedPanel = () => (
 				'kudos-donations'
 			)}
 		/>
+		<ToggleControl
+			name="_kudos_show_remote_notices"
+			label={__('Show Kudos news', 'kudos-donations')}
+			help={__(
+				'Shows news and important notices about Kudos Donations. Checks kudosdonations.com twice a day; no information about your site is sent.',
+				'kudos-donations'
+			)}
+		/>
 		<TextControl
 			name="_kudos_base_font_size"
 			label={__('Base font size', 'kudos-donations')}
