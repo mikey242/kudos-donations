@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d89b797155c2d942e8a7e9a7a61ab3d9",
+    "content-hash": "ea1600dc8241ff3ccf4878493634fda8",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1125,16 +1125,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v5.4.46",
+            "version": "v5.4.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "977c88a02d7d3f16904a81907531b19666a08e78"
+                "reference": "94bc7e95a6c8b8729c4379343e749b261bf91b36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/977c88a02d7d3f16904a81907531b19666a08e78",
-                "reference": "977c88a02d7d3f16904a81907531b19666a08e78",
+                "url": "https://api.github.com/repos/symfony/config/zipball/94bc7e95a6c8b8729c4379343e749b261bf91b36",
+                "reference": "94bc7e95a6c8b8729c4379343e749b261bf91b36",
                 "shasum": ""
             },
             "require": {
@@ -1184,7 +1184,7 @@
             "description": "Helps you find, load, combine, autofill and validate configuration values of any kind",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/config/tree/v5.4.46"
+                "source": "https://github.com/symfony/config/tree/v5.4.56"
             },
             "funding": [
                 {
@@ -1196,11 +1196,16 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-30T07:58:02+00:00"
+            "time": "2026-09-15T08:38:37+00:00",
+            "published-time": "2026-11-04T10:51:51+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -1356,7 +1361,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:11:13+00:00"
+            "time": "2024-09-25T14:11:13+00:00",
+            "published-time": "2024-11-27T12:25:26+00:00"
         },
         {
             "name": "symfony/dotenv",
@@ -1503,7 +1509,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-30T06:54:06+00:00"
+            "time": "2026-08-30T06:54:06+00:00",
+            "published-time": "2026-10-15T06:51:49+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1755,7 +1762,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:50:05+00:00"
+            "time": "2026-09-25T15:50:05+00:00",
+            "published-time": "2026-09-30T10:23:35+00:00"
         },
         {
             "name": "symfony/polyfill-php81",
@@ -1835,7 +1843,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T12:45:58+00:00"
+            "time": "2026-05-26T12:45:58+00:00",
+            "published-time": "2026-05-26T13:40:34+00:00"
         },
         {
             "name": "symfony/proxy-manager-bridge",
@@ -5571,5 +5580,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
