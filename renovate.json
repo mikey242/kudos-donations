@@ -4,13 +4,17 @@
 		"config:recommended",
 		"mergeConfidence:all-badges"
 	],
+	"minimumReleaseAge": "7 days",
 	"constraints": {
 		"php": "7.4.0"
 	},
 	"constraintsFiltering": "strict",
 	"composer": {
 		"lockFileMaintenance": {
-			"enabled": true
+			"enabled": true,
+			"schedule": [
+				"before 5am on the first day of the month"
+			]
 		},
 		"rangeStrategy": "update-lockfile"
 	}
