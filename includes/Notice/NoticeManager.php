@@ -25,6 +25,12 @@ class NoticeManager implements HasSettingsInterface {
 	public const FILTER_NOTICES = 'kudos_notices';
 
 	/**
+	 * Action fired after a notice is dismissed, so sources that inject notices via
+	 * FILTER_NOTICES (e.g. remote notices) can record the dismissal themselves.
+	 */
+	public const ACTION_NOTICE_DISMISSED = 'kudos_notice_dismissed';
+
+	/**
 	 * Unified in-memory notice store for this request.
 	 *
 	 * @var Notice[]
@@ -94,6 +100,8 @@ class NoticeManager implements HasSettingsInterface {
 			unset( $stored[ $key ] );
 			update_option( self::SETTING_ADMIN_NOTICES, $stored );
 		}
+
+		do_action( self::ACTION_NOTICE_DISMISSED, $key );
 	}
 
 	/**
