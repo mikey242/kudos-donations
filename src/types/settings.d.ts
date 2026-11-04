@@ -36,6 +36,7 @@ export interface BaseSettings {
 	_kudos_base_font_size: string; // e.g., '1.2rem'
 	_kudos_maximum_donation: number;
 	_kudos_allow_metrics: boolean;
+	_kudos_show_remote_notices: boolean;
 	_kudos_email_bcc: string;
 	_kudos_custom_smtp: string | null;
 	_kudos_smtp_password: string;

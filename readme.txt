@@ -124,6 +124,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.3.1 =
+ * Add Kudos news notices
+
  = 4.3.0 =
  * Added Stripe payment provider, supporting one-off and recurring donations, fixed-term subscriptions and refunds
  * Added onboarding flow for new installations, replacing the intro guide
