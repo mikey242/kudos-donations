@@ -125,8 +125,10 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
  = 4.3.1 =
- * Add Kudos news notices
- * Update dependencies
+ * Added Kudos news: occasional notices about Kudos Donations in the admin. These can be turned off under Help > Advanced
+ * Fix the notifications dropdown not closing when clicking outside it
+ * Update stripe/stripe-php to v22.1.0
+ * Update symfony/config to v5.4.56
 
  = 4.3.0 =
  * Added Stripe payment provider, supporting one-off and recurring donations, fixed-term subscriptions and refunds
