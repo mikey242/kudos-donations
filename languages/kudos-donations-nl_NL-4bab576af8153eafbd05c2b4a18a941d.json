@@ -1,6 +1,6 @@
 {
-	"translation-revision-date": "2025-03-16 13:23:09+0000",
-	"generator": "WP-CLI\/2.11.0",
+	"translation-revision-date": "2026-11-05 12:15:38+0000",
+	"generator": "kudos-i18n-script",
 	"source": "build\/front\/block\/index.js",
 	"domain": "messages",
 	"locale_data": {
@@ -10,78 +10,178 @@
 				"lang": "nl",
 				"plural-forms": "nplurals=2; plural=n != 1;"
 			},
-			"Please select a campaign from the sidebar": [
-				"Selecteer een campagne in de zijbalk."
+			"Loading": [
+				"Laden"
 			],
-			"Create a campaign": ["Maak een campagne aan"],
-			"Button Label": ["Knoplabel"],
-			"Appearance": ["Weergave"],
-			"Campaign Settings": ["Campagne-instellingen"],
-			"Campaign not found": ["Campagne niet gevonden"],
+			"Create a campaign": [
+				"Maak een campagne aan"
+			],
+			"Button Label": [
+				"Knoplabel"
+			],
+			"Appearance": [
+				"Weergave"
+			],
+			"Campaign Settings": [
+				"Campagne-instellingen"
+			],
+			"Campaign not found": [
+				"Campagne niet gevonden"
+			],
 			"Accept <a>Terms and Conditions<\/a>": [
 				"Ik accepteer de <a>voorwaarden en condities<\/a>"
 			],
 			"Accept <a>Privacy Policy<\/a>": [
 				"Accepteer <a>Privacy Beleid<\/a>"
 			],
-			"anonymous": ["anoniem"],
-			"Full name": ["Volledige naam"],
-			"Open donation amount": ["Open donatiebedrag"],
-			"Fixed donation amount": ["Vast donatiebedrag"],
+			"anonymous": [
+				"anoniem"
+			],
+			"Open donation amount": [
+				"Open donatiebedrag"
+			],
+			"Fixed donation amount": [
+				"Vast donatiebedrag"
+			],
+			"Campaign post type singular name\u0004Campaign": [
+				"Campagne"
+			],
+			"block description\u0004Adds a configurable Kudos donate button or form.": [
+				"Voegt een instelbare Kudos donatieknop of formulier toe."
+			],
+			"block title\u0004Kudos Donations": [
+				"Kudos Donations"
+			],
 			"Please accept this to continue": [
 				"Accepteer dit om verder te gaan"
 			],
-			"One off": ["Eenmalig"],
-			"Recurring donation": ["Terugkerende donatie"],
-			"Maximum donation is %1$s%2$s": ["Maximale donatie is %1$s%2$s"],
-			"Country required": ["Land vereist"],
-			"City required": ["Stad vereist"],
-			"Postcode required": ["Postcode vereist"],
-			"Street required": ["Straat vereist"],
-			"Submit": ["Verstuur"],
-			"Button with modal": ["Knop met modal"],
-			"Embedded form": ["Ingesloten formulier"],
-			"Back": ["Terug"],
-			"Display Type": ["Weergavetype"],
-			"Close modal": ["Pop-up sluiten"],
-			"Business name": ["Bedrijfsnaam"],
-			"Message": ["Bericht"],
-			"Select Campaign": ["Selecteer campagne"],
-			"Donation duration": ["Donatieduur"],
-			"Next": ["Volgende"],
-			"years": ["jaren"],
-			"year": ["jaar"],
-			"Payment frequency": ["Betalingsfrequentie"],
-			"E-mail address": ["E-mailadres"],
-			"Subscriptions must be more than one payment": [
-				"Abonnementen bestaan uit meer dan \u00e9\u00e9n betaling"
+			"One off": [
+				"Eenmalig"
 			],
-			"Please select a payment duration": ["Selecteer betalingsduur"],
+			"Recurring donation": [
+				"Terugkerende donatie"
+			],
+			"Country required": [
+				"Land vereist"
+			],
+			"City required": [
+				"Stad vereist"
+			],
+			"Postcode required": [
+				"Postcode vereist"
+			],
+			"Street required": [
+				"Straat vereist"
+			],
+			"Submit": [
+				"Verstuur"
+			],
+			"Button with modal": [
+				"Knop met modal"
+			],
+			"Embedded form": [
+				"Ingesloten formulier"
+			],
+			"Back": [
+				"Terug"
+			],
+			"block keyword\u0004donate": [
+				"doneren"
+			],
+			"block keyword\u0004button": [
+				"knop"
+			],
+			"block keyword\u0004kudos": [
+				"kudos"
+			],
+			"Display Type": [
+				"Weergavetype"
+			],
+			"Close modal": [
+				"Pop-up sluiten"
+			],
+			"Message": [
+				"Bericht"
+			],
+			"Next": [
+				"Volgende"
+			],
+			"years": [
+				"jaren"
+			],
+			"Payment frequency": [
+				"Betalingsfrequentie"
+			],
+			"E-mail address": [
+				"E-mailadres"
+			],
+			"Campaign": [
+				"Campagne"
+			],
+			"Subscriptions must be more than one payment": [
+				"Abonnementen bestaan uit meer dan één betaling"
+			],
+			"Please select a payment duration": [
+				"Selecteer betalingsduur"
+			],
 			"Please select a payment frequency": [
 				"Selecteer betalingsfrequentie"
 			],
-			"None": ["Geen"],
-			"Edit": ["Bewerk"],
-			"Recurring": ["Periodiek"],
-			"One-off": ["Eenmalig"],
-			"Country": ["Land"],
-			"City": ["Stad"],
-			"Postcode": ["Postcode"],
-			"Street": ["Straat"],
-			"Type": ["Type"],
-			"Monthly": ["Maandelijks"],
-			"Quarterly": ["Per kwartaal"],
-			"Yearly": ["Jaarlijks"],
-			"Continuous": ["Doorlopend"],
+			"None": [
+				"Geen"
+			],
+			"Edit": [
+				"Bewerk"
+			],
+			"Recurring": [
+				"Periodiek"
+			],
+			"One-off": [
+				"Eenmalig"
+			],
+			"Address": [
+				"Adres"
+			],
+			"Type": [
+				"Type"
+			],
+			"Monthly": [
+				"Maandelijks"
+			],
+			"Quarterly": [
+				"Per kwartaal"
+			],
+			"Yearly": [
+				"Jaarlijks"
+			],
+			"Continuous": [
+				"Doorlopend"
+			],
 			"Minimum donation is %d euro": [
 				"Minimum donatie is %d euro",
 				"Minimum donatie is %d euro's"
 			],
-			"Your email is required": ["Vul je e-mailadres in"],
-			"Your name is required": ["Vul je naam in"],
-			"Amount": ["Bedrag"],
-			"Email": ["E-mail"],
-			"Name": ["Naam"]
+			"Your email is required": [
+				"Vul je e-mailadres in"
+			],
+			"Your name is required": [
+				"Vul je naam in"
+			],
+			"Open": [
+				"Open"
+			],
+			"Amount": [
+				"Bedrag"
+			],
+			"Name": [
+				"Naam"
+			],
+			"Donate now": [
+				"Doneer nu"
+			],
+			"Kudos Donations": [
+				"Kudos Donations"
+			]
 		}
 	}
 }

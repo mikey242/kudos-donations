@@ -1,0 +1,684 @@
+{
+	"translation-revision-date": "2026-11-05 12:15:38+0000",
+	"generator": "kudos-i18n-script",
+	"source": "build\/admin\/kudos-admin.js",
+	"domain": "messages",
+	"locale_data": {
+		"messages": {
+			"": {
+				"domain": "messages",
+				"lang": "nl",
+				"plural-forms": "nplurals=2; plural=n != 1;"
+			},
+			"This will be the number assigned to the next successful payment. This will automatically increases as transactions are paid.": [
+				"Dit wordt het nummer dat aan de volgende succesvolle betaling wordt toegekend. Dit wordt automatisch verhoogd naarmate transacties worden betaald."
+			],
+			"Address to send the test email to. Please ensure you save changes first.": [
+				"Adres om de test-e-mail naar te verzenden. Zorg ervoor dat je eerst de wijzigingen opslaat."
+			],
+			"Show the campaign name in the receipt email.": [
+				"Toon de campagnenaam in de ontvangstbevestiging e-mail."
+			],
+			"Show campaign name": [
+				"Toon campagnenaam"
+			],
+			"Payment type": [
+				"Betalingstype"
+			],
+			"Create a campaign": [
+				"Maak een campagne aan"
+			],
+			"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size.": [
+				"Dit verandert de schaal van alle lettergroottes en de tussenruimtes binnen het Kudos Donations-frame. De standaardwaarde is 1rem, wat de hoofdlettergrootte van je website is."
+			],
+			"Base font size": [
+				"Basis lettergrootte"
+			],
+			"The maximum donation that you want to allow, leave blank to disable. This does not override your payment provider's maximum.": [
+				"De maximale donatie die je wilt toestaan, laat leeg om deze uit te schakelen. Dit overschrijft niet de maximale limiet van je betaalprovider."
+			],
+			"Each value must not exceed the maximum donation amount": [
+				"Elke waarde mag het maximale donatiebedrag niet overschrijden."
+			],
+			"Please make sure you backup your data before proceeding.": [
+				"Zorg ervoor dat je een back-up maakt van je gegevens voordat je doorgaat."
+			],
+			"Kudos Donations needs to update your database before you can continue.": [
+				"Kudos Donations moet je database bijwerken voordat je verder kunt gaan."
+			],
+			"Migration failed": [
+				"Migratie mislukt"
+			],
+			"No payment methods found.": [
+				"Geen betaalmethoden gevonden."
+			],
+			"Read more about Mollie recurring payments": [
+				"Lees meer over terugkerende betalingen bij Mollie"
+			],
+			"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear as a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.": [
+				"Dit zijn de betaalmethoden die beschikbaar zijn voor je donateurs. Om terugkerende betalingen (abonnementen) te gebruiken, moet je 'Creditcard', 'PayPal' of 'SEPA Automatische Incasso' hebben geactiveerd. Let op: 'SEPA Automatische Incasso' verschijnt niet als een directe betaaloptie, omdat het andere betaalopties gebruikt om het abonnement in te stellen. Als je wijzigingen hebt aangebracht in de betaalmethoden in je Mollie-dashboard, klik dan op de vernieuw-knop hieronder om deze lijst bij te werken."
+			],
+			"Refresh Payment Methods": [
+				"Betaalmethoden vernieuwen"
+			],
+			"Available payment methods": [
+				"Beschikbare betaalmethoden"
+			],
+			"Visit our Documentation": [
+				"Lees onze documentatie"
+			],
+			"Edit %s": [
+				"Bewerk %s"
+			],
+			"Key must start with \"%s\"": [
+				"De sleutel moet beginnen met \"%s\""
+			],
+			"VAT Number": [
+				"BTW nummer"
+			],
+			"Your details": [
+				"Je gegevens"
+			],
+			"Enables debug logging. Please only enable this if advised to by support.": [
+				"Zet debug logging aan. Schakel dit alleen in als support het aangeeft."
+			],
+			"This password will be encrypted in the database.": [
+				"Dit wachtwoord wordt gecodeerd in de database opgeslagen."
+			],
+			"Payment tab": [
+				"Tabblad betaling"
+			],
+			"Message tab": [
+				"Bericht tab"
+			],
+			"Address tab": [
+				"Tabblad adres"
+			],
+			"Policy links": [
+				"Beleid links"
+			],
+			"URL required": [
+				"URL verplicht"
+			],
+			"Message required": [
+				"Bericht vereist"
+			],
+			"Title is required": [
+				"Titel is vereist"
+			],
+			"After payment": [
+				"Na betaling"
+			],
+			"Please enter a goal": [
+				"Voer een doel in"
+			],
+			"Please select a currency": [
+				"Selecteer een valuta"
+			],
+			"Select the desired currency for this campaign. Cannot be changed once you have received a donation.": [
+				"Selecteer de gewenste valuta voor deze campagne. Dit kan niet meer gewijzigd worden zodra je een donatie hebt ontvangen."
+			],
+			"This is the minimum donation that will be accepted.": [
+				"Dit is de minimale donatie die wordt geaccepteerd."
+			],
+			"You need to enter one or more amounts": [
+				"Je moet één of meer bedragen invoeren"
+			],
+			"All values must be numbers": [
+				"Alle waarden moeten nummers zijn"
+			],
+			"Progress": [
+				"Voortgang"
+			],
+			"Custom CSS": [
+				"Aangepaste CSS"
+			],
+			"There are invalid fields in the form. Please check the fields and correct any errors.": [
+				"Er zijn ongeldige velden in het formulier. Controleer de velden en corrigeer eventuele fouten."
+			],
+			"Transaction post type plural name\u0004Transactions": [
+				"Transacties"
+			],
+			"Transaction post type singular name\u0004Transaction": [
+				"Transactie"
+			],
+			"Length": [
+				"Lengte"
+			],
+			"Subscription post type plural name\u0004Subscriptions": [
+				"Abonnementen"
+			],
+			"Subscription post type singular name\u0004Subscription": [
+				"Abonnement"
+			],
+			"Donor post type plural name\u0004Donors": [
+				"Donateurs"
+			],
+			"Donor post type singular name\u0004Donor": [
+				"Donateur"
+			],
+			"Campaign post type plural name\u0004Campaigns": [
+				"Campagnes"
+			],
+			"Campaign post type singular name\u0004Campaign": [
+				"Campagne"
+			],
+			"Label used when an item is updated\u0004%s updated": [
+				"%s bijgewerkt"
+			],
+			"Label for the new item page title\u0004New %s": [
+				"Nieuwe %s"
+			],
+			"Label for editing a singular item\u0004Edit %s": [
+				"Bewerken %s"
+			],
+			"Maximum donation": [
+				"Maximum donatie"
+			],
+			"block title\u0004Kudos Donations": [
+				"Kudos Donations"
+			],
+			"This name will be used in the \"From\" field.": [
+				"Deze naam wordt gebruikt in het \"Van\" veld."
+			],
+			"Email from name": [
+				"E-mail van naam"
+			],
+			"This email address will be used in the \"From\" field.": [
+				"Dit e-mailadres wordt gebruikt in het veld 'Van'."
+			],
+			"For most servers TLS is the recommended option. If your SMTP provider offers both SSL and TLS options, we recommend using TLS.": [
+				"Voor de meeste servers is TLS de aanbevolen optie; als de SMTP-provider zowel SSL- als TLS-opties aanbiedt, raden we aan TLS te gebruiken."
+			],
+			"The email server port number.": [
+				"Het poortnummer van de mailserver."
+			],
+			"The email server.": [
+				"De mailserver."
+			],
+			"Allow you to configure an external SMTP email server.": [
+				"Laat je een externe SMTP-mailserver configureren."
+			],
+			"Add an email address here to send a copy of every donation receipt.": [
+				"Voeg hier een e-mailadres toe om een kopie van elke donatiebon te ontvangen."
+			],
+			"Add a URL to your Privacy policy, donors will need to agree to it before donating.": [
+				"Voeg een URL toe naar je Privacybeleid, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."
+			],
+			"Add a URL to your Terms & Conditions, donors will need to agree to them before donating.": [
+				"Voeg een URL toe naar je Algemene Voorwaarden, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."
+			],
+			"Once the payment has been completed, return the donor to a custom URL.": [
+				"Stuur de donateur naar een aangepaste URL zodra de betaling is voltooid."
+			],
+			"This will show a pop-up message to the donor thanking them for their donation.": [
+				"Dit toont een pop-up bericht aan de donateur om ze te bedanken voor hun donatie."
+			],
+			"This will display a goal progress bar on your donation form. Make sure you also set a goal.": [
+				"Dit toont een voortgangsbalk voor je doel op het donatieformulier. Vergeet niet om een doel in te stellen."
+			],
+			"Display goal progress": [
+				"Toon voortgang van het doel"
+			],
+			"Update now": [
+				"Nu updaten"
+			],
+			"Shortcode copied": [
+				"Shortcode gekopieerd"
+			],
+			"Campaigns": [
+				"Campagnes"
+			],
+			"Button with modal": [
+				"Knop met modal"
+			],
+			"This will ensure that the JavaScript for Kudos is loaded on every page.": [
+				"Dit zorgt ervoor dat de JavaScript voor Kudos op elke pagina wordt geladen."
+			],
+			"Always load assets": [
+				"Laad altijd assets"
+			],
+			"Test email": [
+				"Test e-mail"
+			],
+			"Visit Mollie dashboard": [
+				"Bezoek het Mollie-dashboard"
+			],
+			"Created": [
+				"Aangemaakt"
+			],
+			"Add a button label": [
+				"Voeg een knoplabel toe"
+			],
+			"Embedded form": [
+				"Ingesloten formulier"
+			],
+			"Display as": [
+				"Weergeven als"
+			],
+			"Generate shortcode": [
+				"Shortcode genereren"
+			],
+			"Duplicate campaign": [
+				"Dupliceer campagne"
+			],
+			"Edit campaign": [
+				"Campagne bewerken"
+			],
+			"Back": [
+				"Terug"
+			],
+			"Privacy Policy URL": [
+				"Privacybeleid URL"
+			],
+			"Terms & Conditions URL": [
+				"Algemene voorwaarden URL"
+			],
+			"Allow donors to leave a message.": [
+				"Laat donateurs een bericht achterlaten."
+			],
+			"Show the address tab.": [
+				"Toon het tabblad Adres."
+			],
+			"Optional fields": [
+				"Optionele velden"
+			],
+			"Fixed amounts": [
+				"Vaste bedragen"
+			],
+			"Minimum allowed donation": [
+				"Minimale toegestane donatie"
+			],
+			"Minimum donation required": [
+				"Minimale donatie vereist"
+			],
+			"Chose the available amount types.": [
+				"Kies de beschikbare bedragtypes."
+			],
+			"Choose the available payment frequency.": [
+				"Kies de beschikbare betalingsfrequentie."
+			],
+			"Donation settings": [
+				"Donatie-instellingen"
+			],
+			"Message title": [
+				"Berichttitel"
+			],
+			"Initial tab": [
+				"Eerste tab"
+			],
+			"Show return message": [
+				"Toon terugkeerbericht"
+			],
+			"Choose a color theme for your campaign.": [
+				"Kies een kleurthema voor je campagne."
+			],
+			"Add external funds to the total.": [
+				"Voeg externe fondsen toe aan het totaal."
+			],
+			"Minimum value is 1": [
+				"Minimumwaarde is 1"
+			],
+			"Set a goal for your campaign.": [
+				"Stel een doel in voor je campagne."
+			],
+			"Name required": [
+				"Naam verplicht"
+			],
+			"Give your campaign a unique name.": [
+				"Geef je campagne een unieke naam."
+			],
+			"block keyword\u0004button": [
+				"knop"
+			],
+			"Additional funds": [
+				"Extra bedrag"
+			],
+			"Business name": [
+				"Bedrijfsnaam"
+			],
+			"Message": [
+				"Bericht"
+			],
+			"General": [
+				"Algemeen"
+			],
+			"Goal": [
+				"Doel"
+			],
+			"Send": [
+				"Versturen"
+			],
+			"Copy shortcode": [
+				"Kopieer shortcode"
+			],
+			"Do you like using Kudos? Please let us know your thoughts.": [
+				"Gebruik je Kudos graag? Geef ons feedback."
+			],
+			"SMTP settings": [
+				"SMTP instellingen"
+			],
+			"Help": [
+				"Help"
+			],
+			"Settings updated": [
+				"Instelling geüpdatet"
+			],
+			"Campaign details": [
+				"Campagne gegevens"
+			],
+			"Campaign name": [
+				"Campagne naam"
+			],
+			"New campaign": [
+				"Nieuwe campagne"
+			],
+			"Support forums": [
+				"Support forums"
+			],
+			"Leave a review": [
+				"Laat een beoordeling achter"
+			],
+			"Share the love": [
+				"Deel de liefde"
+			],
+			"Delete campaign": [
+				"Verwijder campagne"
+			],
+			"Are you sure you wish to delete this campaign?": [
+				"Weet je zeker dat je deze campagne wilt verwijderen?"
+			],
+			"Make the address required.": [
+				"Adresveld is verplicht om in te vullen."
+			],
+			"Donation type": [
+				"Donatie soort"
+			],
+			"Both": [
+				"Beide"
+			],
+			"Fixed": [
+				"Vaste bedragen"
+			],
+			"This field is required.": [
+				"Dit veld is vereist."
+			],
+			"Payment": [
+				"Betaling"
+			],
+			"years": [
+				"jaren"
+			],
+			"Use custom SMTP settings": [
+				"Gebruik aangepaste SMTP instellingen"
+			],
+			"Advanced": [
+				"Geavanceerd"
+			],
+			"Mollie": [
+				"Mollie"
+			],
+			"Campaign": [
+				"Campagne"
+			],
+			"Theme color": [
+				"Themakleur"
+			],
+			"Debug mode": [
+				"Debug modus"
+			],
+			"Send receipt copy to": [
+				"Verzend een kopie naar"
+			],
+			"Once a payment has been completed, you can automatically send an email receipt to the donor.": [
+				"Wanneer een betaling is voltooid, kun je automatisch een ontvangstbewijs per e-mail naar de donateur sturen."
+			],
+			"Send email receipts": [
+				"E-mailontvangstbewijzen verzenden"
+			],
+			"Email receipts": [
+				"E-mail ontvangstbewijzen"
+			],
+			"When using Kudos Donations for the first time, the payment mode is set to \"Test\". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to \"Live\".": [
+				"Wanneer je Kudos Donations voor de eerste keer gebruikt, staat de betalingsmodus op 'Test'. Controleer of de configuratie correct werkt. Zodra je klaar bent om live-betalingen te ontvangen, schakel de modus naar 'Live'."
+			],
+			"API Mode": [
+				"API modus"
+			],
+			"API Keys": [
+				"API-sleutels"
+			],
+			"Email address": [
+				"E-mailadres"
+			],
+			"From address": [
+				"Van adres"
+			],
+			"Password": [
+				"Wachtwoord"
+			],
+			"This is usually an email address.": [
+				"Dit is meestal een e-mailadres."
+			],
+			"Username": [
+				"Gebruikersnaam"
+			],
+			"Port": [
+				"Poort"
+			],
+			"TLS": [
+				"TLS"
+			],
+			"SSL": [
+				"SSL"
+			],
+			"None": [
+				"Geen"
+			],
+			"Encryption": [
+				"Versleuteling"
+			],
+			"Host": [
+				"Host"
+			],
+			"Text": [
+				"Tekst"
+			],
+			"Title": [
+				"Titel"
+			],
+			"Save": [
+				"Opslaan"
+			],
+			"Other": [
+				"Anders"
+			],
+			"Donate Now": [
+				"Doneer nu"
+			],
+			"Edit": [
+				"Bewerk"
+			],
+			"One-off": [
+				"Eenmalig"
+			],
+			"Settings": [
+				"Instellingen"
+			],
+			"Address": [
+				"Adres"
+			],
+			"Donor": [
+				"Donateur"
+			],
+			"Country": [
+				"Land"
+			],
+			"City": [
+				"Stad"
+			],
+			"Postcode": [
+				"Postcode"
+			],
+			"Street": [
+				"Straat"
+			],
+			"Monthly": [
+				"Maandelijks"
+			],
+			"Quarterly": [
+				"Per kwartaal"
+			],
+			"Yearly": [
+				"Jaarlijks"
+			],
+			"Continuous": [
+				"Doorlopend"
+			],
+			"Subscription tab": [
+				"Abonnement tab"
+			],
+			"Subscription": [
+				"Abonnement"
+			],
+			"Currency": [
+				"Valuta"
+			],
+			"Frequency": [
+				"Frequentie"
+			],
+			"Subscriptions": [
+				"Abonnementen"
+			],
+			"Donors": [
+				"Donateurs"
+			],
+			"Please enter a valid URL": [
+				"Voer een geldige URL in"
+			],
+			"Failed": [
+				"Mislukt"
+			],
+			"Canceled": [
+				"Geannuleerd"
+			],
+			"Open": [
+				"Open"
+			],
+			"Paid": [
+				"Betaald"
+			],
+			"Status": [
+				"Status"
+			],
+			"Amount": [
+				"Bedrag"
+			],
+			"URL": [
+				"URL"
+			],
+			"Use custom return URL": [
+				"Gebruik een aangepaste retour-URL"
+			],
+			"Message text": [
+				"Bericht tekst"
+			],
+			"Email": [
+				"E-mail"
+			],
+			"Required": [
+				"Verplicht"
+			],
+			"Name": [
+				"Naam"
+			],
+			"Button label": [
+				"Knop tekst"
+			],
+			"Live": [
+				"Live"
+			],
+			"Test": [
+				"Test"
+			],
+			"Transactions": [
+				"Transacties"
+			],
+			"https:\/\/iseard.media": [
+				"https:\/\/iseard.media"
+			],
+			"Iseard Media": [
+				"Iseard Media"
+			],
+			"Kudos Donations": [
+				"Kudos Donations"
+			],
+			"Shows news and important notices about Kudos Donations. Checks kudosdonations.com twice a day; no information about your site is sent.": [
+				"Toont nieuws en belangrijke mededelingen over Kudos Donations. Controleert kudosdonations.com twee keer per dag; er wordt geen informatie over je site verzonden."
+			],
+			"Show Kudos news": [
+				"Toon Kudos-nieuws"
+			],
+			"View message": [
+				"Bekijk bericht"
+			],
+			"Provider": [
+				"Provider"
+			],
+			"Previously created transactions and subscriptions will remain with their original provider.": [
+				"Eerder aangemaakte transacties en abonnementen blijven bij hun oorspronkelijke provider."
+			],
+			"Select the active payment provider for new transactions.": [
+				"Selecteer de actieve betaalprovider voor nieuwe transacties."
+			],
+			"Found in the endpoint details in your Stripe Dashboard. It must be the endpoint for the sandbox or test mode you are using — a live secret will not verify test payments.": [
+				"Te vinden in de endpointgegevens in je Stripe-dashboard. Het moet het endpoint zijn voor de sandbox of testmodus die je gebruikt — een live secret kan testbetalingen niet verifiëren."
+			],
+			"Found in the endpoint details in your Stripe Dashboard. It must be the live endpoint — a test secret will not verify live payments.": [
+				"Te vinden in de endpointgegevens in je Stripe-dashboard. Het moet het live endpoint zijn — een test secret kan livebetalingen niet verifiëren."
+			],
+			"Stripe webhook could not be registered automatically. Add the URL below as an endpoint in the sandbox or test mode you are using in your Stripe Dashboard, then paste that endpoint’s signing secret below.": [
+				"De Stripe-webhook kon niet automatisch worden geregistreerd. Voeg de onderstaande URL toe als endpoint in de sandbox of testmodus die je gebruikt in je Stripe-dashboard en plak daarna het signing secret van dat endpoint hieronder."
+			],
+			"Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard while it is in live mode, then paste that endpoint’s signing secret below.": [
+				"De Stripe-webhook kon niet automatisch worden geregistreerd. Voeg de onderstaande URL toe als endpoint in je Stripe-dashboard terwijl dit in livemodus staat en plak daarna het signing secret van dat endpoint hieronder."
+			],
+			"Webhook (test mode)": [
+				"Webhook (testmodus)"
+			],
+			"Webhook (live mode)": [
+				"Webhook (livemodus)"
+			],
+			"Discard": [
+				"Verwerpen"
+			],
+			"Unsaved changes": [
+				"Niet-opgeslagen wijzigingen"
+			],
+			"documentation": [
+				"documentatie"
+			],
+			"support forums": [
+				"supportforums"
+			],
+			"Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums\/> or <docs\/>.": [
+				"Pas je campagne gerust aan. Zodra je klaar bent, plaats je de campagne op je website met een shortcode of blok. Lees meer op onze <forums\/> of in de <docs\/>."
+			],
+			"You're all set!": [
+				"Je bent helemaal klaar!"
+			],
+			"Complete the following steps to get started": [
+				"Voltooi de volgende stappen om aan de slag te gaan"
+			],
+			"Choose a payment provider": [
+				"Kies een betaalprovider"
+			],
+			"Dismiss": [
+				"Sluiten"
+			],
+			"This will remove the saved %s. You will need to enter it again to continue.": [
+				"Hiermee wordt de opgeslagen %s verwijderd. Je moet deze opnieuw invoeren om verder te gaan."
+			]
+		}
+	}
+}

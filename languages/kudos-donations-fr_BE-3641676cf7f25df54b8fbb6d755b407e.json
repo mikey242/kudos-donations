@@ -1,0 +1,81 @@
+{
+	"translation-revision-date": "2026-11-05 12:15:38+0000",
+	"generator": "kudos-i18n-script",
+	"source": "build\/admin\/kudos-admin.js",
+	"domain": "messages",
+	"locale_data": {
+		"messages": {
+			"": {
+				"domain": "messages",
+				"lang": "fr_BE",
+				"plural-forms": "nplurals=2; plural=n > 1;"
+			},
+			"Shows news and important notices about Kudos Donations. Checks kudosdonations.com twice a day; no information about your site is sent.": [
+				"Affiche les actualités et les avis importants concernant Kudos Donations. Vérifie kudosdonations.com deux fois par jour ; aucune information sur votre site n’est envoyée."
+			],
+			"Show Kudos news": [
+				"Afficher les actualités Kudos"
+			],
+			"View message": [
+				"Voir le message"
+			],
+			"Provider": [
+				"Prestataire"
+			],
+			"Previously created transactions and subscriptions will remain with their original provider.": [
+				"Les transactions et abonnements créés précédemment resteront chez leur prestataire d’origine."
+			],
+			"Select the active payment provider for new transactions.": [
+				"Sélectionnez le prestataire de paiement actif pour les nouvelles transactions."
+			],
+			"Found in the endpoint details in your Stripe Dashboard. It must be the endpoint for the sandbox or test mode you are using — a live secret will not verify test payments.": [
+				"Disponible dans les détails du point de terminaison de votre tableau de bord Stripe. Il doit s’agir du point de terminaison de la sandbox ou du mode test que vous utilisez — une clé secrète de production ne permettra pas de vérifier les paiements de test."
+			],
+			"Found in the endpoint details in your Stripe Dashboard. It must be the live endpoint — a test secret will not verify live payments.": [
+				"Disponible dans les détails du point de terminaison de votre tableau de bord Stripe. Il doit s’agir du point de terminaison de production — une clé secrète de test ne permettra pas de vérifier les paiements réels."
+			],
+			"Stripe webhook could not be registered automatically. Add the URL below as an endpoint in the sandbox or test mode you are using in your Stripe Dashboard, then paste that endpoint’s signing secret below.": [
+				"Le webhook Stripe n’a pas pu être enregistré automatiquement. Ajoutez l’URL ci-dessous comme point de terminaison dans la sandbox ou le mode test que vous utilisez dans votre tableau de bord Stripe, puis collez ci-dessous la clé secrète de signature de ce point de terminaison."
+			],
+			"Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard while it is in live mode, then paste that endpoint’s signing secret below.": [
+				"Le webhook Stripe n’a pas pu être enregistré automatiquement. Ajoutez l’URL ci-dessous comme point de terminaison dans votre tableau de bord Stripe en mode production, puis collez ci-dessous la clé secrète de signature de ce point de terminaison."
+			],
+			"Webhook (test mode)": [
+				"Webhook (mode test)"
+			],
+			"Webhook (live mode)": [
+				"Webhook (mode production)"
+			],
+			"Discard": [
+				"Abandonner"
+			],
+			"Unsaved changes": [
+				"Modifications non enregistrées"
+			],
+			"documentation": [
+				"documentation"
+			],
+			"support forums": [
+				"forums d’assistance"
+			],
+			"Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums\/> or <docs\/>.": [
+				"N’hésitez pas à personnaliser votre campagne. Lorsque vous êtes prêt, placez votre campagne sur votre site à l’aide d’un shortcode ou d’un bloc. Pour en savoir plus, consultez nos <forums\/> ou notre <docs\/>."
+			],
+			"You're all set!": [
+				"Tout est prêt !"
+			],
+			"Complete the following steps to get started": [
+				"Suivez les étapes ci-dessous pour commencer"
+			],
+			"Choose a payment provider": [
+				"Choisissez un prestataire de paiement"
+			],
+			"Dismiss": [
+				"Fermer"
+			],
+			"This will remove the saved %s. You will need to enter it again to continue.": [
+				"Cette action supprimera la valeur enregistrée (%s). Vous devrez la saisir à nouveau pour continuer."
+			]
+		}
+	}
+}

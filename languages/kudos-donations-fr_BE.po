@@ -1,0 +1,132 @@
+# Translation of Kudos Donations in fr_BE
+# This file is distributed under the same license as the Kudos Donations package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-11-05 12:15:38+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr_BE\n"
+"Project-Id-Version: Kudos Donations\n"
+
+#: build/admin/kudos-admin.js:1
+msgid "Shows news and important notices about Kudos Donations. Checks kudosdonations.com twice a day; no information about your site is sent."
+msgstr "Affiche les actualités et les avis importants concernant Kudos Donations. Vérifie kudosdonations.com deux fois par jour ; aucune information sur votre site n’est envoyée."
+
+#: build/admin/kudos-admin.js:1
+msgid "Show Kudos news"
+msgstr "Afficher les actualités Kudos"
+
+#: includes/Service/RemoteNoticeService.php:187
+msgid "Read more"
+msgstr "En savoir plus"
+
+#: build/admin/kudos-admin.js:1
+msgid "View message"
+msgstr "Voir le message"
+
+#: build/admin/kudos-admin.js:1
+msgid "Provider"
+msgstr "Prestataire"
+
+#: build/admin/kudos-admin.js:1
+msgid "Previously created transactions and subscriptions will remain with their original provider."
+msgstr "Les transactions et abonnements créés précédemment resteront chez leur prestataire d’origine."
+
+#: build/admin/kudos-admin.js:1
+msgid "Select the active payment provider for new transactions."
+msgstr "Sélectionnez le prestataire de paiement actif pour les nouvelles transactions."
+
+#: build/admin/kudos-admin.js:1
+msgid "Found in the endpoint details in your Stripe Dashboard. It must be the endpoint for the sandbox or test mode you are using — a live secret will not verify test payments."
+msgstr "Disponible dans les détails du point de terminaison de votre tableau de bord Stripe. Il doit s’agir du point de terminaison de la sandbox ou du mode test que vous utilisez — une clé secrète de production ne permettra pas de vérifier les paiements de test."
+
+#: build/admin/kudos-admin.js:1
+msgid "Found in the endpoint details in your Stripe Dashboard. It must be the live endpoint — a test secret will not verify live payments."
+msgstr "Disponible dans les détails du point de terminaison de votre tableau de bord Stripe. Il doit s’agir du point de terminaison de production — une clé secrète de test ne permettra pas de vérifier les paiements réels."
+
+#: build/admin/kudos-admin.js:1
+msgid "Stripe webhook could not be registered automatically. Add the URL below as an endpoint in the sandbox or test mode you are using in your Stripe Dashboard, then paste that endpoint’s signing secret below."
+msgstr "Le webhook Stripe n’a pas pu être enregistré automatiquement. Ajoutez l’URL ci-dessous comme point de terminaison dans la sandbox ou le mode test que vous utilisez dans votre tableau de bord Stripe, puis collez ci-dessous la clé secrète de signature de ce point de terminaison."
+
+#: build/admin/kudos-admin.js:1
+msgid "Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard while it is in live mode, then paste that endpoint’s signing secret below."
+msgstr "Le webhook Stripe n’a pas pu être enregistré automatiquement. Ajoutez l’URL ci-dessous comme point de terminaison dans votre tableau de bord Stripe en mode production, puis collez ci-dessous la clé secrète de signature de ce point de terminaison."
+
+#: build/admin/kudos-admin.js:1
+msgid "Webhook (test mode)"
+msgstr "Webhook (mode test)"
+
+#: build/admin/kudos-admin.js:1
+msgid "Webhook (live mode)"
+msgstr "Webhook (mode production)"
+
+#: build/admin/kudos-admin.js:1
+msgid "Discard"
+msgstr "Abandonner"
+
+#: build/admin/kudos-admin.js:1
+msgid "Unsaved changes"
+msgstr "Modifications non enregistrées"
+
+#: build/admin/kudos-admin.js:1
+msgid "documentation"
+msgstr "documentation"
+
+#: build/admin/kudos-admin.js:1
+msgid "support forums"
+msgstr "forums d’assistance"
+
+#: build/admin/kudos-admin.js:1
+msgid "Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums/> or <docs/>."
+msgstr "N’hésitez pas à personnaliser votre campagne. Lorsque vous êtes prêt, placez votre campagne sur votre site à l’aide d’un shortcode ou d’un bloc. Pour en savoir plus, consultez nos <forums/> ou notre <docs/>."
+
+#: build/admin/kudos-admin.js:1
+msgid "You're all set!"
+msgstr "Tout est prêt !"
+
+#: build/admin/kudos-admin.js:1
+msgid "Complete the following steps to get started"
+msgstr "Suivez les étapes ci-dessous pour commencer"
+
+#: build/admin/kudos-admin.js:1
+msgid "Choose a payment provider"
+msgstr "Choisissez un prestataire de paiement"
+
+#: build/admin/kudos-admin.js:1
+msgid "Dismiss"
+msgstr "Fermer"
+
+#: build/admin/kudos-admin.js:1
+msgid "This will remove the saved %s. You will need to enter it again to continue."
+msgstr "Cette action supprimera la valeur enregistrée (%s). Vous devrez la saisir à nouveau pour continuer."
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:1221
+msgid "Set up webhook"
+msgstr "Configurer le webhook"
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:599
+msgid "Kudos Donations Donor"
+msgstr "Donateur Kudos Donations"
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:516
+msgid "Stripe webhook could not be registered automatically. Add <code>%1$s</code> as a webhook endpoint in your <a href=\"https://dashboard.stripe.com/webhooks\">Stripe Dashboard</a>, then paste the signing secret into the <a href=\"%2$s\">Stripe settings</a>."
+msgstr "Le webhook Stripe n’a pas pu être enregistré automatiquement. Ajoutez <code>%1$s</code> comme point de terminaison de webhook dans votre <a href=\"https://dashboard.stripe.com/webhooks\">tableau de bord Stripe</a>, puis collez la clé secrète de signature dans les <a href=\"%2$s\">réglages Stripe</a>."
+
+#: includes/Provider/PaymentProvider/PaymentProviderFactory.php:65
+msgid "Kudos Donations is not ready to receive donations yet. <a href=\"%s\">Complete the setup</a> to get started."
+msgstr "Kudos Donations n’est pas encore prêt à recevoir des dons. <a href=\"%s\">Terminez la configuration</a> pour commencer."
+
+#: includes/Provider/PaymentProvider/AbstractPaymentProvider.php:230
+msgid "Switch to live mode"
+msgstr "Passer en mode production"
+
+#: includes/Provider/PaymentProvider/AbstractPaymentProvider.php:224
+msgid "Enter live API key"
+msgstr "Saisissez la clé API de production"
+
+#: includes/Controller/Front.php:188
+#: includes/Controller/Rest/Payment.php:285
+msgid "No payment vendor configured."
+msgstr "Aucun prestataire de paiement configuré."

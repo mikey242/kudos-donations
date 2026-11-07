@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Kudos Donations &#8211; Easy donations and payments with Mollie - Development (trunk) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-16 13:23:09+0000\n"
+"PO-Revision-Date: 2026-11-05 12:15:38+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1617,3 +1617,124 @@ msgstr "https://code.iseard.media/michael/kudos-donations"
 #: build/admin/settings/kudos-admin-settings.js:1
 msgid "Kudos Donations"
 msgstr "Kudos Donations"
+
+#: build/admin/kudos-admin.js:1
+msgid "Shows news and important notices about Kudos Donations. Checks kudosdonations.com twice a day; no information about your site is sent."
+msgstr "Toont nieuws en belangrijke mededelingen over Kudos Donations. Controleert kudosdonations.com twee keer per dag; er wordt geen informatie over je site verzonden."
+
+#: build/admin/kudos-admin.js:1
+msgid "Show Kudos news"
+msgstr "Toon Kudos-nieuws"
+
+#: includes/Service/RemoteNoticeService.php:187
+msgid "Read more"
+msgstr "Lees meer"
+
+#: build/admin/kudos-admin.js:1
+msgid "View message"
+msgstr "Bekijk bericht"
+
+#: build/admin/kudos-admin.js:1
+msgid "Provider"
+msgstr "Provider"
+
+#: build/admin/kudos-admin.js:1
+msgid "Previously created transactions and subscriptions will remain with their original provider."
+msgstr "Eerder aangemaakte transacties en abonnementen blijven bij hun oorspronkelijke provider."
+
+#: build/admin/kudos-admin.js:1
+msgid "Select the active payment provider for new transactions."
+msgstr "Selecteer de actieve betaalprovider voor nieuwe transacties."
+
+#: build/admin/kudos-admin.js:1
+msgid "Found in the endpoint details in your Stripe Dashboard. It must be the endpoint for the sandbox or test mode you are using — a live secret will not verify test payments."
+msgstr "Te vinden in de endpointgegevens in je Stripe-dashboard. Het moet het endpoint zijn voor de sandbox of testmodus die je gebruikt — een live secret kan testbetalingen niet verifiëren."
+
+#: build/admin/kudos-admin.js:1
+msgid "Found in the endpoint details in your Stripe Dashboard. It must be the live endpoint — a test secret will not verify live payments."
+msgstr "Te vinden in de endpointgegevens in je Stripe-dashboard. Het moet het live endpoint zijn — een test secret kan livebetalingen niet verifiëren."
+
+#: build/admin/kudos-admin.js:1
+msgid "Stripe webhook could not be registered automatically. Add the URL below as an endpoint in the sandbox or test mode you are using in your Stripe Dashboard, then paste that endpoint’s signing secret below."
+msgstr "De Stripe-webhook kon niet automatisch worden geregistreerd. Voeg de onderstaande URL toe als endpoint in de sandbox of testmodus die je gebruikt in je Stripe-dashboard en plak daarna het signing secret van dat endpoint hieronder."
+
+#: build/admin/kudos-admin.js:1
+msgid "Stripe webhook could not be registered automatically. Add the URL below as an endpoint in your Stripe Dashboard while it is in live mode, then paste that endpoint’s signing secret below."
+msgstr "De Stripe-webhook kon niet automatisch worden geregistreerd. Voeg de onderstaande URL toe als endpoint in je Stripe-dashboard terwijl dit in livemodus staat en plak daarna het signing secret van dat endpoint hieronder."
+
+#: build/admin/kudos-admin.js:1
+msgid "Webhook (test mode)"
+msgstr "Webhook (testmodus)"
+
+#: build/admin/kudos-admin.js:1
+msgid "Webhook (live mode)"
+msgstr "Webhook (livemodus)"
+
+#: build/admin/kudos-admin.js:1
+msgid "Discard"
+msgstr "Verwerpen"
+
+#: build/admin/kudos-admin.js:1
+msgid "Unsaved changes"
+msgstr "Niet-opgeslagen wijzigingen"
+
+#: build/admin/kudos-admin.js:1
+msgid "documentation"
+msgstr "documentatie"
+
+#: build/admin/kudos-admin.js:1
+msgid "support forums"
+msgstr "supportforums"
+
+#: build/admin/kudos-admin.js:1
+msgid "Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums/> or <docs/>."
+msgstr "Pas je campagne gerust aan. Zodra je klaar bent, plaats je de campagne op je website met een shortcode of blok. Lees meer op onze <forums/> of in de <docs/>."
+
+#: build/admin/kudos-admin.js:1
+msgid "You're all set!"
+msgstr "Je bent helemaal klaar!"
+
+#: build/admin/kudos-admin.js:1
+msgid "Complete the following steps to get started"
+msgstr "Voltooi de volgende stappen om aan de slag te gaan"
+
+#: build/admin/kudos-admin.js:1
+msgid "Choose a payment provider"
+msgstr "Kies een betaalprovider"
+
+#: build/admin/kudos-admin.js:1
+msgid "Dismiss"
+msgstr "Sluiten"
+
+#: build/admin/kudos-admin.js:1
+msgid "This will remove the saved %s. You will need to enter it again to continue."
+msgstr "Hiermee wordt de opgeslagen %s verwijderd. Je moet deze opnieuw invoeren om verder te gaan."
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:1221
+msgid "Set up webhook"
+msgstr "Webhook instellen"
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:599
+msgid "Kudos Donations Donor"
+msgstr "Kudos Donations-donateur"
+
+#: includes/Provider/PaymentProvider/StripePaymentProvider.php:516
+msgid "Stripe webhook could not be registered automatically. Add <code>%1$s</code> as a webhook endpoint in your <a href=\"https://dashboard.stripe.com/webhooks\">Stripe Dashboard</a>, then paste the signing secret into the <a href=\"%2$s\">Stripe settings</a>."
+msgstr "De Stripe-webhook kon niet automatisch worden geregistreerd. Voeg <code>%1$s</code> toe als webhook-endpoint in je <a href=\"https://dashboard.stripe.com/webhooks\">Stripe-dashboard</a> en plak daarna het signing secret in de <a href=\"%2$s\">Stripe-instellingen</a>."
+
+#: includes/Provider/PaymentProvider/PaymentProviderFactory.php:65
+msgid "Kudos Donations is not ready to receive donations yet. <a href=\"%s\">Complete the setup</a> to get started."
+msgstr "Kudos Donations is nog niet klaar om donaties te ontvangen. <a href=\"%s\">Voltooi de installatie</a> om aan de slag te gaan."
+
+#: includes/Provider/PaymentProvider/AbstractPaymentProvider.php:230
+msgid "Switch to live mode"
+msgstr "Overschakelen naar livemodus"
+
+#: includes/Provider/PaymentProvider/AbstractPaymentProvider.php:224
+msgid "Enter live API key"
+msgstr "Voer live API-sleutel in"
+
+#: includes/Controller/Front.php:188
+#: includes/Controller/Rest/Payment.php:285
+msgid "No payment vendor configured."
+msgstr "Geen betaalprovider geconfigureerd."
