@@ -124,6 +124,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.3.3 =
+ * Fix the licence status indicator on the settings page not showing when no licence is active
+
  = 4.3.2 =
  * Fix donation forms not loading their campaign, and donations failing, on sites using plain permalinks
  * Fix the "View receipt" link on sites using plain permalinks

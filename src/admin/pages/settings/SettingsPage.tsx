@@ -64,9 +64,8 @@ export const SettingsPage = (): React.ReactNode => {
 						<FlexItem>
 							<span
 								className={clsx(
-									isLicenceActive
-										? 'ready status-icon'
-										: 'not-ready'
+									'status-icon',
+									isLicenceActive ? 'ready' : 'not-ready'
 								)}
 							></span>
 						</FlexItem>
