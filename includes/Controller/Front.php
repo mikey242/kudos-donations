@@ -98,6 +98,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				true
 			);
 		}
+		// The front end calls the REST API with plain fetch(); rest_url() is right for every
+		// permalink setting (with plain permalinks there is no /wp-json/ path).
+		Localization::add_front( 'restRoot', esc_url_raw( rest_url() ) );
 		Localization::add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
 		Localization::add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
 

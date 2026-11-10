@@ -125,6 +125,8 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
  = 4.3.2 =
+ * Fix donation forms not loading their campaign, and donations failing, on sites using plain permalinks
+ * Fix the "View receipt" link on sites using plain permalinks
  * Fix Kudos Donations Plus licences and updates on sites where the server reports an unexpected host name (for example when WordPress runs scheduled tasks from the command line)
 
  = 4.3.1 =

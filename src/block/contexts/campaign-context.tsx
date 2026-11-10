@@ -8,13 +8,10 @@ import {
 	useState,
 } from '@wordpress/element';
 import type { Campaign } from '../../types/entity';
+import { kudosRestUrl } from '../rest-url';
 
 const fetchCampaign = async (path: string): Promise<Campaign> => {
-	const root: string =
-		(window as Window & { wpApiSettings?: { root?: string } })
-			?.wpApiSettings?.root ?? '/wp-json/';
-	const url = `${root.replace(/\/$/, '')}/kudos/v1/${path}`;
-	const res = await window.fetch(url, { credentials: 'omit' });
+	const res = await window.fetch(kudosRestUrl(path), { credentials: 'omit' });
 	const data = await res.json();
 	return res.ok ? data : Promise.reject(data);
 };

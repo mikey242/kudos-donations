@@ -46,10 +46,14 @@ class Transaction extends BaseRepositoryRestController {
 		$item->subscription = $this->repository->get_subscription( $item );
 
 		if ( 'paid' === $item->status ) {
+			// add_query_arg(), not "?view=true" in the route: with plain permalinks
+			// rest_url() already contains a query string (?rest_route=…).
 			$item->receipt_url = add_query_arg(
-				'_wpnonce',
-				wp_create_nonce( 'wp_rest' ),
-				rest_url( "kudos/v1/receipt/{$item->id}?view=true" )
+				[
+					'view'     => 'true',
+					'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+				],
+				rest_url( "kudos/v1/receipt/{$item->id}" )
 			);
 		}
 		return (array) $item;

@@ -24,6 +24,8 @@ export interface KudosAdminData {
 }
 
 export interface KudosFrontData {
+	/** REST API root from rest_url(); differs with plain permalinks. */
+	restRoot?: string;
 	stylesheets?: string[];
 	customStyles?: string;
 	baseFontSize?: string;

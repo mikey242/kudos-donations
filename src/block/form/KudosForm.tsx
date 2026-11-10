@@ -7,6 +7,7 @@ import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated, Render } from '../components';
 import { applyFilters } from '@wordpress/hooks';
 import { clsx } from 'clsx';
+import { kudosRestUrl } from '../rest-url';
 
 interface KudosFormProps {
 	displayAs: 'form' | 'button' | 'fslogo';
@@ -69,12 +70,7 @@ export const KudosForm = ({
 			}
 		}
 
-		const root: string =
-			(window as Window & { wpApiSettings?: { root?: string } })
-				?.wpApiSettings?.root ?? '/wp-json/';
-		const url = `${root.replace(/\/$/, '')}/kudos/v1/payment/create`;
-
-		return fetch(url, {
+		return fetch(kudosRestUrl('payment/create'), {
 			method: 'POST',
 			body: new URLSearchParams(formData as any),
 		})
