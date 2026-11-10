@@ -102,7 +102,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 		$url = add_query_arg(
 			[
 				'licence_key' => $licence_key,
-				'domain'      => $_SERVER['SERVER_NAME'] ?? '',
+				'domain'      => self::get_site_domain(),
 			],
 			rtrim( $this->base_url, '/' ) . '/info'
 		);
@@ -191,7 +191,7 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 				'body'    => wp_json_encode(
 					[
 						'licence_key' => $licence_key,
-						'domain'      => $_SERVER['SERVER_NAME'] ?? '',
+						'domain'      => self::get_site_domain(),
 					]
 				),
 			]
@@ -224,13 +224,26 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 				'body'    => wp_json_encode(
 					[
 						'licence_key' => $licence_key,
-						'domain'      => $_SERVER['SERVER_NAME'] ?? '',
+						'domain'      => self::get_site_domain(),
 					]
 				),
 			]
 		);
 
 		! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
+	}
+
+	/**
+	 * The site's domain as sent to the licence server: the host of home_url().
+	 *
+	 * Unlike $_SERVER['SERVER_NAME'], this is the same in web requests, cron and WP-CLI,
+	 * and does not depend on the web server's configuration. The licence server
+	 * normalises it further (lowercase, without "www.").
+	 *
+	 * Also used by Kudos Donations Plus for its update checks.
+	 */
+	public static function get_site_domain(): string {
+		return (string) wp_parse_url( home_url(), PHP_URL_HOST );
 	}
 
 	/**
