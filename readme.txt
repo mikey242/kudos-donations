@@ -4,7 +4,7 @@ Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,9 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+ = 4.3.2 =
+ * Fix Kudos Donations Plus licences and updates on sites where the server reports an unexpected host name (for example when WordPress runs scheduled tasks from the command line)
 
  = 4.3.1 =
  * Added Kudos news: occasional notices about Kudos Donations in the admin. These can be turned off under Help > Advanced
