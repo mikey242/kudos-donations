@@ -6,7 +6,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminQueryParams } from '../hooks';
 import type { ReactNode } from 'react';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { PanelNameContext } from '../components';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
@@ -30,6 +30,8 @@ export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const isMounted = useRef(false);
+	const shownTab = useRef<string | null>(null);
+	const [instance, setInstance] = useState(0);
 	const tabExists =
 		!params.tab || tabs.some((tab: AdminTab) => tab.name === params.tab);
 
@@ -45,11 +47,24 @@ export const AdminTabPanel = ({ tabs }: AdminTabPanelProps): ReactNode => {
 		}
 	}, [createWarningNotice, params.tab, tabExists]);
 
+	useEffect(() => {
+		if (
+			params.tab &&
+			shownTab.current !== null &&
+			params.tab !== shownTab.current
+		) {
+			isMounted.current = false;
+			setInstance((n) => n + 1);
+		}
+	}, [params.tab]);
+
 	return (
 		<div className="kudos-settings-tab-panel">
 			<TabPanel
+				key={instance}
 				initialTabName={params.tab || tabs[0]?.name}
 				onSelect={(tab) => {
+					shownTab.current = tab;
 					if (isMounted.current) {
 						void updateParams({ tab, panel: null });
 					} else {

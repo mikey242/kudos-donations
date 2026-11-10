@@ -72,6 +72,8 @@ export const Panel = ({
 			setSelected(false);
 			return;
 		}
+		// A collapsed panel opens when it is the highlight target.
+		setOpen(true);
 		ref.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
 		setSelected(true);
 		const t = setTimeout(() => {
