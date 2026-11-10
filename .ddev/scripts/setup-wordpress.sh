@@ -37,3 +37,8 @@ if ! wp plugin is-installed query-monitor; then
 fi
 
 wp plugin activate kudos-donations query-monitor
+
+# The plugins are mounted git checkouts: stop WordPress from updating or replacing them,
+# which would delete the checkout.
+mkdir -p wp-content/mu-plugins
+cp /var/www/html/.ddev/mu-plugins/protect-mounted-plugins.php wp-content/mu-plugins/

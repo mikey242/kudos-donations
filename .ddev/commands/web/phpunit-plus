@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+## Description: Run Kudos Donations Plus's PHPUnit tests (from ../kudos-donations-plus) against this plugin
+## Usage: phpunit-plus [phpunit options]
+## Example: "ddev phpunit-plus --filter UpdateService"
+
+set -euo pipefail
+
+/var/www/html/.ddev/scripts/setup-tests.sh
+
+TESTS_DIR=/var/www/html/wordpress/wp-tests-lib
+PLUS_DIR=/var/www/html/wordpress/wp-content/plugins/kudos-donations-plus
+
+if [ ! -f "$PLUS_DIR/kudos-donations-plus.php" ]; then
+	echo "Kudos Donations Plus not found: check it out next to this repository as kudos-donations-plus, then run ddev restart." >&2
+	exit 1
+fi
+
+# The Kudos test settings, except that plugins load from the development plugins directory,
+# where both plugins live, and the tables get their own prefix.
+sed \
+	-e "s|/wp-content/test-plugins'|/wp-content/plugins'|" \
+	-e "s|\$table_prefix = 'wptests_';|\$table_prefix = 'wptests_plus_';|" \
+	"$TESTS_DIR/wp-tests-config.php" > "$TESTS_DIR/wp-tests-config-plus.php"
+
+cd "$PLUS_DIR"
+WP_TESTS_DIR="$TESTS_DIR" WP_TESTS_CONFIG_FILE_PATH="$TESTS_DIR/wp-tests-config-plus.php" ./vendor/bin/phpunit "$@"

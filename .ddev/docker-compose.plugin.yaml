@@ -6,3 +6,7 @@ services:
       # A second plugin directory holding only this plugin, used as WP_PLUGIN_DIR by the
       # PHPUnit tests so that development plugins such as Query Monitor are not loaded.
       - ../:/var/www/html/wordpress/wp-content/test-plugins/kudos-donations
+      # Kudos Donations Plus from its sibling checkout (../kudos-donations-plus), for developing
+      # and testing the add-on against this plugin. Not in test-plugins: the Kudos test suite
+      # would load it. Plus's own tests run with `ddev phpunit-plus`.
+      - ../../kudos-donations-plus:/var/www/html/wordpress/wp-content/plugins/kudos-donations-plus

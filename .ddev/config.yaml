@@ -13,6 +13,6 @@ hooks:
   pre-start:
     # Create the plugin mount points as the host user. Otherwise the container runtime creates
     # them as root (or an unmapped user under rootless Podman), and WordPress can't be installed.
-    - exec-host: mkdir -p wordpress/wp-content/plugins/kudos-donations wordpress/wp-content/test-plugins/kudos-donations
+    - exec-host: mkdir -p wordpress/wp-content/plugins/kudos-donations wordpress/wp-content/test-plugins/kudos-donations wordpress/wp-content/plugins/kudos-donations-plus
   post-start:
     - exec: /var/www/html/.ddev/scripts/setup-wordpress.sh
