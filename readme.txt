@@ -128,6 +128,7 @@ For general information on how to use shortcodes, please visit [this page](https
  * Fix the onboarding steps not opening the right settings tab when the settings page is already open
  * Fix the licence status indicator on the settings page not showing when no licence is active
  * Fix the campaign list in the Kudos form block and on the transaction edit screen showing only the first 20 campaigns
+ * Fix the Plus tab showing "Valid until:" without a date for licences that don't expire, and show expiry dates in the site's date format
 
  = 4.3.2 =
  * Fix donation forms not loading their campaign, and donations failing, on sites using plain permalinks

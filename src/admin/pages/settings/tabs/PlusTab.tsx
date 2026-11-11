@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { dateI18n, getSettings as getDateSettings } from '@wordpress/date';
 import type { AdminTab } from '../../AdminTabPanel';
 import React from 'react';
 import { useState } from '@wordpress/element';
@@ -185,9 +186,18 @@ const LicenceKeyPanel = () => {
 				>
 					<Icon icon="yes-alt" />
 					<span>
-						{__('Valid until:', 'kudos-donations') +
-							' ' +
-							licenceStatus.expires_at}
+						{/* An empty expiry date means the licence doesn't expire. */}
+						{licenceStatus.expires_at
+							? __('Valid until:', 'kudos-donations') +
+								' ' +
+								// A plain date (Y-m-d): read and shown as UTC, so no timezone
+								// moves it to the day before.
+								dateI18n(
+									getDateSettings().formats.date,
+									`${licenceStatus.expires_at}T00:00:00Z`,
+									'UTC'
+								)
+							: __('Valid, does not expire', 'kudos-donations')}
 					</span>
 				</Flex>
 			)}
