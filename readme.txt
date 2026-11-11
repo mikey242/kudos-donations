@@ -125,6 +125,8 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
  = 4.3.3 =
+ * Fix the Donations menu icon showing grey until the page has finished loading
+ * The highlighted item in the WordPress admin menu now follows the Kudos page you switch to
  * Fix the onboarding steps not opening the right settings tab when the settings page is already open
  * Fix the licence status indicator on the settings page not showing when no licence is active
  * Fix the campaign list in the Kudos form block and on the transaction edit screen showing only the first 20 campaigns

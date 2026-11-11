@@ -1,6 +1,6 @@
 import { Flex, IconType } from '@wordpress/components';
 import type { ReactNode } from 'react';
-import { useAdminQueryParams } from '../hooks';
+import { useAdminQueryParams, useWpMenuSync } from '../hooks';
 import { EntitiesProvider } from '../contexts';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
@@ -219,6 +219,7 @@ export const AdminRouter = (): ReactNode => {
 	const adminPages = useAdminPages();
 	const { params } = useAdminQueryParams();
 	const page = params.page || adminPages[0].view;
+	useWpMenuSync(page);
 
 	const pageConfig = adminPages.find((p) => p.view === page);
 
