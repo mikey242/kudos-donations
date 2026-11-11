@@ -127,6 +127,7 @@ For general information on how to use shortcodes, please visit [this page](https
  * Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
  * Fix the transactions and subscriptions REST routes failing with a fatal error when only some columns are requested
  * After the first live donation, ask once whether you would leave a review on WordPress.org
+ * Fix Kudos Donations switching itself off, including all donation forms, after a single failed request. It now only does so when it cannot start at all, and tries again after an update
 
  = 4.3.3 =
  * Fix the Donations menu icon showing grey until the page has finished loading
