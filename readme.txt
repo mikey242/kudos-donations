@@ -41,7 +41,7 @@ You will need a [Mollie](https://www.mollie.com/) or [Stripe](https://stripe.com
 
 1. Install using the WordPress plugin control panel or manually download the plugin and upload the *kudos-donations* folder to the /wp-content/plugins/ directory
 1. Activate the plugin through the *Plugins* menu in WordPress.
-1. Go to the 'Kudos Settings' menu in the dashboard and follow the setup steps to choose your payment provider, add your API key and go live.
+1. Go to the *Donations* menu in the dashboard and follow the setup steps to choose your payment provider, add your API key and go live.
 
 == Frequently Asked Questions ==
 
@@ -55,7 +55,7 @@ No. Kudos Donations adds no platform fee to your donations: they go straight to 
 
 = Which payment providers are supported? =
 
-Kudos Donations works with Mollie and Stripe. You can choose your provider in the 'Kudos Settings' menu and switch at any time. Donations and subscriptions made with a previous provider continue to be processed, as long as its API key stays configured.
+Kudos Donations works with Mollie and Stripe. You can choose your provider under *Donations > Settings > Payment* and switch at any time. Donations and subscriptions made with a previous provider continue to be processed, as long as its API key stays configured.
 
 = Which payment methods are supported? =
 
@@ -69,7 +69,7 @@ With Stripe, recurring payments are available on all accounts.
 
 = I've enabled the required recurring payment methods, but I still cannot use recurring. =
 
-If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" button.
+If you changed your Mollie account after adding it to Kudos Donations, you will need to refresh the payment methods. To do this, go to *Donations > Settings > Payment* and click the "Refresh Payment Methods" button.
 
 = Do I need to set up a webhook for Stripe? =
 
