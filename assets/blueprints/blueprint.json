@@ -1,14 +1,24 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Kudos Donations demo",
+		"description": "A demo campaign with a donate button on the front page. Payments are simulated.",
+		"author": "iseardmedia",
+		"categories": [
+			"donations"
+		]
+	},
 	"features": {
 		"networking": true
 	},
-	"landingPage": "/wp-admin/admin.php?page=kudos-campaigns",
+	"landingPage": "/",
 	"preferredVersions": {
 		"php": "8.4",
 		"wp": "latest"
 	},
-	"phpExtensionBundles": ["kitchen-sink"],
+	"phpExtensionBundles": [
+		"kitchen-sink"
+	],
 	"steps": [
 		{
 			"step": "login",
@@ -19,12 +29,7 @@
 			"step": "setSiteOptions",
 			"options": {
 				"blogname": "Kudos Donations Demo",
-				"_kudos_payment_vendor": "demo",
-				"_kudos_payment_vendor_status": {
-					"ready": true,
-					"recurring": false,
-					"account": "Demo account"
-				}
+				"_kudos_payment_vendor": "demo"
 			}
 		},
 		{
@@ -32,7 +37,20 @@
 			"consts": {
 				"KUDOS_DEMO_MODE": true
 			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "kudos-donations"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\nuse IseardMedia\\Kudos\\ContainerFactory;\nuse IseardMedia\\Kudos\\Domain\\Entity\\CampaignEntity;\nuse IseardMedia\\Kudos\\Domain\\Entity\\DonorEntity;\nuse IseardMedia\\Kudos\\Domain\\Entity\\TransactionEntity;\nuse IseardMedia\\Kudos\\Domain\\Repository\\CampaignRepository;\nuse IseardMedia\\Kudos\\Domain\\Repository\\DonorRepository;\nuse IseardMedia\\Kudos\\Domain\\Repository\\TransactionRepository;\n\n$container = ContainerFactory::create();\n\n// A demo campaign, with its goal shown on the form.\n$campaign_id = $container->get( CampaignRepository::class )->insert(\n\tnew CampaignEntity(\n\t\t[\n\t\t\t'title'               => 'Community Garden',\n\t\t\t'goal'                => 2500,\n\t\t\t'show_goal'           => true,\n\t\t\t'amount_type'         => 'both',\n\t\t\t'fixed_amounts'       => [ '10', '25', '50', '100' ],\n\t\t\t'message_enabled'     => true,\n\t\t\t'initial_title'       => 'Help our community garden grow',\n\t\t\t'initial_description' => 'Every donation goes towards seeds, tools and workshops for the neighbourhood.',\n\t\t]\n\t)\n);\n\n// A few paid donations (test mode), so the progress bar and the admin tables have content.\n$donors       = $container->get( DonorRepository::class );\n$transactions = $container->get( TransactionRepository::class );\nforeach ( [ [ 'Sam Jansen', 'sam@example.org', 50 ], [ 'Alex Peeters', 'alex@example.org', 25 ], [ 'Robin de Vries', 'robin@example.org', 100 ] ] as [ $name, $email, $value ] ) {\n\t$donor_id = $donors->insert( new DonorEntity( [ 'name' => $name, 'email' => $email, 'mode' => 'test' ] ) );\n\t$transactions->insert(\n\t\tnew TransactionEntity(\n\t\t\t[\n\t\t\t\t'value'       => $value,\n\t\t\t\t'currency'    => 'EUR',\n\t\t\t\t'status'      => 'paid',\n\t\t\t\t'mode'        => 'test',\n\t\t\t\t'vendor'      => 'demo',\n\t\t\t\t'campaign_id' => $campaign_id,\n\t\t\t\t'donor_id'    => $donor_id,\n\t\t\t]\n\t\t)\n\t);\n}\n\n// A page with the donate button, used as the front page of the demo site.\n$page_id = wp_insert_post(\n\t[\n\t\t'post_type'    => 'page',\n\t\t'post_status'  => 'publish',\n\t\t'post_title'   => 'Support our community garden',\n\t\t'post_content' => '<!-- wp:paragraph --><p>This demo shows Kudos Donations as your visitors see it. Click the button to try a donation: payments in this demo are simulated, no money changes hands.</p><!-- /wp:paragraph -->'\n\t\t\t. '<!-- wp:iseardmedia/kudos-button {\"campaign_id\":\"' . $campaign_id . '\",\"alignment\":\"center\"} /-->'\n\t\t\t. '<!-- wp:paragraph --><p>To see the other side, go to <strong>Donations</strong> in the admin.</p><!-- /wp:paragraph -->',\n\t]\n);\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', $page_id );\n"
 		}
-
 	]
 }
