@@ -42,4 +42,5 @@ export interface BaseSettings {
 	_kudos_smtp_password: string;
 	_kudos_smtp_enable: boolean;
 	_kudos_onboarding_dismissed: boolean;
+	_kudos_review_request_dismissed: boolean;
 }

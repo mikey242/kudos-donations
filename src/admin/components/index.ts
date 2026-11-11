@@ -8,3 +8,4 @@ export * from './PaymentMethodsList';
 export * from './Spacer';
 export * from './StickySaveBar';
 export * from './table';
+export * from './ReviewRequest';
