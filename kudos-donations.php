@@ -6,7 +6,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
- * Plugin URI:        https://code.iseard.media/michael/kudos-donations
+ * Plugin URI:        https://kudosdonations.com
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
  * Version:           4.3.3
  * Author:            Iseard Media

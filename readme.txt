@@ -1,4 +1,4 @@
-=== Kudos Donations: Easy Donations with Mollie & Stripe | One-off & Recurring | PDF Receipts | Buttons & Forms ===
+=== Kudos Donations – Donation Forms for Mollie & Stripe ===
 Contributors: iseardmedia
 Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 6.9
@@ -8,16 +8,19 @@ Stable tag: 4.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
+Donation buttons and forms for Mollie and Stripe. One-off and recurring donations, PDF receipts, and no platform fees on your donations.
 
 == Description ==
 
-= A modern and easy to use donation plugin =
+= Accept donations without platform fees =
 
-*Kudos Donations* is a powerful, easy-to-use WordPress plugin that lets you accept donations effortlessly. Whether you're running a charity, nonprofit, or a personal project, this plugin provides everything you need to create and manage effective donation campaigns. Fully integrated with Mollie and Stripe, it supports a wide range of payment methods, allowing your donors to contribute through their preferred option.
+*Kudos Donations* adds donation buttons and forms to your WordPress site, for charities, foundations, clubs, churches and personal causes. Donations go straight to your own Mollie or Stripe account. Many free donation plugins add their own percentage to every donation; Kudos Donations never does, so you only pay your payment provider's transaction fee.
+
+Donors pay with the methods they know: iDEAL, Bancontact, SEPA Direct Debit, PayPal and cards through Mollie, or cards, Apple Pay, Google Pay and local payment methods through Stripe. A guided setup gets you from installing the plugin to your first donation in minutes.
 
 = Key Features =
 
+* No Platform Fees: Kudos Donations takes nothing from your donations. You only pay your payment provider's own transaction fee.
 * Mollie & Stripe Integration: Accept payments via credit card, PayPal, iDEAL, SEPA Direct Debit and more, using the Mollie or Stripe payment gateway.
 * Guided Setup: A step-by-step onboarding flow walks you through connecting your payment provider and going live.
 * Shortcode & Block Support: Choose between a shortcode or Gutenberg block to easily place donation forms anywhere on your site.
@@ -28,10 +31,6 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 * Comprehensive Donor Management: Access detailed insights into donors, transactions, and subscriptions.
 * Automated Donation Receipts: Automatically generate and send donation receipts via email, complete with PDF attachments.
 * PDF Donation Summaries: Generate downloadable PDFs for every successful donation, providing donors with clear and professional records.
-
-= Why Choose Kudos Donations? =
-
-Kudos Donations is designed to make online fundraising easier than ever. With seamless integration into your WordPress site, customizable options, and real-time tracking of donations, you can focus on growing your cause without the hassle of complicated setups.
 
 = Source =
 The Git repository for this plugin can be found [here](https://code.iseard.media/michael/kudos-donations).
@@ -50,9 +49,9 @@ You will need a [Mollie](https://www.mollie.com/) or [Stripe](https://stripe.com
 
 Yes, Kudos Donations is a free open-source plugin.
 
-= Does Kudos Donations take a commission from my donations?
+= Does Kudos Donations take a commission from my donations? =
 
-No, we do not touch your donations.
+No. Kudos Donations adds no platform fee to your donations: they go straight to your own Mollie or Stripe account, and you only pay your payment provider's transaction fee.
 
 = Which payment providers are supported? =
 
@@ -62,13 +61,13 @@ Kudos Donations works with Mollie and Stripe. You can choose your provider in th
 
 This depends on your payment provider and the methods enabled on your account. Mollie supports a wide range of payment methods such as iDEAL, credit card and PayPal, see [Mollie's payment methods](https://www.mollie.com/en/payments). Stripe supports cards, wallets such as Apple Pay and Google Pay, and many local payment methods, see [Stripe's payment methods](https://stripe.com/payments/payment-methods).
 
-= How can I use recurring payments?
+= How can I use recurring payments? =
 
 With Mollie, recurring payments require either SEPA Direct Debit OR credit card payment methods to be enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
 
 With Stripe, recurring payments are available on all accounts.
 
-= I've enabled the required recurring payment methods, but I still cannot use recurring.
+= I've enabled the required recurring payment methods, but I still cannot use recurring. =
 
 If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" button.
 
