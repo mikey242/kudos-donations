@@ -19,6 +19,8 @@ export const TransactionEdit = (): React.ReactNode => {
 		const response: Campaign[] = await apiFetch({
 			path: addQueryArgs('/kudos/v1/campaign', {
 				columns: ['id', 'title'],
+				// All campaigns; the route returns 20 by default.
+				per_page: -1,
 			}),
 		});
 		const campaignsResponse = response.map((item: Campaign) => {

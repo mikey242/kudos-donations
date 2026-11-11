@@ -122,7 +122,8 @@ class Utils {
 				as_schedule_single_action( $timestamp, $hook, $args );
 			}
 		} else {
-			do_action( $hook, $args );
+			// Same call as Action Scheduler makes: each argument passed separately.
+			do_action( $hook, ...array_values( $args ) );
 		}
 	}
 

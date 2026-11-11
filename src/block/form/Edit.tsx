@@ -51,6 +51,8 @@ const ButtonEdit = (props: ButtonEditProps) => {
 		const response: Campaign[] = await apiFetch({
 			path: addQueryArgs('/kudos/v1/campaign', {
 				columns: ['id', 'title'],
+				// All campaigns; the route returns 20 by default.
+				per_page: -1,
 			}),
 		});
 		setCampaigns(response);
