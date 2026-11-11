@@ -3,7 +3,6 @@ import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { usePaymentTab, EmailTab, ReceiptTab, PlusTab, HelpTab } from './tabs';
-import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import type { AdminTab } from '../AdminTabPanel';
 import { Fill, FlexItem } from '@wordpress/components';
@@ -54,22 +53,26 @@ export const SettingsPage = (): React.ReactNode => {
 		<div className="admin-wrap">
 			{settingsReady && (
 				<FormProvider {...formMethods}>
-					<Fill name={SLOT_HEADER_ACTIONS}>
-						<FlexItem>
-							<span className="status-text">
-								{isLicenceActive &&
-									__('licence active', 'kudos-donations')}
-							</span>
-						</FlexItem>
-						<FlexItem>
-							<span
-								className={clsx(
-									'status-icon',
-									isLicenceActive ? 'ready' : 'not-ready'
-								)}
-							></span>
-						</FlexItem>
-					</Fill>
+					{/* Only with an active licence: most sites have no Plus licence,
+					    and the Plus tab explains the status either way. */}
+					{isLicenceActive && (
+						<Fill name={SLOT_HEADER_ACTIONS}>
+							<FlexItem>
+								<span className="status-text">
+									{__(
+										'Plus licence active',
+										'kudos-donations'
+									)}
+								</span>
+							</FlexItem>
+							<FlexItem>
+								<span
+									className="status-icon ready"
+									aria-hidden="true"
+								></span>
+							</FlexItem>
+						</Fill>
+					)}
 					<form
 						id="settings-form"
 						onSubmit={formMethods.handleSubmit(save)}

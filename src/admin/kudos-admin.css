@@ -112,11 +112,6 @@
 				background: #35ac35;
 				border-color: #90ee90;
 			}
-
-			&.not-ready {
-				background: #6b7280;
-				border-color: #d1d5db;
-			}
 		}
 	}
 
