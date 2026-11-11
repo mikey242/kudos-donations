@@ -1,50 +1,20 @@
 import React from 'react';
-import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Notice } from '@wordpress/components';
 import { useSettingsContext } from '../contexts';
-import { queryEntities } from '../utils';
 import type { AllSettings } from '../../types/all-settings';
 
 const REVIEW_URL =
 	'https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post';
 
 /**
- * Whether the site has received at least one live (not test) donation.
- *
- * @param enabled Whether to check; skips the request when the prompt can't show anyway.
- */
-function useHasLiveDonation(enabled: boolean): boolean {
-	const [hasLiveDonation, setHasLiveDonation] = useState(false);
-
-	useEffect(() => {
-		if (!enabled) {
-			return;
-		}
-		queryEntities('transaction', {
-			per_page: 1,
-			where: { status: 'paid', mode: 'live' },
-		})
-			.then((response) => setHasLiveDonation(response.total > 0))
-			.catch(() => setHasLiveDonation(false));
-	}, [enabled]);
-
-	return hasLiveDonation;
-}
-
-/**
- * Asks once for a review on WordPress.org, after the site's first live donation, when the
- * plugin has visibly worked. Shown only on Kudos pages and once onboarding is out of the
- * way. Either answer hides it for good.
+ * Asks once for a review on WordPress.org. Shown by AdminBanners once the site has a live
+ * donation, when the plugin has visibly worked. Either answer hides it for good.
  */
 export const ReviewRequest = () => {
 	const { settings, updateSetting } = useSettingsContext<AllSettings>();
-	const eligible =
-		!!settings._kudos_onboarding_dismissed &&
-		!settings._kudos_review_request_dismissed;
-	const hasLiveDonation = useHasLiveDonation(eligible);
 
-	if (!eligible || !hasLiveDonation) {
+	if (settings._kudos_review_request_dismissed) {
 		return null;
 	}
 

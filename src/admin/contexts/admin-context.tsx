@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Flex, SlotFillProvider } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../pages';
-import { OnboardingBanner, ReviewRequest } from '../components';
+import { AdminBanners } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { createContext, useContext, useState } from '@wordpress/element';
 import { SettingsProvider } from './settings-context';
@@ -39,8 +39,7 @@ export const InnerAdminProvider = ({ children }) => {
 				<AdminHeader />
 				<Notices />
 				<SettingsProvider>
-					<OnboardingBanner />
-					<ReviewRequest />
+					<AdminBanners />
 					{pageTitle && (
 						<Flex justify="center">
 							<h2>{pageTitle}</h2>

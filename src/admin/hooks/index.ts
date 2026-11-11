@@ -2,3 +2,4 @@ export * from './use-admin-query-params';
 export * from './use-on-settings-saved';
 export * from './use-page-title';
 export * from './use-wp-menu-sync';
+export * from './use-has-live-donation';
