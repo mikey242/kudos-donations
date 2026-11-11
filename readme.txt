@@ -125,6 +125,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
  = 4.3.4 =
  * Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
+ * Fix the transactions and subscriptions REST routes failing with a fatal error when only some columns are requested
 
  = 4.3.3 =
  * Fix the Donations menu icon showing grey until the page has finished loading

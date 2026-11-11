@@ -115,6 +115,24 @@ class SubscriptionRepositoryTest extends BaseTestCase {
 	}
 
 	/**
+	 * A subscription loaded with only some columns (the REST "columns" parameter) leaves
+	 * campaign_id uninitialised; get_campaign() then uses the linked transaction instead of
+	 * failing with a fatal error.
+	 */
+	public function test_get_campaign_with_campaign_id_not_loaded(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Partial Campaign' ] ) );
+		$sub_id      = $this->subscription_repository->insert( new SubscriptionEntity( [ 'campaign_id' => $campaign_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'subscription_id' => $sub_id, 'campaign_id' => $campaign_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $this->subscription_repository->get( $sub_id, [ 'id' ] );
+		$campaign     = $this->subscription_repository->get_campaign( $subscription );
+
+		$this->assertInstanceOf( CampaignEntity::class, $campaign );
+		$this->assertSame( $campaign_id, $campaign->id );
+	}
+
+	/**
 	 * Test that get_campaign() falls back to the linked transaction's campaign when campaign_id is not set.
 	 */
 	public function test_get_campaign_falls_back_to_transaction_campaign(): void {

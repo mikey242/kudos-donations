@@ -82,7 +82,7 @@ class TransactionRepository extends BaseRepository {
 	 * @param array             $columns The list of columns to return.
 	 */
 	public function get_subscription( TransactionEntity $transaction, array $columns = [ '*' ] ): ?SubscriptionEntity {
-		$subscription_id = $transaction->subscription_id;
+		$subscription_id = $transaction->subscription_id ?? null;
 		if ( null === $subscription_id ) {
 			return null;
 		}

@@ -126,6 +126,20 @@ class TransactionRepositoryTest extends BaseTestCase {
 		$this->assertNull( $this->transaction_repository->get_subscription( $transaction ) );
 	}
 
+	/**
+	 * A transaction loaded with only some columns (the REST "columns" parameter) leaves
+	 * subscription_id uninitialised; reading it must not be a fatal error.
+	 */
+	public function test_get_subscription_returns_null_when_subscription_id_not_loaded(): void {
+		$sub_id = $this->subscription_repository->insert( new SubscriptionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
+		$tx_id  = $this->transaction_repository->insert( new TransactionEntity( [ 'subscription_id' => $sub_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id, [ 'id' ] );
+
+		$this->assertNull( $this->transaction_repository->get_subscription( $transaction ) );
+	}
+
 	// -------------------------------------------------------------------------
 	// get_orphan_ids()
 	// -------------------------------------------------------------------------

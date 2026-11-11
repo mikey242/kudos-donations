@@ -77,7 +77,7 @@ class SubscriptionRepository extends BaseRepository {
 	 * @param SubscriptionEntity $subscription The subscription array.
 	 */
 	public function get_campaign( SubscriptionEntity $subscription ): ?CampaignEntity {
-		$campaign_id = $subscription->campaign_id;
+		$campaign_id = $subscription->campaign_id ?? null;
 
 		// Fallback: get campaign id from linked transaction.
 		if ( null === $campaign_id ) {
@@ -87,7 +87,7 @@ class SubscriptionRepository extends BaseRepository {
 				return null;
 			}
 
-			$campaign_id = $transaction->campaign_id;
+			$campaign_id = $transaction->campaign_id ?? null;
 		}
 
 		if ( null === $campaign_id ) {
