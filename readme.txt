@@ -1,7 +1,7 @@
 === Kudos Donations: Easy Donations with Mollie & Stripe | One-off & Recurring | PDF Receipts | Buttons & Forms ===
 Contributors: iseardmedia
 Tags: donation, fundraising, recurring donations, mollie, stripe
-Requires at least: 7.1
+Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 4.3.3
@@ -123,6 +123,9 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+ = 4.3.4 =
+ * Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
 
  = 4.3.3 =
  * Fix the Donations menu icon showing grey until the page has finished loading
