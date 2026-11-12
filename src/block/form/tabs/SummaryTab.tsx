@@ -8,6 +8,7 @@ import { createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { getCurrencySymbol } from '../../../utils/currency';
+import { getFrequencyName } from '../../../utils/frequency';
 
 interface SummaryTabProps {
 	campaign: Campaign;
@@ -152,18 +153,3 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 		</BaseTab>
 	);
 };
-
-function getFrequencyName(frequency: string) {
-	switch (frequency) {
-		case '12 months':
-			return __('Yearly', 'kudos-donations');
-		case '1 month':
-			return __('Monthly', 'kudos-donations');
-		case '3 months':
-			return __('Quarterly', 'kudos-donations');
-		case 'oneoff':
-			return __('One-off', 'kudos-donations');
-		default:
-			return frequency;
-	}
-}

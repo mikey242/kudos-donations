@@ -12,6 +12,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { getCurrencySymbol } from '../../../utils/currency';
+import { getFrequencyName } from '../../../utils/frequency';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
@@ -106,13 +107,14 @@ export const SubscriptionsTable = (): React.ReactNode => {
 			key: 'frequency',
 			title: __('Frequency', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.frequency,
+				getFrequencyName(post.frequency),
 		},
 		{
 			key: 'length',
 			title: __('Length', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.years === 0
+				// Mollie stores 0 for a continuous subscription, Stripe stores null.
+				!post.years
 					? __('Continuous', 'kudos-donations')
 					: post.years + ' ' + __('years', 'kudos-donations'),
 		},
