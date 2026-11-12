@@ -132,6 +132,12 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.3.5 =
+ * Fix the subscriptions table showing "null years" as the length of continuous Stripe subscriptions
+ * The subscriptions table now shows the frequency as "Monthly", "Quarterly" or "Yearly", the same as the donation form
+ * When the Plus add-on can't be installed, the Plus tab now says why, for example when the licence has expired or was not recognised
+ * Update mollie/mollie-api-php to v3.16.0
+
  = 4.3.4 =
  * Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
  * Fix the transactions and subscriptions REST routes failing with a fatal error when only some columns are requested
