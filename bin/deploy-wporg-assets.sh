@@ -48,14 +48,20 @@ cd "$work/assets"
 svn status | sed -n 's/^!       //p' | while IFS= read -r path; do svn delete --quiet "$path@"; done
 svn add --quiet --force --depth infinity .
 
-# Images need the right MIME type, or browsers download them instead of showing them.
-svn status | sed -n 's/^A       //p' | while IFS= read -r path; do
+# Images need the right MIME type, or browsers download them instead of showing
+# them. Checked on every image, not only new ones, so files added by hand in the
+# past get fixed too.
+find . -type f -not -path '*/.svn/*' | sed 's#^\./##' | while IFS= read -r path; do
 	case "$path" in
-		*.png) svn propset --quiet svn:mime-type image/png "$path@" ;;
-		*.jpg | *.jpeg) svn propset --quiet svn:mime-type image/jpeg "$path@" ;;
-		*.gif) svn propset --quiet svn:mime-type image/gif "$path@" ;;
-		*.svg) svn propset --quiet svn:mime-type image/svg+xml "$path@" ;;
+		*.png) mime=image/png ;;
+		*.jpg | *.jpeg) mime=image/jpeg ;;
+		*.gif) mime=image/gif ;;
+		*.svg) mime=image/svg+xml ;;
+		*) continue ;;
 	esac
+	if [ "$(svn propget svn:mime-type "$path@" 2>/dev/null)" != "$mime" ]; then
+		svn propset --quiet svn:mime-type "$mime" "$path@"
+	fi
 done
 
 changes="$(svn status)"
@@ -67,7 +73,7 @@ fi
 echo ""
 echo "Changes to assets/:"
 echo "$changes" | sed 's/^/  /'
-echo "  (A = added, D = deleted, M = modified)"
+echo "  (A = added, D = deleted, M = modified; an M in the second column means only the MIME type changes)"
 
 if [ "$dry_run" = 1 ]; then
 	echo ""
