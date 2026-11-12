@@ -76,7 +76,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-29T14:10:42+00:00"
+            "time": "2026-10-29T14:10:42+00:00",
+            "published-time": "2026-10-29T14:45:12+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -451,16 +452,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.15.0",
+            "version": "v3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb"
+                "reference": "a0dfd149d3e33c92bba906c27ca9cc98da91136d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb",
-                "reference": "da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/a0dfd149d3e33c92bba906c27ca9cc98da91136d",
+                "reference": "a0dfd149d3e33c92bba906c27ca9cc98da91136d",
                 "shasum": ""
             },
             "require": {
@@ -476,7 +477,7 @@
             },
             "require-dev": {
                 "brianium/paratest": "^6.11",
-                "guzzlehttp/guzzle": "^7.6",
+                "guzzlehttp/guzzle": "^7.6|^8.0",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^9.6",
                 "symfony/var-dumper": "^5.4|^6.4|^7.2"
@@ -541,9 +542,10 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.15.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.16.0"
             },
-            "time": "2026-09-23T13:33:07+00:00"
+            "time": "2026-11-04T19:48:14+00:00",
+            "published-time": "2026-11-04T19:49:41+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -723,7 +725,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-09T07:06:30+00:00"
+            "time": "2024-09-09T07:06:30+00:00",
+            "published-time": "2024-09-09T07:07:05+00:00"
         },
         {
             "name": "psr/container",
@@ -823,7 +826,8 @@
             "support": {
                 "source": "https://github.com/php-fig/http-client"
             },
-            "time": "2023-09-23T14:17:50+00:00"
+            "time": "2023-09-23T14:17:50+00:00",
+            "published-time": "2023-09-23T14:18:12+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -878,7 +882,8 @@
             "support": {
                 "source": "https://github.com/php-fig/http-factory"
             },
-            "time": "2024-04-15T12:06:14+00:00"
+            "time": "2024-04-15T12:06:14+00:00",
+            "published-time": "2024-05-10T07:32:19+00:00"
         },
         {
             "name": "psr/http-message",
@@ -931,7 +936,8 @@
             "support": {
                 "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2023-04-04T09:54:51+00:00"
+            "time": "2023-04-04T09:54:51+00:00",
+            "published-time": "2023-04-04T09:55:35+00:00"
         },
         {
             "name": "psr/log",
