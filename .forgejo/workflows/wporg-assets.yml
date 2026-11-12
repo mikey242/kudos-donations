@@ -1,0 +1,31 @@
+name: WordPress.org Assets
+
+# Copies .wordpress-org/ (banners, icons, screenshots and the Live Preview
+# blueprint) to the plugin's SVN assets/ folder. Runs when those files change
+# on main, or by hand from the Actions tab. Needs the same repository secrets
+# as the release: SVN_USERNAME and SVN_PASSWORD.
+
+on:
+  push:
+    branches: ["main"]
+    paths: [".wordpress-org/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: wporg-assets
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: code.iseard.media/michael/kudos-ci:php8.2
+    steps:
+      - name: Checkout code
+        uses: https://github.com/actions/checkout@v7
+
+      - name: Deploy assets to WordPress.org SVN
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: bash bin/deploy-wporg-assets.sh

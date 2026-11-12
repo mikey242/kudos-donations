@@ -12,7 +12,6 @@
 /.ddev
 /wordpress
 __static__
-/assets
 bin
 /node_modules
 /src

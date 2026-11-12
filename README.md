@@ -1,10 +1,10 @@
 <div align="center">
-    <img alt="Kudos logo" src="assets/plugin/icon-128x128.png" width="128">
+    <img alt="Kudos logo" src=".wordpress-org/icon-128x128.png" width="128">
     <h1>Kudos Donations</h1>
     Add a donation button to any page on your website. Easy & fast setup. Works with Mollie and Stripe payments.
     <br>
     <br>
-    <img src="assets/plugin/demo-1.webp" alt="Kudos Donations">
+    <img src=".forgejo/media/demo-1.webp" alt="Kudos Donations">
 </div>
 
 ## Development
