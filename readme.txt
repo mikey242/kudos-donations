@@ -114,14 +114,15 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Screenshots ==
 
-1. The donation form, with the campaign goal and progress, fixed amounts and an open amount
-2. Donors can choose a recurring donation, and how often and for how long
-3. All your campaigns, with their progress and amount raised
-4. The campaign editor
-5. All donations, filtered by status
-6. Recurring donations and their frequency
-7. Connect Mollie or Stripe and see the available payment methods
-8. Add a donation form to any page with the block
+1. The donation form in a pop-up, with the campaign goal and progress, fixed amounts and an open amount
+2. Or embed the form directly in any page
+3. Donors can choose a recurring donation, and how often and for how long
+4. All your campaigns, with their progress and amount raised
+5. The campaign editor
+6. All donations, filtered by status
+7. Recurring donations and their frequency
+8. Connect Mollie or Stripe and see the available payment methods
+9. Add a donation form with the block, as a button or embedded in the page
 
 == Changelog ==
 
