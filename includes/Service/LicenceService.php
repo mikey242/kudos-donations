@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Localization;
 use stdClass;
+use WP_Error;
 
 class LicenceService extends AbstractRegistrable implements HasSettingsInterface {
 
@@ -96,8 +97,9 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 	 * and activate it.
 	 *
 	 * @param string $licence_key The active licence key.
+	 * @return true|WP_Error True when the add-on is installed and active, or an error saying why not.
 	 */
-	public function maybe_install_addon( string $licence_key ): bool {
+	public function maybe_install_addon( string $licence_key ) {
 		$this->logger->info( 'Licence valid, attempting to install add-on' );
 		$url = add_query_arg(
 			[
@@ -123,14 +125,21 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 			|| empty( wp_remote_retrieve_body( $response ) )
 		) {
 			$this->logger->error( 'Error fetching add-on info.', [ 'response' => $response ] );
-			return false;
+			return new WP_Error( 'kudos_addon_info', __( 'Could not reach the licence server. Please try again later.', 'kudos-donations' ) );
 		}
 
 		$remote = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( empty( $remote->download_url ) || empty( $remote->slug ) ) {
-			$this->logger->error( 'Plugin slug or download_url missing.', [ 'remote' => $remote ] );
-			return false;
+			$licence_status = (string) ( $remote->licence_status ?? '' );
+			$this->logger->error(
+				'The licence server returned no download for the add-on.',
+				[
+					'licence_status' => $licence_status,
+					'remote'         => $remote,
+				]
+			);
+			return new WP_Error( 'kudos_addon_no_download', self::get_licence_status_message( $licence_status ) );
 		}
 
 		$plugin_file = $remote->slug . '/' . $remote->slug . '.php';
@@ -168,7 +177,27 @@ class LicenceService extends AbstractRegistrable implements HasSettingsInterface
 				'plugin_file' => $plugin_file,
 			]
 		);
-		return false;
+		return new WP_Error( 'kudos_addon_install', __( 'Failed to install add-on. Please check the logs for details.', 'kudos-donations' ) );
+	}
+
+	/**
+	 * Explains why the licence server gave no download link, from the licence status it returned.
+	 *
+	 * @param string $licence_status The licence_status from the server's /info response.
+	 */
+	private static function get_licence_status_message( string $licence_status ): string {
+		switch ( $licence_status ) {
+			case 'not_found':
+				return __( 'Your licence key was not recognised by the licence server. Please check the key, or contact support.', 'kudos-donations' );
+			case 'inactive':
+				return __( 'Your licence is no longer active. Please contact support.', 'kudos-donations' );
+			case 'expired':
+				return __( 'Your licence has expired. Please renew it to install the add-on.', 'kudos-donations' );
+			case 'not_activated':
+				return __( 'Your licence is not activated for this site. Please save your licence key again to activate it.', 'kudos-donations' );
+			default:
+				return __( 'The licence server did not provide a download for the add-on. Please check the logs for details.', 'kudos-donations' );
+		}
 	}
 
 	/**

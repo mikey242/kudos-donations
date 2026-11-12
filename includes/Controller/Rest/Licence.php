@@ -47,18 +47,21 @@ class Licence extends BaseRestController {
 	 */
 	public function install_addon(): WP_REST_Response {
 		$licence_key = get_option( LicenceService::SETTING_KUDOS_LICENCE_KEY, '' );
-		$success     = $this->licence_service->maybe_install_addon( $licence_key );
+		$result      = $this->licence_service->maybe_install_addon( $licence_key );
 
-		if ( $success ) {
+		if ( is_wp_error( $result ) ) {
 			return new WP_REST_Response(
-				[ 'message' => __( 'Add-on installed and activated successfully.', 'kudos-donations' ) ],
-				200
+				[
+					'code'    => $result->get_error_code(),
+					'message' => $result->get_error_message(),
+				],
+				500
 			);
 		}
 
 		return new WP_REST_Response(
-			[ 'message' => __( 'Failed to install add-on. Please check the logs for details.', 'kudos-donations' ) ],
-			500
+			[ 'message' => __( 'Add-on installed and activated successfully.', 'kudos-donations' ) ],
+			200
 		);
 	}
 }

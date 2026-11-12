@@ -47,13 +47,16 @@ const AddonPanel = () => {
 				__('Add-on installed and activated.', 'kudos-donations'),
 				{ type: 'snackbar' }
 			);
-		} catch {
+		} catch (error) {
 			setInstallState('failed');
+			// The server explains why, e.g. an expired licence; fall back to a general message.
+			const message = (error as { message?: string } | null)?.message;
 			void createErrorNotice(
-				__(
-					'Failed to install add-on. Please check the logs and try again.',
-					'kudos-donations'
-				),
+				message ||
+					__(
+						'Failed to install add-on. Please check the logs and try again.',
+						'kudos-donations'
+					),
 				{ type: 'snackbar' }
 			);
 		}
