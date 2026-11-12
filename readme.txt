@@ -114,12 +114,14 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Screenshots ==
 
-1. Donation form
-2. Recurring/Subscription payments
-3. Goal progression
-4. Settings page
-5. Embed form directly
-6. Automated email receipt
+1. The donation form, with the campaign goal and progress, fixed amounts and an open amount
+2. Donors can choose a recurring donation, and how often and for how long
+3. All your campaigns, with their progress and amount raised
+4. The campaign editor
+5. All donations, filtered by status
+6. Recurring donations and their frequency
+7. Connect Mollie or Stripe and see the available payment methods
+8. Add a donation form to any page with the block
 
 == Changelog ==
 
