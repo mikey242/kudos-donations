@@ -48,7 +48,7 @@ class CampaignRepository extends BaseRepository {
 	 * @param array          $columns Columns to return.
 	 */
 	public function get_transactions( CampaignEntity $campaign, array $columns = [ '*' ] ): ?array {
-		$campaign_id = $campaign->id ?? null;
+		$campaign_id = $campaign->id;
 		if ( ! $campaign_id ) {
 			return null;
 		}

@@ -181,8 +181,17 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	/**
 	 * Query and prepare items directly without a REST request/response wrapper.
 	 *
-	 * @param array<string, mixed> $args Query args (limit, offset, orderby, order, where, columns).
+	 * @param array $args Query args (limit, offset, orderby, order, where, columns).
 	 * @return array<array<string, mixed>>
+	 *
+	 * @phpstan-param array{
+	 * columns?: list<string>|array<string>,
+	 * where?: array<string, scalar|null>,
+	 * orderby?: string,
+	 * order?: 'ASC'|'DESC',
+	 * limit?: int,
+	 * offset?: int
+	 * } $args
 	 */
 	protected function get_prepared_items( array $args = [] ): array {
 		$items = $this->repository->query( $args );

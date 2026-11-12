@@ -44,6 +44,9 @@ jobs:
       - name: Lint PHP
         run: composer run lint
 
+      - name: Static analysis
+        run: composer run phpstan
+
       - name: Lint JavaScript and CSS
         run: |
           npm run lint:js

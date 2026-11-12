@@ -254,7 +254,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 		$profile_name = '';
 		try {
 			$profile      = $this->api_client->profiles->getCurrent();
-			$profile_name = $profile->name ?? '';
+			$profile_name = $profile->name;
 			$this->get_logger()->debug( 'Mollie profile fetched', [ $profile ] );
 		} catch ( RequestException $e ) {
 			$this->get_logger()->warning( 'Cannot get Mollie profile', [ 'message' => $e->getMessage() ] );
@@ -703,7 +703,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			$campaign    = $campaigns
 							->find_one_by( [ 'id' => $campaign_id ] ) ??
 							$campaigns
-							->find_one_by( [ 'wp_post_slug' => $campaign_id ] ) ?? null;
+							->find_one_by( [ 'wp_post_slug' => $campaign_id ] );
 			$campaign_id = $campaign->id ?? null;
 
 			// Subscription id.

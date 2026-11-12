@@ -338,7 +338,7 @@ class Payment extends BaseRestController {
 		$vendor_customer_id = $donor ? $donor->vendor_customer_id : null;
 		$transaction        = $this->transaction_repository->new_entity(
 			[
-				'donor_id'      => $donor_id ?? null,
+				'donor_id'      => $donor_id,
 				'value'         => $args['value'],
 				'currency'      => $args['currency'],
 				'status'        => PaymentStatus::OPEN,

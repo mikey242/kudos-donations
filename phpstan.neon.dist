@@ -1,6 +1,5 @@
 includes:
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon
-  - phpstan-baseline.neon
 
 parameters:
   level: 5
@@ -12,6 +11,15 @@ parameters:
     - config
     - includes
 
+  excludePaths:
+    # php-scoper configuration; runs under php-scoper's own autoloader, not the plugin's.
+    - config/php-scoper
+
+  # Defined from the environment at runtime, so their value is not fixed.
+  dynamicConstantNames:
+    - KUDOS_DEMO_MODE
+    - KUDOS_ENV_IS_DEVELOPMENT
+
   scanDirectories:
     - third-party/
 
@@ -22,11 +30,14 @@ parameters:
     - vendor/php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
     - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
     - kudos-donations.php
+    - phpstan-stubs.php
 
   ignoreErrors:
-    # example:
-    # - '#Call to an undefined method.*#'
+    # The WordPress stubs say registered settings always have a 'default', but
+    # register_setting() only stores it when one is passed (wp-includes/option.php).
+    -
+      identifier: nullCoalesce.unnecessary
+      path: includes/Service/SettingsService.php
 
-  # Optional: Only add if absolutely needed
   bootstrapFiles:
     - phpstan-bootstrap.php

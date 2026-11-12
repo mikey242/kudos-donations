@@ -121,9 +121,7 @@ class ContainerFactory {
 			return false;
 		}
 
-		/** @var ContainerInterface $container */
-		$container       = new \KudosContainer();
-		$this->container = $container;
+		$this->container = new \KudosContainer();
 		return true;
 	}
 

@@ -457,28 +457,31 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			}
 
 			// Find the subscription CPT whose transaction_id meta points to this transaction.
-			$subscription_posts = get_posts(
-				[
-					'post_type'   => 'kudos_subscription',
-					'post_status' => 'any',
-					'numberposts' => 1,
-					'meta_key'    => 'transaction_id',
-					'meta_value'  => (string) $transaction_post_id,
-					'fields'      => 'ids',
-				]
+			$subscription_post_ids = wp_parse_id_list(
+				get_posts(
+					[
+						'post_type'   => 'kudos_subscription',
+						'post_status' => 'any',
+						'numberposts' => 1,
+						'meta_key'    => 'transaction_id',
+						'meta_value'  => (string) $transaction_post_id,
+						'fields'      => 'ids',
+					]
+				)
 			);
 
-			if ( empty( $subscription_posts ) ) {
+			if ( empty( $subscription_post_ids ) ) {
 				$this->logger->warning( "No subscription CPT found for transaction post $transaction_post_id" );
 				continue;
 			}
 
 			// Find the migrated subscription row by its legacy post ID.
+			$subscription_post_id = $subscription_post_ids[0];
 			/** @var ?SubscriptionEntity $subscription */
-			$subscription = $subscription_repo->find_one_by( [ 'wp_post_id' => (int) $subscription_posts[0] ] );
+			$subscription = $subscription_repo->find_one_by( [ 'wp_post_id' => $subscription_post_id ] );
 
 			if ( null === $subscription ) {
-				$this->logger->warning( "No migrated subscription found for post {$subscription_posts[0]}" );
+				$this->logger->warning( "No migrated subscription found for post $subscription_post_id" );
 				continue;
 			}
 

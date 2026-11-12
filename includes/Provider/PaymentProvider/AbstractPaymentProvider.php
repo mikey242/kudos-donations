@@ -139,6 +139,7 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	 * Returns provider-specific fields to merge into get_status(). Override in subclasses.
 	 *
 	 * @param array $data The cached data for the current provider and mode.
+	 * @return array{account?: string}
 	 */
 	protected function get_status_extra( array $data ): array {
 		return [];
