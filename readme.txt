@@ -23,7 +23,7 @@ Donors pay with the methods they know: iDEAL, Bancontact, SEPA Direct Debit, Pay
 * No Platform Fees: Kudos Donations takes nothing from your donations. You only pay your payment provider's own transaction fee.
 * Mollie & Stripe Integration: Accept payments via credit card, PayPal, iDEAL, SEPA Direct Debit and more, using the Mollie or Stripe payment gateway.
 * Guided Setup: A step-by-step onboarding flow walks you through connecting your payment provider and going live.
-* Shortcode & Block Support: Choose between a shortcode or Gutenberg block to easily place donation forms anywhere on your site.
+* Button or Embedded Form: Show a donate button that opens the form in a pop-up, or embed the form directly in any page. Place it with the block or a shortcode.
 * Campaign Management: Set up and manage multiple donation campaigns with flexible options, including one-off and subscription-based donations.
 * Customizable Donation Forms: Personalize the look of your donation forms by adjusting colors, text, and even applying custom CSS for each campaign.
 * Campaign Goals & Progress Tracking: Set campaign-specific fundraising goals and show progress bars to your visitors.
@@ -108,6 +108,12 @@ e.g:
 
 ~~~~
 [kudos button_label="Donate now" campaign_id="default" alignment="center"]
+~~~~
+
+To embed the form in the page instead of showing a button:
+
+~~~~
+[kudos campaign_id="default" type="form"]
 ~~~~
 
 For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
