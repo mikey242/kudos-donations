@@ -1,4 +1,4 @@
-=== Kudos Donations – Donation Forms for Mollie & Stripe ===
+=== Kudos Donations - Donation Forms for Mollie & Stripe ===
 Contributors: iseardmedia
 Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 6.9
