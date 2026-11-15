@@ -11,7 +11,25 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\Table;
 
-class CampaignsTable extends BaseTable {
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
+
+class CampaignsTable extends BaseTable implements RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Creates the table, then adds a ready-to-use first campaign on a fresh install. Doing
+	 * both here guarantees the table exists before the insert, whatever order the
+	 * activation services run in.
+	 */
+	public function on_plugin_activation(): void {
+		parent::on_plugin_activation();
+		$this->get_repository( CampaignRepository::class )->create_first_campaign();
+	}
 
 	/**
 	 * {@inheritDoc}

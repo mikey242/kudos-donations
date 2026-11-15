@@ -9,10 +9,12 @@ use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Table\CampaignsTable;
 use IseardMedia\Kudos\Helper\WpDb;
+use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Tests\BaseIntegrationTestCase;
 
 /**
  * @covers \IseardMedia\Kudos\Domain\Table\BaseTable
+ * @covers \IseardMedia\Kudos\Domain\Table\CampaignsTable
  */
 class BaseTableTest extends BaseIntegrationTestCase {
 
@@ -63,6 +65,22 @@ class BaseTableTest extends BaseIntegrationTestCase {
 		$this->table->drop_table();
 		$this->table->on_plugin_activation();
 		$this->assertTrue( $this->wpdb->table_exists( CampaignsTable::get_name() ) );
+	}
+
+	public function test_on_plugin_activation_adds_first_campaign_on_fresh_install(): void {
+		$campaign_repository = $this->get_from_container( CampaignRepository::class );
+		update_option( SettingsService::SETTING_ONBOARDING_DISMISSED, false );
+		delete_option( CampaignRepository::SETTING_FIRST_CAMPAIGN_CREATED );
+		$this->table->drop_table();
+
+		$this->table->on_plugin_activation();
+
+		$campaigns = $campaign_repository->all();
+		$this->assertCount( 1, $campaigns );
+		$this->assertSame( 'My first campaign', $campaigns[0]->title );
+
+		// DDL commits, so drop the table rather than rely on rollback; tear_down recreates it.
+		$this->table->drop_table();
 	}
 
 	public function test_has_column_returns_true_for_existing_column(): void {
