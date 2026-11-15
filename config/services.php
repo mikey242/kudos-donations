@@ -159,7 +159,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( UpgradeHandler::class )
 		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] );
 	$services->set( RepositoryManager::class )
-		->args( [ tagged_iterator( 'kudos.repository' ) ] );
+		->args( [ tagged_locator( 'kudos.repository' ) ] );
 	$services->set( MigrationHandler::class )
 		->args( [ tagged_iterator( 'kudos.migration' ) ] );
 

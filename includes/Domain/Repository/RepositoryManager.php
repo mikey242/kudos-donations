@@ -12,36 +12,25 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain\Repository;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
 
 class RepositoryManager {
 
 	/**
-	 * Array of repositories.
+	 * Container locator for the repositories, keyed by class name. Each repository is only
+	 * built when first requested, rather than all of them whenever the manager is built.
 	 *
-	 * @var array<class-string, BaseRepository>
+	 * @var ServiceLocator
 	 */
-	protected array $repositories = [];
+	private ServiceLocator $repositories;
 
 	/**
 	 * Receives the repositories.
 	 *
-	 * @param iterable<BaseRepository> $repositories Array of repositories.
-	 *
-	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	 * @param ServiceLocator $repositories Locator for the tagged repositories.
 	 */
-	public function __construct( iterable $repositories ) {
-		foreach ( $repositories as $service ) {
-			$this->add( $service );
-		}
-	}
-
-	/**
-	 * Add repository to list.
-	 *
-	 * @param BaseRepository $service Service.
-	 */
-	public function add( BaseRepository $service ): void {
-		$this->repositories[ \get_class( $service ) ] = $service;
+	public function __construct( ServiceLocator $repositories ) {
+		$this->repositories = $repositories;
 	}
 
 	/**
@@ -58,11 +47,11 @@ class RepositoryManager {
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function get( string $class_name ) {
-		if ( ! isset( $this->repositories[ $class_name ] ) ) {
+		if ( ! $this->repositories->has( $class_name ) ) {
 			throw new \RuntimeException( esc_attr( "Repository not registered: $class_name" ) );
 		}
 
 		/** @var TRepository */
-		return $this->repositories[ $class_name ];
+		return $this->repositories->get( $class_name );
 	}
 }
