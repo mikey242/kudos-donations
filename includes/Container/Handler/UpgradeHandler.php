@@ -20,30 +20,20 @@ use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 class UpgradeHandler extends AbstractRegistrable {
 
 	/**
-	 * Array of services.
+	 * The upgrade aware services. A lazy iterable from the container: services are only
+	 * built when it is iterated, which happens inside the upgrader_process_complete callback.
 	 *
-	 * @var UpgradeAwareInterface[]
+	 * @var iterable<UpgradeAwareInterface>
 	 */
-	protected array $services = [];
+	protected iterable $services;
 
 	/**
-	 * Receives the classes with settings.
+	 * Receives the upgrade aware services.
 	 *
-	 * @param iterable $services Array of services.
+	 * @param iterable $services Lazy iterable of UpgradeAwareInterface services.
 	 */
 	public function __construct( iterable $services ) {
-		foreach ( $services as $service ) {
-			$this->add( $service );
-		}
-	}
-
-	/**
-	 * Add service to list.
-	 *
-	 * @param UpgradeAwareInterface $service Service.
-	 */
-	public function add( UpgradeAwareInterface $service ): void {
-		$this->services[] = $service;
+		$this->services = $services;
 	}
 
 	/**
