@@ -132,6 +132,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+ = 4.3.6 =
+ * The setup steps now explain what to do next, such as how to add the donation form to your site
+
  = 4.3.5 =
  * Simpler setup: connect Mollie or Stripe with a test key and start straight away, then go live when your account is ready
  * New installs come with a ready-to-use first campaign, and setup now tracks when your donation form is live on your site
