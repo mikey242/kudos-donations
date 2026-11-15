@@ -181,6 +181,8 @@ class MolliePaymentProviderTest extends BaseTestCase {
 
 		$this->assertSame(['connect', 'golive'], array_keys($steps));
 		$this->assertSame('Connect Mollie', $steps['connect']['label']);
+		$this->assertStringContainsString('Mollie dashboard', $steps['connect']['description']);
+		$this->assertStringContainsString('test donation', $steps['golive']['description']);
 		$this->assertFalse($steps['connect']['done']);
 		$this->assertSame('apikeys', $steps['connect']['panel']);
 		$this->assertFalse($steps['golive']['done']);
@@ -226,6 +228,7 @@ class MolliePaymentProviderTest extends BaseTestCase {
 
 		$this->assertFalse($steps['golive']['done']);
 		$this->assertSame('apimode', $steps['golive']['panel']);
+		$this->assertStringContainsString('live mode', $steps['golive']['description']);
 	}
 
 	/**

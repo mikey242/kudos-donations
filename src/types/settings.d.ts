@@ -9,6 +9,7 @@ export interface VendorOnboardingStep {
 	label: string;
 	done: boolean;
 	panel: string;
+	description?: string;
 }
 
 export interface VendorStatus {

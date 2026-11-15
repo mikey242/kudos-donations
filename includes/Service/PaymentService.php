@@ -240,10 +240,11 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 								'items' => [
 									'type'       => FieldType::OBJECT,
 									'properties' => [
-										'id'    => [ 'type' => FieldType::STRING ],
-										'label' => [ 'type' => FieldType::STRING ],
-										'done'  => [ 'type' => FieldType::BOOLEAN ],
-										'panel' => [ 'type' => FieldType::STRING ],
+										'id'          => [ 'type' => FieldType::STRING ],
+										'label'       => [ 'type' => FieldType::STRING ],
+										'done'        => [ 'type' => FieldType::BOOLEAN ],
+										'panel'       => [ 'type' => FieldType::STRING ],
+										'description' => [ 'type' => FieldType::STRING ],
 									],
 								],
 							],

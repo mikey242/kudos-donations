@@ -110,7 +110,7 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 * panel key. A step with id STEP_GO_LIVE is shown after campaign creation; the rest come
 	 * before it. Providers with nothing to configure (e.g. demo) return an empty array.
 	 *
-	 * @return array<int, array{id: string, label: string, done: bool, panel: string}>
+	 * @return array<int, array{id: string, label: string, done: bool, panel: string, description?: string}>
 	 */
 	public function get_onboarding_steps(): array;
 

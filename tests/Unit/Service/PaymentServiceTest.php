@@ -82,4 +82,20 @@ class PaymentServiceTest extends BaseTestCase {
 
 		$this->service->check_payment_status( $id );
 	}
+
+	/**
+	 * The REST settings endpoint returns null for a setting whose value doesn't match its
+	 * schema, and WordPress disallows unlisted keys in nested objects. A field added to the
+	 * onboarding steps without updating the schema would silently drop the whole status.
+	 */
+	public function test_vendor_status_survives_rest_settings_schema(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+		$data   = rest_do_request( new \WP_REST_Request( 'GET', '/wp/v2/settings' ) )->get_data();
+		$status = $data[ PaymentService::SETTING_VENDOR_STATUS ] ?? null;
+
+		$this->assertIsArray( $status, 'Vendor status was rejected by its REST schema.' );
+		$this->assertNotEmpty( $status['steps'] );
+		$this->assertArrayHasKey( 'description', $status['steps'][0] );
+	}
 }

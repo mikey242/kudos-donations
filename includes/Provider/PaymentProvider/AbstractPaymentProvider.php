@@ -225,22 +225,44 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 
 		return [
 			[
-				'id'    => 'connect',
-				'label' => \sprintf(
+				'id'          => 'connect',
+				'label'       => \sprintf(
 					/* translators: %s: Payment provider name (e.g. Mollie). */
 					__( 'Connect %s', 'kudos-donations' ),
 					static::get_name()
 				),
-				'done'  => $this->is_connected(),
-				'panel' => 'apikeys',
+				'done'        => $this->is_connected(),
+				'panel'       => 'apikeys',
+				'description' => \sprintf(
+					/* translators: %s: Payment provider name (e.g. Mollie). */
+					__( 'Add a test API key from your %s dashboard to try everything out before going live.', 'kudos-donations' ),
+					static::get_name()
+				),
 			],
 			[
-				'id'    => self::STEP_GO_LIVE,
-				'label' => __( 'Go live', 'kudos-donations' ),
-				'done'  => null === $go_live_panel,
-				'panel' => $go_live_panel ?? 'apimode',
+				'id'          => self::STEP_GO_LIVE,
+				'label'       => __( 'Go live', 'kudos-donations' ),
+				'done'        => null === $go_live_panel,
+				'panel'       => $go_live_panel ?? 'apimode',
+				'description' => self::get_go_live_description( $go_live_panel ),
 			],
 		];
+	}
+
+	/**
+	 * Describes what is still needed to go live, for the panel the step points to.
+	 *
+	 * @param string|null $panel The settings panel still needed, or null when live.
+	 */
+	private static function get_go_live_description( ?string $panel ): string {
+		switch ( $panel ) {
+			case 'apimode':
+				return __( 'Switch to live mode to start accepting real donations.', 'kudos-donations' );
+			case 'webhook':
+				return __( 'Add the webhook signing secret so live payments can be confirmed.', 'kudos-donations' );
+			default:
+				return __( 'Make a test donation to check everything works, then add your live API key once your account is verified.', 'kudos-donations' );
+		}
 	}
 
 	/**

@@ -71,6 +71,13 @@ export const OnboardingBanner = () => {
 			step.id === 'connect' && !vendor
 				? __('Connect your account', 'kudos-donations')
 				: step.label,
+		description:
+			step.id === 'connect' && !vendor
+				? __(
+						'Add a test API key from your payment provider to try everything out before going live.',
+						'kudos-donations'
+					)
+				: step.description,
 		done: !!vendor && step.done,
 		onClick: () =>
 			setParams({
@@ -88,6 +95,10 @@ export const OnboardingBanner = () => {
 			label: __('Choose a payment provider', 'kudos-donations'),
 			done: !!vendor,
 			hidden: paymentVendors.length <= 1,
+			description: __(
+				'Choose Mollie or Stripe to receive your donations. You can switch later.',
+				'kudos-donations'
+			),
 			onClick: () =>
 				setParams({
 					page: 'kudos-settings',
@@ -102,6 +113,10 @@ export const OnboardingBanner = () => {
 			id: 'placed',
 			label: __('Add to your site', 'kudos-donations'),
 			done: !!placedUrl,
+			description: __(
+				'Add the Donation Form block to a page, or copy the shortcode with the Shortcode button on your campaign. This step completes once the form appears on your site.',
+				'kudos-donations'
+			),
 			onClick: () =>
 				setParams(
 					campaignId
@@ -112,27 +127,13 @@ export const OnboardingBanner = () => {
 		...liveSteps,
 	];
 
-	// Once only going live is left, nudge towards a test donation before switching.
-	const onlyLiveLeft =
-		liveSteps.some((step) => !step.done) &&
-		steps.every(
-			(step) => step.done || step.hidden || step.id === GO_LIVE_STEP
-		);
-
 	return (
 		<div className="admin-wrap" style={{ margin: '2em auto' }}>
 			<StepsBanner
-				title={
-					onlyLiveLeft
-						? __(
-								'Try a test donation, then go live when you are ready',
-								'kudos-donations'
-							)
-						: __(
-								'Complete the following steps to get started',
-								'kudos-donations'
-							)
-				}
+				title={__(
+					'Complete the following steps to get started',
+					'kudos-donations'
+				)}
 				steps={steps}
 				className="kudos-onboarding-banner"
 				onClose={dismiss}

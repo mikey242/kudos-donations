@@ -66,6 +66,7 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'Connect Stripe', $steps['connect']['label'] );
 		$this->assertFalse( $steps['golive']['done'] );
 		$this->assertSame( 'webhook', $steps['golive']['panel'] );
+		$this->assertStringContainsString( 'webhook signing secret', $steps['golive']['description'] );
 	}
 
 	public function test_onboarding_go_live_done_with_live_webhook_secret(): void {

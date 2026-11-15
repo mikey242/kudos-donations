@@ -35,6 +35,7 @@ export interface StepsBannerStep {
 	label: string;
 	done: boolean;
 	hidden?: boolean;
+	description?: string;
 	onClick: () => void;
 }
 
@@ -73,6 +74,7 @@ export const StepsBanner = ({
 	});
 
 	const doneCount = visibleSteps.filter((s) => s.done).length;
+	const currentStep = resolvedSteps.find((s) => !s.done && !s.locked);
 	const showCompleted =
 		!!completedMessage && visibleSteps.every((s) => s.done);
 
@@ -190,6 +192,19 @@ export const StepsBanner = ({
 								))}
 							</div>
 						</div>
+						{currentStep?.description && (
+							<p
+								className="kudos-steps-banner-description"
+								style={{
+									textAlign: 'center',
+									margin: '1em auto 0',
+									maxWidth: '40em',
+									color: 'var(--wpds-color-foreground-content-neutral-weak)',
+								}}
+							>
+								{currentStep.description}
+							</p>
+						)}
 					</>
 				) : (
 					completedMessage
