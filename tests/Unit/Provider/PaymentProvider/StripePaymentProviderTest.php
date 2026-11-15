@@ -55,6 +55,38 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( 'Stripe', StripePaymentProvider::get_name() );
 	}
 
+	public function test_onboarding_go_live_needs_live_webhook_secret(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'live' );
+		update_option( StripePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'encrypted-live-key' );
+		update_option( StripePaymentProvider::SETTING_WEBHOOK, [ 'test' => [ 'secret' => 'whsec_test' ] ] );
+
+		$steps = array_column( $this->provider->get_onboarding_steps(), null, 'id' );
+
+		$this->assertSame( [ 'connect', 'golive' ], array_keys( $steps ) );
+		$this->assertSame( 'Connect Stripe', $steps['connect']['label'] );
+		$this->assertFalse( $steps['golive']['done'] );
+		$this->assertSame( 'webhook', $steps['golive']['panel'] );
+	}
+
+	public function test_onboarding_go_live_done_with_live_webhook_secret(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'live' );
+		update_option( StripePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'encrypted-live-key' );
+		update_option( StripePaymentProvider::SETTING_WEBHOOK, [ 'live' => [ 'secret' => 'whsec_live' ] ] );
+
+		$steps = array_column( $this->provider->get_onboarding_steps(), null, 'id' );
+
+		$this->assertTrue( $steps['golive']['done'] );
+	}
+
+	public function test_onboarding_go_live_asks_for_live_key_before_webhook(): void {
+		update_option( StripePaymentProvider::SETTING_API_MODE, 'test' );
+		delete_option( StripePaymentProvider::SETTING_WEBHOOK );
+
+		$steps = array_column( $this->provider->get_onboarding_steps(), null, 'id' );
+
+		$this->assertSame( 'apikeys', $steps['golive']['panel'] );
+	}
+
 	public function test_rest_webhook_returns_400_when_no_secret_configured(): void {
 		delete_option( StripePaymentProvider::SETTING_WEBHOOK );
 

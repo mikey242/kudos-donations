@@ -17,6 +17,12 @@ use WP_REST_Response;
 
 interface PaymentProviderInterface extends ProviderInterface {
 	/**
+	 * Id of the onboarding step for taking live payments. The banner shows it after "Create a
+	 * campaign", so users can build and try a campaign in test mode first.
+	 */
+	public const STEP_GO_LIVE = 'golive';
+
+	/**
 	 * Returns the name of the vendor.
 	 */
 	public static function get_name(): string;
@@ -101,7 +107,8 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 * Returns the setup steps this provider needs before it can take live payments.
 	 *
 	 * Rendered by the onboarding banner. Each step deep-links to a settings panel via its
-	 * panel key. Providers with nothing to configure (e.g. demo) return an empty array.
+	 * panel key. A step with id STEP_GO_LIVE is shown after campaign creation; the rest come
+	 * before it. Providers with nothing to configure (e.g. demo) return an empty array.
 	 *
 	 * @return array<int, array{id: string, label: string, done: bool, panel: string}>
 	 */

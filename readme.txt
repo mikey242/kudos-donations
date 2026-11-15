@@ -133,6 +133,9 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
  = 4.3.5 =
+ * Simpler setup: connect Mollie or Stripe with a test key and start straight away, then go live when your account is ready
+ * New installs come with a ready-to-use first campaign, and setup now tracks when your donation form is live on your site
+ * New campaigns default to your local currency, based on your site's timezone (or its language when no timezone city is set)
  * Fix the subscriptions table showing "null years" as the length of continuous Stripe subscriptions
  * The subscriptions table now shows the frequency as "Monthly", "Quarterly" or "Yearly", the same as the donation form
  * When the Plus add-on can't be installed, the Plus tab now says why, for example when the licence has expired or was not recognised

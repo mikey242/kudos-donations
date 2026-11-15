@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\Entity;
 
+use IseardMedia\Kudos\Helper\Currency;
+
 class CampaignEntity extends BaseEntity {
 
 	public string $currency;
@@ -60,7 +62,7 @@ class CampaignEntity extends BaseEntity {
 	 */
 	protected function defaults(): array {
 		return [
-			'currency'                   => 'EUR',
+			'currency'                   => Currency::get_default(),
 			'show_goal'                  => false,
 			'goal'                       => 500,
 			'amount_type'                => 'fixed',

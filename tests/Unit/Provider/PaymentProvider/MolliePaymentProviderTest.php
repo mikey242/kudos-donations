@@ -173,6 +173,73 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	/**
 	 * Creates a MolliePaymentProvider with the given API client.
 	 */
+	/**
+	 * A fresh install has two steps to do: connect, then go live.
+	 */
+	public function test_onboarding_steps_on_fresh_install(): void {
+		$steps = array_column($this->vendor->get_onboarding_steps(), null, 'id');
+
+		$this->assertSame(['connect', 'golive'], array_keys($steps));
+		$this->assertSame('Connect Mollie', $steps['connect']['label']);
+		$this->assertFalse($steps['connect']['done']);
+		$this->assertSame('apikeys', $steps['connect']['panel']);
+		$this->assertFalse($steps['golive']['done']);
+		$this->assertSame('apikeys', $steps['golive']['panel']);
+	}
+
+	/**
+	 * A test key with fetched payment methods completes the connect step on its own.
+	 */
+	public function test_onboarding_connect_step_done_with_test_key_only(): void {
+		update_option(MolliePaymentProvider::SETTING_API_MODE, 'test');
+		update_option(MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_TEST, 'encrypted-test-key');
+		update_option(MolliePaymentProvider::SETTING_CACHE, ['test' => ['methods' => [['id' => 'ideal', 'description' => 'iDEAL']]]]);
+
+		$steps = array_column($this->vendor->get_onboarding_steps(), null, 'id');
+
+		$this->assertTrue($steps['connect']['done']);
+		$this->assertFalse($steps['golive']['done']);
+		$this->assertSame('apikeys', $steps['golive']['panel']);
+	}
+
+	/**
+	 * A key that fetched no payment methods (e.g. rejected) does not count as connected.
+	 */
+	public function test_onboarding_connect_step_not_done_without_payment_methods(): void {
+		update_option(MolliePaymentProvider::SETTING_API_MODE, 'test');
+		update_option(MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_TEST, 'encrypted-test-key');
+		update_option(MolliePaymentProvider::SETTING_CACHE, ['test' => []]);
+
+		$steps = array_column($this->vendor->get_onboarding_steps(), null, 'id');
+
+		$this->assertFalse($steps['connect']['done']);
+	}
+
+	/**
+	 * With a live key still in test mode, going live points at the mode switch.
+	 */
+	public function test_onboarding_go_live_points_to_mode_when_live_key_saved(): void {
+		update_option(MolliePaymentProvider::SETTING_API_MODE, 'test');
+		update_option(MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'encrypted-live-key');
+
+		$steps = array_column($this->vendor->get_onboarding_steps(), null, 'id');
+
+		$this->assertFalse($steps['golive']['done']);
+		$this->assertSame('apimode', $steps['golive']['panel']);
+	}
+
+	/**
+	 * A live key in live mode completes going live.
+	 */
+	public function test_onboarding_go_live_done_in_live_mode(): void {
+		update_option(MolliePaymentProvider::SETTING_API_MODE, 'live');
+		update_option(MolliePaymentProvider::SETTING_API_KEY_ENCRYPTED_LIVE, 'encrypted-live-key');
+
+		$steps = array_column($this->vendor->get_onboarding_steps(), null, 'id');
+
+		$this->assertTrue($steps['golive']['done']);
+	}
+
 	private function create_vendor(MockMollieClient $client): MolliePaymentProvider {
 		$logger = $this->createMock(LoggerInterface::class);
 		$vendor = new MolliePaymentProvider(

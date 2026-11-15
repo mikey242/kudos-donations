@@ -10,6 +10,7 @@ use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Service\SettingsService;
 
 /**
  * @covers \IseardMedia\Kudos\Domain\Repository\CampaignRepository
@@ -195,5 +196,57 @@ class CampaignRepositoryTest extends BaseTestCase {
 		/** @var CampaignEntity $result */
 		$result = $this->campaign_repository->get( $id );
 		$this->assertStringContainsString( 'Campaign', $result->title );
+	}
+
+	// -------------------------------------------------------------------------
+	// create_first_campaign()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Puts the site in the state of a fresh install: onboarding active, no campaigns.
+	 */
+	private function fresh_install(): void {
+		update_option( SettingsService::SETTING_ONBOARDING_DISMISSED, false );
+		delete_option( CampaignRepository::SETTING_FIRST_CAMPAIGN_CREATED );
+		foreach ( $this->campaign_repository->all( [ 'id' ] ) as $campaign ) {
+			$this->campaign_repository->delete( (int) $campaign->id );
+		}
+	}
+
+	public function test_create_first_campaign_on_fresh_install(): void {
+		$this->fresh_install();
+
+		$id = $this->campaign_repository->create_first_campaign();
+
+		$this->assertNotNull( $id );
+		$this->assertSame( 'My first campaign', $this->campaign_repository->get( $id )->title );
+		$this->assertTrue( (bool) get_option( CampaignRepository::SETTING_FIRST_CAMPAIGN_CREATED ) );
+	}
+
+	public function test_create_first_campaign_runs_only_once(): void {
+		$this->fresh_install();
+		$id = $this->campaign_repository->create_first_campaign();
+		// The user deletes it, then reactivates the plugin.
+		$this->campaign_repository->delete( $id );
+
+		$this->assertNull( $this->campaign_repository->create_first_campaign() );
+		$this->assertSame( 0, $this->campaign_repository->count_query() );
+	}
+
+	public function test_create_first_campaign_skipped_when_campaigns_exist(): void {
+		$this->fresh_install();
+		$this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Existing' ] ) );
+
+		$this->assertNull( $this->campaign_repository->create_first_campaign() );
+		$this->assertSame( 1, $this->campaign_repository->count_query() );
+		$this->assertTrue( (bool) get_option( CampaignRepository::SETTING_FIRST_CAMPAIGN_CREATED ) );
+	}
+
+	public function test_create_first_campaign_skipped_when_onboarding_dismissed(): void {
+		$this->fresh_install();
+		update_option( SettingsService::SETTING_ONBOARDING_DISMISSED, true );
+
+		$this->assertNull( $this->campaign_repository->create_first_campaign() );
+		$this->assertSame( 0, $this->campaign_repository->count_query() );
 	}
 }

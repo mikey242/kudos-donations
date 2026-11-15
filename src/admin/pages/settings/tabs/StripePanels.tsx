@@ -1,3 +1,4 @@
+import { createInterpolateElement } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useSettingsContext } from '../../../contexts';
@@ -122,6 +123,24 @@ const PaymentMethodsPanel = () => {
 
 const ApiKeysPanel = () => (
 	<Panel header={__('API Keys', 'kudos-donations')}>
+		<p style={{ marginTop: 0 }}>
+			{createInterpolateElement(
+				__(
+					'No Stripe account yet? <link>Sign up for free</link>. Your test key is available straight away, so you can try everything before going live. Stripe also accepts individuals and sole traders.',
+					'kudos-donations'
+				),
+				{
+					link: (
+						<ExternalLink
+							href="https://dashboard.stripe.com/register"
+							rel="external noreferrer noopener"
+						>
+							{null}
+						</ExternalLink>
+					),
+				}
+			)}
+		</p>
 		{(['test', 'live'] as ApiMode[]).map((mode) => (
 			<SecretControl
 				key={mode}

@@ -54,4 +54,67 @@ class FrontTest extends WP_UnitTestCase {
 		$html           = $front->kudos_render_callback( $args );
 		$this->assertSame( true, \is_string( $html ) );
 	}
+
+	/**
+	 * A Front instance whose vendor is ready, so the form renders.
+	 */
+	private function create_front(): Front {
+		$mollie_mock = $this->createMock( MolliePaymentProvider::class );
+		$mollie_mock->method( 'is_vendor_ready' )->willReturn( true );
+		$vendor_factory = $this->createMock( PaymentProviderFactory::class );
+		$vendor_factory->method( 'get_active_provider' )->willReturn( $mollie_mock );
+
+		return new Front( $vendor_factory, new TransactionRepository( new WpDb(), new TransactionSchema() ) );
+	}
+
+	public function test_render_records_placement_url_on_public_page(): void {
+		delete_option( Front::SETTING_FORM_PLACED_URL );
+		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'publish' ] );
+		$this->go_to( get_permalink( $page_id ) . '?utm_source=test' );
+
+		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+
+		$this->assertTrue( Front::is_form_placed() );
+		$this->assertSame( get_permalink( $page_id ), get_option( Front::SETTING_FORM_PLACED_URL ) );
+	}
+
+	public function test_render_keeps_first_placement_url(): void {
+		update_option( Front::SETTING_FORM_PLACED_URL, 'https://example.org/first/' );
+		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'publish' ] );
+		$this->go_to( get_permalink( $page_id ) );
+
+		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+
+		$this->assertSame( 'https://example.org/first/', get_option( Front::SETTING_FORM_PLACED_URL ) );
+	}
+
+	public function test_render_does_not_record_in_preview(): void {
+		delete_option( Front::SETTING_FORM_PLACED_URL );
+		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'draft' ] );
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		$this->go_to( add_query_arg( [ 'page_id' => $page_id, 'preview' => 'true' ], home_url( '/' ) ) );
+
+		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+
+		$this->assertFalse( Front::is_form_placed() );
+	}
+
+	public function test_render_does_not_record_in_admin(): void {
+		delete_option( Front::SETTING_FORM_PLACED_URL );
+		set_current_screen( 'dashboard' );
+
+		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+
+		set_current_screen( 'front' );
+		$this->assertFalse( Front::is_form_placed() );
+	}
+
+	public function test_render_does_not_record_without_campaign(): void {
+		delete_option( Front::SETTING_FORM_PLACED_URL );
+		$this->go_to( home_url( '/' ) );
+
+		$this->create_front()->kudos_render_callback( [ 'campaign_id' => '' ] );
+
+		$this->assertFalse( Front::is_form_placed() );
+	}
 }

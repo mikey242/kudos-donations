@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Currency;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
@@ -135,7 +136,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			'date'          => $transaction->created_at,
 			'description'   => $transaction->title,
 			'amount'        => ( ! empty( $transaction->currency ) ? html_entity_decode(
-				Utils::get_currencies()[ $transaction->currency ]
+				Currency::get_currencies()[ $transaction->currency ]
 			) : '' ) . number_format_i18n(
 				$transaction->value,
 				2

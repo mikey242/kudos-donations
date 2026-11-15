@@ -7,38 +7,53 @@ import {
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { Button, ExternalLink } from '@wordpress/components';
-import { EntityRestResponse, useSettingsContext } from '../contexts';
+import { useSettingsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { AllSettings } from '../../types/all-settings';
 import { Campaign } from '../../types/entity';
-import { StepsBanner } from './StepsBanner';
+import { StepsBanner, type StepsBannerStep } from './StepsBanner';
 import { getPaymentVendors } from '../../utils/payment-vendor';
 
-function useHasCampaign(params: object, enabled: boolean): boolean | null {
-	const [hasCampaign, setHasCampaign] = useState<boolean | null>(null);
+// Matches PaymentProviderInterface::STEP_GO_LIVE.
+const GO_LIVE_STEP = 'golive';
+
+/**
+ * The ID of the most recent campaign, null when there is none, or undefined while loading.
+ *
+ * @param params  The admin query params; a change triggers a refetch.
+ * @param enabled Whether to fetch at all.
+ */
+function useFirstCampaignId(
+	params: object,
+	enabled: boolean
+): number | null | undefined {
+	const [campaignId, setCampaignId] = useState<number | null | undefined>(
+		undefined
+	);
 	useEffect(() => {
 		if (!enabled) {
 			return;
 		}
-		apiFetch<EntityRestResponse<Campaign>[]>({
+		apiFetch<Campaign[]>({
 			path: 'kudos/v1/campaign?per_page=1',
 		})
-			.then((res) => setHasCampaign(res.length > 0))
-			.catch(() => setHasCampaign(false));
+			.then((res) => setCampaignId(res[0]?.id ?? null))
+			.catch(() => setCampaignId(null));
 	}, [enabled, params]);
-	return hasCampaign;
+	return campaignId;
 }
 
 export const OnboardingBanner = () => {
 	const { settings, updateSetting } = useSettingsContext<AllSettings>();
 	const { params, setParams } = useAdminQueryParams();
 	const dismissed = !!settings._kudos_onboarding_dismissed;
-	const hasCampaign = useHasCampaign(params, !dismissed);
+	const campaignId = useFirstCampaignId(params, !dismissed);
+	const placedUrl = settings._kudos_form_placed_url ?? '';
 
 	const vendor = settings._kudos_payment_vendor ?? '';
 	const status = settings._kudos_payment_vendor_status;
 
-	if (dismissed || hasCampaign === null) {
+	if (dismissed || campaignId === undefined) {
 		return null;
 	}
 
@@ -46,22 +61,28 @@ export const OnboardingBanner = () => {
 	const dismiss = () => updateSetting('_kudos_onboarding_dismissed', true);
 
 	// The active provider declares its own setup steps; we only supply the ones that are
-	// not vendor-specific. A provider with nothing to configure returns none.
-	const vendorSteps = (status?.steps ?? []).map(
-		(step: { id: any; label: any; done: any; panel: any }) => ({
-			id: step.id,
-			label: step.label,
-			done: step.done,
-			onClick: () =>
-				setParams({
-					page: 'kudos-settings',
-					tab: 'payment',
-					panel: step.panel,
-				}),
-		})
-	);
+	// not vendor-specific. A provider with nothing to configure returns none. Going live
+	// comes after the campaign, so a campaign can be built and tried in test mode first.
+	const vendorSteps = (status?.steps ?? []).map((step) => ({
+		id: step.id,
+		// Until a provider is chosen, the steps come from the default one: don't name it,
+		// and don't count its leftover keys as progress.
+		label:
+			step.id === 'connect' && !vendor
+				? __('Connect your account', 'kudos-donations')
+				: step.label,
+		done: !!vendor && step.done,
+		onClick: () =>
+			setParams({
+				page: 'kudos-settings',
+				tab: 'payment',
+				panel: step.panel,
+			}),
+	}));
+	const setupSteps = vendorSteps.filter((step) => step.id !== GO_LIVE_STEP);
+	const liveSteps = vendorSteps.filter((step) => step.id === GO_LIVE_STEP);
 
-	const steps = [
+	const steps: StepsBannerStep[] = [
 		{
 			id: 'provider',
 			label: __('Choose a payment provider', 'kudos-donations'),
@@ -74,22 +95,44 @@ export const OnboardingBanner = () => {
 					panel: 'vendor-selector',
 				}),
 		},
-		...vendorSteps,
+		...setupSteps,
 		{
-			id: 'campaign',
-			label: __('Create a campaign', 'kudos-donations'),
-			done: hasCampaign,
-			onClick: () => setParams({ page: 'kudos-campaigns' }),
+			// A campaign is created on activation, so the step that matters is getting a
+			// form onto the site. Done once one has rendered on a public page.
+			id: 'placed',
+			label: __('Add to your site', 'kudos-donations'),
+			done: !!placedUrl,
+			onClick: () =>
+				setParams(
+					campaignId
+						? { page: 'kudos-campaigns', entity: campaignId }
+						: { page: 'kudos-campaigns' }
+				),
 		},
+		...liveSteps,
 	];
+
+	// Once only going live is left, nudge towards a test donation before switching.
+	const onlyLiveLeft =
+		liveSteps.some((step) => !step.done) &&
+		steps.every(
+			(step) => step.done || step.hidden || step.id === GO_LIVE_STEP
+		);
 
 	return (
 		<div className="admin-wrap" style={{ margin: '2em auto' }}>
 			<StepsBanner
-				title={__(
-					'Complete the following steps to get started',
-					'kudos-donations'
-				)}
+				title={
+					onlyLiveLeft
+						? __(
+								'Try a test donation, then go live when you are ready',
+								'kudos-donations'
+							)
+						: __(
+								'Complete the following steps to get started',
+								'kudos-donations'
+							)
+				}
 				steps={steps}
 				className="kudos-onboarding-banner"
 				onClose={dismiss}
@@ -101,11 +144,16 @@ export const OnboardingBanner = () => {
 						<p>
 							{createInterpolateElement(
 								__(
-									/* translators: 1: support forums link, 2: documentation link */
-									"Feel free to customise your campaign. Once you're ready place your campaign on your website using a shortcode or block. Find out more by visiting our <forums/> or <docs/>.",
+									/* translators: 1: link to the page the form is on, 2: support forums link, 3: documentation link */
+									'Your donation form is live on <page/>. Feel free to customise your campaign, and find out more by visiting our <forums/> or <docs/>.',
 									'kudos-donations'
 								),
 								{
+									page: (
+										<ExternalLink href={placedUrl}>
+											{placedUrl}
+										</ExternalLink>
+									),
 									forums: (
 										<ExternalLink
 											href="https://wordpress.org/support/plugin/kudos-donations/"

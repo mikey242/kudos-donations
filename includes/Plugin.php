@@ -14,9 +14,10 @@ namespace IseardMedia\Kudos;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Helper\Country;
+use IseardMedia\Kudos\Helper\Currency;
 use IseardMedia\Kudos\Helper\Localization;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
 use Throwable;
@@ -27,19 +28,23 @@ class Plugin implements LoggerAwareInterface {
 
 	private ActivationHandler $activation_handler;
 	private RegistrableHandler $registrable_handler;
+	private CampaignRepository $campaign_repository;
 
 	/**
 	 * Plugin constructor.
 	 *
 	 * @param RegistrableHandler $registrable_handler Registration handler.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
+	 * @param CampaignRepository $campaign_repository Campaign repository.
 	 */
 	public function __construct(
 		RegistrableHandler $registrable_handler,
-		ActivationHandler $activation_handler
+		ActivationHandler $activation_handler,
+		CampaignRepository $campaign_repository
 	) {
 		$this->registrable_handler = $registrable_handler;
 		$this->activation_handler  = $activation_handler;
+		$this->campaign_repository = $campaign_repository;
 	}
 
 	/**
@@ -58,7 +63,7 @@ class Plugin implements LoggerAwareInterface {
 					$global['version']
 				);
 				Localization::add_global( 'countries', Country::get_countries() );
-				Localization::add_global( 'currencies', Utils::get_currencies() );
+				Localization::add_global( 'currencies', Currency::get_currencies() );
 			}
 		);
 		$this->registrable_handler->process();
@@ -71,6 +76,8 @@ class Plugin implements LoggerAwareInterface {
 		CacheService::recursively_clear_cache();
 		flush_rewrite_rules();
 		$this->activation_handler->process();
+		// After process(), so the tables exist.
+		$this->campaign_repository->create_first_campaign();
 		$this->logger->info(
 			'Plugin activated.',
 			[ 'version' => KUDOS_VERSION ]

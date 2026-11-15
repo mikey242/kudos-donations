@@ -18,6 +18,7 @@ use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Currency;
 use IseardMedia\Kudos\Helper\Utils;
 
 class ReceiptService extends AbstractRegistrable implements HasSettingsInterface {
@@ -125,7 +126,7 @@ class ReceiptService extends AbstractRegistrable implements HasSettingsInterface
 			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
-			'currency_symbol' => Utils::get_currencies()[ $transaction->currency ] ?? '',
+			'currency_symbol' => Currency::get_currencies()[ $transaction->currency ] ?? '',
 			'items'           => [
 				$transaction->title            => number_format_i18n( $transaction->value, 2 ),
 				__( 'VAT', 'kudos-donations' ) => 0,

@@ -28,10 +28,15 @@ use WP_REST_Server;
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
-	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
-	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';
-	public const SCRIPT_HANDLE_EDITOR       = 'kudos-editor-script';
-	public const SCRIPT_HANDLES             = [
+	/**
+	 * URL of the first public page a donation form was seen on. Set once; non-empty means
+	 * the "Add to your site" onboarding step is done.
+	 */
+	public const SETTING_FORM_PLACED_URL = '_kudos_form_placed_url';
+	public const STYLE_HANDLE_VIEW       = 'kudos-fonts';
+	public const SCRIPT_HANDLE_VIEW      = 'kudos-view-script';
+	public const SCRIPT_HANDLE_EDITOR    = 'kudos-editor-script';
+	public const SCRIPT_HANDLES          = [
 		self::SCRIPT_HANDLE_VIEW,
 		self::SCRIPT_HANDLE_EDITOR,
 	];
@@ -183,6 +188,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			return null;
 		}
 
+		// Before the vendor check, so placing the form counts even before it is connected.
+		$this->maybe_record_form_placement();
+
 		// Check if the current vendor is connected.
 		$vendor = $this->factory->get_active_provider();
 		if ( null === $vendor || ! $vendor->is_vendor_ready() ) {
@@ -324,6 +332,42 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	}
 
 	/**
+	 * Whether a donation form has been seen on a public page of the site.
+	 */
+	public static function is_form_placed(): bool {
+		return '' !== (string) get_option( self::SETTING_FORM_PLACED_URL, '' );
+	}
+
+	/**
+	 * Records the current page's URL the first time a form renders on the public site.
+	 *
+	 * Detecting this at render time rather than on save_post also catches forms placed by
+	 * page builders, widgets, templates and theme code, which never appear in post_content.
+	 * Admin screens, REST/AJAX, previews and feeds don't count: the form isn't live there.
+	 */
+	private function maybe_record_form_placement(): void {
+		if ( self::is_form_placed() ) {
+			return;
+		}
+
+		if ( is_admin() || wp_doing_ajax() || wp_is_serving_rest_request() || wp_is_json_request()
+			|| is_preview() || is_customize_preview() || is_feed() || is_embed() ) {
+			return;
+		}
+
+		global $wp;
+		// The permalink on single posts/pages, the request path elsewhere; never the query
+		// string, which may carry tracking or Kudos return parameters.
+		$url = is_singular()
+			? get_permalink( get_queried_object_id() )
+			: home_url( user_trailingslashit( (string) ( $wp->request ?? '' ) ) );
+
+		if ( $url ) {
+			update_option( self::SETTING_FORM_PLACED_URL, esc_url_raw( $url ) );
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_settings(): array {
@@ -333,6 +377,12 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_FORM_PLACED_URL    => [
+				'type'              => FieldType::STRING,
+				'show_in_rest'      => true,
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
 			],
 		];
 	}

@@ -21,6 +21,7 @@ export interface VendorStatus {
 
 export interface BaseSettings {
 	_kudos_always_load_assets: boolean;
+	_kudos_form_placed_url: string;
 	_kudos_invoice_number: number;
 	_kudos_invoice_company_address: string;
 	_kudos_invoice_vat_number: string;

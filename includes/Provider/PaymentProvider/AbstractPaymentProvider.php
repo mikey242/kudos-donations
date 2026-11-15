@@ -215,24 +215,55 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	/**
 	 * {@inheritDoc}
 	 *
-	 * The default flow for a key-based provider: add a live key, then go live. Providers with
-	 * extra setup (a webhook secret, say) can append to these.
+	 * The default flow for a key-based provider: connect with any key (a test key is enough to
+	 * start trying things out), then go live once the account is verified. Going live covers
+	 * every remaining requirement in one step, so the banner stays the same size; its panel
+	 * points at the first thing still missing.
 	 */
 	public function get_onboarding_steps(): array {
+		$go_live_panel = $this->get_go_live_panel();
+
 		return [
 			[
-				'id'    => 'apikeys',
-				'label' => __( 'Enter live API key', 'kudos-donations' ),
-				'done'  => $this->has_live_key(),
+				'id'    => 'connect',
+				'label' => \sprintf(
+					/* translators: %s: Payment provider name (e.g. Mollie). */
+					__( 'Connect %s', 'kudos-donations' ),
+					static::get_name()
+				),
+				'done'  => $this->is_connected(),
 				'panel' => 'apikeys',
 			],
 			[
-				'id'    => 'livemode',
-				'label' => __( 'Switch to live mode', 'kudos-donations' ),
-				'done'  => 'live' === $this->get_api_mode(),
-				'panel' => 'apimode',
+				'id'    => self::STEP_GO_LIVE,
+				'label' => __( 'Go live', 'kudos-donations' ),
+				'done'  => null === $go_live_panel,
+				'panel' => $go_live_panel ?? 'apimode',
 			],
 		];
+	}
+
+	/**
+	 * Whether the current mode has a saved key that has fetched payment methods. Unlike
+	 * is_ready() this needs no decryption, since it runs on every admin page via the notices.
+	 */
+	private function is_connected(): bool {
+		$stored = (array) ( $this->get_mode_data()['methods'] ?? [] );
+		return $this->mode_has_key( $this->get_api_mode() ) && ! empty( $stored );
+	}
+
+	/**
+	 * Returns the settings panel for the first thing still needed to take live payments, or
+	 * null when the provider is live. Providers with extra live requirements extend this.
+	 */
+	protected function get_go_live_panel(): ?string {
+		if ( ! $this->has_live_key() ) {
+			return 'apikeys';
+		}
+		if ( 'live' !== $this->get_api_mode() ) {
+			return 'apimode';
+		}
+		return null;
 	}
 
 	/**

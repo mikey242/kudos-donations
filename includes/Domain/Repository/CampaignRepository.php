@@ -14,11 +14,43 @@ namespace IseardMedia\Kudos\Domain\Repository;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Table\CampaignsTable;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Service\SettingsService;
 
 /**
  * @extends BaseRepository<CampaignEntity>
  */
 class CampaignRepository extends BaseRepository {
+
+	/**
+	 * Set once the first campaign has been created (or was found unnecessary), so it is
+	 * never recreated after the user deletes it or reactivates the plugin.
+	 */
+	public const SETTING_FIRST_CAMPAIGN_CREATED = '_kudos_first_campaign_created';
+
+	/**
+	 * Creates a ready-to-use campaign on a fresh install, so new users have a working form to
+	 * place straight away. Runs at most once per site, and only while onboarding is active
+	 * and there are no campaigns yet.
+	 *
+	 * @return int|null The new campaign's ID, or null when none was created.
+	 */
+	public function create_first_campaign(): ?int {
+		if ( get_option( self::SETTING_FIRST_CAMPAIGN_CREATED ) || ! SettingsService::is_onboarding_active() ) {
+			return null;
+		}
+
+		update_option( self::SETTING_FIRST_CAMPAIGN_CREATED, true, false );
+
+		if ( $this->count_query() > 0 ) {
+			return null;
+		}
+
+		$id = $this->insert(
+			new CampaignEntity( [ 'title' => __( 'My first campaign', 'kudos-donations' ) ] )
+		);
+
+		return $id ? (int) $id : null;
+	}
 
 	/**
 	 * {@inheritDoc}

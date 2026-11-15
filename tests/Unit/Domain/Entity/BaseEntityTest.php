@@ -7,6 +7,7 @@ namespace IseardMedia\Kudos\Tests\Domain\Entity;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Helper\Currency;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 
 /**
@@ -22,7 +23,7 @@ class BaseEntityTest extends BaseTestCase {
 
 	public function test_constructor_applies_defaults(): void {
 		$campaign = new CampaignEntity( [] );
-		$this->assertSame( 'EUR', $campaign->currency );
+		$this->assertSame( Currency::get_default(), $campaign->currency );
 		$this->assertSame( 1.0, $campaign->minimum_donation );
 		$this->assertFalse( $campaign->show_goal );
 	}
