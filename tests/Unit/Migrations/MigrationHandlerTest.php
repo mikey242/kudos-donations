@@ -210,4 +210,40 @@ class MigrationHandlerTest extends BaseTestCase {
 
 		$this->assertArrayNotHasKey( 'needsUpgrade', $data['admin'] ?? [] );
 	}
+
+	/**
+	 * When the database is at KUDOS_DB_VERSION, register() must not build any migration:
+	 * they pull in tables, providers and repositories on every request otherwise.
+	 */
+	public function test_register_does_not_build_migrations_when_db_current(): void {
+		// The registered setting default would make update_option() see "no change" and
+		// skip the write, so drop it to store the version for real.
+		remove_all_filters( 'default_option_' . MigrationHandler::SETTING_DB_VERSION );
+		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
+		$built      = false;
+		$migrations = ( static function () use ( &$built ) {
+			$built = true;
+			yield from [];
+		} )();
+
+		( new MigrationHandler( $migrations ) )->register();
+
+		$this->assertFalse( $built );
+	}
+
+	/**
+	 * The "database is current" shortcut assumes no migration is newer than
+	 * KUDOS_DB_VERSION. A new migration added without bumping the constant would
+	 * otherwise be silently skipped.
+	 */
+	public function test_no_migration_is_newer_than_db_version(): void {
+		$handler = $this->get_from_container( MigrationHandler::class );
+
+		foreach ( $handler->get_migrations() as $migration ) {
+			$this->assertTrue(
+				version_compare( $migration->get_version(), KUDOS_DB_VERSION, '<=' ),
+				\sprintf( 'Migration %s is newer than KUDOS_DB_VERSION (%s); bump the constant.', $migration->get_version(), KUDOS_DB_VERSION )
+			);
+		}
+	}
 }

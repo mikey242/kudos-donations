@@ -32,11 +32,19 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	public const AUTO_MIGRATION_HOOK = 'kudos_run_auto_migration_batch';
 
 	/**
-	 * Array of migrations.
+	 * The migrations as injected: a lazy iterable from the container. Migrations pull in
+	 * tables, providers and repositories, so they are only built when actually needed.
 	 *
-	 * @var MigrationInterface[]
+	 * @var iterable<MigrationInterface>
 	 */
-	protected array $migrations = [];
+	private iterable $migration_services;
+
+	/**
+	 * The migrations sorted by version, or null until first needed.
+	 *
+	 * @var MigrationInterface[]|null
+	 */
+	private ?array $migrations = null;
 
 	/**
 	 * MigrationManager constructor.
@@ -44,14 +52,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * @param iterable $migrations Migrations are injected here by the container.
 	 */
 	public function __construct( iterable $migrations ) {
-		foreach ( $migrations as $migration ) {
-			$this->migrations[] = $migration;
-		}
-		usort(
-			$this->migrations,
-			fn( MigrationInterface $a, MigrationInterface $b ) =>
-			version_compare( $a->get_version(), $b->get_version() )
-		);
+		$this->migration_services = $migrations;
 	}
 
 	/**
@@ -102,7 +103,27 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * @return MigrationInterface[]
 	 */
 	public function get_migrations(): array {
+		if ( null === $this->migrations ) {
+			$migrations = [];
+			foreach ( $this->migration_services as $migration ) {
+				$migrations[] = $migration;
+			}
+			usort(
+				$migrations,
+				fn( MigrationInterface $a, MigrationInterface $b ) =>
+				version_compare( $a->get_version(), $b->get_version() )
+			);
+			$this->migrations = $migrations;
+		}
 		return $this->migrations;
+	}
+
+	/**
+	 * Whether the database is at the current schema version. No migration is newer than
+	 * KUDOS_DB_VERSION, so none can be pending then, and the migrations needn't be built.
+	 */
+	private static function is_db_current(): bool {
+		return version_compare( (string) get_option( self::SETTING_DB_VERSION, '0' ), KUDOS_DB_VERSION, '>=' );
 	}
 
 	/**
@@ -111,10 +132,15 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * @return MigrationInterface[]
 	 */
 	public function get_pending_migrations(): array {
+		// Runs on every request via register(); skip building the migrations when up to date.
+		if ( self::is_db_current() ) {
+			return [];
+		}
+
 		$history = (array) get_option( self::SETTING_MIGRATION_HISTORY, [] );
 
 		return array_filter(
-			$this->migrations,
+			$this->get_migrations(),
 			fn( MigrationInterface $migration ) =>
 				! \in_array( $migration->get_version(), $history, true ) &&
 				version_compare( $migration->get_version(), (string) get_option( self::SETTING_DB_VERSION, '0' ), '>' )
