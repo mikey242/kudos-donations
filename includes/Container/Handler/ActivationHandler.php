@@ -19,34 +19,24 @@ use IseardMedia\Kudos\Container\ActivationAwareInterface;
 class ActivationHandler {
 
 	/**
-	 * Array of services.
+	 * The activation aware services. A lazy iterable from the container: services are only
+	 * built when it is iterated, so this must not happen before process().
 	 *
-	 * @var ActivationAwareInterface[]
+	 * @var iterable<ActivationAwareInterface>
 	 */
-	protected array $services = [];
+	protected iterable $services;
 
 	/**
 	 * Receives the activation aware services.
 	 *
-	 * @param iterable $services Array of services.
+	 * @param iterable $services Lazy iterable of ActivationAwareInterface services.
 	 */
 	public function __construct( iterable $services ) {
-		foreach ( $services as $service ) {
-			$this->add( $service );
-		}
+		$this->services = $services;
 	}
 
 	/**
-	 * Add service to list.
-	 *
-	 * @param ActivationAwareInterface $service Service.
-	 */
-	public function add( ActivationAwareInterface $service ): void {
-		$this->services[] = $service;
-	}
-
-	/**
-	 * Runs initialize on each service.
+	 * Runs on_plugin_activation on each service.
 	 */
 	public function process(): void {
 		foreach ( $this->services as $service ) {
