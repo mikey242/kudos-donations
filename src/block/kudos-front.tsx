@@ -14,7 +14,7 @@ import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import { KudosButtonAttributes } from './form/Edit';
+import type { KudosButtonAttributes } from './index';
 
 window.kudos.front.api = { Components, Controls, Contexts };
 
