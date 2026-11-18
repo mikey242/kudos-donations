@@ -4,7 +4,7 @@ Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.3.6
+Stable tag: 4.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,9 @@ For general information on how to use shortcodes, please visit [this page](https
 9. Add a donation form with the block, as a button or embedded in the page
 
 == Changelog ==
+
+= 4.3.7 =
+* Minor performance improvements - we are continuing to review the plugin and make adjustments to the way Kudos Donations loads and runs
 
  = 4.3.6 =
  * The setup steps now explain what to do next, such as how to add the donation form to your site
