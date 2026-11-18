@@ -4,9 +4,7 @@
 		"title": "Kudos Donations demo",
 		"description": "A demo campaign with a donate button on the front page. Payments are simulated.",
 		"author": "iseardmedia",
-		"categories": [
-			"donations"
-		]
+		"categories": ["donations"]
 	},
 	"features": {
 		"networking": true
@@ -16,9 +14,7 @@
 		"php": "8.4",
 		"wp": "latest"
 	},
-	"phpExtensionBundles": [
-		"kitchen-sink"
-	],
+	"phpExtensionBundles": ["kitchen-sink"],
 	"steps": [
 		{
 			"step": "login",

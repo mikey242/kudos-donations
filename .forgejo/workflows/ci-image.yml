@@ -11,81 +11,81 @@ name: CI image
 #   package read/write scope for the image owner.
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - ".forgejo/ci/**"
-      - ".forgejo/workflows/ci-image.yml"
-      - ".nvmrc"
-  schedule:
-    # Monthly rebuild to pick up PHP patch releases and security updates.
-    - cron: "0 4 1 * *"
-  workflow_dispatch:
+    push:
+        branches: ['main']
+        paths:
+            - '.forgejo/ci/**'
+            - '.forgejo/workflows/ci-image.yml'
+            - '.nvmrc'
+    schedule:
+        # Monthly rebuild to pick up PHP patch releases and security updates.
+        - cron: '0 4 1 * *'
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: docker.io/library/docker:29-cli
-    strategy:
-      fail-fast: false
-      # Builds share one dind daemon on the runner; limit contention.
-      max-parallel: 2
-      matrix:
-        php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
-    name: Build PHP ${{ matrix.php-version }} image
-    env:
-      IMAGE: code.iseard.media/michael/kudos-ci
-    steps:
-      # Plain git instead of actions/checkout: this Alpine image has no Node
-      # to run JavaScript actions.
-      - name: Checkout code
-        run: |
-          apk add --no-cache git
-          git init -q src
-          git -C src fetch -q --depth 1 "${{ github.server_url }}/${{ github.repository }}.git" "${{ github.sha }}"
-          git -C src checkout -q FETCH_HEAD
-
-      # The runner uses a docker:dind sidecar listening on tcp/2375, and job
-      # containers run inside it, so the daemon is this container's default
-      # gateway. Set the repository variable DOCKER_HOST to override.
-      - name: Locate Docker daemon
-        run: |
-          if [ -n "${{ vars.DOCKER_HOST }}" ]; then
-            DOCKER_HOST="${{ vars.DOCKER_HOST }}"
-          elif [ -S /var/run/docker.sock ]; then
-            DOCKER_HOST="unix:///var/run/docker.sock"
-          else
-            DOCKER_HOST="tcp://$(ip route | awk '/^default/ { print $3; exit }'):2375"
-          fi
-          echo "Using DOCKER_HOST=$DOCKER_HOST"
-          echo "DOCKER_HOST=$DOCKER_HOST" >> "$GITHUB_ENV"
-          DOCKER_HOST="$DOCKER_HOST" docker version --format 'Docker daemon {{.Server.Version}}'
-
-      - name: Log in to registry
+    build:
+        runs-on: ubuntu-latest
+        container:
+            image: docker.io/library/docker:29-cli
+        strategy:
+            fail-fast: false
+            # Builds share one dind daemon on the runner; limit contention.
+            max-parallel: 2
+            matrix:
+                php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        name: Build PHP ${{ matrix.php-version }} image
         env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-          REGISTRY_USER: ${{ github.repository_owner }}
-        run: |
-          if [ -z "$REGISTRY_TOKEN" ]; then
-            echo "::error::secrets.REGISTRY_TOKEN is empty. Add it under the repository's Settings > Actions > Secrets (secrets are not passed to pull request runs)."
-            exit 1
-          fi
-          printf '%s' "$REGISTRY_TOKEN" | docker login code.iseard.media -u "${REGISTRY_USER:-michael}" --password-stdin
+            IMAGE: code.iseard.media/michael/kudos-ci
+        steps:
+            # Plain git instead of actions/checkout: this Alpine image has no Node
+            # to run JavaScript actions.
+            - name: Checkout code
+              run: |
+                  apk add --no-cache git
+                  git init -q src
+                  git -C src fetch -q --depth 1 "${{ github.server_url }}/${{ github.repository }}.git" "${{ github.sha }}"
+                  git -C src checkout -q FETCH_HEAD
 
-      - name: Build image
-        run: |
-          docker build \
-            --pull \
-            --build-arg PHP_VERSION=${{ matrix.php-version }} \
-            --build-arg NODE_VERSION="$(tr -d '[:space:]' < src/.nvmrc)" \
-            --tag "$IMAGE:php${{ matrix.php-version }}" \
-            src/.forgejo/ci
+            # The runner uses a docker:dind sidecar listening on tcp/2375, and job
+            # containers run inside it, so the daemon is this container's default
+            # gateway. Set the repository variable DOCKER_HOST to override.
+            - name: Locate Docker daemon
+              run: |
+                  if [ -n "${{ vars.DOCKER_HOST }}" ]; then
+                    DOCKER_HOST="${{ vars.DOCKER_HOST }}"
+                  elif [ -S /var/run/docker.sock ]; then
+                    DOCKER_HOST="unix:///var/run/docker.sock"
+                  else
+                    DOCKER_HOST="tcp://$(ip route | awk '/^default/ { print $3; exit }'):2375"
+                  fi
+                  echo "Using DOCKER_HOST=$DOCKER_HOST"
+                  echo "DOCKER_HOST=$DOCKER_HOST" >> "$GITHUB_ENV"
+                  DOCKER_HOST="$DOCKER_HOST" docker version --format 'Docker daemon {{.Server.Version}}'
 
-      - name: Smoke test
-        run: |
-          docker run --rm "$IMAGE:php${{ matrix.php-version }}" sh -c \
-            'php -v && php -m | grep -qx mysqli && composer --version && node --version && npm --version && svn --version --quiet'
+            - name: Log in to registry
+              env:
+                  REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+                  REGISTRY_USER: ${{ github.repository_owner }}
+              run: |
+                  if [ -z "$REGISTRY_TOKEN" ]; then
+                    echo "::error::secrets.REGISTRY_TOKEN is empty. Add it under the repository's Settings > Actions > Secrets (secrets are not passed to pull request runs)."
+                    exit 1
+                  fi
+                  printf '%s' "$REGISTRY_TOKEN" | docker login code.iseard.media -u "${REGISTRY_USER:-michael}" --password-stdin
 
-      - name: Push image
-        run: docker push "$IMAGE:php${{ matrix.php-version }}"
+            - name: Build image
+              run: |
+                  docker build \
+                    --pull \
+                    --build-arg PHP_VERSION=${{ matrix.php-version }} \
+                    --build-arg NODE_VERSION="$(tr -d '[:space:]' < src/.nvmrc)" \
+                    --tag "$IMAGE:php${{ matrix.php-version }}" \
+                    src/.forgejo/ci
+
+            - name: Smoke test
+              run: |
+                  docker run --rm "$IMAGE:php${{ matrix.php-version }}" sh -c \
+                    'php -v && php -m | grep -qx mysqli && composer --version && node --version && npm --version && svn --version --quiet'
+
+            - name: Push image
+              run: docker push "$IMAGE:php${{ matrix.php-version }}"

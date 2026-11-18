@@ -1,9 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": [
-		"config:recommended",
-		"mergeConfidence:all-badges"
-	],
+	"extends": ["config:recommended", "mergeConfidence:all-badges"],
 	"minimumReleaseAge": "7 days",
 	"constraints": {
 		"php": "7.4.33"
@@ -12,9 +9,7 @@
 	"composer": {
 		"lockFileMaintenance": {
 			"enabled": true,
-			"schedule": [
-				"before 5am on the first day of the month"
-			]
+			"schedule": ["before 5am on the first day of the month"]
 		},
 		"rangeStrategy": "update-lockfile"
 	}

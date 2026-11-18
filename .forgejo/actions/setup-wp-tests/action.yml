@@ -2,27 +2,27 @@ name: Setup WP test environment
 description: Downloads built artifacts and installs the WordPress test suite. Expects the kudos-ci job container.
 
 inputs:
-  db-host:
-    description: Database host (and optional port) of the job's MySQL service
-    required: false
-    default: mysql:3306
+    db-host:
+        description: Database host (and optional port) of the job's MySQL service
+        required: false
+        default: mysql:3306
 
 runs:
-  using: composite
-  steps:
-    - name: Download plugin dependencies
-      uses: https://code.forgejo.org/forgejo/download-artifact@v7
-      with:
-        name: plugin-deps
-        path: ./
+    using: composite
+    steps:
+        - name: Download plugin dependencies
+          uses: https://code.forgejo.org/forgejo/download-artifact@v7
+          with:
+              name: plugin-deps
+              path: ./
 
-    - name: Install tests
-      shell: bash
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /usr/local/bin/install-wp-tests.sh
-        chmod +x /usr/local/bin/install-wp-tests.sh
-        bash /usr/local/bin/install-wp-tests.sh wordpress_test root root ${{ inputs.db-host }} latest true
+        - name: Install tests
+          shell: bash
+          run: |
+              curl -fsSL https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /usr/local/bin/install-wp-tests.sh
+              chmod +x /usr/local/bin/install-wp-tests.sh
+              bash /usr/local/bin/install-wp-tests.sh wordpress_test root root ${{ inputs.db-host }} latest true
 
-    - name: Fix permissions for PHPUnit
-      shell: bash
-      run: chmod +x vendor/bin/phpunit
+        - name: Fix permissions for PHPUnit
+          shell: bash
+          run: chmod +x vendor/bin/phpunit

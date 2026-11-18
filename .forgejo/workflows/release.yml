@@ -20,14 +20,14 @@ jobs:
             - name: Cache dependencies
               uses: https://github.com/actions/cache@v6
               with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: ${{ runner.os }}-composer-
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
 
             - name: Install dependencies
               run: |
-                npm ci
-                composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+                  npm ci
+                  composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
 
             - name: Build front-end assets
               run: npm run build

@@ -1,134 +1,138 @@
 {
-  "name": "iseard-media/kudos-donations",
-  "description": "A modern and easy to use donation plugin for WordPress.",
-  "type": "wordpress-plugin",
-  "prefer-stable": true,
-  "license": "proprietary",
-  "minimum-stability": "dev",
-  "config": {
-    "classmap-authoritative": true,
-    "optimize-autoloader": true,
-    "sort-packages": true,
-    "platform": {
-      "php": "7.4"
-    },
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true,
-      "phpstan/extension-installer": true,
-      "typisttech/imposter-plugin": false
-    },
-    "policy": {
-      "advisories": {
-        "ignore-id": [
-          "PKSA-8zx5-v2nz-58pb",
-          "PKSA-fbvq-z33h-r2np",
-          "PKSA-g9zw-qxh8-pq8w",
-          "PKSA-yd6k-t2gh-1m43",
-          "PKSA-1tmc-rt7x-12w6",
-          "PKSA-xx6c-6d96-db2w",
-          "PKSA-sjvz-tbbr-vwth",
-          "PKSA-h8hf-ytnd-5t9q",
-          "PKSA-wwb1-81rc-pd65",
-          "PKSA-kvv6-36cr-fkzb",
-          "PKSA-n14z-jjjg-g8vd",
-          "PKSA-3mcc-k66d-pydb",
-          "PKSA-gw7n-z4yx-7xjt",
-          "PKSA-dpx1-78wg-1kqs",
-          "PKSA-21g2-dzjv-sky5"
-        ]
-      }
-    }
-  },
-  "require": {
-    "php": ">=7.4",
-    "ext-json": "*",
-    "dompdf/dompdf": "^3",
-    "mollie/mollie-api-php": "^v3.12.0",
-    "monolog/monolog": "^2",
-    "psr/log": "^1.1",
-    "sabberworm/php-css-parser": "^9.0",
-    "stripe/stripe-php": "^22.0",
-    "symfony/config": "^5.4",
-    "symfony/dependency-injection": "^5.4",
-    "symfony/dotenv": "^5.4",
-    "symfony/polyfill-ctype": "^1.31",
-    "symfony/polyfill-mbstring": "^1.31",
-    "symfony/proxy-manager-bridge": "^5.4",
-    "twig/twig": "~v3.11.3",
-    "woocommerce/action-scheduler": "^4.0"
-  },
-  "require-dev": {
-    "fakerphp/faker": "^1.24",
-    "johnbillion/wp-compat": "^3.0.1",
-    "php-stubs/wordpress-tests-stubs": "^7.0",
-    "php-stubs/wp-cli-stubs": "^2.12",
-    "phpcompatibility/php-compatibility": "^9.3",
-    "phpcompatibility/phpcompatibility-wp": "*",
-    "phpstan/extension-installer": "^1.3",
-    "phpstan/phpstan": "^2.1.55",
-    "phpstan/phpstan-deprecation-rules": "^2.0",
-    "phpunit/phpunit": "^9.0",
-    "sirbrillig/phpcs-variable-analysis": "v3.0.0",
-    "slevomat/coding-standard": "^8.6",
-    "squizlabs/php_codesniffer": "3.13.6",
-    "szepeviktor/phpstan-wordpress": "^2.0",
-    "wp-coding-standards/wpcs": "3.4.*",
-    "yoast/phpunit-polyfills": "^4.0"
-  },
-  "scripts": {
-    "lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
-    "phpstan": "vendor/bin/phpstan analyse --memory-limit=2048M",
-    "build-production": [
-      "composer install --optimize-autoloader --no-dev --prefer-dist",
-      "npm run build"
-    ],
-    "make-zip": [
-      "Composer\\Config::disableProcessTimeout",
-      "bash bin/make-zip.sh"
-    ],
-    "release": [
-      "@build-production",
-      "@make-zip"
-    ],
-    "clean-unused-files": [
-      "find vendor/dompdf/dompdf/lib/fonts/ ! -name 'Helvetica*' -type f -delete",
-      "find vendor -type f \\( -iname '*.md' -o -iname 'phpunit.xml' -o -iname 'CHANGELOG' -o -iname 'CHANGELOG.txt' -o -iname 'CREDITS' -o -iname 'README' -o -iname 'README.txt' -o -iname 'LICENSE' -o -iname 'LICENSE.txt' -o -iname 'README.rst' -o -iname 'composer.json' \\) -delete",
-      "find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
-      "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
-    ],
-    "remove-from-vendor": [
-      "rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/stripe vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
-      "sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php\\|sabberworm\\/php-css-parser/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
-    ],
-    "post-install-cmd": [
-      "@clean-unused-files",
-      "@prefix-dependencies",
-      "@remove-from-vendor"
-    ],
-    "post-update-cmd": [
-      "@clean-unused-files",
-      "@prefix-dependencies",
-      "@remove-from-vendor"
-    ],
-    "prefix-dependencies": [
-      "rm -rf third-party/vendor",
-      "php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
-      "echo '{ \"autoload\": { \"classmap\": [\"vendor/\"] } }' > ./third-party/composer.json",
-      "@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
-      "cp vendor/composer/InstalledVersions.php third-party/vendor/composer/InstalledVersions.php && cp vendor/composer/installed.php third-party/vendor/composer/installed.php",
-      "sed -i'.bak' -e 's/Composer\\\\Autoload/IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer\\\\Autoload/' -e 's/Composer\\\\\\\\InstalledVersions/IseardMedia\\\\\\\\Kudos\\\\\\\\ThirdParty\\\\\\\\Composer\\\\\\\\InstalledVersions/g' -e 's/^namespace Composer;$/namespace IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer;/' third-party/vendor/composer/*.php && rm -rf third-party/vendor/composer/*.php.bak",
-      "php -r \"\\$map=require 'third-party/vendor/composer/autoload_classmap.php';\\$missing=array_filter(\\$map,fn(\\$f)=>!file_exists(\\$f));if(\\$missing){echo 'Missing scoped files:\\n'.implode(\\\"\\n\\\",array_keys(\\$missing)).\\\"\\n\\\";exit(1);}if(!isset(\\$map['IseardMedia\\\\\\\\Kudos\\\\\\\\ThirdParty\\\\\\\\Symfony\\\\\\\\Component\\\\\\\\DependencyInjection\\\\\\\\ContainerBuilder'])){echo 'Scoped classmap is incomplete ('.count(\\$map).' classes)'.PHP_EOL;exit(1);}\""
-    ]
-  },
-  "autoload": {
-    "psr-4": {
-      "IseardMedia\\Kudos\\": "includes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "IseardMedia\\Kudos\\Dev\\": "includes-dev/",
-      "IseardMedia\\Kudos\\Tests\\": ["tests/", "tests/Unit/", "tests/Integration/"]
-    }
-  }
+	"name": "iseard-media/kudos-donations",
+	"description": "A modern and easy to use donation plugin for WordPress.",
+	"type": "wordpress-plugin",
+	"prefer-stable": true,
+	"license": "proprietary",
+	"minimum-stability": "dev",
+	"config": {
+		"classmap-authoritative": true,
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"platform": {
+			"php": "7.4"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true,
+			"typisttech/imposter-plugin": false
+		},
+		"policy": {
+			"advisories": {
+				"ignore-id": [
+					"PKSA-8zx5-v2nz-58pb",
+					"PKSA-fbvq-z33h-r2np",
+					"PKSA-g9zw-qxh8-pq8w",
+					"PKSA-yd6k-t2gh-1m43",
+					"PKSA-1tmc-rt7x-12w6",
+					"PKSA-xx6c-6d96-db2w",
+					"PKSA-sjvz-tbbr-vwth",
+					"PKSA-h8hf-ytnd-5t9q",
+					"PKSA-wwb1-81rc-pd65",
+					"PKSA-kvv6-36cr-fkzb",
+					"PKSA-n14z-jjjg-g8vd",
+					"PKSA-3mcc-k66d-pydb",
+					"PKSA-gw7n-z4yx-7xjt",
+					"PKSA-dpx1-78wg-1kqs",
+					"PKSA-21g2-dzjv-sky5"
+				]
+			}
+		}
+	},
+	"require": {
+		"php": ">=7.4",
+		"ext-json": "*",
+		"dompdf/dompdf": "^3",
+		"mollie/mollie-api-php": "^v3.12.0",
+		"monolog/monolog": "^2",
+		"psr/log": "^1.1",
+		"sabberworm/php-css-parser": "^9.0",
+		"stripe/stripe-php": "^22.0",
+		"symfony/config": "^5.4",
+		"symfony/dependency-injection": "^5.4",
+		"symfony/dotenv": "^5.4",
+		"symfony/polyfill-ctype": "^1.31",
+		"symfony/polyfill-mbstring": "^1.31",
+		"symfony/proxy-manager-bridge": "^5.4",
+		"twig/twig": "~v3.11.3",
+		"woocommerce/action-scheduler": "^4.0"
+	},
+	"require-dev": {
+		"fakerphp/faker": "^1.24",
+		"johnbillion/wp-compat": "^3.0.1",
+		"php-stubs/wordpress-tests-stubs": "^7.0",
+		"php-stubs/wp-cli-stubs": "^2.12",
+		"phpcompatibility/php-compatibility": "^9.3",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"phpstan/extension-installer": "^1.3",
+		"phpstan/phpstan": "^2.1.55",
+		"phpstan/phpstan-deprecation-rules": "^2.0",
+		"phpunit/phpunit": "^9.0",
+		"sirbrillig/phpcs-variable-analysis": "v3.0.0",
+		"slevomat/coding-standard": "^8.6",
+		"squizlabs/php_codesniffer": "3.13.6",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-coding-standards/wpcs": "3.4.*",
+		"yoast/phpunit-polyfills": "^4.0"
+	},
+	"scripts": {
+		"lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
+		"phpstan": "vendor/bin/phpstan analyse --memory-limit=2048M",
+		"build-production": [
+			"composer install --optimize-autoloader --no-dev --prefer-dist",
+			"npm run build"
+		],
+		"make-zip": [
+			"Composer\\Config::disableProcessTimeout",
+			"bash bin/make-zip.sh"
+		],
+		"release": [
+			"@build-production",
+			"@make-zip"
+		],
+		"clean-unused-files": [
+			"find vendor/dompdf/dompdf/lib/fonts/ ! -name 'Helvetica*' -type f -delete",
+			"find vendor -type f \\( -iname '*.md' -o -iname 'phpunit.xml' -o -iname 'CHANGELOG' -o -iname 'CHANGELOG.txt' -o -iname 'CREDITS' -o -iname 'README' -o -iname 'README.txt' -o -iname 'LICENSE' -o -iname 'LICENSE.txt' -o -iname 'README.rst' -o -iname 'composer.json' \\) -delete",
+			"find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
+			"php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
+		],
+		"remove-from-vendor": [
+			"rm -rf vendor/dompdf vendor/friendsofphp vendor/laminas vendor/masterminds vendor/mollie vendor/monolog vendor/sabberworm vendor/stripe vendor/symfony/config vendor/symfony/dependency-injection vendor/symfony/filesystem vendor/symfony/proxy-manager-bridge vendor/symfony/service-contracts vendor/twig",
+			"sed -i '/laminas-code\\/polyfill\\|twig\\/twig\\|stripe\\/stripe-php\\|sabberworm\\/php-css-parser/d' vendor/composer/autoload_files.php vendor/composer/autoload_static.php"
+		],
+		"post-install-cmd": [
+			"@clean-unused-files",
+			"@prefix-dependencies",
+			"@remove-from-vendor"
+		],
+		"post-update-cmd": [
+			"@clean-unused-files",
+			"@prefix-dependencies",
+			"@remove-from-vendor"
+		],
+		"prefix-dependencies": [
+			"rm -rf third-party/vendor",
+			"php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
+			"echo '{ \"autoload\": { \"classmap\": [\"vendor/\"] } }' > ./third-party/composer.json",
+			"@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
+			"cp vendor/composer/InstalledVersions.php third-party/vendor/composer/InstalledVersions.php && cp vendor/composer/installed.php third-party/vendor/composer/installed.php",
+			"sed -i'.bak' -e 's/Composer\\\\Autoload/IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer\\\\Autoload/' -e 's/Composer\\\\\\\\InstalledVersions/IseardMedia\\\\\\\\Kudos\\\\\\\\ThirdParty\\\\\\\\Composer\\\\\\\\InstalledVersions/g' -e 's/^namespace Composer;$/namespace IseardMedia\\\\Kudos\\\\ThirdParty\\\\Composer;/' third-party/vendor/composer/*.php && rm -rf third-party/vendor/composer/*.php.bak",
+			"php -r \"\\$map=require 'third-party/vendor/composer/autoload_classmap.php';\\$missing=array_filter(\\$map,fn(\\$f)=>!file_exists(\\$f));if(\\$missing){echo 'Missing scoped files:\\n'.implode(\\\"\\n\\\",array_keys(\\$missing)).\\\"\\n\\\";exit(1);}if(!isset(\\$map['IseardMedia\\\\\\\\Kudos\\\\\\\\ThirdParty\\\\\\\\Symfony\\\\\\\\Component\\\\\\\\DependencyInjection\\\\\\\\ContainerBuilder'])){echo 'Scoped classmap is incomplete ('.count(\\$map).' classes)'.PHP_EOL;exit(1);}\""
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"IseardMedia\\Kudos\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"IseardMedia\\Kudos\\Dev\\": "includes-dev/",
+			"IseardMedia\\Kudos\\Tests\\": [
+				"tests/",
+				"tests/Unit/",
+				"tests/Integration/"
+			]
+		}
+	}
 }
