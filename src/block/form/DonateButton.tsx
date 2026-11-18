@@ -2,12 +2,14 @@ import { KudosLogo } from '../components';
 import React from 'react';
 import { Button } from '../controls';
 import clsx from 'clsx';
+import { __ } from '@wordpress/i18n';
 
 interface DonateButtonProps {
 	onClick?: () => void;
 	children: React.ReactNode;
 	showLogo?: boolean;
 	shape?: 'pill' | 'classic';
+	ariaLabel?: string;
 }
 
 const DonateButton = ({
@@ -15,16 +17,28 @@ const DonateButton = ({
 	onClick,
 	showLogo = true,
 	shape = 'classic',
+	ariaLabel,
 }: DonateButtonProps) => {
+	const hasLabel =
+		typeof children === 'string' ? children.trim() !== '' : !!children;
+
 	return (
 		<Button
 			id="donate-button"
 			onClick={() => onClick && onClick()}
 			isRounded={shape === 'pill'}
 			className="logo-animate text-base"
+			ariaLabel={
+				hasLabel
+					? undefined
+					: (ariaLabel ?? __('Donate', 'kudos-donations'))
+			}
 		>
 			{showLogo && (
-				<div className={clsx('flex text-white', children && 'mr-3')}>
+				<div
+					className={clsx('flex text-white', hasLabel && 'mr-3')}
+					aria-hidden="true"
+				>
 					<KudosLogo
 						className="w-5 h-5"
 						lineColor="currentColor"
@@ -32,7 +46,7 @@ const DonateButton = ({
 					/>
 				</div>
 			)}
-			{children}
+			{hasLabel && children}
 		</Button>
 	);
 };
