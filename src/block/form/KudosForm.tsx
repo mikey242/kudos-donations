@@ -11,6 +11,7 @@ import { kudosRestUrl } from '../rest-url';
 
 interface KudosFormProps {
 	displayAs: 'form' | 'button' | 'fslogo';
+	buttonShape?: 'pill' | 'classic';
 	label?: string;
 	alignment?: 'left' | 'center' | 'right';
 	previewMode?: boolean;
@@ -20,6 +21,7 @@ export const KudosForm = ({
 	displayAs,
 	label,
 	alignment,
+	buttonShape = 'classic',
 	previewMode = false,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
@@ -156,7 +158,11 @@ export const KudosForm = ({
 				{isForm && renderDonationForm()}
 				{isModal && (
 					<>
-						<DonateButton showLogo={showLogo} onClick={toggleModal}>
+						<DonateButton
+							shape={buttonShape}
+							showLogo={showLogo}
+							onClick={toggleModal}
+						>
 							{label}
 						</DonateButton>
 						{renderModal()}

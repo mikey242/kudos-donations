@@ -11,6 +11,7 @@ window.kudos.front.api = { Components, Controls, Contexts };
 
 export interface KudosButtonAttributes {
 	button_label: string;
+	button_type: 'pill' | 'classic';
 	type: 'form' | 'button';
 	alignment: 'left' | 'center' | 'right';
 	campaign_id?: string;

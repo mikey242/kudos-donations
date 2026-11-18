@@ -38,6 +38,7 @@ domReady(() => {
 					<KudosForm
 						label={options?.button_label}
 						displayAs={options?.type ?? 'button'}
+						buttonShape={options?.button_type ?? 'classic'}
 						alignment={options?.alignment ?? 'left'}
 					/>
 				</CampaignProvider>
