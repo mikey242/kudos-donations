@@ -44,6 +44,14 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	private TransactionRepository $transaction_repository;
 
 	/**
+	 * Script handles that have been given their window.kudos data.
+	 *
+	 * @var array<string, true>
+	 */
+	private array $localized     = [];
+	private ?array $localization = null;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param PaymentProviderFactory $factory                Payment vendor factory.
@@ -103,24 +111,55 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				true
 			);
 		}
-		// The front end calls the REST API with plain fetch(); rest_url() is right for every
-		// permalink setting (with plain permalinks there is no /wp-json/ path).
-		Localization::add_front( 'restRoot', esc_url_raw( rest_url() ) );
-		Localization::add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
-		Localization::add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
-
 		foreach ( self::SCRIPT_HANDLES as $handle ) {
-			wp_localize_script(
-				$handle,
-				'kudos',
-				Localization::get_front()
-			);
 			wp_set_script_translations(
 				$handle,
 				'kudos-donations',
 				\dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages'
 			);
 		}
+
+		// Attach window.kudos only when one of our scripts is about to print, however it was
+		// enqueued (block, shortcode, add-on), so pages without a form don't build the data.
+		add_filter( 'print_scripts_array', [ $this, 'localize_scripts' ] );
+	}
+
+	/**
+	 * Adds the window.kudos data to each Kudos script queued for printing, once per request.
+	 *
+	 * Hooked to print_scripts_array, which WP_Scripts applies before printing any script, so
+	 * the data is in place before the script tag is output.
+	 *
+	 * @param string[] $handles Script handles about to be printed.
+	 * @return string[]
+	 */
+	public function localize_scripts( $handles ) {
+		foreach ( self::SCRIPT_HANDLES as $handle ) {
+			if ( isset( $this->localized[ $handle ] ) || ! \in_array( $handle, (array) $handles, true ) ) {
+				continue;
+			}
+			$this->localized[ $handle ] = true;
+			wp_localize_script( $handle, 'kudos', $this->get_localization() );
+		}
+
+		return $handles;
+	}
+
+	/**
+	 * Builds the front-end localization data, once per request.
+	 */
+	private function get_localization(): array {
+		if ( null === $this->localization ) {
+			// The front end calls the REST API with plain fetch(); rest_url() is right for every
+			// permalink setting (with plain permalinks there is no /wp-json/ path).
+			Localization::add_front( 'restRoot', esc_url_raw( rest_url() ) );
+			Localization::add_front( 'stylesheets', [ Assets::get_style( 'front/block/kudos-front.css' ) ] );
+			Localization::add_front( 'baseFontSize', get_option( SettingsService::SETTING_BASE_FONT_SIZE ) );
+
+			$this->localization = Localization::get_front();
+		}
+
+		return $this->localization;
 	}
 
 	/**

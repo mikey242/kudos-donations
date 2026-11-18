@@ -57,8 +57,9 @@ class Plugin implements LoggerAwareInterface {
 					'version',
 					$global['version']
 				);
-				Localization::add_global( 'countries', Country::get_countries() );
-				Localization::add_global( 'currencies', Currency::get_currencies() );
+				// Lazy: ~250 translated strings, only needed when a Kudos script is printed.
+				Localization::add_global_lazy( 'countries', [ Country::class, 'get_countries' ] );
+				Localization::add_global_lazy( 'currencies', [ Currency::class, 'get_currencies' ] );
 			}
 		);
 		$this->registrable_handler->process();

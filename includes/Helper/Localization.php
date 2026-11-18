@@ -26,6 +26,13 @@ class Localization {
 	private static array $front  = [];
 
 	/**
+	 * Global values computed only when localization data is output.
+	 *
+	 * @var array<string, callable>
+	 */
+	private static array $global_lazy = [];
+
+	/**
 	 * Add a value available in all contexts.
 	 *
 	 * @param string $key   The key used in window.kudos.
@@ -33,6 +40,17 @@ class Localization {
 	 */
 	public static function add_global( string $key, $value ): void {
 		self::$global[ $key ] = $value;
+	}
+
+	/**
+	 * Add a global value that is computed only when localization data is output, so requests
+	 * that never print a Kudos script don't pay for it.
+	 *
+	 * @param string   $key      The key used in window.kudos.
+	 * @param callable $resolver Returns the value to expose.
+	 */
+	public static function add_global_lazy( string $key, callable $resolver ): void {
+		self::$global_lazy[ $key ] = $resolver;
 	}
 
 	/**
@@ -60,25 +78,29 @@ class Localization {
 	 * The global data is passed through a filter for addon extensibility.
 	 */
 	public static function get_global(): array {
-		return (array) apply_filters( self::FILTER_GLOBAL, self::$global );
+		return (array) apply_filters( self::FILTER_GLOBAL, self::resolve_global() );
 	}
 
 	/**
 	 * Returns global data merged with admin-specific data nested under 'admin'.
 	 * The admin-specific data is passed through a filter for addon extensibility.
+	 *
+	 * @return  array<string,array>
 	 */
 	public static function get_admin(): array {
 		$admin = (array) apply_filters( self::FILTER_ADMIN, self::$admin );
-		return array_merge( self::$global, [ 'admin' => $admin ] );
+		return array_merge( self::resolve_global(), [ 'admin' => $admin ] );
 	}
 
 	/**
 	 * Returns global data merged with front-specific data nested under 'front'.
 	 * The front-specific data is passed through a filter for addon extensibility.
+	 *
+	 * @return  array<string,array>
 	 */
 	public static function get_front(): array {
 		$front = (array) apply_filters( self::FILTER_FRONT, self::$front );
-		return array_merge( self::$global, [ 'front' => $front ] );
+		return array_merge( self::resolve_global(), [ 'front' => $front ] );
 	}
 
 	/**
@@ -88,5 +110,19 @@ class Localization {
 		self::$global = [];
 		self::$admin  = [];
 		self::$front  = [];
+
+		self::$global_lazy = [];
+	}
+
+	/**
+	 * Computes any pending lazy global values, once, and returns the global data.
+	 */
+	private static function resolve_global(): array {
+		foreach ( self::$global_lazy as $key => $resolver ) {
+			self::$global[ $key ] = $resolver();
+		}
+		self::$global_lazy = [];
+
+		return self::$global;
 	}
 }

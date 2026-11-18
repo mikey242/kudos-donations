@@ -117,4 +117,25 @@ class FrontTest extends WP_UnitTestCase {
 
 		$this->assertFalse( Front::is_form_placed() );
 	}
+
+	/**
+	 * window.kudos is only attached to Kudos scripts that are about to print, once each.
+	 */
+	public function test_localize_scripts_only_for_queued_kudos_handles(): void {
+		$front = $this->create_front();
+		wp_scripts()->add_data( Front::SCRIPT_HANDLE_VIEW, 'data', '' );
+		wp_scripts()->add_data( Front::SCRIPT_HANDLE_EDITOR, 'data', '' );
+
+		$this->assertSame( [ 'jquery' ], $front->localize_scripts( [ 'jquery' ] ) );
+		$this->assertStringNotContainsString( 'var kudos', (string) wp_scripts()->get_data( Front::SCRIPT_HANDLE_VIEW, 'data' ) );
+
+		$front->localize_scripts( [ 'jquery', Front::SCRIPT_HANDLE_VIEW ] );
+		$front->localize_scripts( [ Front::SCRIPT_HANDLE_VIEW ] );
+		$data = (string) wp_scripts()->get_data( Front::SCRIPT_HANDLE_VIEW, 'data' );
+
+		$this->assertSame( 1, substr_count( $data, 'var kudos = ' ) );
+		$this->assertStringContainsString( 'restRoot', $data );
+		$this->assertStringContainsString( '"countries"', $data );
+		$this->assertStringNotContainsString( 'var kudos', (string) wp_scripts()->get_data( Front::SCRIPT_HANDLE_EDITOR, 'data' ) );
+	}
 }
