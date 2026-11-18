@@ -133,9 +133,8 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.3.7 =
-* Kudos Donations now only loads the parts it needs for each page. For example, the admin pages and REST API are no longer set up on regular front-end pages
-* Pages without a donation form no longer prepare the form's data, such as the lists of countries and currencies
-* If one part of Kudos Donations fails to load, it is now logged and skipped so the rest of the plugin keeps working
+* Improve Kudos Donations only loading the parts it needs for each page. This is an ongoing job to improve performance.
+* Donate button now applies an aria-label when no button text specified
 * Update react-hook-form to 7.92.0
 * Update nuqs to v2.10.3
 
