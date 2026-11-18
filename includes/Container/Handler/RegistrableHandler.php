@@ -13,62 +13,82 @@ namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Container\Delayed;
 use IseardMedia\Kudos\Container\Registrable;
+use IseardMedia\Kudos\Container\SafeLoggerTrait;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
+use Psr\Log\LoggerAwareInterface;
+use Throwable;
 
 /**
- * Service instantiator class.
+ * Hooks each registrable service onto its registration action.
+ *
+ * Services are resolved from the locator only when their registration action fires, so a
+ * request only builds the services (and dependency graphs) it actually uses. For example,
+ * REST controllers are never built outside REST requests, nor admin pages on the front end.
  */
-class RegistrableHandler {
+class RegistrableHandler implements LoggerAwareInterface {
 
-	/**
-	 * Array of services.
-	 *
-	 * @var Registrable[]
-	 */
-	protected array $services = [];
+	use SafeLoggerTrait;
+
+	private ServiceLocator $services;
 
 	/**
 	 * Receives the registrable services.
 	 *
-	 * @param iterable $services Array of services.
+	 * @param ServiceLocator $services Locator of Registrable services, keyed by service id.
 	 */
-	public function __construct( iterable $services ) {
-		foreach ( $services as $service ) {
-			$this->add( $service );
+	public function __construct( ServiceLocator $services ) {
+		$this->services = $services;
+	}
+
+	/**
+	 * Hooks each service's registration onto its action, or registers it now if not Delayed.
+	 *
+	 * The registration action is read statically from the class, so no service is built here.
+	 */
+	public function process(): void {
+		foreach ( $this->services->getProvidedServices() as $id => $type ) {
+			$class = ltrim( (string) $type, '?' );
+			if ( '' === $class ) {
+				$class = (string) $id;
+			}
+
+			if ( is_a( $class, Delayed::class, true ) ) {
+				add_action(
+					$class::get_registration_action(),
+					fn() => $this->register_service( (string) $id ),
+					$class::get_registration_action_priority()
+				);
+			} else {
+				$this->register_service( (string) $id );
+			}
 		}
 	}
 
 	/**
-	 * Add service to list.
+	 * Builds the service and registers it if enabled.
 	 *
-	 * @param Registrable $service Service.
+	 * A service that fails to build is logged and skipped, rather than taking the request down:
+	 * this runs inside a hook, outside the try/catch around plugin bootstrap.
+	 *
+	 * @param string $id The service id.
 	 */
-	public function add( Registrable $service ): void {
-		$this->services[] = $service;
-	}
+	private function register_service( string $id ): void {
+		try {
+			/** @var Registrable $service */
+			$service = $this->services->get( $id );
+		} catch ( Throwable $e ) {
+			$this->get_logger()->error(
+				'Failed to build registrable service.',
+				[
+					'service' => $id,
+					'error'   => $e->getMessage(),
+				]
+			);
+			return;
+		}
 
-	/**
-	 * Runs initialize on each service.
-	 *
-	 * @psalm-suppress UndefinedMethod
-	 */
-	public function process(): void {
-		// Remove disabled services.
-		$enabled_services = array_filter(
-			$this->services,
-			static fn( $service ) => $service->is_enabled()
-		);
-		// Add 'register' callback function to specified hook.
-		foreach ( $enabled_services as $service ) {
-			// Add specified action or call register directly.
-			if ( $service instanceof Delayed ) {
-				add_action(
-					$service::get_registration_action(),
-					[ $service, 'register' ],
-					$service::get_registration_action_priority()
-				);
-			} else {
-				$service->register();
-			}
+		if ( $service->is_enabled() ) {
+			$service->register();
 		}
 	}
 }

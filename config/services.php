@@ -153,7 +153,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( EmailProviderFactory::class )
 		->args( [ tagged_locator( 'kudos.email_vendor' ) ] );
 	$services->set( RegistrableHandler::class )
-		->args( [ tagged_iterator( 'kudos.registrable' ) ] );
+		->args( [ tagged_locator( 'kudos.registrable' ) ] );
 	$services->set( ActivationHandler::class )
 		->args( [ tagged_iterator( 'kudos.activation' ) ] );
 	$services->set( UpgradeHandler::class )
