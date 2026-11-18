@@ -137,70 +137,70 @@ For general information on how to use shortcodes, please visit [this page](https
 * Pages without a donation form no longer prepare the form's data, such as the lists of countries and currencies
 * If one part of Kudos Donations fails to load, it is now logged and skipped so the rest of the plugin keeps working
 
- = 4.3.6 =
- * The setup steps now explain what to do next, such as how to add the donation form to your site
+= 4.3.6 =
+* The setup steps now explain what to do next, such as how to add the donation form to your site
 
- = 4.3.5 =
- * Simpler setup: connect Mollie or Stripe with a test key and start straight away, then go live when your account is ready
- * New installs come with a ready-to-use first campaign, and setup now tracks when your donation form is live on your site
- * New campaigns default to your local currency, based on your site's timezone (or its language when no timezone city is set)
- * Fix the subscriptions table showing "null years" as the length of continuous Stripe subscriptions
- * The subscriptions table now shows the frequency as "Monthly", "Quarterly" or "Yearly", the same as the donation form
- * When the Plus add-on can't be installed, the Plus tab now says why, for example when the licence has expired or was not recognised
- * Update mollie/mollie-api-php to v3.16.0
+= 4.3.5 =
+* Simpler setup: connect Mollie or Stripe with a test key and start straight away, then go live when your account is ready
+* New installs come with a ready-to-use first campaign, and setup now tracks when your donation form is live on your site
+* New campaigns default to your local currency, based on your site's timezone (or its language when no timezone city is set)
+* Fix the subscriptions table showing "null years" as the length of continuous Stripe subscriptions
+* The subscriptions table now shows the frequency as "Monthly", "Quarterly" or "Yearly", the same as the donation form
+* When the Plus add-on can't be installed, the Plus tab now says why, for example when the licence has expired or was not recognised
+* Update mollie/mollie-api-php to v3.16.0
 
- = 4.3.4 =
- * Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
- * Fix the transactions and subscriptions REST routes failing with a fatal error when only some columns are requested
- * After the first live donation, ask once whether you would leave a review on WordPress.org
- * The settings page now only shows the licence indicator when a Kudos Donations Plus licence is active, labelled "Plus licence active"
- * Fix Kudos Donations switching itself off, including all donation forms, after a single failed request. It now only does so when it cannot start at all, and tries again after an update
+= 4.3.4 =
+* Kudos Donations now works on WordPress 6.9 and 7.0 again, instead of requiring WordPress 7.1
+* Fix the transactions and subscriptions REST routes failing with a fatal error when only some columns are requested
+* After the first live donation, ask once whether you would leave a review on WordPress.org
+* The settings page now only shows the licence indicator when a Kudos Donations Plus licence is active, labelled "Plus licence active"
+* Fix Kudos Donations switching itself off, including all donation forms, after a single failed request. It now only does so when it cannot start at all, and tries again after an update
 
- = 4.3.3 =
- * Fix the Donations menu icon showing grey until the page has finished loading
- * The highlighted item in the WordPress admin menu now follows the Kudos page you switch to
- * Fix the onboarding steps not opening the right settings tab when the settings page is already open
- * Fix the licence status indicator on the settings page not showing when no licence is active
- * Fix the campaign list in the Kudos form block and on the transaction edit screen showing only the first 20 campaigns
- * Fix the Plus tab showing "Valid until:" without a date for licences that don't expire, and show the expiry date in the site's date format
+= 4.3.3 =
+* Fix the Donations menu icon showing grey until the page has finished loading
+* The highlighted item in the WordPress admin menu now follows the Kudos page you switch to
+* Fix the onboarding steps not opening the right settings tab when the settings page is already open
+* Fix the licence status indicator on the settings page not showing when no licence is active
+* Fix the campaign list in the Kudos form block and on the transaction edit screen showing only the first 20 campaigns
+* Fix the Plus tab showing "Valid until:" without a date for licences that don't expire, and show the expiry date in the site's date format
 
- = 4.3.2 =
- * Fix donation forms not loading their campaign, and donations failing, on sites using plain permalinks
- * Fix the "View receipt" link on sites using plain permalinks
- * Fix Kudos Donations Plus licences and updates on sites where the server reports an unexpected host name (for example when WordPress runs scheduled tasks from the command line)
+= 4.3.2 =
+* Fix donation forms not loading their campaign, and donations failing, on sites using plain permalinks
+* Fix the "View receipt" link on sites using plain permalinks
+* Fix Kudos Donations Plus licences and updates on sites where the server reports an unexpected host name (for example when WordPress runs scheduled tasks from the command line)
 
- = 4.3.1 =
- * Added Kudos news: occasional notices about Kudos Donations in the admin. These can be turned off under Help > Advanced
- * Fix the notifications dropdown not closing when clicking outside it
- * Update stripe/stripe-php to v22.1.0
- * Update symfony/config to v5.4.56
+= 4.3.1 =
+* Added Kudos news: occasional notices about Kudos Donations in the admin. These can be turned off under Help > Advanced
+* Fix the notifications dropdown not closing when clicking outside it
+* Update stripe/stripe-php to v22.1.0
+* Update symfony/config to v5.4.56
 
- = 4.3.0 =
- * Added Stripe payment provider, supporting one-off and recurring donations, fixed-term subscriptions and refunds
- * Added onboarding flow for new installations, replacing the intro guide
- * Added payment vendor column to the transactions table
- * Added floating save bar when there are unsaved settings changes
- * Moved admin notices into the Kudos header
- * Changed: saving an API key now only switches the API mode when the current mode has no key configured
- * Changed: minimum required WordPress version is now 7.1
- * Fix Mollie refunds not being recorded on the transaction
- * Fix duplicate transactions when Mollie resends a webhook for a recurring payment
- * Fix receipts for recurring payments after the first not including the subscription cancel link
- * Fix select fields showing an invalid state when the saved option is no longer available
- * Update dompdf/dompdf to v3.1.6
- * Update react-hook-form to v7.82.0
- * Update woocommerce/action-scheduler to v4
- * Update nuqs to v2.9.1
+= 4.3.0 =
+* Added Stripe payment provider, supporting one-off and recurring donations, fixed-term subscriptions and refunds
+* Added onboarding flow for new installations, replacing the intro guide
+* Added payment vendor column to the transactions table
+* Added floating save bar when there are unsaved settings changes
+* Moved admin notices into the Kudos header
+* Changed: saving an API key now only switches the API mode when the current mode has no key configured
+* Changed: minimum required WordPress version is now 7.1
+* Fix Mollie refunds not being recorded on the transaction
+* Fix duplicate transactions when Mollie resends a webhook for a recurring payment
+* Fix receipts for recurring payments after the first not including the subscription cancel link
+* Fix select fields showing an invalid state when the saved option is no longer available
+* Update dompdf/dompdf to v3.1.6
+* Update react-hook-form to v7.82.0
+* Update woocommerce/action-scheduler to v4
+* Update nuqs to v2.9.1
 
- = 4.2.14 =
- * Fix fatal error when viewing campaigns with no maximum donation set
- * Minor admin panel fixes
+= 4.2.14 =
+* Fix fatal error when viewing campaigns with no maximum donation set
+* Minor admin panel fixes
 
- = 4.2.13 =
- * Fix incorrect message showing on return pop-up if campaign not yet loaded
- * Fix fatal error caused by stale admin notices left over from the notice system refactor
- * Update dependency mollie/mollie-api-php to v3.13.1
- * Update dependency react-hook-form to v7.78.0
+= 4.2.13 =
+* Fix incorrect message showing on return pop-up if campaign not yet loaded
+* Fix fatal error caused by stale admin notices left over from the notice system refactor
+* Update dependency mollie/mollie-api-php to v3.13.1
+* Update dependency react-hook-form to v7.78.0
 
 = 4.2.12 =
 * Fix duplicate campaign button not working
