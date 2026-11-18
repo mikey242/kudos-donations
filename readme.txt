@@ -133,7 +133,9 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.3.7 =
-* Minor performance improvements - we are continuing to review the plugin and make adjustments to the way Kudos Donations loads and runs
+* Kudos Donations now only loads the parts it needs for each page. For example, the admin pages and REST API are no longer set up on regular front-end pages
+* Pages without a donation form no longer prepare the form's data, such as the lists of countries and currencies
+* If one part of Kudos Donations fails to load, it is now logged and skipped so the rest of the plugin keeps working
 
  = 4.3.6 =
  * The setup steps now explain what to do next, such as how to add the donation form to your site
