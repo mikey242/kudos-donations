@@ -22,12 +22,13 @@ import { Button, Fill } from '@wordpress/components';
 import { SLOT_HEADER_ACTIONS } from '../../slot-names';
 import { StickySaveBar } from '../../components';
 import GenerateShortcode from './GenerateShortcode';
+import { arrowLeft as arrowLeftIcon } from '@wordpress/icons';
 
 const NavigationButtons = ({ campaign, onBack }): ReactNode => (
 	<>
 		<Button
 			variant="secondary"
-			icon="arrow-left"
+			icon={arrowLeftIcon}
 			onClick={onBack}
 			type="button"
 		>

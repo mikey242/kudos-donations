@@ -9,6 +9,7 @@ import { RadioGroupControl, SecretControl } from '../../../controls';
 import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 import type { AdminPanel } from '../../AdminTabPanel';
+import { check as checkIcon } from '@wordpress/icons';
 
 type ApiMode = 'live' | 'test';
 
@@ -80,7 +81,7 @@ const PaymentMethodsPanel = () => {
 				isReady && (
 					<strong style={{ color: 'var(--kudos-colour-success)' }}>
 						{statusText}
-						<Icon icon="yes" />
+						<Icon icon={checkIcon} />
 					</strong>
 				)
 			}

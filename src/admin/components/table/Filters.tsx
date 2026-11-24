@@ -2,6 +2,7 @@ import { Button, Flex, Panel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useAdminQueryParams } from '../../hooks';
+import { closeSmall as closeSmallIcon } from '@wordpress/icons';
 
 export interface Filter {
 	label: string;
@@ -69,7 +70,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 						size="compact"
 						variant="primary"
 						key={`${key}:${value}`}
-						icon="dismiss"
+						icon={closeSmallIcon}
 						iconSize={15}
 						onClick={() =>
 							updateParams({

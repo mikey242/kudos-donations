@@ -22,6 +22,7 @@ import {
 } from '../../../controls';
 import type { WPErrorResponse, WPResponse } from '../../../../types/wp';
 import { Panel } from '../../../components';
+import { envelope as envelopeIcon } from '@wordpress/icons';
 
 const EmailReceiptsPanel = () => {
 	const watchSendReceipts = useWatch({ name: '_kudos_email_receipt_enable' });
@@ -233,7 +234,7 @@ const TestEmailPanel = () => {
 					variant="secondary"
 					isBusy={isEmailBusy}
 					onClick={sendTestEmail}
-					icon="email"
+					icon={envelopeIcon}
 				>
 					{__('Send', 'kudos-donations')}
 				</Button>

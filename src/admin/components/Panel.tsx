@@ -30,7 +30,7 @@ PanelFooter.displayName = 'Panel.Footer';
 
 export interface PanelProps {
 	name?: string;
-	header: string;
+	header: React.ReactNode;
 	headerExtra?: React.ReactNode;
 	children: React.ReactNode;
 	initialOpen?: boolean;

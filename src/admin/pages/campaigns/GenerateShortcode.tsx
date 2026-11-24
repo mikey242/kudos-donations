@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { copySmall } from '@wordpress/icons';
+import { copySmall, shortcode as shortcodeIcon } from '@wordpress/icons';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalDivider as Divider,
@@ -62,13 +62,13 @@ export default function GenerateShortcode({
 			{iconOnly ? (
 				<Button
 					size="compact"
-					icon="shortcode"
+					icon={shortcodeIcon}
 					label="Get shortcode"
 					onClick={openModal}
 				/>
 			) : (
 				<Button
-					icon="shortcode"
+					icon={shortcodeIcon}
 					variant="secondary"
 					onClick={openModal}
 				>

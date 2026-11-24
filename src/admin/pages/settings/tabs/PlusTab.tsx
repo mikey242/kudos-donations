@@ -17,6 +17,10 @@ import {
 } from '@wordpress/components';
 import { Panel } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
+import {
+	published as publishedIcon,
+	update as updateIcon,
+} from '@wordpress/icons';
 
 type InstallState = 'idle' | 'installing' | 'installed' | 'failed';
 
@@ -68,7 +72,7 @@ const AddonPanel = () => {
 			<Button
 				type="button"
 				variant="primary"
-				icon={<Icon icon="update" />}
+				icon={<Icon icon={updateIcon} />}
 				onClick={() => window.location.reload()}
 			>
 				{__('Reload to apply changes', 'kudos-donations')}
@@ -77,7 +81,7 @@ const AddonPanel = () => {
 	} else if (installState === 'installed') {
 		addonButton = (
 			<p style={{ color: 'var(--kudos-colour-success)' }}>
-				<Icon icon="yes-alt" />{' '}
+				<Icon icon={publishedIcon} />{' '}
 				{__('Add-on installed', 'kudos-donations')}
 			</p>
 		);
@@ -187,7 +191,7 @@ const LicenceKeyPanel = () => {
 						color: 'var(--kudos-colour-success)',
 					}}
 				>
-					<Icon icon="yes-alt" />
+					<Icon icon={publishedIcon} />
 					<span>
 						{/* An empty expiry date means the licence doesn't expire. */}
 						{licenceStatus.expires_at

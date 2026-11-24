@@ -1,4 +1,11 @@
-import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Flex,
+	Icon,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
+import type { IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
@@ -8,10 +15,6 @@ import { confirmDelete } from '../../../utils';
 import { getPaymentVendor } from '../../../utils/payment-vendor';
 import type { Campaign, Transaction } from '../../../types/entity';
 import {
-	ArrowPathIcon,
-	ArrowRightCircleIcon,
-} from '@heroicons/react/24/outline';
-import {
 	DetailsModal,
 	HeaderItem,
 	PaymentVendorIcon,
@@ -20,13 +23,28 @@ import {
 } from '../../components';
 import type { StatusConfig } from '../../components';
 import { getCurrencySymbol } from '../../../utils/currency';
+import {
+	arrowRight as arrowRightIcon,
+	cancelCircleFilled as cancelCircleFilledIcon,
+	caution as cautionIcon,
+	download as downloadIcon,
+	page as pageIcon,
+	pencil as pencilIcon,
+	published as publishedIcon,
+	repeat as repeatIcon,
+	scheduled as scheduledIcon,
+	trash as trashIcon,
+} from '@wordpress/icons';
 
 const transactionStatusConfig: Record<string, StatusConfig> = {
-	paid: { title: __('Paid', 'kudos-donations'), icon: 'yes-alt' },
-	open: { title: __('Open', 'kudos-donations'), icon: 'clock' },
-	cancelled: { title: __('Canceled', 'kudos-donations'), icon: 'no-alt' },
-	expired: { title: __('Expired', 'kudos-donations'), icon: 'warning' },
-	failed: { title: __('Failed', 'kudos-donations'), icon: 'warning' },
+	paid: { title: __('Paid', 'kudos-donations'), icon: publishedIcon },
+	open: { title: __('Open', 'kudos-donations'), icon: scheduledIcon },
+	cancelled: {
+		title: __('Canceled', 'kudos-donations'),
+		icon: cancelCircleFilledIcon,
+	},
+	expired: { title: __('Expired', 'kudos-donations'), icon: cautionIcon },
+	failed: { title: __('Failed', 'kudos-donations'), icon: cautionIcon },
 };
 
 export const TransactionsTable = (): React.ReactNode => {
@@ -70,16 +88,16 @@ export const TransactionsTable = (): React.ReactNode => {
 				const currencySymbol =
 					getCurrencySymbol(post.currency) ?? currency;
 
-				let icon: React.ReactNode;
+				let icon: IconType | null;
 
 				switch (sequence) {
 					case 'oneoff':
-						icon = <ArrowRightCircleIcon />;
+						icon = arrowRightIcon;
 						break;
 
 					case 'recurring':
 					case 'first':
-						icon = <ArrowPathIcon />;
+						icon = repeatIcon;
 						break;
 
 					default:
@@ -95,7 +113,7 @@ export const TransactionsTable = (): React.ReactNode => {
 							sequence
 						}
 					>
-						<div className="dashicons">{icon}</div>
+						{icon && <Icon icon={icon} />}
 						{currencySymbol}
 						{value}
 					</Flex>
@@ -145,7 +163,7 @@ export const TransactionsTable = (): React.ReactNode => {
 						{settings._kudos_debug_mode && (
 							<Button
 								size="compact"
-								icon="edit"
+								icon={pencilIcon}
 								onClick={() => handleEdit(post.id)}
 								title={__('View more', 'kudos-donations')}
 							/>
@@ -154,7 +172,7 @@ export const TransactionsTable = (): React.ReactNode => {
 							<DetailsModal
 								title={__('Message', 'kudos-donations')}
 								label={__('View message', 'kudos-donations')}
-								icon={'text'}
+								icon={pageIcon}
 								content={
 									<p style={{ fontSize: '16px' }}>
 										{post.message}
@@ -164,14 +182,14 @@ export const TransactionsTable = (): React.ReactNode => {
 						)}
 						<Button
 							size="compact"
-							icon="download"
+							icon={downloadIcon}
 							disabled={status !== 'paid'}
 							href={url}
 							title={__('View receipt', 'kudos-donations')}
 						/>
 						<Button
 							size="compact"
-							icon="trash"
+							icon={trashIcon}
 							label={__('Delete transaction', 'kudos-donations')}
 							onClick={() =>
 								confirmDelete(

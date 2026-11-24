@@ -135,6 +135,7 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.3.8 =
 * Kudos admin pages re-render less often, making them more responsive
 * Fix a loading spinner briefly showing when going back from an edit page to its list
+* The admin now uses the same icons as the modern WordPress admin, and the menu's active tab marker sits neatly on the header line
 
 = 4.3.7 =
 * Improve Kudos Donations only loading the parts it needs for each page. This is an ongoing job to improve performance.

@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 import { Button, Flex, TextControl } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import {
-	ChevronDoubleLeftIcon,
-	ChevronDoubleRightIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-} from '@heroicons/react/24/outline';
+	chevronLeft as chevronLeftIcon,
+	chevronRight as chevronRightIcon,
+	next as nextIcon,
+	previous as previousIcon,
+} from '@wordpress/icons';
 import { useAdminQueryParams } from '../../hooks';
 
 interface PaginationProps {
@@ -63,10 +63,9 @@ export const Pagination = ({
 				onClick={() => goToPage(1)}
 				disabled={currentPage === 1}
 				label={__('First page', 'kudos-donations')}
+				icon={previousIcon}
 				showTooltip
-			>
-				<ChevronDoubleLeftIcon style={{ width: 20, height: 20 }} />
-			</Button>
+			/>
 
 			{/* Previous Page */}
 			<Button
@@ -74,10 +73,9 @@ export const Pagination = ({
 				onClick={() => goToPage(currentPage - 1)}
 				disabled={currentPage <= 1}
 				label={__('Previous page', 'kudos-donations')}
+				icon={chevronLeftIcon}
 				showTooltip
-			>
-				<ChevronLeftIcon style={{ width: 20, height: 20 }} />
-			</Button>
+			/>
 
 			{/* Page Info */}
 			<span
@@ -137,10 +135,9 @@ export const Pagination = ({
 				onClick={() => goToPage(currentPage + 1)}
 				disabled={currentPage >= totalPages}
 				label={__('Next page', 'kudos-donations')}
+				icon={chevronRightIcon}
 				showTooltip
-			>
-				<ChevronRightIcon style={{ width: 20, height: 20 }} />
-			</Button>
+			/>
 
 			{/* Last Page */}
 			<Button
@@ -148,10 +145,9 @@ export const Pagination = ({
 				onClick={() => goToPage(totalPages)}
 				disabled={currentPage >= totalPages}
 				label={__('Last page', 'kudos-donations')}
+				icon={nextIcon}
 				showTooltip
-			>
-				<ChevronDoubleRightIcon style={{ width: 20, height: 20 }} />
-			</Button>
+			/>
 		</Flex>
 	);
 };

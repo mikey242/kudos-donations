@@ -12,7 +12,7 @@ import {
 import { SettingsProvider } from './settings-context';
 
 interface AdminContextValue {
-	setPageTitle: (title: string | null) => void;
+	setPageTitle: (title: ReactNode) => void;
 }
 
 interface ProviderProps {
@@ -36,7 +36,7 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 };
 
 export const InnerAdminProvider = ({ children }) => {
-	const [pageTitle, setPageTitle] = useState<string | null>(null);
+	const [pageTitle, setPageTitle] = useState<ReactNode>(null);
 	const contextValue = useMemo(() => ({ setPageTitle }), []);
 
 	return (

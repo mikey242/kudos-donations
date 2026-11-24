@@ -13,12 +13,13 @@ import {
 	Button,
 } from '@wordpress/components';
 import { Panel } from '../components';
+import { arrowLeft as arrowLeftIcon } from '@wordpress/icons';
 
 const NavigationButtons = ({ onBack }): React.ReactNode => (
 	<>
 		<Button
 			variant="secondary"
-			icon="arrow-left"
+			icon={arrowLeftIcon}
 			onClick={onBack}
 			type="button"
 		>

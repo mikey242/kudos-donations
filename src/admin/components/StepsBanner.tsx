@@ -1,6 +1,10 @@
 import React from 'react';
 import { Button, Card, CardBody, Icon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import {
+	close as closeIcon,
+	published as publishedIcon,
+} from '@wordpress/icons';
 
 type StepState = 'done' | 'locked' | 'active';
 
@@ -103,7 +107,7 @@ export const StepsBanner = ({
 			</div>
 			{onClose && (
 				<Button
-					icon="no"
+					icon={closeIcon}
 					label={__('Dismiss', 'kudos-donations')}
 					onClick={onClose}
 					style={{
@@ -154,7 +158,7 @@ export const StepsBanner = ({
 										icon={
 											step.done ? (
 												<Icon
-													icon="yes-alt"
+													icon={publishedIcon}
 													style={{
 														color: 'var(--kudos-colour-success)',
 														flexShrink: 0,

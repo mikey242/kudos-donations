@@ -17,6 +17,13 @@ import { confirmDelete } from '../../../utils';
 import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 import { getCurrencySymbol } from '../../../utils/currency';
+import {
+	copy as copyIcon,
+	payment as paymentIcon,
+	pencil as pencilIcon,
+	plus as plusIcon,
+	trash as trashIcon,
+} from '@wordpress/icons';
 export const CampaignsTable = ({ handleNew }): ReactNode => {
 	const { setParams, updateParams } = useAdminQueryParams();
 	const { handleDelete, handleDuplicate } = useEntitiesContext();
@@ -105,25 +112,25 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 				<Flex justify="flex-end">
 					<Button
 						size="compact"
-						icon="money-alt"
+						icon={paymentIcon}
 						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					<Button
 						size="compact"
-						icon="edit"
+						icon={pencilIcon}
 						label={__('Edit campaign', 'kudos-donations')}
 						onClick={() => handleEdit(post.id)}
 					/>
 					<Button
 						size="compact"
-						icon="admin-page"
+						icon={copyIcon}
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
 					<Button
 						size="compact"
-						icon="trash"
+						icon={trashIcon}
 						label={__('Delete campaign', 'kudos-donations')}
 						onClick={() =>
 							confirmDelete(
@@ -147,7 +154,7 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 					variant="primary"
 					onClick={handleNew}
 					text={__('New campaign', 'kudos-donations')}
-					icon="plus"
+					icon={plusIcon}
 				/>
 			</Fill>
 			<Table headerItems={headerItems} />

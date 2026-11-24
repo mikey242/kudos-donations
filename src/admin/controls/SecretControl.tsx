@@ -11,6 +11,7 @@ import {
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { useSettingsContext } from '../contexts';
+import { shield as shieldIcon } from '@wordpress/icons';
 
 interface SecretControlProps {
 	name: string;
@@ -108,7 +109,7 @@ export const SecretControl = ({
 				help={error ?? help}
 				prefix={
 					<InputControlPrefixWrapper>
-						<Icon icon="shield" />
+						<Icon icon={shieldIcon} />
 					</InputControlPrefixWrapper>
 				}
 				suffix={

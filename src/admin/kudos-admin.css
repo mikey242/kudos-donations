@@ -117,14 +117,23 @@
 
 	.kudos-admin-menu {
 		margin-inline: -22px -20px;
-		padding: 1em 1em 0 1em;
+
+		/* Cancel the header's bottom padding and border, so the active tab's indicator sits on
+		   the header's bottom line rather than floating above it. */
+		margin-bottom: calc(-1em - 1px);
+		padding: 0 1em;
 		border-top: 1px solid var(--wpds-color-stroke-surface-neutral);
 
 		.components-button {
-			border-bottom: 3px solid transparent;
+
+			/* Equal space above and below the label; the indicator border adds to the bottom. */
+			padding-block: 10px 8px;
+			border-bottom: 2px solid transparent;
 			color: var(--wpds-color-foreground-content-neutral);
 
-			.dashicon {
+			/* SVG icons are filled with currentColor; .dashicon covers add-ons still using Dashicons. */
+			.dashicon,
+			svg {
 				color: var(--wp-admin-theme-color);
 			}
 

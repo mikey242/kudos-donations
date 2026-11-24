@@ -13,6 +13,7 @@ import {
 import { Panel, PaymentMethodsList } from '../../../components';
 import type { AllSettings } from '../../../../types/all-settings';
 import type { AdminPanel } from '../../AdminTabPanel';
+import { check as checkIcon, shield as shieldIcon } from '@wordpress/icons';
 
 type ApiMode = 'live' | 'test';
 
@@ -84,7 +85,7 @@ const PaymentMethodsPanel = () => {
 				isReady && (
 					<strong style={{ color: 'var(--kudos-colour-success)' }}>
 						{statusText}
-						<Icon icon="yes" />
+						<Icon icon={checkIcon} />
 					</strong>
 				)
 			}
@@ -214,7 +215,7 @@ const WebhookPanel = () => {
 			<TextControl
 				name={`_kudos_vendor_stripe_webhook.${mode}.secret`}
 				label={__('Signing secret', 'kudos-donations')}
-				prefix={<Icon icon="shield" />}
+				prefix={<Icon icon={shieldIcon} />}
 				help={
 					'live' === mode
 						? __(

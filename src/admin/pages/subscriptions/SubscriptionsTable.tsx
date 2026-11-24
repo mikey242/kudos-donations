@@ -13,12 +13,25 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { getCurrencySymbol } from '../../../utils/currency';
 import { getFrequencyName } from '../../../utils/frequency';
+import {
+	cancelCircleFilled as cancelCircleFilledIcon,
+	caution as cautionIcon,
+	check as checkIcon,
+	closeSmall as closeSmallIcon,
+	payment as paymentIcon,
+	pencil as pencilIcon,
+	published as publishedIcon,
+	trash as trashIcon,
+} from '@wordpress/icons';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
-	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
-	cancelled: { title: __('Canceled', 'kudos-donations'), icon: 'no-alt' },
-	suspended: { title: __('Suspended', 'kudos-donations'), icon: 'warning' },
-	completed: { title: __('Completed', 'kudos-donations'), icon: 'yes' },
+	active: { title: __('Active', 'kudos-donations'), icon: publishedIcon },
+	cancelled: {
+		title: __('Canceled', 'kudos-donations'),
+		icon: cancelCircleFilledIcon,
+	},
+	suspended: { title: __('Suspended', 'kudos-donations'), icon: cautionIcon },
+	completed: { title: __('Completed', 'kudos-donations'), icon: checkIcon },
 };
 
 export const SubscriptionsTable = (): React.ReactNode => {
@@ -137,14 +150,14 @@ export const SubscriptionsTable = (): React.ReactNode => {
 				<Flex justify="flex-end">
 					<Button
 						size="compact"
-						icon="money-alt"
+						icon={paymentIcon}
 						disabled={!post.donor}
 						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					<Button
 						size="compact"
-						icon="dismiss"
+						icon={closeSmallIcon}
 						disabled={post.status !== 'active'}
 						onClick={() => cancelSubscription(post.id, post.token)}
 						title={__('Cancel subscription', 'kudos-donations')}
@@ -152,14 +165,14 @@ export const SubscriptionsTable = (): React.ReactNode => {
 					{settings._kudos_debug_mode && (
 						<Button
 							size="compact"
-							icon="edit"
+							icon={pencilIcon}
 							onClick={() => handleEdit(post.id)}
 							title={__('View more', 'kudos-donations')}
 						/>
 					)}
 					<Button
 						size="compact"
-						icon="trash"
+						icon={trashIcon}
 						label={__('Delete subscription', 'kudos-donations')}
 						onClick={() =>
 							confirmDelete(

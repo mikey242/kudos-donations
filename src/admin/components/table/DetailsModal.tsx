@@ -3,6 +3,7 @@ import type { IconType } from '@wordpress/components';
 import { Button, Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
+import { info as infoIcon } from '@wordpress/icons';
 
 interface DetailsModalProps {
 	content: React.ReactNode | string;
@@ -16,7 +17,7 @@ export const DetailsModal = ({
 	content,
 	title,
 	modalSize = 'small',
-	icon = 'info-outline',
+	icon = infoIcon,
 	label = __('View details', 'kudos-donations'),
 }: DetailsModalProps) => {
 	const [isOpen, setIsOpen] = useState(false);

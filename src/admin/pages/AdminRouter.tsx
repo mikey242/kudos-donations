@@ -13,6 +13,13 @@ import { DonorsTable } from './donors';
 import { SettingsPage } from './settings';
 import { SingleEntityEdit } from './SingleEntityEdit';
 import { applyFilters } from '@wordpress/hooks';
+import {
+	megaphone as megaphoneIcon,
+	payment as paymentIcon,
+	people as peopleIcon,
+	settings as settingsIcon,
+	update as updateIcon,
+} from '@wordpress/icons';
 
 export interface PageConfig {
 	label: string;
@@ -25,7 +32,7 @@ export const AdminPages: PageConfig[] = [
 	{
 		label: __('Campaigns', 'kudos-donations'),
 		view: 'kudos-campaigns',
-		icon: 'megaphone',
+		icon: megaphoneIcon,
 		component: () => (
 			<EntitiesProvider
 				pluralName={__('Campaigns', 'kudos-donations')}
@@ -44,7 +51,7 @@ export const AdminPages: PageConfig[] = [
 	{
 		label: __('Transactions', 'kudos-donations'),
 		view: 'kudos-transactions',
-		icon: 'money-alt',
+		icon: paymentIcon,
 		component: () => (
 			<EntitiesProvider
 				pluralName={__('Transactions', 'kudos-donations')}
@@ -61,7 +68,7 @@ export const AdminPages: PageConfig[] = [
 	{
 		label: __('Subscriptions', 'kudos-donations'),
 		view: 'kudos-subscriptions',
-		icon: 'update',
+		icon: updateIcon,
 		component: () => (
 			<EntitiesProvider
 				pluralName={__('Subscriptions', 'kudos-donations')}
@@ -143,7 +150,7 @@ export const AdminPages: PageConfig[] = [
 	{
 		label: __('Donors', 'kudos-donations'),
 		view: 'kudos-donors',
-		icon: 'groups',
+		icon: peopleIcon,
 		component: () => (
 			<EntitiesProvider
 				pluralName={__('Donors', 'kudos-donations')}
@@ -207,7 +214,7 @@ export const AdminPages: PageConfig[] = [
 	{
 		label: __('Settings', 'kudos-donations'),
 		view: 'kudos-settings',
-		icon: 'admin-settings',
+		icon: settingsIcon,
 		component: () => <SettingsPage />,
 	},
 ];

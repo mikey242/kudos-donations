@@ -12,6 +12,7 @@ import { useCallback, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { page as pageIcon } from '@wordpress/icons';
 
 interface LogEntry {
 	datetime: string;
@@ -108,7 +109,7 @@ const LogModal = () => {
 
 	return (
 		<>
-			<Button variant="secondary" icon="text" onClick={openModal}>
+			<Button variant="secondary" icon={pageIcon} onClick={openModal}>
 				{__('View Logs', 'kudos-donations')}
 			</Button>
 			{isOpen && (

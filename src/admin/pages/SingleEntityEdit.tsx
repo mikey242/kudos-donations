@@ -14,6 +14,7 @@ import {
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
 import { SLOT_HEADER_ACTIONS } from '../slot-names';
+import { arrowLeft as arrowLeftIcon } from '@wordpress/icons';
 
 interface PostEditProps {
 	fields: Field[];
@@ -43,7 +44,7 @@ const NavigationButtons = ({
 	<>
 		<Button
 			variant="secondary"
-			icon="arrow-left"
+			icon={arrowLeftIcon}
 			onClick={onBack}
 			type="button"
 		>

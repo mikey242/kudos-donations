@@ -7,6 +7,11 @@ import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { confirmDelete } from '../../../utils';
 import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
+import {
+	payment as paymentIcon,
+	pencil as pencilIcon,
+	trash as trashIcon,
+} from '@wordpress/icons';
 export const DonorsTable = (): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams, updateParams } = useAdminQueryParams();
@@ -92,7 +97,7 @@ export const DonorsTable = (): React.ReactNode => {
 				<Flex justify="flex-end">
 					<Button
 						size="compact"
-						icon="money-alt"
+						icon={paymentIcon}
 						onClick={() => changeView(post.id)}
 						// href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.id}`}
 						title={__('View donations', 'kudos-donations')}
@@ -100,14 +105,14 @@ export const DonorsTable = (): React.ReactNode => {
 					{settings._kudos_debug_mode && (
 						<Button
 							size="compact"
-							icon="edit"
+							icon={pencilIcon}
 							onClick={() => handleEdit(post.id)}
 							title={__('View more', 'kudos-donations')}
 						/>
 					)}
 					<Button
 						size="compact"
-						icon="trash"
+						icon={trashIcon}
 						label={__('Delete donor', 'kudos-donations')}
 						onClick={() =>
 							confirmDelete(

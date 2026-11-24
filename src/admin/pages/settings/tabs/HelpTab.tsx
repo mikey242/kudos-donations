@@ -5,6 +5,11 @@ import { TextControl, ToggleControl } from '../../../controls';
 import { Panel } from '../../../components';
 import { LogModal } from '../../LogModal';
 import React from 'react';
+import {
+	help as helpIcon,
+	pencil as pencilIcon,
+	people as peopleIcon,
+} from '@wordpress/icons';
 
 const ShareTheLovePanel = () => (
 	<Panel header={__('Share the love', 'kudos-donations')} spacing={2}>
@@ -17,7 +22,7 @@ const ShareTheLovePanel = () => (
 		<Flex justify="flex-start">
 			<Button
 				variant="secondary"
-				icon="edit"
+				icon={pencilIcon}
 				href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
 				target="_blank"
 				rel="noreferrer"
@@ -49,7 +54,7 @@ const AboutPanel = () => {
 			<Flex justify="flex-start">
 				<Button
 					variant="secondary"
-					icon="groups"
+					icon={peopleIcon}
 					href="https://wordpress.org/support/plugin/kudos-donations/"
 					target="_blank"
 					rel="noreferrer"
@@ -58,7 +63,7 @@ const AboutPanel = () => {
 				</Button>
 				<Button
 					variant="secondary"
-					icon="editor-help"
+					icon={helpIcon}
 					href="https://docs.kudosdonations.com/"
 					target="_blank"
 					rel="noreferrer"

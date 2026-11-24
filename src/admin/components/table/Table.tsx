@@ -9,6 +9,11 @@ import { useAdminQueryParams } from '../../hooks';
 import { useEntitiesContext } from '../../contexts';
 import { Filter } from './Filters';
 import { Spacer } from '../Spacer';
+import {
+	arrowDown as arrowDownIcon,
+	arrowUp as arrowUpIcon,
+	chevronUpDown as chevronUpDownIcon,
+} from '@wordpress/icons';
 
 export interface HeaderItem<T extends BaseEntity = BaseEntity> {
 	title: string | React.ReactNode;
@@ -48,9 +53,9 @@ export const Table = <T extends BaseEntity>({
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
-			return 'sort';
+			return chevronUpDownIcon;
 		}
-		return order === 'asc' ? 'arrow-up' : 'arrow-down';
+		return order === 'asc' ? arrowUpIcon : arrowDownIcon;
 	};
 
 	const sort = useCallback(
