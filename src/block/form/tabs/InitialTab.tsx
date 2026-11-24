@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
@@ -39,14 +39,10 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 	const watchValue: number = useWatch({ name: 'value' });
 	const watchEmail: string = useWatch({ name: 'email' });
 	const valueError = sprintf(
-		/* translators: %d is the amount in euros. */
-		_n(
-			'Minimum donation is %d euro',
-			'Minimum donation is %d euros',
-			minimum_donation,
-			'kudos-donations'
-		),
-		minimum_donation
+		/* translators: %1$s is the currency symbol and %2$s is the minimum donation value */
+		__('Minimum donation is %1$s%2$s', 'kudos-donations'),
+		currencySymbol,
+		String(minimum_donation)
 	);
 	const optional = __('optional', 'kudos-donations');
 	const emailRequired = email_required || 'recurring' === donation_type;
@@ -161,13 +157,13 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 					max: {
 						value: maximum_donation,
 						message: sprintf(
-							/* translators: %1$s is the currency and %2$s is the maximum donation value */
+							/* translators: %1$s is the currency symbol and %2$s is the maximum donation value */
 							__(
-								'Maximum donation is %1$s%2$d',
+								'Maximum donation is %1$s%2$s',
 								'kudos-donations'
 							),
-							currency,
-							maximum_donation
+							currencySymbol,
+							String(maximum_donation)
 						),
 					},
 				}}
