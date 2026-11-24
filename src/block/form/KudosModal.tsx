@@ -3,9 +3,13 @@
 import { __ } from '@wordpress/i18n';
 import logo from '../../images/logo-colour.svg';
 import { Transition, TransitionChild } from '@headlessui/react';
-import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { ReactNode } from 'react';
+
+const FOCUSABLE =
+	'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 interface KudosModalProps {
 	isOpen?: boolean;
 	toggleModal: () => void;
@@ -20,68 +24,73 @@ export const KudosModal = ({
 	showLogo = true,
 }: KudosModalProps) => {
 	const targetRef = useRef<HTMLDivElement | null>(null);
-	const [firstElement, setFirstElement] = useState<HTMLElement | null>(null);
-	const [lastElement, setLastElement] = useState<HTMLElement | null>(null);
 
-	const toggle = useCallback(() => {
-		toggleModal();
-	}, [toggleModal]);
+	// Read through a ref so the keydown listener needn't be re-attached when the parent
+	// re-renders with a new callback.
+	const toggleRef = useRef(toggleModal);
+	toggleRef.current = toggleModal;
 
-	const setUp = useCallback(() => {
-		const focusableElements =
-			targetRef.current?.querySelectorAll<HTMLElement>(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-			);
-		setFirstElement(focusableElements ? focusableElements[0] : null);
-		setLastElement(
-			focusableElements
-				? focusableElements[focusableElements.length - 1]
-				: null
-		);
-		const initialFocus = targetRef.current?.querySelector<HTMLElement>(
-			'[name*="value"]:not([type="hidden"])'
-		);
-		initialFocus?.focus();
+	const focusInitialField = useCallback(() => {
+		targetRef.current
+			?.querySelector<HTMLElement>('[name*="value"]:not([type="hidden"])')
+			?.focus();
 	}, []);
 
-	const handleKeyPress = useCallback(
-		(e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				toggle();
-			}
-			if (e.key === 'Tab') {
-				const activeElement = (
-					targetRef.current.getRootNode() as Document
-				).activeElement as HTMLElement;
-				if (e.shiftKey && activeElement === firstElement) {
-					e.preventDefault();
-					lastElement?.focus();
-				} else if (!e.shiftKey && activeElement === lastElement) {
-					e.preventDefault();
-					firstElement?.focus();
-				}
-			}
-		},
-		[firstElement, lastElement, toggle]
-	);
-
 	useEffect(() => {
-		if (isOpen) {
-			setUp();
+		if (!isOpen) {
+			return;
+		}
+
+		// The form swaps its fields as the donor moves between steps, so the focusable
+		// elements are looked up on each Tab press rather than once when the modal opens.
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				toggleRef.current();
+				return;
+			}
+			if (e.key !== 'Tab' || !targetRef.current) {
+				return;
+			}
+			const focusable = Array.from(
+				targetRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)
+			).filter(
+				// Skip disabled fields and ones not rendered (hidden inputs, display: none).
+				(el) =>
+					!el.hasAttribute('disabled') &&
+					el.getClientRects().length > 0
+			);
+			if (focusable.length === 0) {
+				return;
+			}
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			const active = (targetRef.current.getRootNode() as Document)
+				.activeElement;
+			const isInside = targetRef.current.contains(active);
+
+			if (e.shiftKey && (active === first || !isInside)) {
+				e.preventDefault();
+				last.focus();
+			} else if (!e.shiftKey && (active === last || !isInside)) {
+				e.preventDefault();
+				first.focus();
+			}
+		};
+
+		focusInitialField();
+		document.documentElement.style.setProperty(
+			'--kudos-modal-overflow',
+			'hidden'
+		);
+		document.addEventListener('keydown', handleKeyDown, false);
+		return () => {
 			document.documentElement.style.setProperty(
 				'--kudos-modal-overflow',
-				'hidden'
+				'auto'
 			);
-			document.addEventListener('keydown', handleKeyPress, false);
-			return () => {
-				document.documentElement.style.setProperty(
-					'--kudos-modal-overflow',
-					'auto'
-				);
-				document.removeEventListener('keydown', handleKeyPress, false);
-			};
-		}
-	}, [isOpen, handleKeyPress, setUp]);
+			document.removeEventListener('keydown', handleKeyDown, false);
+		};
+	}, [isOpen, focusInitialField]);
 
 	return (
 		<div id="modal-container" ref={targetRef}>
@@ -102,7 +111,7 @@ export const KudosModal = ({
 						/>
 					</TransitionChild>
 					<TransitionChild
-						beforeEnter={setUp}
+						beforeEnter={focusInitialField}
 						enter="transition-all duration-[400ms]"
 						enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
 						enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
@@ -141,7 +150,7 @@ export const KudosModal = ({
 										)}
 										<button
 											className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center ml-auto"
-											onClick={toggle}
+											onClick={toggleModal}
 											type="button"
 											title={__(
 												'Close modal',

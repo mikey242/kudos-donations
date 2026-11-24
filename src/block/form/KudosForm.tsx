@@ -1,4 +1,9 @@
-import { createPortal, useEffect, useState } from '@wordpress/element';
+import {
+	createPortal,
+	useCallback,
+	useEffect,
+	useState,
+} from '@wordpress/element';
 import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
@@ -39,9 +44,9 @@ export const KudosForm = ({
 		}
 	}, [isModalOpen]);
 
-	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
+	const toggleModal = useCallback(() => {
+		setIsModalOpen((open) => !open);
+	}, []);
 
 	const resetForm = () => {
 		setCurrentStep(0);
@@ -119,7 +124,11 @@ export const KudosForm = ({
 			);
 		}
 		return (
-			<KudosModal toggleModal={toggleModal} isOpen={isModalOpen}>
+			<KudosModal
+				showLogo={showLogo}
+				toggleModal={toggleModal}
+				isOpen={isModalOpen}
+			>
 				{renderDonationForm()}
 			</KudosModal>
 		);
