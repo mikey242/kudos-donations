@@ -63,7 +63,13 @@ export const AdminHeader = (): ReactNode => {
 							</Flex>
 						</FlexBlock>
 						<FlexItem>
-							<Flex align="center" gap={2}>
+							{/* A fixed height, so the header doesn't change size between pages
+							    whose actions are 36px buttons and 40px controls. */}
+							<Flex
+								align="center"
+								gap={2}
+								style={{ minHeight: '40px' }}
+							>
 								<Slot
 									name={SLOT_HEADER_ACTIONS}
 									bubblesVirtually
