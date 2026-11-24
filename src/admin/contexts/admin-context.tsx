@@ -3,7 +3,12 @@ import { Flex, SlotFillProvider } from '@wordpress/components';
 import { AdminHeader, MigrationModal, Notices } from '../pages';
 import { AdminBanners } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
-import { createContext, useContext, useState } from '@wordpress/element';
+import {
+	createContext,
+	useContext,
+	useMemo,
+	useState,
+} from '@wordpress/element';
 import { SettingsProvider } from './settings-context';
 
 interface AdminContextValue {
@@ -32,9 +37,10 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 
 export const InnerAdminProvider = ({ children }) => {
 	const [pageTitle, setPageTitle] = useState<string | null>(null);
+	const contextValue = useMemo(() => ({ setPageTitle }), []);
 
 	return (
-		<AdminContext.Provider value={{ setPageTitle }}>
+		<AdminContext.Provider value={contextValue}>
 			<SlotFillProvider>
 				<AdminHeader />
 				<Notices />

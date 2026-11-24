@@ -6,6 +6,7 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -77,7 +78,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 		void fetchSettings();
 	}, [fetchSettings]);
 
-	const setSettings = (newSettings: T) => {
+	const setSettings = useCallback((newSettings: T) => {
 		setSettingsRequest((prevState) => {
 			return {
 				...prevState,
@@ -85,69 +86,75 @@ export const SettingsProvider = <T extends BaseSettings>({
 				settings: { ...newSettings },
 			};
 		});
-	};
+	}, []);
 
 	// Update all settings.
-	async function updateSettings(data: T, dirtyFields = null): Promise<void> {
-		if (dirtyFields && Object.keys(dirtyFields as object).length > 0) {
-			data = dirtyValues(dirtyFields, data as Record<string, any>) as T;
-		}
-
-		setSettingsSaving(true);
-		// Delete empty settings keys.
-		for (const key in data) {
-			if (data[key] === null) {
-				delete data[key];
+	const updateSettings = useCallback(
+		async (data: T, dirtyFields = null): Promise<void> => {
+			if (dirtyFields && Object.keys(dirtyFields as object).length > 0) {
+				data = dirtyValues(
+					dirtyFields,
+					data as Record<string, any>
+				) as T;
 			}
-		}
 
-		// Create WordPress settings model.
-		const model = new api.models.Settings(data);
+			setSettingsSaving(true);
+			// Delete empty settings keys.
+			for (const key in data) {
+				if (data[key] === null) {
+					delete data[key];
+				}
+			}
 
-		// Save to database.
-		return model
-			.save()
-			.then(async (response: T) => {
-				return new Promise<void>((resolve) => {
-					setTimeout(() => {
-						createSuccessNotice(
-							__('Settings updated', 'kudos-donations'),
-							{ type: 'snackbar', icon: '✅' }
-						);
-						setSettings(response);
-						doAction('kudos_settings_saved', response);
-						resolve();
-					}, 500);
+			// Create WordPress settings model.
+			const model = new api.models.Settings(data);
+
+			// Save to database.
+			return model
+				.save()
+				.then(async (response: T) => {
+					return new Promise<void>((resolve) => {
+						setTimeout(() => {
+							createSuccessNotice(
+								__('Settings updated', 'kudos-donations'),
+								{ type: 'snackbar', icon: '✅' }
+							);
+							setSettings(response);
+							doAction('kudos_settings_saved', response);
+							resolve();
+						}, 500);
+					});
+				})
+				.catch((error: WPErrorResponse) => {
+					createErrorNotice(error?.message, {
+						type: 'snackbar',
+					});
+				})
+				.always(() => {
+					setSettingsSaving(false);
 				});
-			})
-			.catch((error: WPErrorResponse) => {
-				createErrorNotice(error?.message, {
-					type: 'snackbar',
-				});
-			})
-			.always(() => {
-				setSettingsSaving(false);
-			});
-	}
+		},
+		[createErrorNotice, createSuccessNotice, setSettings]
+	);
 
 	// Update an individual setting.
-	async function updateSetting(
-		option: keyof T,
-		value: T[keyof T]
-	): Promise<T> {
-		const model = new api.models.Settings({ [option]: value });
-		return model.save().then((response: T) => {
-			setSettings(response);
-			doAction('kudos_settings_saved', response);
-			return response;
-		});
-	}
+	const updateSetting = useCallback(
+		async (option: keyof T, value: T[keyof T]): Promise<T> => {
+			const model = new api.models.Settings({ [option]: value });
+			return model.save().then((response: T) => {
+				setSettings(response);
+				doAction('kudos_settings_saved', response);
+				return response;
+			});
+		},
+		[setSettings]
+	);
 
 	const licenceActive = isLicenceActive(
 		(settings as any)._kudos_licence_status ?? {}
 	);
 
-	async function checkApiKey(): Promise<any> {
+	const checkApiKey = useCallback(async (): Promise<any> => {
 		setCheckingApiKey(true);
 		try {
 			return await apiFetch({
@@ -160,22 +167,35 @@ export const SettingsProvider = <T extends BaseSettings>({
 			await fetchSettings();
 			setCheckingApiKey(false);
 		}
-	}
+	}, [fetchSettings]);
+
+	const contextValue = useMemo(
+		() => ({
+			settings,
+			isLicenceActive: licenceActive,
+			checkingApiKey,
+			checkApiKey,
+			fetchSettings,
+			updateSetting,
+			updateSettings,
+			settingsReady,
+			settingsSaving,
+		}),
+		[
+			settings,
+			licenceActive,
+			checkingApiKey,
+			checkApiKey,
+			fetchSettings,
+			updateSetting,
+			updateSettings,
+			settingsReady,
+			settingsSaving,
+		]
+	);
 
 	return (
-		<SettingsContext.Provider
-			value={{
-				settings,
-				isLicenceActive: licenceActive,
-				checkingApiKey,
-				checkApiKey,
-				fetchSettings,
-				updateSetting,
-				updateSettings,
-				settingsReady,
-				settingsSaving,
-			}}
-		>
+		<SettingsContext.Provider value={contextValue}>
 			{settingsReady ? (
 				children
 			) : (

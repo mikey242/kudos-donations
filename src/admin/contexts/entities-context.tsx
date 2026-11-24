@@ -4,6 +4,7 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from '@wordpress/element';
 import type { ReactNode, SyntheticEvent } from 'react';
@@ -296,27 +297,43 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		}
 	}, [entityId, entityType, state.entities, state.hasResolved]);
 
+	const contextValue = useMemo(
+		() => ({
+			entities: state.entities,
+			currentEntity,
+			hasResolved: state.hasResolved,
+			totalItems: state.totalItems,
+			totalPages: state.totalPages,
+			handleNew,
+			handleDuplicate,
+			handleDelete,
+			handleUpdate,
+			singularName,
+			pluralName,
+			entityType,
+			fetchEntities,
+			queryEntities,
+			queryParams: params,
+		}),
+		[
+			state,
+			currentEntity,
+			handleNew,
+			handleDuplicate,
+			handleDelete,
+			handleUpdate,
+			singularName,
+			pluralName,
+			entityType,
+			fetchEntities,
+			queryEntities,
+			params,
+		]
+	);
+
 	return (
-		<EntitiesContext.Provider
-			value={{
-				entities: state.entities,
-				currentEntity,
-				hasResolved: state.hasResolved,
-				totalItems: state.totalItems,
-				totalPages: state.totalPages,
-				handleNew,
-				handleDuplicate,
-				handleDelete,
-				handleUpdate,
-				singularName,
-				pluralName,
-				entityType,
-				fetchEntities,
-				queryEntities,
-				queryParams: params,
-			}}
-		>
-			<>{children}</>
+		<EntitiesContext.Provider value={contextValue}>
+			{children}
 		</EntitiesContext.Provider>
 	);
 };
