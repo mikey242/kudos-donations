@@ -82,13 +82,12 @@ export const FormRouter = ({
 	submitForm,
 	onStepChange,
 }: FormRouterProps) => {
-	const [height, setHeight] = useState<string>('');
+	const [height, setHeight] = useState<string | undefined>(undefined);
 	const [currentStep, setCurrentStep] = useState<number>(step);
 	const prevStep = useRef<number>(step); // Ref to keep track of the previous step
 	const [isBusy, setIsBusy] = useState<boolean>(false);
 	const elementRef = useRef<HTMLDivElement>(null);
 	const firstUpdate = useRef<boolean>(true);
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const methods: UseFormReturn<FormData> = useForm<FormData>({
 		defaultValues: applyFilters(
 			'kudosFormDefaultValues',
@@ -160,8 +159,9 @@ export const FormRouter = ({
 		let prev = currentStep - 1;
 		const state = { ...methods.getValues(), ...campaign };
 
-		// Find next available step.
-		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
+		// Find the previous available step. The first step has no requirements, so this stops
+		// there at the latest; the bounds check comes first so it never looks before it.
+		while (prev > 0 && !checkRequirements(Tabs, state, prev)) {
 			prev--;
 		}
 		onStepChange(prev);
@@ -171,10 +171,11 @@ export const FormRouter = ({
 		const state = { ...data, ...campaign };
 		let nextStep = currentStep + 1;
 
-		// Find next available step.
+		// Find the next available step. The last step (Summary) has no requirements, so this
+		// stops there at the latest.
 		while (
-			!checkRequirements(Tabs, state, nextStep) &&
-			nextStep < Tabs.length
+			nextStep < Tabs.length - 1 &&
+			!checkRequirements(Tabs, state, nextStep)
 		) {
 			nextStep++;
 		}
@@ -195,6 +196,20 @@ export const FormRouter = ({
 		});
 	};
 
+	// Keep the container's height in step with the form's for as long as the form is shown.
+	useLayoutEffect(() => {
+		const form = elementRef.current?.querySelector('form');
+		if (!form) {
+			return;
+		}
+		const observer = new ResizeObserver(() =>
+			setHeight(`${form.offsetHeight}px`)
+		);
+		observer.observe(form);
+		return () => observer.disconnect();
+	}, []);
+
+	// Fade the old step out, then switch to the new one.
 	useLayoutEffect(() => {
 		if (firstUpdate.current) {
 			firstUpdate.current = false;
@@ -207,36 +222,22 @@ export const FormRouter = ({
 			}
 
 			const target = elementRef.current;
-			const form = target.querySelector('form');
 			target.classList.add('translate-x-1', 'opacity-0');
 
-			const oldHeight = form.offsetHeight;
-			setHeight(oldHeight.toString());
-			const resizeObserver = new ResizeObserver(() => {
-				const newHeight = form.offsetHeight;
-				setHeight(newHeight.toString());
+			const timeout = setTimeout(() => {
+				setCurrentStep(step);
+				target.classList.remove(
+					'translate-x-1',
+					'opacity-0',
+					'section-' + Tabs[prevStep.current]?.name?.toLowerCase()
+				);
+				target.classList.add(
+					'section-' + Tabs[step]?.name?.toLowerCase()
+				);
+				prevStep.current = step; // Update the previous step to the current step
+			}, 200);
 
-				timeoutRef.current = setTimeout(() => {
-					setHeight('auto'); // Allow form to grow if validation message appears.
-					setCurrentStep(step);
-					target.classList.remove(
-						'translate-x-1',
-						'opacity-0',
-						'section-' + Tabs[prevStep.current]?.name?.toLowerCase()
-					);
-					target.classList.add(
-						'section-' + Tabs[step]?.name?.toLowerCase()
-					);
-					prevStep.current = step; // Update the previous step to the current step
-				}, 200);
-			});
-
-			resizeObserver.observe(form);
-
-			return () => {
-				resizeObserver.disconnect();
-				clearTimeout(timeoutRef.current);
-			};
+			return () => clearTimeout(timeout);
 		}
 	}, [Tabs, step]);
 
@@ -249,7 +250,7 @@ export const FormRouter = ({
 					isBusy && 'opacity-50',
 					'w-full transition-all duration-200'
 				)}
-				style={{ height: height + 'px' }}
+				style={{ height }}
 			>
 				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
 					<CurrentTab campaign={campaign} />
