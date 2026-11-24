@@ -100,7 +100,7 @@ const PaymentMethodsPanel = () => {
 			<PaymentMethodsList methods={status?.methods} />
 			<p>
 				{__(
-					"These are the payment methods enabled on your Stripe account. Stripe's Payment Element will automatically show the most relevant methods to each donor based on their location and currency.",
+					'These are the payment methods available on your Stripe account. Stripe Checkout shows each donor the ones that suit their location and currency, and for recurring donations only those that support repeat payments.',
 					'kudos-donations'
 				)}
 			</p>
