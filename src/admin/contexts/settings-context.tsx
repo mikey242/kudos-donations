@@ -22,7 +22,6 @@ import { doAction } from '@wordpress/hooks';
 interface SettingsContextValue<T extends BaseSettings> {
 	settings: T;
 	isLicenceActive: boolean;
-	setSettings: (newSettings: T) => void;
 	checkingApiKey: boolean;
 	fetchSettings: () => Promise<void>;
 	checkApiKey: () => Promise<any>;
