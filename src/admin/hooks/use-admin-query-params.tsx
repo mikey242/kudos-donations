@@ -65,14 +65,6 @@ export const useAdminQueryParams = () => {
 		[setQueryParams]
 	);
 
-	// Detect if any table filters differ from default.
-	const hasActiveFilters = Object.entries(defaultTableFilterParams).some(
-		([key, defaultValue]) => params[key] !== defaultValue
-	);
-
-	// Reset everything to full default (use with caution).
-	const resetAllParams = () => void setParams(defaultParams);
-
 	// Reset just the filter params (excluding paged, entity, tab, etc).
 	const resetFilterParams = () =>
 		void setQueryParams(defaultTableFilterParams);
@@ -81,8 +73,6 @@ export const useAdminQueryParams = () => {
 		params,
 		setParams,
 		updateParams: setQueryParams,
-		resetAllParams,
 		resetFilterParams,
-		hasActiveFilters,
 	};
 };
