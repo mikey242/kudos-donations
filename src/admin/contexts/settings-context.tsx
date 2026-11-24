@@ -91,39 +91,33 @@ export const SettingsProvider = <T extends BaseSettings>({
 	// Update all settings.
 	const updateSettings = useCallback(
 		async (data: T, dirtyFields = null): Promise<void> => {
-			if (dirtyFields && Object.keys(dirtyFields as object).length > 0) {
-				data = dirtyValues(
-					dirtyFields,
-					data as Record<string, any>
-				) as T;
-			}
+			const values: Record<string, any> =
+				dirtyFields && Object.keys(dirtyFields as object).length > 0
+					? dirtyValues(dirtyFields, data as Record<string, any>)
+					: data;
+
+			// Leave out null settings. Build a copy rather than deleting keys, as the values
+			// passed in are usually the form's own. Empty strings are still sent: they are how
+			// a setting is cleared, e.g. resetting an API key.
+			const payload = Object.fromEntries(
+				Object.entries(values).filter(([, value]) => value !== null)
+			);
 
 			setSettingsSaving(true);
-			// Delete empty settings keys.
-			for (const key in data) {
-				if (data[key] === null) {
-					delete data[key];
-				}
-			}
 
 			// Create WordPress settings model.
-			const model = new api.models.Settings(data);
+			const model = new api.models.Settings(payload);
 
 			// Save to database.
 			return model
 				.save()
-				.then(async (response: T) => {
-					return new Promise<void>((resolve) => {
-						setTimeout(() => {
-							createSuccessNotice(
-								__('Settings updated', 'kudos-donations'),
-								{ type: 'snackbar', icon: '✅' }
-							);
-							setSettings(response);
-							doAction('kudos_settings_saved', response);
-							resolve();
-						}, 500);
-					});
+				.then((response: T) => {
+					createSuccessNotice(
+						__('Settings updated', 'kudos-donations'),
+						{ type: 'snackbar', icon: '✅' }
+					);
+					setSettings(response);
+					doAction('kudos_settings_saved', response);
 				})
 				.catch((error: WPErrorResponse) => {
 					createErrorNotice(error?.message, {
