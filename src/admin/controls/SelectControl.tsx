@@ -4,6 +4,7 @@ import {
 	__experimentalInputControlPrefixWrapper as InputControlPrefixWrapper,
 	SelectControl as WPSelectControl,
 } from '@wordpress/components';
+import { prefixVariant } from './prefix-variant';
 import { BaseControl, ControlProps } from './BaseControl';
 
 interface SelectOption {
@@ -45,7 +46,9 @@ export const SelectControl = ({
 						value={isValid ? value : ''}
 						prefix={
 							prefix && (
-								<InputControlPrefixWrapper>
+								<InputControlPrefixWrapper
+									variant={prefixVariant(prefix)}
+								>
 									{prefix}
 								</InputControlPrefixWrapper>
 							)

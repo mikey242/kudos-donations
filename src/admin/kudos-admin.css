@@ -191,6 +191,12 @@
 			overflow: hidden;
 			display: block;
 			text-align: center;
+
+			/* Tabs sit inline, so align them by their top edge: by baseline, a tab that starts
+			   with an icon (like the Plus star) would sit higher than the others. */
+			.components-tab-panel__tabs-item {
+				vertical-align: top;
+			}
 		}
 
 		.components-tab-panel__tab-content {
@@ -201,13 +207,6 @@
 		}
 	}
 
-
-	.kudos-table-paginator {
-
-		.components-button svg {
-			fill: none;
-		}
-	}
 
 	table {
 

@@ -108,7 +108,7 @@ export const SecretControl = ({
 				onKeyDown={handleKeyDown}
 				help={error ?? help}
 				prefix={
-					<InputControlPrefixWrapper>
+					<InputControlPrefixWrapper variant="icon">
 						<Icon icon={shieldIcon} />
 					</InputControlPrefixWrapper>
 				}

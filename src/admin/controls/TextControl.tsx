@@ -8,6 +8,7 @@ import {
 	__experimentalInputControlSuffixWrapper as InputControlSuffixWrapper,
 } from '@wordpress/components';
 import { forwardRef } from '@wordpress/element';
+import { prefixVariant } from './prefix-variant';
 import { BaseControl, ControlProps } from './BaseControl';
 
 interface TextControlProps extends ControlProps {
@@ -50,7 +51,9 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
 						placeholder={placeholder}
 						prefix={
 							prefix && (
-								<InputControlPrefixWrapper>
+								<InputControlPrefixWrapper
+									variant={prefixVariant(prefix)}
+								>
 									{prefix}
 								</InputControlPrefixWrapper>
 							)
