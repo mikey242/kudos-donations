@@ -135,8 +135,13 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.3.7 =
 * Improve Kudos Donations only loading the parts it needs for each page. This is an ongoing job to improve performance.
 * Donate button now applies an aria-label when no button text specified
+* Donation forms load faster, as they no longer need the lodash library
+* Fix keyboard navigation escaping the donation pop-up after moving to the next step
+* The minimum and maximum donation messages now show the campaign's currency symbol, instead of "euro" or the currency code
+* Fix the donation pop-up showing the Kudos logo when branding is hidden, on themes that don't load the WordPress footer
 * Update react-hook-form to 7.92.0
 * Update nuqs to v2.10.3
+* Update stripe/stripe-php to v23.0.0
 
 = 4.3.6 =
 * The setup steps now explain what to do next, such as how to add the donation form to your site
