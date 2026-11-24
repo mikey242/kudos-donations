@@ -1,6 +1,11 @@
 import React, { ReactNode } from 'react';
-import { Controller, RegisterOptions, useFormContext } from 'react-hook-form';
-import { get } from 'lodash';
+import {
+	Controller,
+	FieldError,
+	get,
+	RegisterOptions,
+	useFormContext,
+} from 'react-hook-form';
 import { clsx } from 'clsx';
 
 export interface ControlProps {
@@ -34,7 +39,7 @@ export const BaseControl = ({
 	const {
 		formState: { errors },
 	} = useFormContext();
-	const error = get(errors, name);
+	const error = get(errors, name) as FieldError | undefined;
 	const rawMessage = error?.message;
 	const description = typeof rawMessage === 'string' ? rawMessage : help;
 

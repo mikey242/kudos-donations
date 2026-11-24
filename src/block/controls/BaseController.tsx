@@ -1,11 +1,11 @@
 import React, { ReactNode, ReactElement } from 'react';
 import { clsx } from 'clsx';
-import { get } from 'lodash';
 import {
 	Controller,
 	ControllerRenderProps,
 	FieldError,
 	FieldValues,
+	get,
 	RegisterOptions,
 	useFormContext,
 } from 'react-hook-form';
