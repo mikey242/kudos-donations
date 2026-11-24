@@ -43,7 +43,6 @@ export interface KudosGlobal {
 	countries: Record<string, string>;
 	env?: string;
 	isAddonInstalled: boolean;
-	debug?: boolean;
 	admin?: KudosAdminData;
 	front?: KudosFrontData;
 	screencastMode?: boolean;

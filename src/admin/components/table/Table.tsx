@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Flex, Spinner, CheckboxControl } from '@wordpress/components';
+import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import type { BaseEntity } from '../../../types/entity';
@@ -32,8 +32,6 @@ export interface HeaderItem<T extends BaseEntity = BaseEntity> {
 
 interface TableProps<T extends BaseEntity = BaseEntity> {
 	headerItems: HeaderItem<T>[];
-	isLoading?: boolean;
-	hasLoadedOnce?: boolean;
 	filters?: Filter[];
 }
 
@@ -44,42 +42,10 @@ export const Table = <T extends BaseEntity>({
 	const [cachedPosts, setCachedPosts] = useState<BaseEntity[]>();
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const { params, updateParams } = useAdminQueryParams();
 	const { pluralName, hasResolved, entities, totalPages, totalItems } =
 		useEntitiesContext();
 	const { order, orderby } = params;
-	headerItems = headerItems.map((header, index) =>
-		index === 0 && window.kudos.debug
-			? {
-					...header,
-					valueCallback: (item: T) => {
-						const original = header.valueCallback(item);
-						return (
-							<Flex justify="flex-start" align="center">
-								<CheckboxControl
-									name="select"
-									checked={selectedItems.includes(item.id)}
-									onChange={(value) =>
-										onCheckboxSelect(value, item)
-									}
-								/>
-								{original}
-							</Flex>
-						);
-					},
-				}
-			: header
-	);
-
-	const onCheckboxSelect = (checked: boolean, item: T) => {
-		setSelectedItems(
-			(prev) =>
-				checked
-					? [...prev, item.id] // add id
-					: prev.filter((id) => id !== item.id) // remove id
-		);
-	};
 
 	useEffect(() => {
 		setIsLoading(!hasResolved);
