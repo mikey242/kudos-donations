@@ -139,6 +139,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Fix keyboard navigation escaping the donation pop-up after moving to the next step
 * The minimum and maximum donation messages now show the campaign's currency symbol, instead of "euro" or the currency code
 * Fix the donation pop-up showing the Kudos logo when branding is hidden, on themes that don't load the WordPress footer
+* Fix the donation summary showing a blank name when the donor entered an email address but no name
 * Update react-hook-form to 7.92.0
 * Update nuqs to v2.10.3
 * Update stripe/stripe-php to v23.0.0

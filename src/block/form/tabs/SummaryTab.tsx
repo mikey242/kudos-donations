@@ -114,17 +114,15 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 				<p className="my-1">
 					<strong>{__('Name', 'kudos-donations')}: </strong>
 					<span>
-						{values.email !== ''
-							? values.name
-							: __('anonymous', 'kudos-donations')}
+						{values.name?.trim() ||
+							__('anonymous', 'kudos-donations')}
 					</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('E-mail address', 'kudos-donations')}: </strong>
 					<span>
-						{values.email !== ''
-							? values.email
-							: __('anonymous', 'kudos-donations')}
+						{values.email?.trim() ||
+							__('anonymous', 'kudos-donations')}
 					</span>
 				</p>
 				<p className="my-1">
