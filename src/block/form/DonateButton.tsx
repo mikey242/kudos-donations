@@ -25,7 +25,7 @@ const DonateButton = ({
 	return (
 		<Button
 			id="donate-button"
-			onClick={() => onClick && onClick()}
+			onClick={onClick}
 			isRounded={shape === 'pill'}
 			className="logo-animate text-base"
 			ariaLabel={
