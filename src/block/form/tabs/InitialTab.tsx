@@ -46,10 +46,6 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 	);
 	const optional = __('optional', 'kudos-donations');
 	const emailRequired = email_required || 'recurring' === donation_type;
-	const isRecurringAllowed = useMemo(() => {
-		return donation_type === 'both' && !!watchEmail;
-	}, [donation_type, watchEmail]);
-
 	const fixedAmountOptions: RadioGroupOption[] = useMemo(() => {
 		return fixed_amounts?.map((value) => ({
 			value,
@@ -61,12 +57,6 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		amount_type === 'fixed' && fixedAmountOptions?.length === 1
 			? fixedAmountOptions[0].value
 			: undefined;
-
-	useEffect(() => {
-		if (!isRecurringAllowed) {
-			setValue('recurring', false);
-		}
-	}, [isRecurringAllowed, setValue]);
 
 	useEffect(() => {
 		if (watchFixed) {
