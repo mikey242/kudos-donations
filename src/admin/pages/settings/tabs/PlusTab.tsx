@@ -80,8 +80,15 @@ const AddonPanel = () => {
 		);
 	} else if (installState === 'installed') {
 		addonButton = (
-			<p style={{ color: 'var(--kudos-colour-success)' }}>
-				<Icon icon={publishedIcon} />{' '}
+			<p
+				style={{
+					display: 'inline-flex',
+					alignItems: 'center',
+					gap: '4px',
+					color: 'var(--kudos-colour-success)',
+				}}
+			>
+				<Icon icon={publishedIcon} />
 				{__('Add-on installed', 'kudos-donations')}
 			</p>
 		);

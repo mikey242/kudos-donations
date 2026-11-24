@@ -79,7 +79,14 @@ const PaymentMethodsPanel = () => {
 			header={__('Available payment methods', 'kudos-donations')}
 			headerExtra={
 				isReady && (
-					<strong style={{ color: 'var(--kudos-colour-success)' }}>
+					<strong
+						style={{
+							display: 'inline-flex',
+							alignItems: 'center',
+							gap: '4px',
+							color: 'var(--kudos-colour-success)',
+						}}
+					>
 						{statusText}
 						<Icon icon={checkIcon} />
 					</strong>
