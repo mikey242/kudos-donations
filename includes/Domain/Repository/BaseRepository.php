@@ -238,8 +238,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * } $args
 	 */
 	public function query( array $args = [] ): array {
-		if ( isset( $args['columns'] ) && [ '*' ] !== $args['columns'] ) {
-			$args['columns'] = array_filter( $args['columns'], fn( $col ) => $this->is_valid_column( $col ) );
+		// A partial select loads only the requested columns. The id is always included, so
+		// the entity can still be identified (e.g. a related campaign in a REST response).
+		$is_partial = isset( $args['columns'] ) && [ '*' ] !== $args['columns'];
+		if ( $is_partial ) {
+			$columns         = array_filter( $args['columns'], fn( $col ) => $this->is_valid_column( $col ) );
+			$args['columns'] = array_values( array_unique( array_merge( [ 'id' ], $columns ) ) );
 		}
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
 
@@ -273,7 +277,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 			$results = [];
 		}
 
-		return array_map( fn( array $row ) => $this->transform_result( $row ), $results );
+		// Don't fill a partial entity's other properties with defaults: they would be returned as
+		// if they were stored values. Unloaded properties are left unset instead.
+		return array_map( fn( array $row ) => $this->transform_result( $row, ! $is_partial ), $results );
 	}
 
 	/**

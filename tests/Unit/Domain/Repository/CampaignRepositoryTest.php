@@ -249,4 +249,40 @@ class CampaignRepositoryTest extends BaseTestCase {
 		$this->assertNull( $this->campaign_repository->create_first_campaign() );
 		$this->assertSame( 0, $this->campaign_repository->count_query() );
 	}
+
+	/**
+	 * A campaign loaded with only some columns gets its id, and no defaults for the columns it
+	 * didn't load, so they aren't presented as stored values.
+	 */
+	public function test_partial_select_includes_id_and_skips_defaults(): void {
+		$campaign_id = $this->campaign_repository->insert(
+			new CampaignEntity(
+				[
+					'title'    => 'Partial Campaign',
+					'currency' => 'GBP',
+				]
+			)
+		);
+
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( $campaign_id, [ 'title' ] );
+		$data     = $campaign->to_array();
+
+		$this->assertSame( $campaign_id, $campaign->id );
+		$this->assertSame( 'Partial Campaign', $campaign->title );
+		$this->assertArrayNotHasKey( 'currency', $data );
+		$this->assertArrayNotHasKey( 'goal', $data );
+	}
+
+	/**
+	 * A full select still applies defaults.
+	 */
+	public function test_full_select_applies_defaults(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Full Campaign' ] ) );
+
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertArrayHasKey( 'currency', $campaign->to_array() );
+	}
 }

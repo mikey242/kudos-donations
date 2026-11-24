@@ -138,6 +138,8 @@ For general information on how to use shortcodes, please visit [this page](https
 * The admin now uses the same icons as the modern WordPress admin, and the menu's active tab marker sits neatly on the header line
 * Correct the Stripe payment methods description, which mentioned Stripe's Payment Element instead of Stripe Checkout
 * Show Mollie payment method refresh errors as a pop-up notice, like other notices
+* The transactions list loads faster, as it no longer fetches unused campaign and subscription details
+* Fix the REST API filling in default values, such as the currency, for campaign fields that weren't requested
 
 = 4.3.7 =
 * Improve Kudos Donations only loading the parts it needs for each page. This is an ongoing job to improve performance.
