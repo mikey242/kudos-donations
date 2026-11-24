@@ -3,7 +3,7 @@ import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import type { BaseEntity } from '../../../types/entity';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { useEntitiesContext } from '../../contexts';
@@ -39,21 +39,12 @@ export const Table = <T extends BaseEntity>({
 	headerItems,
 	filters,
 }: TableProps<T>): React.ReactNode => {
-	const [cachedPosts, setCachedPosts] = useState<BaseEntity[]>();
-	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { params, updateParams } = useAdminQueryParams();
 	const { pluralName, hasResolved, entities, totalPages, totalItems } =
 		useEntitiesContext();
 	const { order, orderby } = params;
-
-	useEffect(() => {
-		setIsLoading(!hasResolved);
-		if (hasResolved) {
-			setCachedPosts(entities ?? []);
-			setHasLoadedOnce(true);
-		}
-	}, [hasResolved, entities]);
+	const isLoading = !hasResolved;
+	const hasRows = entities.length > 0;
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
@@ -90,10 +81,7 @@ export const Table = <T extends BaseEntity>({
 			<table
 				className="widefat striped rounded"
 				style={{
-					tableLayout:
-						cachedPosts?.length === 0 || !cachedPosts
-							? 'auto'
-							: 'fixed',
+					tableLayout: hasRows ? 'fixed' : 'auto',
 				}}
 			>
 				<thead>
@@ -126,11 +114,11 @@ export const Table = <T extends BaseEntity>({
 				</thead>
 				<tbody className={isLoading ? 'is-loading' : 'is-loaded'}>
 					{/* eslint-disable-next-line no-nested-ternary */}
-					{!cachedPosts ? (
+					{!hasRows && isLoading ? (
 						<TableMessage>
 							<Spinner style={{ margin: 0, padding: '1em' }} />
 						</TableMessage>
-					) : cachedPosts?.length === 0 && hasLoadedOnce ? (
+					) : !hasRows ? (
 						<TableMessage>
 							<p>
 								{sprintf(
@@ -141,7 +129,7 @@ export const Table = <T extends BaseEntity>({
 							</p>
 						</TableMessage>
 					) : (
-						cachedPosts?.map((post) => (
+						entities.map((post) => (
 							<TableRow
 								key={post.id}
 								post={post}
