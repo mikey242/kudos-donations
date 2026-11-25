@@ -7,6 +7,7 @@ import type { BaseEntity } from '../../../types/entity';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { useEntitiesContext } from '../../contexts';
+import { FilterContext } from './Filters';
 import type { Filter } from './Filters';
 import { Spacer } from '../Spacer';
 import {
@@ -129,6 +130,7 @@ export const Table = <T extends BaseEntity>({
 
 	return (
 		<>
+			<FilterContext filters={filters} />
 			<TableControls
 				filters={filters}
 				totalPages={totalPages}

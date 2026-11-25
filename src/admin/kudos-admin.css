@@ -241,6 +241,11 @@
 	}
 
 
+	.kudos-filter-context {
+		margin-bottom: 12px;
+		color: var(--wpds-color-foreground-content-neutral-weak);
+	}
+
 	table {
 
 		.is-loading {

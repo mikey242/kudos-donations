@@ -139,6 +139,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * The campaigns list shows the amount raised against the goal in a single column, and no longer shows an empty progress bar for campaigns without a goal
 * Changing the sort or clearing filters in a table now returns to the first page, and clearing filters keeps the current sort
 * Only the current page's icon in the admin menu is highlighted, making it clearer where you are
+* "View donations" from a donor, campaign or subscription now says what the transactions list is showing, with a link to show all
 * Update @wordpress monorepo to latest versions
 
 = 4.3.8 =

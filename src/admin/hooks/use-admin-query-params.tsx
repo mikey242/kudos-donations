@@ -6,7 +6,7 @@ import {
 } from 'nuqs';
 import { useCallback } from '@wordpress/element';
 
-type WhereRecord = Record<string, string | number>;
+export type WhereRecord = Record<string, string | number>;
 
 const parseWhereSchema = (value: unknown): WhereRecord => {
 	if (typeof value !== 'object' || value === null) {
@@ -59,16 +59,9 @@ export const useAdminQueryParams = () => {
 		[setQueryParams]
 	);
 
-	// Clear the table filters and return to the first page, keeping the sort.
-	const resetFilterParams = useCallback(
-		() => void setQueryParams({ where: {}, paged: 1 }),
-		[setQueryParams]
-	);
-
 	return {
 		params,
 		setParams,
 		updateParams: setQueryParams,
-		resetFilterParams,
 	};
 };
