@@ -21,7 +21,7 @@ import { useRowActions } from '../use-row-actions';
 import { formatAmount } from '../../../utils/currency';
 import {
 	arrowRight as arrowRightIcon,
-	cancelCircleFilled as cancelCircleFilledIcon,
+	notAllowed as notAllowedIcon,
 	caution as cautionIcon,
 	download as downloadIcon,
 	page as pageIcon,
@@ -37,7 +37,7 @@ const statusConfig: Record<string, StatusConfig> = {
 	failed: { title: __('Failed', 'kudos-donations'), icon: cautionIcon },
 	canceled: {
 		title: __('Canceled', 'kudos-donations'),
-		icon: cancelCircleFilledIcon,
+		icon: notAllowedIcon,
 	},
 	expired: { title: __('Expired', 'kudos-donations'), icon: cautionIcon },
 };

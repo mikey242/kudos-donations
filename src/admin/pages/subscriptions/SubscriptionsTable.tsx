@@ -4,7 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {
-	cancelCircleFilled as cancelCircleFilledIcon,
+	notAllowed as notAllowedIcon,
 	caution as cautionIcon,
 	check as checkIcon,
 	closeSmall as closeSmallIcon,
@@ -27,7 +27,7 @@ const statusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: publishedIcon },
 	cancelled: {
 		title: __('Canceled', 'kudos-donations'),
-		icon: cancelCircleFilledIcon,
+		icon: notAllowedIcon,
 	},
 	suspended: { title: __('Suspended', 'kudos-donations'), icon: cautionIcon },
 	completed: { title: __('Completed', 'kudos-donations'), icon: checkIcon },

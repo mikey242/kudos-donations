@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { copySmall, shortcode as shortcodeIcon } from '@wordpress/icons';
+import { copy as copyIcon, shortcode as shortcodeIcon } from '@wordpress/icons';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalDivider as Divider,
@@ -137,7 +137,7 @@ export default function GenerateShortcode({
 					<Button
 						ref={copyRef}
 						type="button"
-						icon={copySmall}
+						icon={copyIcon}
 						variant="secondary"
 					>
 						{__('Copy shortcode', 'kudos-donations')}
