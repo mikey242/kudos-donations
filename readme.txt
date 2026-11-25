@@ -4,7 +4,7 @@ Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.3.9
+Stable tag: 4.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,12 @@ For general information on how to use shortcodes, please visit [this page](https
 9. Add a donation form with the block, as a button or embedded in the page
 
 == Changelog ==
+
+= 4.4.0 =
+* Campaigns can now be translated with WPML or Polylang. One campaign works in every language, so donations and the goal stay together. Translate the campaign's text under WPML → String Translation (or Languages → Translations in Polylang)
+* The donate button label can be translated in WPML's translation editor
+* Donation emails and receipts are now sent in the language of the page the donor used, instead of their browser's language
+* Developers: new `kudos_{entity}_saved` and `kudos_{entity}_deleted` actions (e.g. `kudos_campaign_saved`) fire when campaigns, transactions, donors and subscriptions are saved or deleted
 
 = 4.3.9 =
 * Fix cancelled transactions not showing a status icon
