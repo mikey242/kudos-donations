@@ -4,7 +4,7 @@ Tags: donation, fundraising, recurring donations, mollie, stripe
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.3.8
+Stable tag: 4.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,13 @@ For general information on how to use shortcodes, please visit [this page](https
 9. Add a donation form with the block, as a button or embedded in the page
 
 == Changelog ==
+
+= 4.3.9 =
+* Fix the Kudos Donations Plus transactions export failing when it included subscription payments
+* Fix cancelled transactions not showing a status icon
+* Admin tables use their space better: short columns are narrower, leaving more room for names and campaigns
+* The campaigns list shows the amount raised against the goal in a single column, and no longer shows an empty progress bar for campaigns without a goal
+* Changing the sort or clearing filters in a table now returns to the first page, and clearing filters keeps the current sort
 
 = 4.3.8 =
 * Kudos admin pages re-render less often, making them more responsive
