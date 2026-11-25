@@ -131,10 +131,11 @@
 			border-bottom: 2px solid transparent;
 			color: var(--wpds-color-foreground-content-neutral);
 
-			/* SVG icons are filled with currentColor; .dashicon covers add-ons still using Dashicons. */
+			/* SVG icons are filled with currentColor; .dashicon covers add-ons still using Dashicons.
+			   Inactive icons match their label, so only the active tab is in the theme colour. */
 			.dashicon,
 			svg {
-				color: var(--wp-admin-theme-color);
+				color: inherit;
 			}
 
 			&:hover:not(:disabled, .is-active) {
@@ -145,6 +146,11 @@
 			&.is-active {
 				border-bottom-color: var(--wp-admin-theme-color);
 				font-weight: 600;
+
+				.dashicon,
+				svg {
+					color: var(--wp-admin-theme-color);
+				}
 			}
 		}
 
