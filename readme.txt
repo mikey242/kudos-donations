@@ -140,6 +140,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Changing the sort or clearing filters in a table now returns to the first page, and clearing filters keeps the current sort
 * Only the current page's icon in the admin menu is highlighted, making it clearer where you are
 * "View donations" from a donor, campaign or subscription now says what the transactions list is showing, with a link to show all
+* Amounts in admin tables are formatted for your language (e.g. €2,000.00), and amounts, counts and dates are right-aligned
 * Update @wordpress monorepo to latest versions
 
 = 4.3.8 =

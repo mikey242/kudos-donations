@@ -95,6 +95,7 @@ export const SubscriptionsTable = (): React.ReactNode => {
 			title: __('Amount', 'kudos-donations'),
 			size: 'small',
 			orderby: 'value',
+			align: 'right',
 			render: ({ value, currency }) =>
 				value && currency ? formatAmount(value, currency) : null,
 		},

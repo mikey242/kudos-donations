@@ -153,6 +153,7 @@ export const Table = <T extends BaseEntity>({
 										? `kudos-col-${column.size}`
 										: undefined
 								}
+								style={{ textAlign: column.align ?? 'left' }}
 							>
 								{column.orderby ? (
 									<Button
@@ -233,6 +234,7 @@ export const createdAtColumn = <T extends BaseEntity>(): Column<T> => ({
 	title: __('Created', 'kudos-donations'),
 	orderby: 'created_at',
 	size: 'medium',
+	align: 'right',
 	render: (item) => (
 		<time
 			dateTime={item.created_at}

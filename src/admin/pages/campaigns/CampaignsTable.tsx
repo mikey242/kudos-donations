@@ -51,7 +51,9 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 			render: (campaign) => {
 				const total = Number(campaign.total) || 0;
 				const goal = Number(campaign.goal) || 0;
-				const raised = formatAmount(total, campaign.currency);
+				const raised = formatAmount(total, campaign.currency, {
+					trimWholeNumbers: true,
+				});
 
 				if (!goal) {
 					return raised;
@@ -67,7 +69,9 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 									/* translators: %1$s is the amount raised, %2$s is the campaign goal */
 									__('%1$s of %2$s', 'kudos-donations'),
 									raised,
-									formatAmount(goal, campaign.currency)
+									formatAmount(goal, campaign.currency, {
+										trimWholeNumbers: true,
+									})
 								)}
 							</span>
 							<span className="kudos-campaign-progress-percent">

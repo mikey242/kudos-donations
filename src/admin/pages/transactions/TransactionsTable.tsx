@@ -76,6 +76,7 @@ export const TransactionsTable = (): React.ReactNode => {
 			title: __('Amount', 'kudos-donations'),
 			size: 'medium',
 			orderby: 'value',
+			align: 'right',
 			render: ({ value, currency, sequence_type: sequence }) => {
 				if (!value || !currency) {
 					return null;
@@ -83,7 +84,7 @@ export const TransactionsTable = (): React.ReactNode => {
 				const icon = sequenceIcons[sequence];
 				return (
 					<Flex
-						justify="flex-start"
+						justify="flex-end"
 						title={
 							__('Payment type:', 'kudos-donations') +
 							' ' +

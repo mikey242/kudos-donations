@@ -33,6 +33,7 @@ export const DonorsTable = (): React.ReactNode => {
 			key: 'transaction_count',
 			title: __('Total donations', 'kudos-donations'),
 			size: 'medium',
+			align: 'right',
 			render: (donor) => donor.transaction_count,
 		},
 		{
