@@ -24,6 +24,7 @@ declare module '@kudos/admin-controls' {
 		RadioGroupOption,
 		RadioGroupControl,
 		RadioGroupControlBase,
+		SecretControl,
 		SelectControl,
 		TextAreaControl,
 		TextControl,
