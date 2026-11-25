@@ -112,21 +112,21 @@ export default function GenerateShortcode({
 					/>
 					<hr className="kudos-separator" />
 					<RadioControl
-						label="Alignment"
+						label={__('Alignment', 'kudos-donations')}
 						onChange={setAlignment}
 						disabled={type === 'form'}
 						selected={alignment}
 						options={[
 							{
-								label: 'Left',
+								label: __('Left', 'kudos-donations'),
 								value: 'left',
 							},
 							{
-								label: 'Center',
+								label: __('Center', 'kudos-donations'),
 								value: 'center',
 							},
 							{
-								label: 'Right',
+								label: __('Right', 'kudos-donations'),
 								value: 'right',
 							},
 						]}
