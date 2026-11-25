@@ -1,109 +1,86 @@
-import {
-	Button,
-	Flex,
-	Icon,
-	Tooltip,
-	VisuallyHidden,
-} from '@wordpress/components';
+import { Flex, Icon } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { dateI18n } from '@wordpress/date';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { useAdminQueryParams } from '../../hooks';
-import { confirmDelete } from '../../../utils';
 import { getPaymentVendor } from '../../../utils/payment-vendor';
-import type { Campaign, Transaction } from '../../../types/entity';
+import type { Transaction } from '../../../types/entity';
 import {
+	createdAtColumn,
 	DetailsModal,
-	HeaderItem,
 	PaymentVendorIcon,
 	StatusIcon,
 	Table,
 } from '../../components';
-import type { StatusConfig } from '../../components';
-import { getCurrencySymbol } from '../../../utils/currency';
+import type {
+	Column,
+	Filter,
+	RowActionList,
+	StatusConfig,
+} from '../../components';
+import { useRowActions } from '../use-row-actions';
+import { formatAmount } from '../../../utils/currency';
 import {
 	arrowRight as arrowRightIcon,
 	cancelCircleFilled as cancelCircleFilledIcon,
 	caution as cautionIcon,
 	download as downloadIcon,
 	page as pageIcon,
-	pencil as pencilIcon,
 	published as publishedIcon,
 	repeat as repeatIcon,
 	scheduled as scheduledIcon,
-	trash as trashIcon,
 } from '@wordpress/icons';
 
-const transactionStatusConfig: Record<string, StatusConfig> = {
+// Keys match PaymentStatus in includes/Enum/PaymentStatus.php.
+const statusConfig: Record<string, StatusConfig> = {
 	paid: { title: __('Paid', 'kudos-donations'), icon: publishedIcon },
 	open: { title: __('Open', 'kudos-donations'), icon: scheduledIcon },
-	cancelled: {
+	failed: { title: __('Failed', 'kudos-donations'), icon: cautionIcon },
+	canceled: {
 		title: __('Canceled', 'kudos-donations'),
 		icon: cancelCircleFilledIcon,
 	},
 	expired: { title: __('Expired', 'kudos-donations'), icon: cautionIcon },
-	failed: { title: __('Failed', 'kudos-donations'), icon: cautionIcon },
+};
+
+const filters: Filter[] = Object.entries(statusConfig).map(
+	([status, { title }]) => ({ label: title, where: { status } })
+);
+
+const sequenceIcons: Record<string, IconType> = {
+	oneoff: arrowRightIcon,
+	first: repeatIcon,
+	recurring: repeatIcon,
 };
 
 export const TransactionsTable = (): React.ReactNode => {
-	const { settings } = useSettingsContext();
-	const { handleDelete } = useEntitiesContext();
-	const { updateParams } = useAdminQueryParams();
+	const rowActions = useRowActions<Transaction>();
 
-	const handleEdit = (id: number) => void updateParams({ entity: id });
-
-	const headerItems: HeaderItem[] = [
+	const columns: Column<Transaction>[] = [
 		{
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
-			valueCallback: (post: Transaction): React.ReactNode =>
-				post?.donor?.name || post?.donor?.email || '',
+			render: (transaction) =>
+				transaction.donor?.name || transaction.donor?.email || '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			size: 'small',
 			orderby: 'status',
-			valueCallback: (post: Transaction): React.ReactNode => (
-				<StatusIcon
-					status={post.status}
-					config={transactionStatusConfig}
-				/>
+			render: (transaction) => (
+				<StatusIcon status={transaction.status} config={statusConfig} />
 			),
 		},
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			size: 'medium',
 			orderby: 'value',
-			valueCallback: (post: Transaction): React.ReactNode => {
-				const value = post.value;
-				const currency = post.currency;
-				const sequence = post.sequence_type;
-
+			render: ({ value, currency, sequence_type: sequence }) => {
 				if (!value || !currency) {
 					return null;
 				}
-
-				const currencySymbol =
-					getCurrencySymbol(post.currency) ?? currency;
-
-				let icon: IconType | null;
-
-				switch (sequence) {
-					case 'oneoff':
-						icon = arrowRightIcon;
-						break;
-
-					case 'recurring':
-					case 'first':
-						icon = repeatIcon;
-						break;
-
-					default:
-						icon = null;
-				}
-
+				const icon = sequenceIcons[sequence];
 				return (
 					<Flex
 						justify="flex-start"
@@ -114,8 +91,7 @@ export const TransactionsTable = (): React.ReactNode => {
 						}
 					>
 						{icon && <Icon icon={icon} />}
-						{currencySymbol}
-						{value}
+						{formatAmount(value, currency)}
 					</Flex>
 				);
 			},
@@ -123,112 +99,57 @@ export const TransactionsTable = (): React.ReactNode => {
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
-			valueCallback: (post: Transaction): React.ReactNode =>
-				post.campaign?.title ?? '',
+			render: (transaction) => transaction.campaign?.title ?? '',
 		},
 		{
-			key: 'provider',
+			key: 'vendor',
 			title: __('Provider', 'kudos-donations'),
-			align: 'left',
-			valueCallback: (post: Transaction): React.ReactNode => (
+			size: 'small',
+			render: (transaction) => (
 				<PaymentVendorIcon
-					title={post.vendor}
-					icon={getPaymentVendor(post.vendor)?.icon}
+					title={transaction.vendor}
+					icon={getPaymentVendor(transaction.vendor)?.icon}
+				/>
+			),
+		},
+		createdAtColumn(),
+	];
+
+	const actions: RowActionList<Transaction> = [
+		rowActions.inspect(),
+		{
+			id: 'message',
+			label: __('View message', 'kudos-donations'),
+			icon: pageIcon,
+			isEligible: (transaction) => Boolean(transaction.message),
+			render: (transaction) => (
+				<DetailsModal
+					title={__('Message', 'kudos-donations')}
+					label={__('View message', 'kudos-donations')}
+					icon={pageIcon}
+					content={
+						<p style={{ fontSize: '16px' }}>
+							{transaction.message}
+						</p>
+					}
 				/>
 			),
 		},
 		{
-			key: 'date',
-			title: __('Created', 'kudos-donations'),
-			orderby: 'created_at',
-			valueCallback: (post: Campaign): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
-					<i>{dateI18n('d-m-Y', post.created_at)}</i>
-				</Tooltip>
-			),
+			id: 'receipt',
+			label: __('View receipt', 'kudos-donations'),
+			icon: downloadIcon,
+			href: (transaction) => transaction.receipt_url,
+			isDisabled: (transaction) => transaction.status !== 'paid',
 		},
-		{
-			key: 'actions',
-			title: (
-				<VisuallyHidden>
-					{__('Actions', 'kudos-donations')}
-				</VisuallyHidden>
-			),
-			align: 'right',
-			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.status;
-				const url = post.receipt_url;
-				return (
-					<>
-						{settings._kudos_debug_mode && (
-							<Button
-								size="compact"
-								icon={pencilIcon}
-								onClick={() => handleEdit(post.id)}
-								title={__('View more', 'kudos-donations')}
-							/>
-						)}
-						{post.message && (
-							<DetailsModal
-								title={__('Message', 'kudos-donations')}
-								label={__('View message', 'kudos-donations')}
-								icon={pageIcon}
-								content={
-									<p style={{ fontSize: '16px' }}>
-										{post.message}
-									</p>
-								}
-							/>
-						)}
-						<Button
-							size="compact"
-							icon={downloadIcon}
-							disabled={status !== 'paid'}
-							href={url}
-							title={__('View receipt', 'kudos-donations')}
-						/>
-						<Button
-							size="compact"
-							icon={trashIcon}
-							label={__('Delete transaction', 'kudos-donations')}
-							onClick={() =>
-								confirmDelete(
-									__(
-										'Are you sure you wish to delete this transaction?',
-										'kudos-donations'
-									),
-									() => handleDelete(post.id)
-								)
-							}
-						/>
-					</>
-				);
-			},
-		},
+		rowActions.remove(
+			__('Delete transaction', 'kudos-donations'),
+			__(
+				'Are you sure you wish to delete this transaction?',
+				'kudos-donations'
+			)
+		),
 	];
 
-	const filters = [
-		{
-			label: __('Paid', 'kudos-donations'),
-			where: { status: 'paid' },
-		},
-		{
-			label: __('Open', 'kudos-donations'),
-			where: { status: 'open' },
-		},
-		{
-			label: __('Failed', 'kudos-donations'),
-			where: { status: 'failed' },
-		},
-		{
-			label: __('Cancelled', 'kudos-donations'),
-			where: { status: 'canceled' },
-		},
-		{
-			label: __('Expired', 'kudos-donations'),
-			where: { status: 'expired' },
-		},
-	];
-
-	return <Table filters={filters} headerItems={headerItems} />;
+	return <Table columns={columns} actions={actions} filters={filters} />;
 };

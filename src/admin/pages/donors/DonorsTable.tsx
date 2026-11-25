@@ -1,133 +1,73 @@
-import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { DetailsModal, Table } from '../../components';
 import React from 'react';
-import { dateI18n } from '@wordpress/date';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { confirmDelete } from '../../../utils';
+import { createdAtColumn, DetailsModal, Table } from '../../components';
+import type { Column, RowActionList } from '../../components';
+import { useRowActions } from '../use-row-actions';
 import type { Donor } from '../../../types/entity';
-import { useAdminQueryParams } from '../../hooks';
-import {
-	payment as paymentIcon,
-	pencil as pencilIcon,
-	trash as trashIcon,
-} from '@wordpress/icons';
+
+const addressLines = (donor: Donor): string[] =>
+	[
+		donor.business_name,
+		donor.street,
+		[donor.postcode, donor.city].filter(Boolean).join(' '),
+		donor.country,
+	].filter(Boolean);
+
 export const DonorsTable = (): React.ReactNode => {
-	const { settings } = useSettingsContext();
-	const { setParams, updateParams } = useAdminQueryParams();
-	const { handleDelete } = useEntitiesContext();
+	const rowActions = useRowActions<Donor>();
 
-	const handleEdit = (id: number) => void updateParams({ entity: id });
-
-	const changeView = (postId: number) => {
-		void setParams({
-			page: 'kudos-transactions',
-			where: { donor_id: String(postId) },
-		});
-	};
-
-	const headerItems = [
+	const columns: Column<Donor>[] = [
 		{
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
 			orderby: 'name',
-			valueCallback: (post: Donor): React.ReactNode => post.name ?? '',
+			render: (donor) => donor.name ?? '',
 		},
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
 			orderby: 'email',
-			valueCallback: (post: Donor): React.ReactNode => post.email ?? '',
+			render: (donor) => donor.email ?? '',
 		},
 		{
-			key: 'number',
+			key: 'transaction_count',
 			title: __('Total donations', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode =>
-				post.transaction_count,
+			size: 'medium',
+			render: (donor) => donor.transaction_count,
 		},
 		{
 			key: 'address',
 			title: __('Address', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode => {
-				const hasAddress =
-					post.business_name ||
-					post.street ||
-					post.postcode ||
-					post.city ||
-					post.country;
-
+			size: 'small',
+			render: (donor) => {
+				const lines = addressLines(donor);
 				return (
-					<>
-						{hasAddress && (
-							<DetailsModal
-								title={__('Address', 'kudos-donations')}
-								content={
-									<div style={{ fontSize: '16px' }}>
-										{post.business_name}
-										<br />
-										{post.street}
-										<br />
-										{post.postcode + ' ' + post.city}
-										<br />
-										{post.country}
-									</div>
-								}
-							/>
-						)}
-					</>
+					lines.length > 0 && (
+						<DetailsModal
+							title={__('Address', 'kudos-donations')}
+							content={
+								<div style={{ fontSize: '16px' }}>
+									{lines.map((line) => (
+										<div key={line}>{line}</div>
+									))}
+								</div>
+							}
+						/>
+					)
 				);
 			},
 		},
-		{
-			key: 'date',
-			title: __('Created', 'kudos-donations'),
-			orderby: 'created_at',
-			valueCallback: (post: Donor): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
-					<i>{dateI18n('d-m-Y', post.created_at)}</i>
-				</Tooltip>
-			),
-		},
-		{
-			key: 'edit',
-			title: (
-				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
-			),
-			valueCallback: (post: Donor): React.ReactNode => (
-				<Flex justify="flex-end">
-					<Button
-						size="compact"
-						icon={paymentIcon}
-						onClick={() => changeView(post.id)}
-						// href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.id}`}
-						title={__('View donations', 'kudos-donations')}
-					/>
-					{settings._kudos_debug_mode && (
-						<Button
-							size="compact"
-							icon={pencilIcon}
-							onClick={() => handleEdit(post.id)}
-							title={__('View more', 'kudos-donations')}
-						/>
-					)}
-					<Button
-						size="compact"
-						icon={trashIcon}
-						label={__('Delete donor', 'kudos-donations')}
-						onClick={() =>
-							confirmDelete(
-								__(
-									'Are you sure you wish to delete this donor?',
-									'kudos-donations'
-								),
-								() => handleDelete(post.id)
-							)
-						}
-					/>
-				</Flex>
-			),
-		},
+		createdAtColumn(),
 	];
 
-	return <Table headerItems={headerItems} />;
+	const actions: RowActionList<Donor> = [
+		rowActions.viewTransactions('donor_id'),
+		rowActions.inspect(),
+		rowActions.remove(
+			__('Delete donor', 'kudos-donations'),
+			__('Are you sure you wish to delete this donor?', 'kudos-donations')
+		),
+	];
+
+	return <Table columns={columns} actions={actions} />;
 };

@@ -1,13 +1,13 @@
-import React from 'react';
-import { Button, Flex, Spinner } from '@wordpress/components';
+import React, { Fragment } from 'react';
+import { Button, Flex, Spinner, VisuallyHidden } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
+import { dateI18n } from '@wordpress/date';
 import type { BaseEntity } from '../../../types/entity';
-import { useCallback } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { useEntitiesContext } from '../../contexts';
-import { Filter } from './Filters';
+import type { Filter } from './Filters';
 import { Spacer } from '../Spacer';
 import {
 	arrowDown as arrowDownIcon,
@@ -15,65 +15,117 @@ import {
 	chevronUpDown as chevronUpDownIcon,
 } from '@wordpress/icons';
 
-export interface HeaderItem<T extends BaseEntity = BaseEntity> {
-	title: string | React.ReactNode;
+export interface Column<T extends BaseEntity = BaseEntity> {
 	key: string;
-	orderby?:
-		| 'author'
-		| 'date'
-		| 'id'
-		| 'include'
-		| 'modified'
-		| 'parent'
-		| 'relevance'
-		| 'slug'
-		| 'include_slugs'
-		| 'title'
-		| string;
-	valueCallback?: (post: T) => React.ReactNode;
-	align?: 'left' | 'right' | 'center' | 'justify' | 'start' | 'end';
-	width?: string | number;
+	title: string;
+	orderby?: string;
+	render: (item: T) => React.ReactNode;
+	align?: 'left' | 'right' | 'center';
+	/**
+	 * Fixed width for columns with short, predictable content (icons,
+	 * dates, amounts). Columns without a size share the remaining space.
+	 */
+	size?: 'small' | 'medium';
 }
 
-interface TableProps<T extends BaseEntity = BaseEntity> {
-	headerItems: HeaderItem<T>[];
+export interface RowAction<T extends BaseEntity = BaseEntity> {
+	id: string;
+	label: string;
+	icon: IconType;
+	onClick?: (item: T) => void;
+	href?: (item: T) => string | undefined;
+	/** Return false to hide the action for this row. */
+	isEligible?: (item: T) => boolean;
+	isDisabled?: (item: T) => boolean;
+	/** Replaces the default button, e.g. for a modal trigger. */
+	render?: (item: T) => React.ReactNode;
+}
+
+/** Falsy entries are skipped, so an action can be included conditionally. */
+export type RowActionList<T extends BaseEntity = BaseEntity> = Array<
+	RowAction<T> | false | null | undefined
+>;
+
+interface TableProps<T extends BaseEntity> {
+	columns: Column<T>[];
+	actions?: RowActionList<T>;
 	filters?: Filter[];
 }
 
 export const Table = <T extends BaseEntity>({
-	headerItems,
+	columns,
+	actions: actionList = [],
 	filters,
 }: TableProps<T>): React.ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
 	const { pluralName, hasResolved, entities, totalPages, totalItems } =
-		useEntitiesContext();
+		useEntitiesContext<T>();
 	const { order, orderby } = params;
-	const isLoading = !hasResolved;
 	const hasRows = entities.length > 0;
+	const actions = actionList.filter(Boolean) as RowAction<T>[];
+	const hasActions = actions.length > 0;
 
-	const getSortIcon = (value: string): IconType => {
-		if (orderby !== value) {
+	const sort = (column: string) => {
+		const nextOrder =
+			orderby === column && order === 'asc' ? 'desc' : 'asc';
+		void updateParams({ order: nextOrder, orderby: column, paged: 1 });
+	};
+
+	const sortIcon = (column: string): IconType => {
+		if (orderby !== column) {
 			return chevronUpDownIcon;
 		}
 		return order === 'asc' ? arrowUpIcon : arrowDownIcon;
 	};
 
-	const sort = useCallback(
-		(newOrderBy: string) => {
-			const prevOrderby = orderby;
-			const prevOrder = order;
-			const isSameColumn = prevOrderby === newOrderBy;
+	const ariaSort = (column?: string) => {
+		if (!column || orderby !== column) {
+			return undefined;
+		}
+		return order === 'asc' ? 'ascending' : 'descending';
+	};
 
-			const nextOrder =
-				isSameColumn && prevOrder === 'asc' ? 'desc' : 'asc';
-
-			void updateParams({
-				order: nextOrder,
-				orderby: newOrderBy,
-			});
-		},
-		[order, orderby, updateParams]
-	);
+	let body: React.ReactNode;
+	if (!hasRows) {
+		body = (
+			<tr>
+				<td colSpan={columns.length + (hasActions ? 1 : 0)}>
+					<Flex justify="center">
+						{hasResolved ? (
+							<p>
+								{sprintf(
+									// translators: %s is the plural post type name (e.g. Transactions)
+									__('No %s', 'kudos-donations'),
+									pluralName
+								)}
+							</p>
+						) : (
+							<Spinner style={{ margin: 0, padding: '1em' }} />
+						)}
+					</Flex>
+				</td>
+			</tr>
+		);
+	} else {
+		body = entities.map((item) => (
+			<tr key={item.id}>
+				{columns.map((column) => (
+					<td
+						key={column.key}
+						className="table-cell"
+						style={{ textAlign: column.align ?? 'left' }}
+					>
+						{column.render(item)}
+					</td>
+				))}
+				{hasActions && (
+					<td className="table-cell">
+						<RowActions item={item} actions={actions} />
+					</td>
+				)}
+			</tr>
+		));
+	}
 
 	return (
 		<>
@@ -85,63 +137,52 @@ export const Table = <T extends BaseEntity>({
 			<Spacer size={3} />
 			<table
 				className="widefat striped rounded"
-				style={{
-					tableLayout: hasRows ? 'fixed' : 'auto',
-				}}
+				style={{ tableLayout: hasRows ? 'fixed' : 'auto' }}
 			>
 				<thead>
 					<tr>
-						{headerItems?.map((item) => (
+						{columns.map((column) => (
 							<th
-								key={item.key}
+								key={column.key}
 								scope="col"
-								style={
-									item.width
-										? { width: item.width }
+								aria-sort={ariaSort(column.orderby)}
+								className={
+									column.size
+										? `kudos-col-${column.size}`
 										: undefined
 								}
 							>
-								{item.orderby ? (
+								{column.orderby ? (
 									<Button
-										onClick={() => {
-											sort(item.orderby);
-										}}
-										icon={getSortIcon(item.orderby)}
+										onClick={() => sort(column.orderby)}
+										icon={sortIcon(column.orderby)}
 									>
-										{item.title}
+										{column.title}
 									</Button>
 								) : (
-									<span>{item.title} </span>
+									<span>{column.title}</span>
 								)}
 							</th>
 						))}
+						{hasActions && (
+							<th
+								scope="col"
+								className="kudos-col-actions"
+								style={
+									{
+										'--kudos-action-count': actions.length,
+									} as React.CSSProperties
+								}
+							>
+								<VisuallyHidden>
+									{__('Actions', 'kudos-donations')}
+								</VisuallyHidden>
+							</th>
+						)}
 					</tr>
 				</thead>
-				<tbody className={isLoading ? 'is-loading' : 'is-loaded'}>
-					{/* eslint-disable-next-line no-nested-ternary */}
-					{!hasRows && isLoading ? (
-						<TableMessage>
-							<Spinner style={{ margin: 0, padding: '1em' }} />
-						</TableMessage>
-					) : !hasRows ? (
-						<TableMessage>
-							<p>
-								{sprintf(
-									// translators: %s is the plural post type name (e.g. Transactions)
-									__('No %s', 'kudos-donations'),
-									pluralName
-								)}
-							</p>
-						</TableMessage>
-					) : (
-						entities.map((post) => (
-							<TableRow
-								key={post.id}
-								post={post}
-								columns={headerItems}
-							/>
-						))
-					)}
+				<tbody className={hasResolved ? 'is-loaded' : 'is-loading'}>
+					{body}
 				</tbody>
 			</table>
 			<Spacer size={3} />
@@ -150,47 +191,53 @@ export const Table = <T extends BaseEntity>({
 	);
 };
 
-interface TableMessageProps {
-	children: React.ReactNode;
-	colspan?: number;
+interface RowActionsProps<T extends BaseEntity> {
+	item: T;
+	actions: RowAction<T>[];
 }
 
-const TableMessage = ({
-	children,
-	colspan = 100,
-}: TableMessageProps): React.ReactNode => (
-	<tr>
-		<td colSpan={colspan}>
-			<Flex justify="center">{children}</Flex>
-		</td>
-	</tr>
+const RowActions = <T extends BaseEntity>({
+	item,
+	actions,
+}: RowActionsProps<T>): React.ReactNode => (
+	<Flex justify="flex-end">
+		{actions
+			.filter((action) => action.isEligible?.(item) ?? true)
+			.map((action) =>
+				action.render ? (
+					<Fragment key={action.id}>{action.render(item)}</Fragment>
+				) : (
+					<Button
+						key={action.id}
+						size="compact"
+						icon={action.icon}
+						label={action.label}
+						href={action.href?.(item)}
+						disabled={action.isDisabled?.(item)}
+						onClick={
+							action.onClick
+								? () => action.onClick(item)
+								: undefined
+						}
+					/>
+				)
+			)}
+	</Flex>
 );
 
-interface TableRowProps<T extends BaseEntity> {
-	post: T;
-	columns: HeaderItem<T>[];
-}
-
-const TableRow = <T extends BaseEntity>({
-	post,
-	columns,
-}: TableRowProps<T>) => {
-	return (
-		<tr role="row">
-			{columns.map((column) => {
-				return (
-					<td
-						className="table-cell"
-						style={{
-							width: column.width ?? 'auto',
-							textAlign: column.align ?? 'left',
-						}}
-						key={column.key + post.id}
-					>
-						{column.valueCallback && column.valueCallback(post)}
-					</td>
-				);
-			})}
-		</tr>
-	);
-};
+/** Shared "Created" column, sortable by `created_at`. */
+export const createdAtColumn = <T extends BaseEntity>(): Column<T> => ({
+	key: 'created_at',
+	title: __('Created', 'kudos-donations'),
+	orderby: 'created_at',
+	size: 'medium',
+	render: (item) => (
+		<time
+			dateTime={item.created_at}
+			title={dateI18n('d-m-Y H:i:s', item.created_at)}
+			style={{ fontStyle: 'italic' }}
+		>
+			{dateI18n('d-m-Y', item.created_at)}
+		</time>
+	),
+});

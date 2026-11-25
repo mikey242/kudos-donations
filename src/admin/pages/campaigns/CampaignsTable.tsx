@@ -4,147 +4,109 @@ import {
 	Fill,
 	Flex,
 	ProgressBar,
-	Tooltip,
-	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { HeaderItem, Table } from '../../components';
 import React, { ReactNode } from 'react';
-import { dateI18n } from '@wordpress/date';
+import { copy as copyIcon, plus as plusIcon } from '@wordpress/icons';
+import { createdAtColumn, Table } from '../../components';
+import type { Column, RowActionList } from '../../components';
+import { useRowActions } from '../use-row-actions';
 import { useEntitiesContext } from '../../contexts';
-import { SLOT_HEADER_ACTIONS } from '../../slot-names';
-import { confirmDelete } from '../../../utils';
-import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
-import { getCurrencySymbol } from '../../../utils/currency';
-import {
-	copy as copyIcon,
-	payment as paymentIcon,
-	pencil as pencilIcon,
-	plus as plusIcon,
-	trash as trashIcon,
-} from '@wordpress/icons';
+import { SLOT_HEADER_ACTIONS } from '../../slot-names';
+import type { Campaign } from '../../../types/entity';
+import { formatAmount } from '../../../utils/currency';
+
 export const CampaignsTable = ({ handleNew }): ReactNode => {
-	const { setParams, updateParams } = useAdminQueryParams();
-	const { handleDelete, handleDuplicate } = useEntitiesContext();
+	const { updateParams } = useAdminQueryParams();
+	const { handleDuplicate } = useEntitiesContext<Campaign>();
+	const rowActions = useRowActions<Campaign>();
 
-	const handleEdit = (id: number) => void updateParams({ entity: id });
-
-	const changeView = (postId: number) => {
-		void setParams({
-			page: 'kudos-transactions',
-			where: { campaign_id: String(postId) },
-		});
-	};
-
-	const headerItems: HeaderItem[] = [
+	const columns: Column<Campaign>[] = [
 		{
-			key: 'campaign',
+			key: 'title',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
-			valueCallback: (post: Campaign): ReactNode => (
+			render: (campaign) => (
 				<Button
 					showTooltip={true}
-					style={{
-						fontWeight: 'bold',
-						color: 'inherit',
-					}}
+					style={{ fontWeight: 'bold', color: 'inherit' }}
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
-						post.title
+						campaign.title
 					)}
 					variant="link"
-					onClick={() => handleEdit(post.id)}
+					onClick={() => void updateParams({ entity: campaign.id })}
 				>
-					{post.title}
+					{campaign.title}
 				</Button>
 			),
 		},
 		{
-			key: 'theme',
+			key: 'theme_color',
 			title: __('Theme color', 'kudos-donations'),
-			valueCallback: (post: Campaign): ReactNode => (
-				<ColorIndicator colorValue={post.theme_color} />
+			size: 'small',
+			render: (campaign) => (
+				<ColorIndicator colorValue={campaign.theme_color} />
 			),
 		},
 		{
-			key: 'progress',
-			title: __('Progress', 'kudos-donations'),
-			valueCallback: (post: Campaign): ReactNode => {
-				const total = Number(post.total);
-				const goal = Number(post.goal);
-				const progress =
-					total && goal ? Math.round((total / goal) * 100) : 0;
+			key: 'raised',
+			title: __('Raised', 'kudos-donations'),
+			render: (campaign) => {
+				const total = Number(campaign.total) || 0;
+				const goal = Number(campaign.goal) || 0;
+				const raised = formatAmount(total, campaign.currency);
+
+				if (!goal) {
+					return raised;
+				}
+
+				const progress = Math.round((total / goal) * 100);
 
 				return (
-					<Tooltip text={`${progress}%`}>
+					<>
+						<Flex justify="space-between">
+							<span>
+								{sprintf(
+									/* translators: %1$s is the amount raised, %2$s is the campaign goal */
+									__('%1$s of %2$s', 'kudos-donations'),
+									raised,
+									formatAmount(goal, campaign.currency)
+								)}
+							</span>
+							<span className="kudos-campaign-progress-percent">
+								{`${progress}%`}
+							</span>
+						</Flex>
 						<ProgressBar
 							className="kudos-campaign-progress"
-							value={progress ?? 0}
+							value={progress}
 						/>
-					</Tooltip>
+					</>
 				);
 			},
 		},
+		createdAtColumn(),
+	];
+
+	const actions: RowActionList<Campaign> = [
+		rowActions.viewTransactions('campaign_id'),
+		rowActions.edit(__('Edit campaign', 'kudos-donations')),
 		{
-			key: 'total',
-			title: __('Total', 'kudos-donations'),
-			valueCallback: (post: Campaign): React.ReactNode =>
-				`${getCurrencySymbol(post.currency)}${post.total}`,
+			id: 'duplicate',
+			label: __('Duplicate campaign', 'kudos-donations'),
+			icon: copyIcon,
+			onClick: (campaign) => void handleDuplicate(campaign),
 		},
-		{
-			key: 'date',
-			title: __('Created', 'kudos-donations'),
-			orderby: 'created_at',
-			valueCallback: (post: Campaign): ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
-					<i>{dateI18n('d-m-Y', post.created_at)}</i>
-				</Tooltip>
-			),
-		},
-		{
-			key: 'edit',
-			title: (
-				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
-			),
-			valueCallback: (post: Campaign): ReactNode => (
-				<Flex justify="flex-end">
-					<Button
-						size="compact"
-						icon={paymentIcon}
-						onClick={() => changeView(post.id)}
-						title={__('View donations', 'kudos-donations')}
-					/>
-					<Button
-						size="compact"
-						icon={pencilIcon}
-						label={__('Edit campaign', 'kudos-donations')}
-						onClick={() => handleEdit(post.id)}
-					/>
-					<Button
-						size="compact"
-						icon={copyIcon}
-						label={__('Duplicate campaign', 'kudos-donations')}
-						onClick={() => handleDuplicate(post)}
-					/>
-					<Button
-						size="compact"
-						icon={trashIcon}
-						label={__('Delete campaign', 'kudos-donations')}
-						onClick={() =>
-							confirmDelete(
-								__(
-									'Are you sure you wish to delete this campaign?',
-									'kudos-donations'
-								),
-								() => handleDelete(post.id)
-							)
-						}
-					/>
-				</Flex>
-			),
-		},
+		rowActions.remove(
+			__('Delete campaign', 'kudos-donations'),
+			__(
+				'Are you sure you wish to delete this campaign?',
+				'kudos-donations'
+			)
+		),
 	];
 
 	return (
@@ -157,7 +119,7 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 					icon={plusIcon}
 				/>
 			</Fill>
-			<Table headerItems={headerItems} />
+			<Table columns={columns} actions={actions} />
 		</>
 	);
 };

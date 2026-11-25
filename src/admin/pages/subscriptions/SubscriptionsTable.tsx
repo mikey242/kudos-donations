@@ -1,30 +1,29 @@
-import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table, StatusIcon } from '../../components';
 import React from 'react';
-import { dateI18n } from '@wordpress/date';
-import type { Subscription } from '../../../types/entity';
-import type { StatusConfig } from '../../components';
-import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { confirmDelete } from '../../../utils';
-import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { getCurrencySymbol } from '../../../utils/currency';
-import { getFrequencyName } from '../../../utils/frequency';
 import {
 	cancelCircleFilled as cancelCircleFilledIcon,
 	caution as cautionIcon,
 	check as checkIcon,
 	closeSmall as closeSmallIcon,
-	payment as paymentIcon,
-	pencil as pencilIcon,
 	published as publishedIcon,
-	trash as trashIcon,
 } from '@wordpress/icons';
+import { createdAtColumn, StatusIcon, Table } from '../../components';
+import type {
+	Column,
+	Filter,
+	RowActionList,
+	StatusConfig,
+} from '../../components';
+import { useEntitiesContext } from '../../contexts';
+import type { Subscription } from '../../../types/entity';
+import { useRowActions } from '../use-row-actions';
+import { formatAmount } from '../../../utils/currency';
+import { getFrequencyName } from '../../../utils/frequency';
 
-const subscriptionStatusConfig: Record<string, StatusConfig> = {
+const statusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: publishedIcon },
 	cancelled: {
 		title: __('Canceled', 'kudos-donations'),
@@ -34,175 +33,114 @@ const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	completed: { title: __('Completed', 'kudos-donations'), icon: checkIcon },
 };
 
-export const SubscriptionsTable = (): React.ReactNode => {
-	const { setParams, updateParams } = useAdminQueryParams();
+const filters: Filter[] = [
+	{
+		label: __('Monthly', 'kudos-donations'),
+		where: { frequency: '1 month' },
+	},
+	{
+		label: __('Quarterly', 'kudos-donations'),
+		where: { frequency: '3 months' },
+	},
+	{
+		label: __('Yearly', 'kudos-donations'),
+		where: { frequency: '12 months' },
+	},
+];
 
-	const handleEdit = (id: number) => void updateParams({ entity: id });
-	const { settings } = useSettingsContext();
-	const { handleDelete, fetchEntities } = useEntitiesContext();
+export const SubscriptionsTable = (): React.ReactNode => {
+	const rowActions = useRowActions<Subscription>();
+	const { fetchEntities } = useEntitiesContext<Subscription>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 
-	const changeView = (entityId: number) => {
-		void setParams({
-			page: 'kudos-transactions',
-			where: { subscription_id: String(entityId) },
-		});
-	};
-
-	const cancelSubscription = async (entityId: number, token: string) => {
+	const cancelSubscription = async (subscription: Subscription) => {
 		try {
-			const response: any = await apiFetch({
+			const response: { message: string } = await apiFetch({
 				path: `/kudos/v1/subscription/cancel/`,
 				method: 'POST',
-				data: { id: entityId, token },
+				data: { id: subscription.id, token: subscription.token },
 			});
-
-			await createSuccessNotice(response.message, {
+			void createSuccessNotice(response.message, {
 				type: 'snackbar',
 				icon: '✅',
 			});
-
 			fetchEntities();
 		} catch (error: any) {
 			void createErrorNotice(error.message, { type: 'snackbar' });
-			return null;
 		}
 	};
 
-	const headerItems = [
+	const columns: Column<Subscription>[] = [
 		{
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.donor?.name ?? post.donor?.email ?? '',
+			render: (subscription) =>
+				subscription.donor?.name || subscription.donor?.email || '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			size: 'small',
 			orderby: 'status',
-			valueCallback: (post: Subscription): React.ReactNode => (
+			render: (subscription) => (
 				<StatusIcon
-					status={post.status}
-					config={subscriptionStatusConfig}
+					status={subscription.status}
+					config={statusConfig}
 				/>
 			),
 		},
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			size: 'small',
 			orderby: 'value',
-			valueCallback: (post: Subscription): React.ReactNode => {
-				const value = post?.value;
-				const currency = post?.currency;
-
-				if (!value || !currency) {
-					return null;
-				}
-
-				const currencySymbol =
-					getCurrencySymbol(post.currency) ?? currency;
-				return (
-					<span>
-						{currencySymbol}
-						{value}
-					</span>
-				);
-			},
+			render: ({ value, currency }) =>
+				value && currency ? formatAmount(value, currency) : null,
 		},
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.campaign?.title,
+			render: (subscription) => subscription.campaign?.title ?? '',
 		},
 		{
 			key: 'frequency',
 			title: __('Frequency', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				getFrequencyName(post.frequency),
+			render: (subscription) => getFrequencyName(subscription.frequency),
 		},
 		{
-			key: 'length',
+			key: 'years',
 			title: __('Length', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
+			render: (subscription) =>
 				// Mollie stores 0 for a continuous subscription, Stripe stores null.
-				!post.years
+				!subscription.years
 					? __('Continuous', 'kudos-donations')
-					: post.years + ' ' + __('years', 'kudos-donations'),
+					: subscription.years + ' ' + __('years', 'kudos-donations'),
 		},
-		{
-			key: 'date',
-			title: __('Created', 'kudos-donations'),
-			orderby: 'created_at',
-			valueCallback: (post: Subscription): React.ReactNode => (
-				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at)}>
-					<i>{dateI18n('d-m-Y', post.created_at)}</i>
-				</Tooltip>
-			),
-		},
-		{
-			key: 'edit',
-			title: (
-				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
-			),
-			valueCallback: (post: Subscription): React.ReactNode => (
-				<Flex justify="flex-end">
-					<Button
-						size="compact"
-						icon={paymentIcon}
-						disabled={!post.donor}
-						onClick={() => changeView(post.id)}
-						title={__('View donations', 'kudos-donations')}
-					/>
-					<Button
-						size="compact"
-						icon={closeSmallIcon}
-						disabled={post.status !== 'active'}
-						onClick={() => cancelSubscription(post.id, post.token)}
-						title={__('Cancel subscription', 'kudos-donations')}
-					/>
-					{settings._kudos_debug_mode && (
-						<Button
-							size="compact"
-							icon={pencilIcon}
-							onClick={() => handleEdit(post.id)}
-							title={__('View more', 'kudos-donations')}
-						/>
-					)}
-					<Button
-						size="compact"
-						icon={trashIcon}
-						label={__('Delete subscription', 'kudos-donations')}
-						onClick={() =>
-							confirmDelete(
-								__(
-									'Are you sure you wish to delete this subscription?',
-									'kudos-donations'
-								),
-								() => handleDelete(post.id)
-							)
-						}
-					/>
-				</Flex>
-			),
-		},
+		createdAtColumn(),
 	];
 
-	const filters = [
+	const actions: RowActionList<Subscription> = [
 		{
-			label: __('Monthly', 'kudos-donations'),
-			where: { frequency: '1 month' },
+			...rowActions.viewTransactions('subscription_id'),
+			isDisabled: (subscription) => !subscription.donor,
 		},
 		{
-			label: __('Quarterly', 'kudos-donations'),
-			where: { frequency: '3 months' },
+			id: 'cancel',
+			label: __('Cancel subscription', 'kudos-donations'),
+			icon: closeSmallIcon,
+			isDisabled: (subscription) => subscription.status !== 'active',
+			onClick: (subscription) => void cancelSubscription(subscription),
 		},
-		{
-			label: __('Yearly', 'kudos-donations'),
-			where: { frequency: '12 months' },
-		},
+		rowActions.inspect(),
+		rowActions.remove(
+			__('Delete subscription', 'kudos-donations'),
+			__(
+				'Are you sure you wish to delete this subscription?',
+				'kudos-donations'
+			)
+		),
 	];
 
-	return <Table filters={filters} headerItems={headerItems} />;
+	return <Table columns={columns} actions={actions} filters={filters} />;
 };

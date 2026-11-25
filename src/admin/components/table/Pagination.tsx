@@ -38,7 +38,7 @@ export const Pagination = ({
 	}, [currentPage, isEditing]);
 
 	const goToPage = async (page: number) => {
-		const sanitizedPage = Math.min(Math.max(1, page), totalPages);
+		const sanitizedPage = Math.max(1, Math.min(page, totalPages));
 		await updateParams({ paged: sanitizedPage });
 		setIsEditing(false);
 	};

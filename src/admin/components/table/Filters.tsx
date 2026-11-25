@@ -18,7 +18,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 	const currentWhere = params.where || {};
 
 	if (!filters) {
-		return;
+		return null;
 	}
 
 	const activeFilter = filters.find((filter) =>
@@ -27,17 +27,11 @@ export const Filters = ({ filters }: FiltersProps) => {
 		)
 	);
 
-	const handleClick = (filter?: Filter) => {
-		if (!filter) {
-			resetFilterParams();
-			return;
-		}
-
+	const applyFilter = (filter: Filter) =>
 		void updateParams({
-			where: { ...params.where, ...filter.where },
+			where: { ...currentWhere, ...filter.where },
 			paged: 1,
 		});
-	};
 
 	// For displaying unknown filters
 	const knownKeys = filters.flatMap((f) => Object.keys(f.where));
@@ -60,7 +54,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 						size="compact"
 						key={JSON.stringify(filter.where)}
 						isPressed={activeFilter === filter}
-						onClick={() => handleClick(filter)}
+						onClick={() => applyFilter(filter)}
 					>
 						{filter.label}
 					</Button>

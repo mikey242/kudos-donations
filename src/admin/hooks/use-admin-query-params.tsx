@@ -21,20 +21,15 @@ const parseWhereSchema = (value: unknown): WhereRecord => {
 	return result;
 };
 
-const defaultTableFilterParams = {
-	order: 'desc',
-	orderby: 'created_at',
-	search: '',
-	where: {},
-};
-
 const defaultParams = {
 	entity: null,
 	tab: null,
 	page: '',
 	paged: 1,
 	panel: null,
-	...defaultTableFilterParams,
+	order: 'desc',
+	orderby: 'created_at',
+	where: {},
 };
 
 export const useAdminQueryParams = () => {
@@ -54,7 +49,6 @@ export const useAdminQueryParams = () => {
 			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
-		search: parseAsString.withDefault(defaultParams.search),
 	});
 
 	const setParams = useCallback(
@@ -65,9 +59,11 @@ export const useAdminQueryParams = () => {
 		[setQueryParams]
 	);
 
-	// Reset just the filter params (excluding paged, entity, tab, etc).
-	const resetFilterParams = () =>
-		void setQueryParams(defaultTableFilterParams);
+	// Clear the table filters and return to the first page, keeping the sort.
+	const resetFilterParams = useCallback(
+		() => void setQueryParams({ where: {}, paged: 1 }),
+		[setQueryParams]
+	);
 
 	return {
 		params,

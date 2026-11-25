@@ -155,7 +155,12 @@
 
 	.kudos-campaign-progress {
 		width: 100%;
-		height: 1em;
+		height: 0.5em;
+		margin-top: 4px;
+	}
+
+	.kudos-campaign-progress-percent {
+		color: #757575;
 	}
 
 	.kudos-admin-panel {
@@ -214,6 +219,21 @@
 			opacity: 0.5;
 			pointer-events: none;
 			transition: opacity 0.2s ease-in-out;
+		}
+
+		/* Column widths only apply with table-layout: fixed (see Table.tsx).
+		   Widths are content-box: .widefat adds 10px padding either side. */
+		.kudos-col-small {
+			width: 6rem;
+		}
+
+		.kudos-col-medium {
+			width: 8rem;
+		}
+
+		/* Compact 32px buttons with an 8px gap between them. */
+		.kudos-col-actions {
+			width: calc(var(--kudos-action-count, 1) * 40px - 8px);
 		}
 
 		.table-cell {

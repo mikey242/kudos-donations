@@ -40,10 +40,13 @@ declare module '@kudos/admin-components' {
 		StatusConfig,
 		StatusIcon,
 		Pagination,
-		Search,
-		HeaderItem,
+		Column,
+		RowAction,
+		RowActionList,
+		Filter,
 		Table,
 		TableControls,
+		createdAtColumn,
 	} from '../admin/components';
 	export type { Provider } from '../admin/components';
 }
