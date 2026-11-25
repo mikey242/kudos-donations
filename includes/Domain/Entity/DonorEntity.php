@@ -30,6 +30,7 @@ class DonorEntity extends BaseEntity {
 	 * {@inheritDoc}
 	 */
 	public function __toString(): string {
-		return trim( $this->name . ' <' . $this->email . '>' );
+		// Read with ?? so a donor loaded with only some columns doesn't fatal when cast.
+		return trim( ( $this->name ?? '' ) . ' <' . ( $this->email ?? '' ) . '>' );
 	}
 }

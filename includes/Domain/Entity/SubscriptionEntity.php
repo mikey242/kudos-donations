@@ -40,8 +40,10 @@ class SubscriptionEntity extends BaseEntity {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * Read with ?? so a subscription loaded with only some columns doesn't fatal when cast.
 	 */
 	public function __toString(): string {
-		return $this->vendor_subscription_id;
+		return $this->vendor_subscription_id ?? '';
 	}
 }

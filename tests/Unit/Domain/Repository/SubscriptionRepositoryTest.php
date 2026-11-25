@@ -200,4 +200,26 @@ class SubscriptionRepositoryTest extends BaseTestCase {
 
 		$this->assertStringContainsString( 'Subscription', $result->title );
 	}
+
+	/**
+	 * Regression: the Plus CSV export casts a transaction's nested subscription to a string.
+	 * A subscription loaded with only some columns must not fatal when cast.
+	 */
+	public function test_partial_subscription_casts_to_string(): void {
+		$id = $this->subscription_repository->insert(
+			new SubscriptionEntity(
+				[
+					'value'                  => 10.00,
+					'currency'               => 'EUR',
+					'vendor_subscription_id' => 'sub_123',
+				]
+			)
+		);
+
+		$without = $this->subscription_repository->get( $id, [ 'status' ] );
+		$with    = $this->subscription_repository->get( $id, [ 'vendor_subscription_id' ] );
+
+		$this->assertSame( '', (string) $without );
+		$this->assertSame( 'sub_123', (string) $with );
+	}
 }

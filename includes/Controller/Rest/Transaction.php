@@ -43,7 +43,7 @@ class Transaction extends BaseRepositoryRestController {
 	protected function prepare_item( BaseEntity $item ): array {
 		$item->campaign     = $this->repository->get_campaign( $item, [ 'title', 'theme_color' ] );
 		$item->donor        = $this->repository->get_donor( $item, [ 'name', 'email' ] );
-		$item->subscription = $this->repository->get_subscription( $item, [ 'status', 'frequency' ] );
+		$item->subscription = $this->repository->get_subscription( $item, [ 'status', 'frequency', 'vendor_subscription_id' ] );
 
 		if ( 'paid' === $item->status ) {
 			// add_query_arg(), not "?view=true" in the route: with plain permalinks

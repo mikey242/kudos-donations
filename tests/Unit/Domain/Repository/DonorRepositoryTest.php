@@ -82,4 +82,21 @@ class DonorRepositoryTest extends BaseTestCase {
 		$result = $this->donor_repository->get( $id );
 		$this->assertStringContainsString( 'Donor', $result->title );
 	}
+
+	/**
+	 * A donor loaded with only some columns must not fatal when cast to a string.
+	 */
+	public function test_partial_donor_casts_to_string(): void {
+		$id = $this->donor_repository->insert(
+			new DonorEntity(
+				[
+					'email' => 'jane@example.com',
+					'name'  => 'Jane Doe',
+				]
+			)
+		);
+
+		$this->assertSame( '<jane@example.com>', (string) $this->donor_repository->get( $id, [ 'email' ] ) );
+		$this->assertSame( 'Jane Doe <jane@example.com>', (string) $this->donor_repository->get( $id, [ 'name', 'email' ] ) );
+	}
 }
