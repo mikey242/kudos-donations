@@ -248,26 +248,16 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		}
 
 		// Create unique id for triggering.
-		$id         = Utils::generate_id( 'kudos-' );
-		$attributes = wp_json_encode( $args );
+		$id = Utils::generate_id( 'kudos-' );
 
 		// Add Kudos Portal for mounting the modal.
 		add_action( 'wp_footer', [ $this, 'kudos_portal_html' ] );
 
-		return wp_kses(
-			\sprintf(
-				"<p><span id='%s' class='kudos-form' data-options='%s'></span></p>",
-				$id,
-				$attributes
-			),
-			[
-				'p'    => [],
-				'span' => [
-					'id'           => [],
-					'class'        => [],
-					'data-options' => [],
-				],
-			]
+		// esc_attr() so a label with an apostrophe (e.g. "St John's") can't end the attribute.
+		return \sprintf(
+			'<p><span id="%s" class="kudos-form" data-options="%s"></span></p>',
+			esc_attr( $id ),
+			esc_attr( (string) wp_json_encode( $args ) )
 		);
 	}
 
@@ -338,16 +328,11 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * @param string $body The body text.
 	 */
 	private function message_modal_html( string $header, string $body ): void {
-		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-message' data-color='#ff9f1c' data-title='%s' data-body='%s'></div>", $header, $body ),
-			[
-				'div' => [
-					'class'      => [],
-					'data-color' => [],
-					'data-title' => [],
-					'data-body'  => [],
-				],
-			]
+		// esc_attr() so a message with an apostrophe (common in translations) can't end the attribute.
+		printf(
+			'<div class="kudos-donations kudos-message" data-color="#ff9f1c" data-title="%s" data-body="%s"></div>',
+			esc_attr( $header ),
+			esc_attr( $body )
 		);
 	}
 
@@ -358,15 +343,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * @param int $campaign_id The campaign id.
 	 */
 	private function payment_status_modal_html( int $transaction_id, int $campaign_id ): void {
-		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s' ></div>", $transaction_id, $campaign_id ),
-			[
-				'div' => [
-					'class'            => [],
-					'data-campaign'    => [],
-					'data-transaction' => [],
-				],
-			]
+		printf(
+			'<div class="kudos-donations kudos-transaction-status" data-transaction="%d" data-campaign="%d"></div>',
+			(int) $transaction_id,
+			(int) $campaign_id
 		);
 	}
 

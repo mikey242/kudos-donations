@@ -119,6 +119,58 @@ class FrontTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Reads a data attribute from rendered HTML, decoding entities as a browser would.
+	 *
+	 * @param string $html      The HTML.
+	 * @param string $attribute The attribute name.
+	 */
+	private function get_attribute( string $html, string $attribute ): ?string {
+		$processor = new \WP_HTML_Tag_Processor( $html );
+		while ( $processor->next_tag() ) {
+			$value = $processor->get_attribute( $attribute );
+			if ( \is_string( $value ) ) {
+				return $value;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * A button label with quotes survives into data-options as valid JSON.
+	 */
+	public function test_render_keeps_options_intact_with_quotes_in_label(): void {
+		$args = [
+			'campaign_id'  => 291,
+			'button_label' => 'Support St John\'s "Appeal" & more',
+			'type'         => 'button',
+		];
+
+		$html = (string) $this->create_front()->kudos_render_callback( $args );
+
+		$this->assertSame( $args, json_decode( (string) $this->get_attribute( $html, 'data-options' ), true ), $html );
+	}
+
+	/**
+	 * A message with an apostrophe (e.g. a translation) keeps its full title and body.
+	 */
+	public function test_message_modal_keeps_title_with_apostrophe(): void {
+		$message = 'L\'abonnement a été annulé';
+		add_filter(
+			'rest_pre_dispatch',
+			static fn() => new \WP_REST_Response( [ 'message' => $message ], 200 )
+		);
+		$_REQUEST['kudos_action'] = 'cancel_subscription';
+
+		ob_start();
+		$this->create_front()->handle_query_variables();
+		$html = (string) ob_get_clean();
+		unset( $_REQUEST['kudos_action'] );
+
+		$this->assertSame( $message, $this->get_attribute( $html, 'data-title' ), $html );
+		$this->assertSame( 'Thanks for your support!', $this->get_attribute( $html, 'data-body' ), $html );
+	}
+
+	/**
 	 * window.kudos is only attached to Kudos scripts that are about to print, once each.
 	 */
 	public function test_localize_scripts_only_for_queued_kudos_handles(): void {

@@ -134,6 +134,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.3.9 =
 * Fix cancelled transactions not showing a status icon
+* Fix donation buttons not showing when their label contains an apostrophe (e.g. "St John's"), and messages with an apostrophe being cut short
 * Admin tables use their space better: short columns are narrower, leaving more room for names and campaigns
 * The campaigns list shows the amount raised against the goal in a single column, and no longer shows an empty progress bar for campaigns without a goal
 * Changing the sort or clearing filters in a table now returns to the first page, and clearing filters keeps the current sort
