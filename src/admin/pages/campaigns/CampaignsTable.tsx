@@ -1,10 +1,4 @@
-import {
-	Button,
-	ColorIndicator,
-	Fill,
-	Flex,
-	ProgressBar,
-} from '@wordpress/components';
+import { Button, ColorIndicator, Fill, Flex } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import React, { ReactNode } from 'react';
 import { copy as copyIcon, plus as plusIcon } from '@wordpress/icons';
@@ -80,10 +74,18 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 								{`${progress}%`}
 							</span>
 						</Flex>
-						<ProgressBar
+						<div
 							className="kudos-campaign-progress"
-							value={progress}
-						/>
+							role="progressbar"
+							aria-valuemin={0}
+							aria-valuemax={100}
+							aria-valuenow={Math.min(progress, 100)}
+						>
+							<div
+								className="kudos-campaign-progress__fill"
+								style={{ width: `${Math.min(progress, 100)}%` }}
+							/>
+						</div>
 					</>
 				);
 			},

@@ -1,13 +1,6 @@
 import { KudosLogo } from '../../block/components';
 import { __ } from '@wordpress/i18n';
-import {
-	FlexBlock,
-	FlexItem,
-	Flex,
-	Panel,
-	ResponsiveWrapper,
-	Slot,
-} from '@wordpress/components';
+import { FlexBlock, FlexItem, Flex, Panel, Slot } from '@wordpress/components';
 import { AdminMenu } from './AdminMenu';
 import { useAdminQueryParams } from '../hooks';
 import {
@@ -38,12 +31,13 @@ export const AdminHeader = (): ReactNode => {
 								align="center"
 							>
 								<FlexItem>
-									<ResponsiveWrapper
-										naturalHeight={32}
-										naturalWidth={32}
-									>
-										<KudosLogo />
-									</ResponsiveWrapper>
+									<KudosLogo
+										style={{
+											display: 'block',
+											width: 32,
+											height: 32,
+										}}
+									/>
 								</FlexItem>
 								<FlexItem>
 									<span

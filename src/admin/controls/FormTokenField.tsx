@@ -34,7 +34,7 @@ export const FormTokenField = ({
 				>
 					<WPFormTokenField
 						__next40pxDefaultSize
-						__experimentalShowHowTo={false}
+						help=""
 						tokenizeOnBlur
 						tokenizeOnSpace
 						maxLength={maxLength}
