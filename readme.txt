@@ -137,6 +137,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Admin tables use their space better: short columns are narrower, leaving more room for names and campaigns
 * The campaigns list shows the amount raised against the goal in a single column, and no longer shows an empty progress bar for campaigns without a goal
 * Changing the sort or clearing filters in a table now returns to the first page, and clearing filters keeps the current sort
+* Only the current page's icon in the admin menu is highlighted, making it clearer where you are
 * Update @wordpress monorepo to latest versions
 
 = 4.3.8 =

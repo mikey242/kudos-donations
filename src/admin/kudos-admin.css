@@ -6,6 +6,13 @@
 	border-radius: var(--wpds-border-radius-lg)
 }
 
+/* Replaces the deprecated components Divider. Top level, as modals render outside .kudos-admin-page. */
+.kudos-separator {
+	margin: 20px 0;
+	border: 0;
+	border-top: 1px solid var(--wpds-color-stroke-surface-neutral);
+}
+
 /* Show focus rings for keyboard navigation only, not after mouse clicks. */
 .components-button:focus:not(:focus-visible),
 .components-external-link:focus:not(:focus-visible) {

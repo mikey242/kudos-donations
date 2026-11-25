@@ -6,8 +6,6 @@ import { store as noticesStore } from '@wordpress/notices';
 import { copy as copyIcon, shortcode as shortcodeIcon } from '@wordpress/icons';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalDivider as Divider,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
 	Button,
 	Modal,
@@ -102,7 +100,7 @@ export default function GenerateShortcode({
 							},
 						]}
 					/>
-					<Divider margin="5" />
+					<hr className="kudos-separator" />
 					<InputControl
 						name="label"
 						disabled={type === 'form'}
@@ -112,7 +110,7 @@ export default function GenerateShortcode({
 						onChange={setLabel}
 						__next40pxDefaultSize
 					/>
-					<Divider margin="5" />
+					<hr className="kudos-separator" />
 					<RadioControl
 						label="Alignment"
 						onChange={setAlignment}
@@ -133,7 +131,7 @@ export default function GenerateShortcode({
 							},
 						]}
 					/>
-					<Divider margin="5" />
+					<hr className="kudos-separator" />
 					<Button
 						ref={copyRef}
 						type="button"
