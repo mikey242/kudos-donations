@@ -93,6 +93,14 @@
 			height: 2.1rem;
 		}
 
+		/* Leave room for the header actions on phones; the logo still identifies the plugin. */
+		.kudos-title {
+
+			@media screen and (max-width: 600px) {
+				display: none;
+			}
+		}
+
 		@media screen and (max-width: 782px) {
 			position: initial;
 			top: initial;
