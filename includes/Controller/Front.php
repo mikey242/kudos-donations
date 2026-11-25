@@ -179,7 +179,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			register_block_type(
 				$path,
 				[
-					'render_callback' => [ $this, 'kudos_render_callback' ],
+					'render_callback' => [ $this, 'render_form' ],
 				]
 			);
 		}
@@ -202,19 +202,24 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					$args,
 					'kudos'
 				);
-				$this->enqueue_assets();
 
-				return $this->kudos_render_callback( $args );
+				return $this->render_form( $args );
 			}
 		);
 	}
 
 	/**
-	 * Renders the kudos button and donation modals.
+	 * Renders a donation button or form. Used by the block and shortcode, and the entry point
+	 * for add-ons that place a form themselves. Enqueues the front-end assets when a form is
+	 * output, so callers need not.
 	 *
-	 * @param array $args Array of Kudos button/modal attributes.
+	 * Returns null when nothing should show. Administrators instead get an inline message when
+	 * the campaign is missing or the payment vendor isn't ready; check those first if that
+	 * message would be out of place.
+	 *
+	 * @param array $args Button/form attributes: campaign_id, type, button_label, alignment.
 	 */
-	public function kudos_render_callback( array $args ): ?string {
+	public function render_form( array $args ): ?string {
 		do_action( 'kudos_render_callback', $args );
 
 		// Check if the Campaign ID has been given.
@@ -246,6 +251,8 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			}
 			return null;
 		}
+
+		$this->enqueue_assets();
 
 		// Create unique id for triggering.
 		$id = Utils::generate_id( 'kudos-' );

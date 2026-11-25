@@ -51,7 +51,7 @@ class FrontTest extends WP_UnitTestCase {
 			'button_label' => 'Donate now',
 			'type'         => 'button',
 		];
-		$html           = $front->kudos_render_callback( $args );
+		$html           = $front->render_form( $args );
 		$this->assertSame( true, \is_string( $html ) );
 	}
 
@@ -72,7 +72,7 @@ class FrontTest extends WP_UnitTestCase {
 		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'publish' ] );
 		$this->go_to( get_permalink( $page_id ) . '?utm_source=test' );
 
-		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+		$this->create_front()->render_form( [ 'campaign_id' => 1 ] );
 
 		$this->assertTrue( Front::is_form_placed() );
 		$this->assertSame( get_permalink( $page_id ), get_option( Front::SETTING_FORM_PLACED_URL ) );
@@ -83,7 +83,7 @@ class FrontTest extends WP_UnitTestCase {
 		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'publish' ] );
 		$this->go_to( get_permalink( $page_id ) );
 
-		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+		$this->create_front()->render_form( [ 'campaign_id' => 1 ] );
 
 		$this->assertSame( 'https://example.org/first/', get_option( Front::SETTING_FORM_PLACED_URL ) );
 	}
@@ -94,7 +94,7 @@ class FrontTest extends WP_UnitTestCase {
 		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
 		$this->go_to( add_query_arg( [ 'page_id' => $page_id, 'preview' => 'true' ], home_url( '/' ) ) );
 
-		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+		$this->create_front()->render_form( [ 'campaign_id' => 1 ] );
 
 		$this->assertFalse( Front::is_form_placed() );
 	}
@@ -103,7 +103,7 @@ class FrontTest extends WP_UnitTestCase {
 		delete_option( Front::SETTING_FORM_PLACED_URL );
 		set_current_screen( 'dashboard' );
 
-		$this->create_front()->kudos_render_callback( [ 'campaign_id' => 1 ] );
+		$this->create_front()->render_form( [ 'campaign_id' => 1 ] );
 
 		set_current_screen( 'front' );
 		$this->assertFalse( Front::is_form_placed() );
@@ -113,7 +113,7 @@ class FrontTest extends WP_UnitTestCase {
 		delete_option( Front::SETTING_FORM_PLACED_URL );
 		$this->go_to( home_url( '/' ) );
 
-		$this->create_front()->kudos_render_callback( [ 'campaign_id' => '' ] );
+		$this->create_front()->render_form( [ 'campaign_id' => '' ] );
 
 		$this->assertFalse( Front::is_form_placed() );
 	}
@@ -145,9 +145,35 @@ class FrontTest extends WP_UnitTestCase {
 			'type'         => 'button',
 		];
 
-		$html = (string) $this->create_front()->kudos_render_callback( $args );
+		$html = (string) $this->create_front()->render_form( $args );
 
 		$this->assertSame( $args, json_decode( (string) $this->get_attribute( $html, 'data-options' ), true ), $html );
+	}
+
+	/**
+	 * Rendering a form enqueues the front-end assets, so add-ons need not.
+	 */
+	public function test_render_form_enqueues_assets(): void {
+		wp_dequeue_script( Front::SCRIPT_HANDLE_VIEW );
+		wp_dequeue_style( Front::STYLE_HANDLE_VIEW );
+
+		$this->create_front()->render_form( [ 'campaign_id' => 1 ] );
+
+		$this->assertTrue( wp_script_is( Front::SCRIPT_HANDLE_VIEW ) );
+		$this->assertTrue( wp_style_is( Front::STYLE_HANDLE_VIEW ) );
+	}
+
+	/**
+	 * Nothing is enqueued when no form is output.
+	 */
+	public function test_render_form_without_campaign_enqueues_nothing(): void {
+		wp_dequeue_script( Front::SCRIPT_HANDLE_VIEW );
+		wp_dequeue_style( Front::STYLE_HANDLE_VIEW );
+
+		$this->assertNull( $this->create_front()->render_form( [ 'campaign_id' => '' ] ) );
+
+		$this->assertFalse( wp_script_is( Front::SCRIPT_HANDLE_VIEW ) );
+		$this->assertFalse( wp_style_is( Front::STYLE_HANDLE_VIEW ) );
 	}
 
 	/**
