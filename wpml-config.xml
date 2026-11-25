@@ -1,0 +1,15 @@
+<wpml-config>
+	<shortcodes>
+		<shortcode>
+			<tag>kudos</tag>
+			<attributes>
+				<attribute>button_label</attribute>
+			</attributes>
+		</shortcode>
+	</shortcodes>
+	<gutenberg-blocks>
+		<gutenberg-block type="iseardmedia/kudos-button" translate="1">
+			<key name="button_label" />
+		</gutenberg-block>
+	</gutenberg-blocks>
+</wpml-config>

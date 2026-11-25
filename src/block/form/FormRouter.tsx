@@ -101,7 +101,7 @@ export const FormRouter = ({
 				message: '',
 				name: '',
 				email: '',
-				language: navigator.language,
+				language: document.documentElement.lang || navigator.language,
 			},
 			campaign
 		) as FormData,

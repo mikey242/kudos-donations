@@ -8,10 +8,16 @@ import {
 	useState,
 } from '@wordpress/element';
 import type { Campaign } from '../../types/entity';
+import { addQueryArgs } from '@wordpress/url';
 import { kudosRestUrl } from '../rest-url';
 
 const fetchCampaign = async (path: string): Promise<Campaign> => {
-	const res = await window.fetch(kudosRestUrl(path), { credentials: 'omit' });
+	// On multilingual sites, ask for the campaign text in the page's language.
+	const language = window.kudos?.front?.language;
+	const url = language
+		? addQueryArgs(kudosRestUrl(path), { kudos_lang: language })
+		: kudosRestUrl(path);
+	const res = await window.fetch(url, { credentials: 'omit' });
 	const data = await res.json();
 	return res.ok ? data : Promise.reject(data);
 };

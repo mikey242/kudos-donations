@@ -26,6 +26,8 @@ export interface KudosAdminData {
 export interface KudosFrontData {
 	/** REST API root from rest_url(); differs with plain permalinks. */
 	restRoot?: string;
+	/** Current WPML/Polylang language code, when a multilingual plugin is active. */
+	language?: string;
 	stylesheets?: string[];
 	customStyles?: string;
 	baseFontSize?: string;

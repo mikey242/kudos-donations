@@ -131,6 +131,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 
 		if ( $id ) {
 			$this->after_insert( $id, $data );
+			$this->fire_saved( (int) $id );
 		}
 
 		return $id;
@@ -172,7 +173,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 
 		$data['updated_at'] = current_time( 'mysql', true );
 
-		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
+		$updated = $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
+		if ( $updated ) {
+			$this->fire_saved( $id );
+		}
+
+		return $updated;
 	}
 
 	/**
@@ -199,7 +205,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	public function patch( int $id, array $data ): bool {
 		$data = $this->schema->sanitize_data_from_schema( $data );
 
-		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) > 0;
+		$patched = $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) > 0;
+		if ( $patched ) {
+			$this->fire_saved( $id );
+		}
+
+		return $patched;
 	}
 
 	/**
@@ -208,7 +219,43 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @param int $id id of the record to delete.
 	 */
 	public function delete( int $id ): bool {
-		return $this->wpdb->delete( $this->table, [ 'id' => $id ] ) !== false;
+		$deleted = $this->wpdb->delete( $this->table, [ 'id' => $id ] ) !== false;
+		if ( $deleted ) {
+			/**
+			 * Fires after an entity is deleted, e.g. `kudos_campaign_deleted`.
+			 *
+			 * @param int $id The deleted entity's ID.
+			 */
+			do_action( 'kudos_' . $this->get_hook_slug() . '_deleted', $id );
+		}
+
+		return $deleted;
+	}
+
+	/**
+	 * Stable, untranslated slug used in this repository's hook names, derived from the
+	 * entity class: `CampaignEntity` gives `campaign`, so hooks are `kudos_campaign_saved`
+	 * and `kudos_campaign_deleted`.
+	 */
+	protected function get_hook_slug(): string {
+		$class = $this->get_entity_class();
+		$short = substr( $class, (int) strrpos( $class, '\\' ) + 1 );
+
+		return strtolower( (string) preg_replace( '/Entity$/', '', $short ) );
+	}
+
+	/**
+	 * Announces that an entity was inserted, updated or patched.
+	 *
+	 * @param int $id The saved entity's ID.
+	 */
+	private function fire_saved( int $id ): void {
+		/**
+		 * Fires after an entity is inserted, updated or patched, e.g. `kudos_campaign_saved`.
+		 *
+		 * @param int $id The saved entity's ID.
+		 */
+		do_action( 'kudos_' . $this->get_hook_slug() . '_saved', $id );
 	}
 
 	/**

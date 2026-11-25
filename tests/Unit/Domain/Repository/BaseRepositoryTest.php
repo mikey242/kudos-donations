@@ -372,4 +372,39 @@ class BaseRepositoryTest extends BaseTestCase {
 		$result = $this->repository->get( $id );
 		$this->assertNotEmpty( $result->title );
 	}
+
+	/**
+	 * Writes fire `kudos_{entity}_saved` / `kudos_{entity}_deleted`, named after the entity class.
+	 */
+	public function test_writes_fire_entity_named_actions(): void {
+		$saved   = [];
+		$deleted = [];
+		add_action( 'kudos_donor_saved', static function ( $id ) use ( &$saved ) { $saved[] = $id; } );
+		add_action( 'kudos_donor_deleted', static function ( $id ) use ( &$deleted ) { $deleted[] = $id; } );
+
+		$id = (int) $this->repository->insert( new DonorEntity( [ 'title' => 'Hooks' ] ) );
+		$this->repository->patch( $id, [ 'title' => 'Changed' ] );
+		$this->repository->update( $this->repository->get( $id ) );
+		$this->repository->delete( $id );
+
+		remove_all_actions( 'kudos_donor_saved' );
+		remove_all_actions( 'kudos_donor_deleted' );
+
+		$this->assertSame( [ $id, $id, $id ], $saved );
+		$this->assertSame( [ $id ], $deleted );
+	}
+
+	/**
+	 * A patch that changes nothing is not announced as a save.
+	 */
+	public function test_noop_patch_does_not_fire_saved(): void {
+		$id    = (int) $this->repository->insert( new DonorEntity( [ 'title' => 'Same' ] ) );
+		$fired = 0;
+		add_action( 'kudos_donor_saved', static function () use ( &$fired ) { ++$fired; } );
+
+		$this->repository->patch( $id, [ 'title' => 'Same' ] );
+		remove_all_actions( 'kudos_donor_saved' );
+
+		$this->assertSame( 0, $fired );
+	}
 }
