@@ -45,6 +45,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 	} = props;
 	const { campaign } = useCampaignContext();
 	const blockProps = useBlockProps();
+	const defaultLabel = __('Donate now', 'kudos-donations');
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
 	const fetchPosts = useCallback(async () => {
@@ -167,6 +168,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 										'kudos-donations'
 									)}
 									value={button_label}
+									placeholder={defaultLabel}
 									onChange={onChangeButtonLabel}
 									__next40pxDefaultSize
 								/>
@@ -189,7 +191,7 @@ const ButtonEdit = (props: ButtonEditProps) => {
 			{campaign ? (
 				<KudosForm
 					displayAs={type}
-					label={button_label}
+					label={button_label || defaultLabel}
 					previewMode={true}
 					alignment={alignment}
 				/>

@@ -27,9 +27,7 @@ export default function GenerateShortcode({
 	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const [type, setType] = useState<string>('button');
-	const [label, setLabel] = useState<string>(
-		__('Donate Now', 'kudos-donations')
-	);
+	const [label, setLabel] = useState<string>('');
 	const [alignment, setAlignment] = useState<string>('left');
 
 	const openModal = () => setOpen(true);
@@ -45,7 +43,7 @@ export default function GenerateShortcode({
 	const shortcode = [
 		`[kudos campaign_id="${campaign.id}"`,
 		`type="${type}"`,
-		type === 'button' ? `button_label="${label}"` : '',
+		type === 'button' && label ? `button_label="${label}"` : '',
 		type === 'button' ? `alignment="${alignment}"` : '',
 		`]`,
 	];
@@ -106,6 +104,7 @@ export default function GenerateShortcode({
 						disabled={type === 'form'}
 						label={__('Button label', 'kudos-donations')}
 						help={__('Add a button label', 'kudos-donations')}
+						placeholder={__('Donate now', 'kudos-donations')}
 						value={label}
 						onChange={setLabel}
 						__next40pxDefaultSize

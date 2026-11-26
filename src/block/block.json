@@ -17,13 +17,13 @@
 	},
 	"example": {
 		"attributes": {
-			"label": "Donate now!"
+			"button_label": "Donate now!"
 		}
 	},
 	"attributes": {
 		"button_label": {
 			"type": "string",
-			"default": "Donate now"
+			"default": ""
 		},
 		"campaign_id": {
 			"type": "string",

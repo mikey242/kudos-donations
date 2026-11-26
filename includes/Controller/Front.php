@@ -194,7 +194,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			function ( $args ) {
 				$args = shortcode_atts(
 					[
-						'button_label' => __( 'Donate now', 'kudos-donations' ),
+						'button_label' => '',
 						'campaign_id'  => '',
 						'type'         => 'button',
 						'alignment'    => 'left',
@@ -253,6 +253,12 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		}
 
 		$this->enqueue_assets();
+
+		// An empty label means "use the default", translated into the page's language. Saving
+		// the default into the block or shortcode would fix it in the language it was placed in.
+		if ( empty( $args['button_label'] ) || ! \is_string( $args['button_label'] ) ) {
+			$args['button_label'] = __( 'Donate now', 'kudos-donations' );
+		}
 
 		// Create unique id for triggering.
 		$id = Utils::generate_id( 'kudos-' );

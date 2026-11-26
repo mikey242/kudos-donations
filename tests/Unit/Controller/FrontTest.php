@@ -67,6 +67,44 @@ class FrontTest extends WP_UnitTestCase {
 		return new Front( $vendor_factory, new TransactionRepository( new WpDb(), new TransactionSchema() ) );
 	}
 
+	/**
+	 * The options the form is rendered with, decoded from its data-options attribute.
+	 *
+	 * @param string $html Output of render_form().
+	 */
+	private function get_rendered_options( string $html ): array {
+		preg_match( '/data-options="([^"]*)"/', $html, $matches );
+		return json_decode( html_entity_decode( $matches[1] ?? '' ), true ) ?? [];
+	}
+
+	/**
+	 * An empty or missing label falls back to the translatable default.
+	 */
+	public function test_render_uses_default_button_label(): void {
+		add_filter(
+			'gettext_kudos-donations',
+			static fn( $translation, $text ) => 'Donate now' === $text ? 'Doneer nu' : $translation,
+			10,
+			2
+		);
+
+		$empty   = $this->get_rendered_options( (string) $this->create_front()->render_form( [ 'campaign_id' => 1, 'button_label' => '' ] ) );
+		$missing = $this->get_rendered_options( (string) $this->create_front()->render_form( [ 'campaign_id' => 1 ] ) );
+
+		remove_all_filters( 'gettext_kudos-donations' );
+		$this->assertSame( 'Doneer nu', $empty['button_label'] );
+		$this->assertSame( 'Doneer nu', $missing['button_label'] );
+	}
+
+	/**
+	 * A label the user entered is kept as is.
+	 */
+	public function test_render_keeps_custom_button_label(): void {
+		$options = $this->get_rendered_options( (string) $this->create_front()->render_form( [ 'campaign_id' => 1, 'button_label' => 'Give today' ] ) );
+
+		$this->assertSame( 'Give today', $options['button_label'] );
+	}
+
 	public function test_render_records_placement_url_on_public_page(): void {
 		delete_option( Front::SETTING_FORM_PLACED_URL );
 		$page_id = self::factory()->post->create( [ 'post_type' => 'page', 'post_status' => 'publish' ] );
