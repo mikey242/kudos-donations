@@ -10,8 +10,9 @@
  *          --force        pull: overwrite an existing .i18n/<locale>.po
  *
  * "Open" means untranslated, fuzzy, or waiting (someone else's unapproved
- * suggestion). Pulled files contain only those strings. Anything not
- * translated by you is left fuzzy: a prefill borrowed from a sibling locale
+ * suggestion). Pulled files contain only open strings. status also counts
+ * "changes requested" (translations a reviewer sent back); pull doesn't fetch
+ * those, so handle them on the site. Anything not translated by you is left fuzzy: a prefill borrowed from a sibling locale
  * (fr_BE <-> fr_FR, nl_NL <-> nl_BE), the existing fuzzy text, or the pending
  * suggestion. Translate/review, remove the `#, fuzzy` flag from what you
  * accept, run `check`, then upload the .i18n/<locale>.import.po it writes
@@ -59,19 +60,26 @@ async function status() {
 	const { translation_sets: sets = [] } = JSON.parse(
 		await get( `https://translate.wordpress.org/api/projects/${ PROJECT }/${ branch }/` )
 	);
-	const rows = selected.map( ( locale ) => {
+	const rows = [];
+	for ( const locale of selected ) {
 		const set = sets.find( ( s ) => s.wp_locale === locale );
-		return {
+		rows.push( {
 			locale,
 			untranslated: set?.untranslated_count ?? '?',
 			fuzzy: set?.fuzzy_count ?? '?',
 			waiting: set?.waiting_count ?? '?',
-		};
-	} );
+			// Translations a reviewer sent back. The API has no count for these, and they
+			// are not counted as untranslated, so a locale can look complete without them.
+			'changes requested': await countStatus( locale, 'changesrequested' ),
+		} );
+	}
 	console.table( rows );
-	for ( const { locale, waiting, fuzzy } of rows ) {
+	for ( const { locale, waiting, fuzzy, 'changes requested': changes } of rows ) {
 		if ( waiting > 0 || fuzzy > 0 ) {
 			console.log( `${ locale }: review on site → ${ base( locale ) }/?filters%5Bstatus%5D=waiting_or_fuzzy` );
+		}
+		if ( changes > 0 ) {
+			console.log( `${ locale }: changes requested → ${ base( locale ) }/?filters%5Bstatus%5D=changesrequested` );
 		}
 	}
 }
@@ -238,6 +246,14 @@ async function get( url ) {
 		process.stderr.write( `  rate limited, retrying in ${ wait }s…\n` );
 		await new Promise( ( r ) => setTimeout( r, wait * 1000 ) );
 	}
+}
+
+// Number of strings with a translation in the given status, from a JSON export.
+async function countStatus( locale, status ) {
+	const data = JSON.parse(
+		await get( `${ base( locale ) }/export-translations/?format=json&filters%5Bstatus%5D=${ status }` )
+	);
+	return Array.isArray( data ) ? 0 : Object.keys( data ).filter( Boolean ).length;
 }
 
 const exportPo = ( locale, status ) =>
