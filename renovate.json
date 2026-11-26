@@ -3,7 +3,7 @@
 	"extends": ["config:recommended", "mergeConfidence:all-badges"],
 	"minimumReleaseAge": "7 days",
 	"constraints": {
-		"php": "7.4.33"
+		"php": "8.6.0"
 	},
 	"constraintsFiltering": "strict",
 	"composer": {
