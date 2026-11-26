@@ -187,7 +187,8 @@
 		background: var(--wpds-color-foreground-content-neutral);
 	}
 
-	.kudos-campaign-progress-percent {
+	.kudos-campaign-progress-percent,
+	.kudos-campaign-id {
 		color: #757575;
 	}
 

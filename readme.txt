@@ -138,6 +138,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Donate buttons without a label of their own now show "Donate now" in the page's language, instead of always in English
 * Fix the shortcode pop-up describing "Display as" with the help text for payment frequency, and the "Edit:" page title not being translatable
 * Donation emails and receipts are now sent in the language of the page the donor used, instead of their browser's language
+* The campaigns list shows each campaign's ID next to its name, for use in shortcodes and when translating with WPML or Polylang
 * Developers: new `kudos_{entity}_saved` and `kudos_{entity}_deleted` actions (e.g. `kudos_campaign_saved`) fire when campaigns, transactions, donors and subscriptions are saved or deleted
 
 = 4.3.9 =

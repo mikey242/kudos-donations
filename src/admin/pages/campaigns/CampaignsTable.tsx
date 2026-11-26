@@ -22,19 +22,25 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
 			render: (campaign) => (
-				<Button
-					showTooltip={true}
-					style={{ fontWeight: 'bold', color: 'inherit' }}
-					label={sprintf(
-						/* translators: %s is the campaign name */
-						__('Edit %s', 'kudos-donations'),
-						campaign.title
-					)}
-					variant="link"
-					onClick={() => void updateParams({ entity: campaign.id })}
-				>
-					{campaign.title}
-				</Button>
+				<>
+					<Button
+						showTooltip={true}
+						style={{ fontWeight: 'bold', color: 'inherit' }}
+						label={sprintf(
+							/* translators: %s is the campaign name */
+							__('Edit %s', 'kudos-donations'),
+							campaign.title
+						)}
+						variant="link"
+						onClick={() =>
+							void updateParams({ entity: campaign.id })
+						}
+					>
+						{campaign.title}
+					</Button>{' '}
+					{/* Shown for the shortcode and WPML/Polylang, which refer to campaigns by ID. */}
+					<span className="kudos-campaign-id">#{campaign.id}</span>
+				</>
 			),
 		},
 		{
