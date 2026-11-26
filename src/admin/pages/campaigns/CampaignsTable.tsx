@@ -38,7 +38,6 @@ export const CampaignsTable = ({ handleNew }): ReactNode => {
 					>
 						{campaign.title}
 					</Button>{' '}
-					{/* Shown for the shortcode and WPML/Polylang, which refer to campaigns by ID. */}
 					<span className="kudos-campaign-id">#{campaign.id}</span>
 				</>
 			),

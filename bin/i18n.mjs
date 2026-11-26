@@ -68,8 +68,7 @@ async function status() {
 			untranslated: set?.untranslated_count ?? '?',
 			fuzzy: set?.fuzzy_count ?? '?',
 			waiting: set?.waiting_count ?? '?',
-			// Translations a reviewer sent back. The API has no count for these, and they
-			// are not counted as untranslated, so a locale can look complete without them.
+			// The API doesn't count these, not even as untranslated.
 			'changes requested': await countStatus( locale, 'changesrequested' ),
 		} );
 	}
@@ -248,7 +247,6 @@ async function get( url ) {
 	}
 }
 
-// Number of strings with a translation in the given status, from a JSON export.
 async function countStatus( locale, status ) {
 	const data = JSON.parse(
 		await get( `${ base( locale ) }/export-translations/?format=json&filters%5Bstatus%5D=${ status }` )

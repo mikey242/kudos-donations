@@ -68,7 +68,7 @@ class FrontTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The options the form is rendered with, decoded from its data-options attribute.
+	 * The options in the rendered form's data-options attribute.
 	 *
 	 * @param string $html Output of render_form().
 	 */
@@ -77,9 +77,6 @@ class FrontTest extends WP_UnitTestCase {
 		return json_decode( html_entity_decode( $matches[1] ?? '' ), true ) ?? [];
 	}
 
-	/**
-	 * An empty or missing label falls back to the translatable default.
-	 */
 	public function test_render_uses_default_button_label(): void {
 		add_filter(
 			'gettext_kudos-donations',
@@ -96,9 +93,6 @@ class FrontTest extends WP_UnitTestCase {
 		$this->assertSame( 'Doneer nu', $missing['button_label'] );
 	}
 
-	/**
-	 * A label the user entered is kept as is.
-	 */
 	public function test_render_keeps_custom_button_label(): void {
 		$options = $this->get_rendered_options( (string) $this->create_front()->render_form( [ 'campaign_id' => 1, 'button_label' => 'Give today' ] ) );
 

@@ -254,8 +254,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 		$this->enqueue_assets();
 
-		// An empty label means "use the default", translated into the page's language. Saving
-		// the default into the block or shortcode would fix it in the language it was placed in.
+		// The default isn't saved with the block or shortcode, so it follows the page's language.
 		if ( empty( $args['button_label'] ) || ! \is_string( $args['button_label'] ) ) {
 			$args['button_label'] = __( 'Donate now', 'kudos-donations' );
 		}

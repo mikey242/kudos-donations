@@ -96,9 +96,6 @@ class WpmlServiceTest extends BaseTestCase {
 		$this->assertArrayNotHasKey( $context . '|title', $this->registered );
 	}
 
-	/**
-	 * Strings are registered with the site's default language as their source language.
-	 */
 	public function test_registers_strings_in_default_language(): void {
 		$languages = [];
 		add_action(
