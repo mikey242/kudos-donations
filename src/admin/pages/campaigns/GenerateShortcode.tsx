@@ -79,7 +79,7 @@ export default function GenerateShortcode({
 					<RadioGroupControlBase
 						label={__('Display as', 'kudos-donations')}
 						help={__(
-							'Choose the available payment frequency.',
+							'Show a button that opens the form in a pop-up, or show the form in the page itself.',
 							'kudos-donations'
 						)}
 						onChange={(value: string) => setType(value)}

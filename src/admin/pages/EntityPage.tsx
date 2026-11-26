@@ -3,6 +3,7 @@ import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams, usePageTitle } from '../hooks';
 import { Fill } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
+import { __, sprintf } from '@wordpress/i18n';
 import { SLOT_HEADER_ACTIONS_EXTRA } from '../slot-names';
 import React, { ReactNode } from 'react';
 
@@ -23,7 +24,12 @@ export const EntityPage = ({
 		useEntitiesContext<BaseEntity>();
 	usePageTitle(
 		entityId
-			? currentEntity?.title && `Edit: ${currentEntity.title}`
+			? currentEntity?.title &&
+					sprintf(
+						/* translators: %s: Name of the item being edited (e.g. a campaign). */
+						__('Edit: %s', 'kudos-donations'),
+						currentEntity.title
+					)
 			: pluralName
 	);
 

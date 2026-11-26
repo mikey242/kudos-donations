@@ -136,6 +136,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Campaigns can now be translated with WPML or Polylang. One campaign works in every language, so donations and the goal stay together. Translate the campaign's text under WPML → String Translation (or Languages → Translations in Polylang)
 * The donate button label can be translated in WPML's translation editor
 * Donate buttons without a label of their own now show "Donate now" in the page's language, instead of always in English
+* Fix the shortcode pop-up describing "Display as" with the help text for payment frequency, and the "Edit:" page title not being translatable
 * Donation emails and receipts are now sent in the language of the page the donor used, instead of their browser's language
 * Developers: new `kudos_{entity}_saved` and `kudos_{entity}_deleted` actions (e.g. `kudos_campaign_saved`) fire when campaigns, transactions, donors and subscriptions are saved or deleted
 
