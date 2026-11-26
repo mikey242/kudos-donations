@@ -16,3 +16,4 @@ includes/Dependencies
 /wordpress/
 /third-party/
 cloudflared.dev.yml
+/.i18n/
