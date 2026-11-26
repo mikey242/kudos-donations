@@ -97,6 +97,28 @@ class WpmlServiceTest extends BaseTestCase {
 	}
 
 	/**
+	 * Strings are registered with the site's default language as their source language.
+	 */
+	public function test_registers_strings_in_default_language(): void {
+		$languages = [];
+		add_action(
+			'wpml_register_single_string',
+			static function ( $context, $name, $value, $allow_empty = false, $source_language = null ) use ( &$languages ): void {
+				$languages[ $name ] = $source_language;
+			},
+			10,
+			5
+		);
+		add_filter( 'wpml_default_language', static fn() => 'nl' );
+
+		$id = (int) $this->campaign_repository->insert( new CampaignEntity( [ 'initial_title' => 'Steun ons' ] ) );
+		$this->wpml->register_campaign_strings( $id );
+
+		remove_all_filters( 'wpml_default_language' );
+		$this->assertSame( 'nl', $languages['initial_title'] );
+	}
+
+	/**
 	 * Existing campaigns are registered once per plugin version.
 	 */
 	public function test_registers_existing_campaigns_once_per_version(): void {

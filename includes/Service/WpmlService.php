@@ -197,10 +197,13 @@ class WpmlService extends AbstractRegistrable {
 	private function register_strings( CampaignEntity $campaign ): void {
 		$context = self::get_context( (int) $campaign->id );
 
+		$source_language = apply_filters( 'wpml_default_language', null );
+		$source_language = \is_string( $source_language ) && '' !== $source_language ? $source_language : null;
+
 		foreach ( self::TRANSLATABLE_FIELDS as $field ) {
 			$value = $campaign->{$field} ?? null;
 			if ( \is_string( $value ) && '' !== $value ) {
-				do_action( 'wpml_register_single_string', $context, $field, $value );
+				do_action( 'wpml_register_single_string', $context, $field, $value, false, $source_language );
 			}
 		}
 	}
