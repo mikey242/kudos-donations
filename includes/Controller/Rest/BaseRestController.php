@@ -123,8 +123,8 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 * @param array $values Array of form values.
 	 */
 	protected function is_bot( array $values ): bool {
-		// Check if timestamp is present and tabs completed too quickly.
-		if ( isset( $values['timestamp'] ) && abs( (int) $values['timestamp'] - time() ) < 4 ) {
+		// Seconds the form was open before submitting, measured in the browser so clock differences don't matter.
+		if ( isset( $values['elapsed'] ) && (int) $values['elapsed'] < 4 ) {
 			return true;
 		}
 

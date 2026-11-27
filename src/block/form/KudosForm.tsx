@@ -30,7 +30,7 @@ export const KudosForm = ({
 	previewMode = false,
 }: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
-	const [timestamp] = useState<number>(() => Date.now());
+	const [openedAt] = useState<number>(() => Date.now());
 	const [formError, setFormError] = useState<string | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(0);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -58,7 +58,10 @@ export const KudosForm = ({
 		}
 		setFormError(null);
 		const formData = new window.FormData();
-		formData.append('timestamp', timestamp.toString());
+		formData.append(
+			'elapsed',
+			Math.floor((Date.now() - openedAt) / 1000).toString()
+		);
 		formData.append('campaign_id', campaign!.id.toString());
 		formData.append(
 			'return_url',
