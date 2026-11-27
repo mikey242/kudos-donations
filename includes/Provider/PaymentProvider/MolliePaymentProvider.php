@@ -397,7 +397,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 			'redirectUrl'  => $redirect_url,
 			'webhookUrl'   => static::get_webhook_url(),
 			'sequenceType' => $sequence_type,
-			'description'  => $transaction->title,
+			'description'  => $this->get_donation_name( $transaction ),
 			'metadata'     => [
 				'transaction_id' => $transaction_id,
 				'frequency'      => $payment_args['payment_frequency'],
@@ -513,6 +513,9 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 					return false;
 				}
 
+				// Mollie rejects a subscription whose description matches another of the customer's, so keep the reference.
+				$description = \sprintf( '%1$s (%2$s)', $this->get_donation_name( $transaction ), Utils::get_id( $subscription_entity, 'subscription' ) );
+
 				// Prepare arguments to send to Mollie.
 				$subscription_args = [
 					'amount'      => [
@@ -523,7 +526,7 @@ class MolliePaymentProvider extends AbstractPaymentProvider {
 					'mandateId'   => $mandate_id,
 					'interval'    => $interval,
 					'startDate'   => $start_date,
-					'description' => $subscription_entity->title,
+					'description' => $description,
 					'metadata'    => [
 						'campaign_id'     => $transaction->campaign_id,
 						'donor_id'        => $transaction->donor_id,

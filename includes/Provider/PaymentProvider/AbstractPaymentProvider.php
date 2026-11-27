@@ -339,6 +339,18 @@ abstract class AbstractPaymentProvider extends AbstractProvider implements Payme
 	}
 
 	/**
+	 * Returns a donor-facing name for the transaction's payment: its campaign's name, or "Donation"
+	 * when the campaign is missing or unnamed. The transaction's own title is an internal reference.
+	 *
+	 * @param TransactionEntity $transaction The transaction being paid.
+	 */
+	protected function get_donation_name( TransactionEntity $transaction ): string {
+		$campaign = $this->transaction_repository->get_campaign( $transaction, [ 'title' ] );
+
+		return $campaign && '' !== $campaign->title ? $campaign->title : __( 'Donation', 'kudos-donations' );
+	}
+
+	/**
 	 * Enqueues an async action to process a payment status change for this provider.
 	 *
 	 * @param string      $payment_id The vendor payment or session ID.

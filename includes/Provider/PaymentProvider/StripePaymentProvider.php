@@ -620,7 +620,7 @@ class StripePaymentProvider extends AbstractPaymentProvider {
 			'currency'     => strtolower( $currency ),
 			'unit_amount'  => $this->to_stripe_amount( \floatval( $payment_args['value'] ), $currency ),
 			'product_data' => [
-				'name' => $transaction->title,
+				'name' => $this->get_donation_name( $transaction ),
 			],
 		];
 

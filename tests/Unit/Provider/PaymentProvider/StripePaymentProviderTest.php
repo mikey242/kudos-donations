@@ -127,6 +127,36 @@ class StripePaymentProviderTest extends BaseTestCase {
 		$this->assertSame( [ 'interval' => 'month', 'interval_count' => 3 ], $recurring );
 	}
 
+	public function test_create_payment_names_product_after_campaign(): void {
+		$this->http_client->set_response( 'checkout/sessions', $this->session_fixture() );
+
+		$this->create_payment_fixture( [ 'recurring' => 'true', 'recurring_frequency' => '12 months' ] );
+
+		$last = $this->http_client->get_last_request();
+		$this->assertSame( 'Save the Whales', $last['params']['line_items'][0]['price_data']['product_data']['name'] );
+	}
+
+	public function test_create_payment_falls_back_to_donation_without_campaign(): void {
+		$this->http_client->set_response( 'checkout/sessions', $this->session_fixture() );
+
+		$transactions   = $this->get_from_container( TransactionRepository::class );
+		$transaction_id = $transactions->insert( new TransactionEntity( [ 'title' => 'Test' ] ) );
+		$this->provider->create_payment(
+			[
+				'value'       => 10,
+				'currency'    => 'EUR',
+				'return_url'  => 'https://example.com',
+				'campaign_id' => '',
+				'email'       => 'donor@example.com',
+				'name'        => 'Jane Donor',
+			],
+			$transactions->get( $transaction_id )
+		);
+
+		$last = $this->http_client->get_last_request();
+		$this->assertSame( 'Donation', $last['params']['line_items'][0]['price_data']['product_data']['name'] );
+	}
+
 	public function test_create_payment_stores_session_id_on_transaction(): void {
 		$this->http_client->set_response( 'checkout/sessions', $this->session_fixture( [ 'id' => 'cs_test_stored' ] ) );
 
@@ -1252,10 +1282,10 @@ class StripePaymentProviderTest extends BaseTestCase {
 		/** @var TransactionRepository $transactions */
 		$transactions = $this->get_from_container( TransactionRepository::class );
 
-		$campaign    = new CampaignEntity();
+		$campaign    = new CampaignEntity( [ 'title' => 'Save the Whales' ] );
 		$campaign_id = $this->get_from_container( CampaignRepository::class )->insert( $campaign );
 
-		$transaction    = new TransactionEntity( [ 'title' => 'Test' ] );
+		$transaction    = new TransactionEntity( [ 'title' => 'Test', 'campaign_id' => $campaign_id ] );
 		$transaction_id = $transactions->insert( $transaction );
 		$transaction    = $transactions->get( $transaction_id );
 

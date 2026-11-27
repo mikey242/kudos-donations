@@ -2,6 +2,7 @@
 namespace IseardMedia\Kudos\Tests\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
@@ -13,9 +14,14 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Fake\MockResponse;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\PendingRequest;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\CreateCustomerRequest;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\CreatePaymentRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\CreateSubscriptionRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\GetCustomerRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\GetMandateRequest;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Mandate;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Subscription;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\EncryptionService;
@@ -108,6 +114,50 @@ class MolliePaymentProviderTest extends BaseTestCase {
 
 		$this->client->assertSent(function (PendingRequest $request) {
 			return $request->payload()->get('customerId') === 'cst_abc123';
+		});
+	}
+
+	public function test_creates_payment_described_by_campaign_name(): void {
+		$this->create_payment_fixture();
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->get('description') === 'Save the Whales';
+		});
+	}
+
+	public function test_create_subscription_described_by_campaign_name_and_reference(): void {
+		$client = MollieApiClient::fake([
+			GetCustomerRequest::class => MockResponse::resource(Customer::class)->with(['id' => 'cst_abc123'])->create(),
+			GetMandateRequest::class => MockResponse::resource(Mandate::class)->with(['id' => 'mdt_abc123', 'status' => 'valid'])->create(),
+			CreateSubscriptionRequest::class => MockResponse::resource(Subscription::class)->with([
+				'id' => 'sub_abc123',
+				'status' => 'active',
+				'customerId' => 'cst_abc123',
+			])->create(),
+		], true);
+		$vendor = $this->create_vendor($client);
+
+		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert(new CampaignEntity(['title' => 'Save the Whales']));
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_from_container(TransactionRepository::class);
+		$transaction_id = $transactions->insert(new TransactionEntity([
+			'campaign_id' => $campaign_id,
+			'donor_id' => 1,
+			'vendor_customer_id' => 'cst_abc123',
+			'value' => 10,
+			'currency' => 'EUR',
+			'mode' => 'test',
+		]));
+
+		$subscription_id = $vendor->create_subscription($transactions->get($transaction_id), 'mdt_abc123', '1 month', 0);
+
+		$this->assertIsInt($subscription_id);
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $this->get_from_container(SubscriptionRepository::class)->get($subscription_id);
+		$reference = substr($subscription->title, strpos($subscription->title, '(') + 1, -1);
+		$client->assertSent(function (PendingRequest $request) use ($reference) {
+			return $request->getRequest() instanceof CreateSubscriptionRequest
+				&& $request->payload()->get('description') === 'Save the Whales (' . $reference . ')';
 		});
 	}
 
@@ -285,12 +335,12 @@ class MolliePaymentProviderTest extends BaseTestCase {
 
 		$payment_args = array_merge($default_args, $overrides);
 
-		$campaign = new CampaignEntity();
+		$campaign = new CampaignEntity(['title' => 'Save the Whales']);
 		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert($campaign);
 
 		$payment_args['campaign_id'] = $campaign_id;
 
-		$transaction = new TransactionEntity(['title' => 'Test transaction']);
+		$transaction = new TransactionEntity(['title' => 'Test transaction', 'campaign_id' => $campaign_id]);
 		$transaction_id = $transactions->insert($transaction);
 		$transaction = $transactions->get($transaction_id);
 

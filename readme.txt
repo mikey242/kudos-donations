@@ -133,6 +133,7 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.4.1 =
+* Payments are now described with the campaign name instead of an internal reference, so donors see e.g. "Save the Whales" rather than "Transaction (ktr_123)" in Stripe Checkout, on Mollie's payment page and on their bank statement. Mollie subscriptions add their reference, e.g. "Save the Whales (ksu_202612)"
 * Update Stripe PHP library to 23.1.0
 
 = 4.4.0 =
