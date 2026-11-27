@@ -67,6 +67,9 @@ export const Render = ({
 
 	return (
 		<root.div className="kudos-render-root">
+			{/* Shadow DOM blocks theme selectors but not inheritance, so stop the theme's text-align, letter-spacing etc. reaching the form. First, so everything below can still override it. */}
+			<style>{':host { all: initial; display: block; }'}</style>
+
 			{/* Load global styles */}
 			{window.kudos?.front?.customStyles && (
 				<style>{window.kudos?.front?.customStyles}</style>
