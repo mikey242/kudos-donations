@@ -14,6 +14,8 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Service\LicenceService;
 use WP_Error;
+use WP_HTTP_Response;
+use WP_REST_Request;
 
 abstract class BaseRestController extends AbstractRegistrable {
 
@@ -46,6 +48,29 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 */
 	public function register(): void {
 		$this->register_routes();
+		add_filter( 'rest_post_dispatch', [ self::class, 'prevent_caching' ], 10, 3 );
+	}
+
+	/**
+	 * Marks Kudos REST responses as uncacheable. WordPress only does this for logged-in users, so a
+	 * cache that stores REST responses could otherwise keep serving a donor the first payment status
+	 * ("open") while the return page polls for "paid".
+	 *
+	 * @param mixed           $response The response being sent.
+	 * @param mixed           $_server  The REST server.
+	 * @param WP_REST_Request $request  The request being answered.
+	 * @return mixed
+	 */
+	public static function prevent_caching( $response, $_server, WP_REST_Request $request ) {
+		if ( $response instanceof WP_HTTP_Response && str_starts_with( $request->get_route(), '/kudos/' ) ) {
+			foreach ( wp_get_nocache_headers() as $name => $value ) {
+				if ( $value ) {
+					$response->header( $name, $value );
+				}
+			}
+		}
+
+		return $response;
 	}
 
 	/**

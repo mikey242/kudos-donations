@@ -2,6 +2,7 @@
 
 namespace IseardMedia\Kudos\Tests\Controller\Rest;
 
+use IseardMedia\Kudos\Controller\Rest\BaseRestController;
 use IseardMedia\Kudos\Controller\Rest\Payment;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
@@ -12,7 +13,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 
 /**
- * Bot checks on payment creation.
+ * Bot checks on payment creation, and the no-cache headers on Kudos REST responses.
  */
 class PaymentCreateGuardsTest extends BaseTestCase {
 
@@ -35,6 +36,22 @@ class PaymentCreateGuardsTest extends BaseTestCase {
 		$response = $this->create_payment( [ 'elapsed' => '12', 'donation' => 'spam' ] );
 
 		$this->assertSame( 400, $response->get_status() );
+	}
+
+	public function test_kudos_responses_are_not_cacheable(): void {
+		$response = $this->prevent_caching( '/kudos/v1/payment/status' );
+
+		$this->assertStringContainsString( 'no-store', $response->get_headers()['Cache-Control'] ?? '' );
+	}
+
+	public function test_other_responses_are_left_alone(): void {
+		$response = $this->prevent_caching( '/wp/v2/posts' );
+
+		$this->assertArrayNotHasKey( 'Cache-Control', $response->get_headers() );
+	}
+
+	private function prevent_caching( string $route ): WP_REST_Response {
+		return BaseRestController::prevent_caching( new WP_REST_Response(), null, new WP_REST_Request( WP_REST_Server::READABLE, $route ) );
 	}
 
 	private function is_bot( array $values ): bool {
