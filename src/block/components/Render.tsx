@@ -81,6 +81,13 @@ export const Render = ({
 					key={i}
 					rel="stylesheet"
 					onLoad={updateLoadedSheets}
+					onError={() => {
+						// eslint-disable-next-line no-console
+						console.error(
+							`Kudos Donations: failed to load ${stylesheet}`
+						);
+						updateLoadedSheets();
+					}}
 					href={stylesheet}
 				/>
 			))}

@@ -137,6 +137,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Fix the check that rejects donation forms submitted too quickly by bots, which never triggered
 * Kudos REST responses now tell caches not to store them, so a caching plugin can't keep showing a donor's payment as unpaid on the return page
 * Theme styles such as letter-spacing or text alignment no longer change how the donation form looks
+* If the donation form's stylesheet fails to load, the form now still shows (unstyled) instead of an empty space, and the browser console says which file failed
 * Update Stripe PHP library to 23.1.0
 
 = 4.4.0 =
