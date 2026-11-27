@@ -138,6 +138,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Kudos REST responses now tell caches not to store them, so a caching plugin can't keep showing a donor's payment as unpaid on the return page
 * Theme styles such as letter-spacing or text alignment no longer change how the donation form looks
 * If the donation form's stylesheet fails to load, the form now still shows (unstyled) instead of an empty space, and the browser console says which file failed
+* Fix pages with a donation form scrolling sideways or losing sticky headers on some themes, and the page jumping sideways when the donation modal opens
 * Update Stripe PHP library to 23.1.0
 
 = 4.4.0 =

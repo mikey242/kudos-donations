@@ -1,12 +1,12 @@
 @config "tailwind.config.js";
 
-/* Prevent page scroll when modal open */
-:root {
-	--kudos-modal-overflow: auto; /* default */
+/* Stop the page scrolling behind the open modal, keeping the scrollbar's space so the page doesn't jump. */
+html.kudos-modal-open {
+	overflow: hidden;
 }
 
-body {
-	overflow: var(--kudos-modal-overflow);
+html.kudos-modal-gutter {
+	scrollbar-gutter: stable;
 }
 
 /* Define Kudos fonts */

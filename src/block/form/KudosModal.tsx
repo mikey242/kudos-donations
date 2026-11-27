@@ -78,16 +78,16 @@ export const KudosModal = ({
 		};
 
 		focusInitialField();
-		document.documentElement.style.setProperty(
-			'--kudos-modal-overflow',
-			'hidden'
+		const html = document.documentElement;
+		// Reserve the scrollbar's space only if there is one, or a page without one would shift.
+		html.classList.toggle(
+			'kudos-modal-gutter',
+			window.innerWidth > html.clientWidth
 		);
+		html.classList.add('kudos-modal-open');
 		document.addEventListener('keydown', handleKeyDown, false);
 		return () => {
-			document.documentElement.style.setProperty(
-				'--kudos-modal-overflow',
-				'auto'
-			);
+			html.classList.remove('kudos-modal-open', 'kudos-modal-gutter');
 			document.removeEventListener('keydown', handleKeyDown, false);
 		};
 	}, [isOpen, focusInitialField]);
