@@ -132,6 +132,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.4.1 =
+* Update Stripe PHP library to 23.1.0
+
 = 4.4.0 =
 * Campaigns can now be translated with WPML or Polylang. One campaign works in every language, so donations and the goal stay together. Translate the campaign's text under WPML → String Translation (or Languages → Translations in Polylang)
 * The donate button label can be translated in WPML's translation editor
